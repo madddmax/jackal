@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5D5340F5-739A-47ED-A76D-9BA02F18C004}"
 	ProjectSection(SolutionItems) = preProject
@@ -21,6 +21,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackal.RolloPlayer", "Jackal.RolloPlayer\Jackal.RolloPlayer.csproj", "{2A356132-7720-4F7E-AE75-6EF40DCCED8E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JackalWebHost", "JackalWebHost\JackalWebHost.csproj", "{4E322764-62BE-4DF8-A852-6FBB26284145}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JackalWebHost2", "JackalWebHost2\JackalWebHost2.csproj", "{8C1A0D3A-02A3-4548-B6DF-6942D70D2039}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,8 +54,15 @@ Global
 		{4E322764-62BE-4DF8-A852-6FBB26284145}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E322764-62BE-4DF8-A852-6FBB26284145}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E322764-62BE-4DF8-A852-6FBB26284145}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C1A0D3A-02A3-4548-B6DF-6942D70D2039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C1A0D3A-02A3-4548-B6DF-6942D70D2039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C1A0D3A-02A3-4548-B6DF-6942D70D2039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C1A0D3A-02A3-4548-B6DF-6942D70D2039}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67BC37BE-A076-4A41-863B-A88C8459D125}
 	EndGlobalSection
 EndGlobal
