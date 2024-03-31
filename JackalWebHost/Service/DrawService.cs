@@ -195,7 +195,7 @@ namespace JackalWebHost.Service
                 tileElement.BackgroundColor = "Gray";
             }
 
-            tileElement.Levels = new LevelChange[tile.Levels.Count]; 
+            tileElement.Levels = new LevelChange[tile.Levels.Count];
 
             for (int i = 0; i < tile.Levels.Count; i++)
             {
@@ -357,7 +357,7 @@ namespace JackalWebHost.Service
                     throw new NotSupportedException();
             }
 
-            string relativePath = string.Format(@"/Content/Fields/{0}.png", filename);
+            string relativePath = string.Format(@"~/fields/{0}.png", filename);
 
             tileChange.BackgroundImageSrc = relativePath;
             tileChange.Rotate = rotateCount;
@@ -377,6 +377,6 @@ namespace JackalWebHost.Service
         }
 
 
-        
+
     }
 }

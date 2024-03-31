@@ -16,3 +16,142 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+body {
+    background-color: lightgray;
+}
+
+.navbar{
+    font-size: 24px;
+    height:20px;
+}
+
+/*#map {float: left;}*/
+#map table td {width: 50px; height: 50px; border: 1px black solid; vertical-align: top; padding: 0px; }
+#map table { border-collapse: separate; border-spacing: 2px; box-sizing: border-box; }
+table td .coins {width: 15px; height: 15px; float: right; color: black; position: relative; z-index: 5;}
+table td .pirates {width: 15px; height: 15px; float: left; color: white; z-index: 5;}
+
+.controls { width: 200px; }
+#teams div { color: white; }
+.controls button { width: 100% }
+
+.back { position: absolute; width: 50px; height: 50px; background-size: cover; border-width: 0px; z-index: 0;}
+
+.level { position: absolute; width: 50px; z-index: 3; }
+.level-10 { position: absolute; width: 50px; z-index: 3;}
+
+.level-21 { position: absolute; margin-top: 35px; z-index: 3;}
+.level-20 { position: absolute; margin-left: 35px; z-index: 3;}
+
+.level-32 { position: absolute; margin-top: 35px; margin-left: 35px; z-index: 3;}
+.level-31 { position: absolute; margin-top: 15px; margin-left: 5px; z-index: 3;}
+.level-30 { position: absolute; margin-left: 35px; z-index: 3;}
+
+.level-43 { position: absolute; margin-top: 35px; margin-left: 35px; z-index: 3;}
+.level-42 { position: absolute; margin-top: 25px; }
+.level-41 { position: absolute; margin-top: 10px; margin-left: 25px; z-index: 3;}
+.level-40 { position: absolute; }
+
+.level-54 { position: absolute; margin-left: 35px; z-index: 3;}
+.level-53 { position: absolute; margin-left: 15px; z-index: 3;}
+.level-52 { position: absolute; margin-top: 15px; z-index: 3;}
+.level-51 { position: absolute; margin-top: 35px; margin-left: 5px; z-index: 3;}
+.level-50 { position: absolute; margin-top: 35px; margin-left: 35px; z-index: 3;}
+
+.digit_1 {
+    background-image: url(../wwwroot/pictures/digits_small.jpg);
+}
+
+.digit_2 {
+    background-image: url(../wwwroot/pictures/digits_small.jpg);
+    background-position: 51px 0px;
+}
+
+.digit_3 {
+    background-image: url(../wwwroot/pictures/digits_small.jpg);
+    background-position: 0px -51px;
+}
+
+.digit_4 {
+    background-image: url(../wwwroot/pictures/digits_small.jpg);
+    background-position: 51px -51px;
+}
+
+.digit_5 {
+    background-image: url(../wwwroot/pictures/digits_small.jpg);
+    background-position: 0px -102px;
+}
+
+.human {
+    background-image: url("../wwwroot/pictures/human.png");
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+}
+
+.robot {
+    background-image: url("../wwwroot/pictures/robot.png");
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+}
+
+.robot2 {
+    background-image: url("../wwwroot/pictures/robot2.png");
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+}
+
+.bs-panel-control, .bs-panel-statistics, .bs-panel-photos  {
+    background-color: white;
+    border-color: gray;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+    margin: 0 -15px 15px;
+    padding: 45px 15px 15px;
+    position: relative;
+}
+.bs-panel-control:after, .bs-panel-statistics:after, .bs-panel-photos:after {
+    color: #959595;
+    font-size: 12px;
+    font-weight: 700;
+    left: 15px;
+    letter-spacing: 1px;
+    position: absolute;
+    text-transform: uppercase;
+    top: 15px;
+}
+
+.bs-panel-control:after {
+    content: "Управление";
+}
+
+.bs-panel-statistics:after {
+    content: "Статистика";
+}
+
+.bs-panel-photos:after {
+    content: "Пираты";
+    width: 140px;
+}
+
+.bs-photos {
+    width: 100px;
+    height: 100px;
+    border: 3px white solid;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.photo-active {
+    border: 3px red solid;
+}

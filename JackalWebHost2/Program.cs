@@ -29,6 +29,9 @@ namespace JackalWebHost2
                    options.ClientSecret = googleAuthNSection["ClientSecret"];
                });
 
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -50,9 +53,13 @@ namespace JackalWebHost2
 
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapRazorPages();
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Game}/{action=Index}/{id?}"
+            );
 
+            app.UseSession();
             app.Run();
         }
     }
