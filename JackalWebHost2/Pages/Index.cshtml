@@ -4,17 +4,8 @@
     Layout = "Shared/_Layout";
 }
 
-<nav class="navbar navbar-default">
-    <div class="container">
-        <ul class="nav navbar-nav">
-            <li><a id="reset" href="#">Новая игра</a></li>
-            <li><a id="game-settings" href="#">Настройки</a></li>
-        </ul>
-    </div>
-</nav>
-
 <div style="width: 100%;">
-    <div class="center-block" style="width: 1280px;">
+    <div class="row justify-content-center" style="width: 1280px;">
         <div class="bs-panel-photos col-md-1">
             <img src="~/pictures/bons.jpg" alt="Билли Бонс" class="img-circle bs-photos photo-active pull-right" data-value="1">
             <img src="~/pictures/gokins.jpg" alt="Джимми Гокинс" class="img-circle bs-photos pull-right" data-value="2">
@@ -25,7 +16,7 @@
             </div>
         </div>
         <div id="map"></div>
-            <div class="controls center-block">
+        <div class="controls center-block">
 
             <div class="bs-panel-statistics" style="display: none;">
                 <div>Код игры: <span id="gamename"></span></div>

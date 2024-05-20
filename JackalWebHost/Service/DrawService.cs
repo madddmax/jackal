@@ -357,7 +357,7 @@ namespace JackalWebHost.Service
                     throw new NotSupportedException();
             }
 
-            string relativePath = string.Format(@"~/fields/{0}.png", filename);
+            string relativePath = string.Format(@"/Content/fields/{0}.png", filename);
 
             tileChange.BackgroundImageSrc = relativePath;
             tileChange.Rotate = rotateCount;

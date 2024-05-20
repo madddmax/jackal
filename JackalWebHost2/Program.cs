@@ -21,16 +21,21 @@ namespace JackalWebHost2
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddRazorPages();
 
-            builder.Services.AddAuthentication()
-               .AddGoogle(options =>
-               {
-                   IConfigurationSection googleAuthNSection = config.GetSection("Authentication:Google");
-                   options.ClientId = googleAuthNSection["ClientId"];
-                   options.ClientSecret = googleAuthNSection["ClientSecret"];
-               });
+            //builder.Services.AddAuthentication()
+            //   .AddGoogle(options =>
+            //   {
+            //       IConfigurationSection googleAuthNSection = config.GetSection("Authentication:Google");
+            //       options.ClientId = googleAuthNSection["ClientId"];
+            //       options.ClientSecret = googleAuthNSection["ClientSecret"];
+            //   });
 
             builder.Services.AddDistributedMemoryCache();
-            builder.Services.AddSession();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             var app = builder.Build();
 
@@ -53,13 +58,14 @@ namespace JackalWebHost2
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
+
             app.MapRazorPages();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Game}/{action=Index}/{id?}"
             );
-
-            app.UseSession();
             app.Run();
         }
     }
