@@ -135,7 +135,7 @@ namespace JackalWebHost.Controllers
         /// </summary>
         public JsonResult Reset()
         {
-            HttpContext.Session.Set("data", null);
+            HttpContext.Session.Set("data", Array.Empty<byte>());
 
             return Json(new { result = "ok" });
         }
