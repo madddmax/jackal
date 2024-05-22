@@ -76,7 +76,7 @@ table td .pirates {width: 15px; height: 15px; float: left; color: white; z-index
 }
 
 .human {
-    background-image: url("../wwwroot/pictures/human.png");
+    background-image: url("/pictures/human.png");
     background-repeat: no-repeat;
     width: 50px;
     height: 50px;
@@ -85,7 +85,7 @@ table td .pirates {width: 15px; height: 15px; float: left; color: white; z-index
 }
 
 .robot {
-    background-image: url("../wwwroot/pictures/robot.png");
+    background-image: url("/pictures/robot.png");
     background-repeat: no-repeat;
     width: 50px;
     height: 50px;
@@ -94,7 +94,7 @@ table td .pirates {width: 15px; height: 15px; float: left; color: white; z-index
 }
 
 .robot2 {
-    background-image: url("../wwwroot/pictures/robot2.png");
+    background-image: url("/pictures/robot2.png");
     background-repeat: no-repeat;
     width: 50px;
     height: 50px;

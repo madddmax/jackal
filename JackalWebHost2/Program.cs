@@ -19,7 +19,7 @@ namespace JackalWebHost2
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            builder.Services.AddRazorPages();
+            builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
             //builder.Services.AddAuthentication()
             //   .AddGoogle(options =>
