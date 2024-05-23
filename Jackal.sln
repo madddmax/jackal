@@ -14,8 +14,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackal", "Jackal\Jackal.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JackalHost", "JackalHost\JackalHost.csproj", "{C5859774-9403-40CE-945F-8527398E7D3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackal.Tests", "Jackal.Tests\Jackal.Tests.csproj", "{062246C4-FED7-4ED8-BE10-E8B9BED3F9CE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JackalBattlefield", "JackalBattlefield\JackalBattlefield.csproj", "{7DFD5770-B060-491B-BED9-00282C233F02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackal.RolloPlayer", "Jackal.RolloPlayer\Jackal.RolloPlayer.csproj", "{2A356132-7720-4F7E-AE75-6EF40DCCED8E}"
@@ -23,6 +21,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JackalWebHost", "JackalWebHost\JackalWebHost.csproj", "{4E322764-62BE-4DF8-A852-6FBB26284145}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JackalWebHost2", "JackalWebHost2\JackalWebHost2.csproj", "{8C1A0D3A-02A3-4548-B6DF-6942D70D2039}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackal.Tests2", "Jackal.Tests2\Jackal.Tests2.csproj", "{A8137676-EBDB-46C0-B7C1-A59FAF9CB7E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +38,6 @@ Global
 		{C5859774-9403-40CE-945F-8527398E7D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5859774-9403-40CE-945F-8527398E7D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5859774-9403-40CE-945F-8527398E7D3F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{062246C4-FED7-4ED8-BE10-E8B9BED3F9CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{062246C4-FED7-4ED8-BE10-E8B9BED3F9CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{062246C4-FED7-4ED8-BE10-E8B9BED3F9CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{062246C4-FED7-4ED8-BE10-E8B9BED3F9CE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7DFD5770-B060-491B-BED9-00282C233F02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7DFD5770-B060-491B-BED9-00282C233F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DFD5770-B060-491B-BED9-00282C233F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -58,6 +54,10 @@ Global
 		{8C1A0D3A-02A3-4548-B6DF-6942D70D2039}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C1A0D3A-02A3-4548-B6DF-6942D70D2039}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C1A0D3A-02A3-4548-B6DF-6942D70D2039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8137676-EBDB-46C0-B7C1-A59FAF9CB7E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8137676-EBDB-46C0-B7C1-A59FAF9CB7E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8137676-EBDB-46C0-B7C1-A59FAF9CB7E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8137676-EBDB-46C0-B7C1-A59FAF9CB7E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
