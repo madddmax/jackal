@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Jackal\Jackal.csproj" />
+    <ProjectReference Include="..\Jackal.Core\Jackal.Core.csproj" />
   </ItemGroup>
 
 </Project>
