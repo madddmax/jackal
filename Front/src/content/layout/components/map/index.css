@@ -1,0 +1,14 @@
+.map {
+    display: table;
+    width: 662px;
+    height: 662px;
+}
+
+.map-cell {
+    display: table-cell;
+    /* background-image: url('/water.png'); */
+}
+
+.map-row {
+     display: table-row;
+}
