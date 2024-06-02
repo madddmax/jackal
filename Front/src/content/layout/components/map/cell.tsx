@@ -1,5 +1,4 @@
 import cn from 'classnames'
-// import classes from './cell.module.less'
 import { Fields } from './constants';
 import './cell.css'
 

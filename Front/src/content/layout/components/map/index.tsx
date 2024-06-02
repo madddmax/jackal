@@ -1,5 +1,5 @@
 import Cell from './cell';
-import './index.css'
+import './map.css'
 
 function Map() {
 
@@ -9,8 +9,12 @@ function Map() {
     return (
       <div className='map'>
         {rows.map((row) => (
-          <div className='map-row'>
-            {cols.map((col) => <div className='map-cell'><Cell col={col} row={row} /></div>)}
+          <div className='map-row' key={`map-row-${row}`}>
+            {cols.map((col) => 
+              <div className='map-cell' key={`map-cell-${col}`}>
+                <Cell col={col} row={row} />
+              </div>)
+            }
           </div>
         ))}
       </div>  

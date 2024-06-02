@@ -1,6 +1,6 @@
 import './App.css'
-import Header from './content/header';
-import Layout from './content/layout';
+import Header from './header';
+import Layout from './layout';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
