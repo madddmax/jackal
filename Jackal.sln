@@ -12,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5D5340
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackal", "Jackal\Jackal.csproj", "{F09A6694-A08D-4C94-A6A2-9AF9FAA6AA6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JackalBattlefield", "JackalBattlefield\JackalBattlefield.csproj", "{7DFD5770-B060-491B-BED9-00282C233F02}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackal.RolloPlayer", "Jackal.RolloPlayer\Jackal.RolloPlayer.csproj", "{2A356132-7720-4F7E-AE75-6EF40DCCED8E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JackalWebHost", "JackalWebHost\JackalWebHost.csproj", "{4E322764-62BE-4DF8-A852-6FBB26284145}"
@@ -34,10 +32,6 @@ Global
 		{F09A6694-A08D-4C94-A6A2-9AF9FAA6AA6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F09A6694-A08D-4C94-A6A2-9AF9FAA6AA6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F09A6694-A08D-4C94-A6A2-9AF9FAA6AA6E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7DFD5770-B060-491B-BED9-00282C233F02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DFD5770-B060-491B-BED9-00282C233F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DFD5770-B060-491B-BED9-00282C233F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7DFD5770-B060-491B-BED9-00282C233F02}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2A356132-7720-4F7E-AE75-6EF40DCCED8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2A356132-7720-4F7E-AE75-6EF40DCCED8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A356132-7720-4F7E-AE75-6EF40DCCED8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
