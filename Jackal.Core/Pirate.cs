@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Jackal
+namespace Jackal.Core
 {
     public class Pirate
     {

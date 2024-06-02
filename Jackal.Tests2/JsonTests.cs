@@ -1,4 +1,5 @@
 ﻿using System;
+using Jackal.Core;
 using Newtonsoft.Json;
 using Xunit;
 

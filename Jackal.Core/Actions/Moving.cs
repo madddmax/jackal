@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
-namespace Jackal.Actions
+namespace Jackal.Core.Actions
 {
     class Moving : IGameAction
     {

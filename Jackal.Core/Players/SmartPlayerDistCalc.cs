@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-
-namespace Jackal
+namespace Jackal.Core.Players
 {
     public class SmartPlayerDistCalc : IPlayer
     {

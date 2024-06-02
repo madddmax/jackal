@@ -1,4 +1,6 @@
-﻿namespace Jackal.RolloPlayer2
+﻿using Jackal.Core;
+
+namespace Jackal.RolloPlayer2
 {
 	public class PosRate
 	{

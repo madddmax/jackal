@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Jackal
+namespace Jackal.Core.Players
 {
     public class RandomPlayer : IPlayer
     {

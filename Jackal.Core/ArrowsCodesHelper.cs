@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Jackal
+namespace Jackal.Core
 {
     public static class ArrowsCodesHelper
     {

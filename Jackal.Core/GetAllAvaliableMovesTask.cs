@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Jackal
+namespace Jackal.Core
 {
     public class GetAllAvaliableMovesTask
     {

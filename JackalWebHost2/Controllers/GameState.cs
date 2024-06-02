@@ -1,4 +1,4 @@
-using Jackal;
+using Jackal.Core;
 
 namespace JackalWebHost.Controllers;
 

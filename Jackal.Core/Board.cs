@@ -1,10 +1,10 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
-﻿using System.Linq;
-﻿using Jackal.Actions;
+using System.Linq;
+using Jackal.Core.Actions;
 using Newtonsoft.Json;
 
-namespace Jackal
+namespace Jackal.Core
 {
     public class Board
     {

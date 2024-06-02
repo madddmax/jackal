@@ -1,6 +1,6 @@
-using Jackal.Actions;
+using Jackal.Core.Actions;
 
-namespace Jackal
+namespace Jackal.Core
 {
     public class AvaliableMove
     {

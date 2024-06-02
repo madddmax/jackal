@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Jackal
+namespace Jackal.Core
 {
     public class GameState
     {

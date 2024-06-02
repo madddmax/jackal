@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
-namespace Jackal
+namespace Jackal.Core
 {
     public class Position
     {

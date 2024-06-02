@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Jackal.Actions
+namespace Jackal.Core.Actions
 {
     class Respawn : IGameAction
     {

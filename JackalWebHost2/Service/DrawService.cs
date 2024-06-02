@@ -1,10 +1,6 @@
-﻿using Jackal;
-using Jackal.Players;
-using JackalWebHost.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using JackalWebHost.Models;
+using Jackal.Core;
+using Jackal.Core.Players;
 
 namespace JackalWebHost.Service
 {

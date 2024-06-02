@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Jackal.GameOrganizer
+namespace Jackal.Core.GameOrganizer
 {
     public class GameOrganizer
     {
@@ -11,7 +11,7 @@ namespace Jackal.GameOrganizer
         private int _permutationId = -1;
         private int _mapId;
 
-        private readonly int totalPermutationsCount = Jackal.Utils.Factorial(4);
+        private readonly int totalPermutationsCount = Utils.Factorial(4);
         List<IdentifiedPlayer> _players = new List<IdentifiedPlayer>();
 
         public GameOrganizer(int? mapId, IEnumerable<IdentifiedPlayer> players)
@@ -54,7 +54,7 @@ namespace Jackal.GameOrganizer
             IdentifiedPlayer[] currentPlayers;
             while (true)
             {
-                currentPlayers = Jackal.Utils.GetPermutation(_permutationId, _players.ToArray()).ToArray();
+                currentPlayers = Utils.GetPermutation(_permutationId, _players.ToArray()).ToArray();
                 if (WasPlayersSet(currentPlayers) == false) break;
                 _permutationId++;
                 _permutationId %= totalPermutationsCount;

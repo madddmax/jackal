@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using Jackal;
-using Jackal.Players;
+using Jackal.Core;
+using Jackal.Core.Players;
 using JackalWebHost.Models;
 using JackalWebHost.Service;
 using Microsoft.AspNetCore.Mvc;

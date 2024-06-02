@@ -1,7 +1,6 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace Jackal
+namespace Jackal.Core
 {
     public class Move : TileDirection
 	{

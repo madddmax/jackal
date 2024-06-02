@@ -1,4 +1,4 @@
-﻿namespace Jackal
+﻿namespace Jackal.Core
 {
     public class CheckedPosition
     {

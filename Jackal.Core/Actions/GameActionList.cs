@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Jackal.Actions
+namespace Jackal.Core.Actions
 {
     public class GameActionList : IGameAction
     {

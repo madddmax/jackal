@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Jackal
+namespace Jackal.Core
 {
     public static class JsonHelper
     {

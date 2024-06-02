@@ -1,4 +1,4 @@
-﻿namespace Jackal.Players
+﻿namespace Jackal.Core.Players
 {
     public abstract class BlankPlayer : IPlayer
     {

@@ -1,4 +1,4 @@
-﻿namespace Jackal.Actions
+﻿namespace Jackal.Core.Actions
 {
     /*
     class DropCoin : IGameAction

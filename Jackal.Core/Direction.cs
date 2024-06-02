@@ -1,8 +1,7 @@
 ﻿using System;
-using System.ComponentModel.Design.Serialization;
 using Newtonsoft.Json;
 
-namespace Jackal
+namespace Jackal.Core
 {
     public class Direction
     {

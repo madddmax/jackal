@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Jackal.Actions
+﻿namespace Jackal.Core.Actions
 {
     /*
     class TakeCoinToShip : IGameAction
