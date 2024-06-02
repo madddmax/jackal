@@ -5,14 +5,18 @@ using Jackal.Core.Players;
 using JackalWebHost.Models;
 using JackalWebHost.Service;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace JackalWebHost.Controllers
 {
     public class GameController : Controller
     {
-        public static Dictionary<string, GameState> Session = new();
+        private readonly IMemoryCache _gamesSessionsCache;
 
-        private JsonSerializerOptions _options = new()
+        private readonly MemoryCacheEntryOptions _cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetSlidingExpiration(TimeSpan.FromHours(1));
+        
+        private readonly JsonSerializerOptions _options = new()
         {
             AllowTrailingCommas = false,
             DefaultBufferSize = 1024,
@@ -33,6 +37,11 @@ namespace JackalWebHost.Controllers
             WriteIndented = false
         };
 
+        public GameController(IMemoryCache gamesSessionsCache)
+        {
+            _gamesSessionsCache = gamesSessionsCache;
+        }
+        
         /// <summary>
         /// Главное окно
         /// </summary>
@@ -44,7 +53,7 @@ namespace JackalWebHost.Controllers
         /// <summary>
         /// Запуск игры
         /// </summary>
-        public JsonResult Start(string settings)
+        public JsonResult Start(string gameName, string settings)
         {
             GameState gameState = new GameState();
 
@@ -53,7 +62,7 @@ namespace JackalWebHost.Controllers
             IPlayer[] gamePlayers = new IPlayer[4];
             int index = 0;
 
-            foreach (var pl in gameSettings.players)
+            foreach (var pl in gameSettings.Players)
             {
                 switch (pl)
                 {
@@ -74,22 +83,21 @@ namespace JackalWebHost.Controllers
                 gamePlayers[index++] = new SmartPlayer();
             }
 
-            if (!gameSettings.mapId.HasValue)
-                gameSettings.mapId = new Random().Next();
+            if (!gameSettings.MapId.HasValue)
+                gameSettings.MapId = new Random().Next();
 
-            gameState.board = new Board(gamePlayers, gameSettings.mapId.Value);
+            gameState.board = new Board(gamePlayers, gameSettings.MapId.Value);
             gameState.game = new Game(gamePlayers, gameState.board);
 
-            Session["test"] = gameState;
-            //HttpContext.Session.Set("test", gameState);
+            _gamesSessionsCache.Set(gameName, gameState, _cacheEntryOptions);
 
             var service = new DrawService();
             var map = service.Map(gameState.board);
 
             return Json(new {
-                gamename = "test",
+                gameName = gameName,
                 map = map,
-                mapId = gameSettings.mapId.Value,
+                mapId = gameSettings.MapId.Value,
                 stat = service.GetStatistics(gameState.game)
             }, _options);
         }
@@ -97,14 +105,15 @@ namespace JackalWebHost.Controllers
         /// <summary>
         /// Ход игры
         /// </summary>
-        public JsonResult Turn(int? turnNum)
+        public JsonResult Turn(string gameName, int? turnNum)
         {
-            //var gameState = HttpContext.Session.Get<GameState>("test");
-            var gameState = Session["test"];
-            if (gameState == null)
+            if (!_gamesSessionsCache.TryGetValue(gameName, out GameState? gameState) || 
+                gameState == null)
+            {
                 return Json(new { error = true });
+            }
 
-            string prevBoardStr = JsonHelper.SerialiazeWithType(gameState.board);
+            var prevBoardStr = JsonHelper.SerialiazeWithType(gameState.board);
 
             if (gameState.game.CurrentPlayer is WebHumanPlayer)
             {

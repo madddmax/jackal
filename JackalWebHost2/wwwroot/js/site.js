@@ -6,7 +6,7 @@ var game = new Game();
 
 $(document).ready(function () {
     /// Быстрое начало игры
-    game.MakeStart(['human', 'robot2', 'robot2', 'robot2']);
+    game.MakeStart(uuidGen(), ['human', 'robot2', 'robot2', 'robot2']);
 
     /// выбор игроков
     $('#player-choose-menu div').click(function () {
@@ -32,7 +32,7 @@ $(document).ready(function () {
             input.push($(players[i]).attr('class'));
         }
         var mapId = $('#game-map-id').val();
-        game.MakeStart(input, parseInt(mapId));
+        game.MakeStart(uuidGen(), input, parseInt(mapId));
 
         $("#preparing-file-modal").modal('toggle');
     });
@@ -60,7 +60,7 @@ $(document).ready(function () {
 
     /// Следующий ход в пошаговом режиме
     $('#next').click(function () {
-        game.MakeTurn();
+        game.MakeTurn(game.gameName);
     });
 
     /// Атрибут хода (с монетой/ без монеты)
@@ -88,7 +88,7 @@ $(document).ready(function () {
 
 function Game() {
 
-    this.gamename = null;
+    this.gameName = null;
     this.gamestate = 'stop';
     this.map;
     this.groups;
@@ -137,16 +137,16 @@ function Game() {
             return;
         }
 
-        game.MakeTurn();
+        game.MakeTurn(game.gameName);
     }
 
-    this.MakeStart = function (players, mapId) {
+    this.MakeStart = function (gameName, players, mapId) {
 
         var self = this;
-        $.post("/Game/Start", { settings: JSON.stringify({players : players, mapId: mapId}) }, function (data) {
+        $.post("/Game/Start", {gameName: gameName, settings: JSON.stringify({players : players, mapId: mapId}) }, function (data) {
 
-            self.gamename = data.gamename;
-            $('#gamename').text(self.gamename);
+            self.gameName = data.gameName;
+            $('#gamename').text(self.gameName);
             $('#mapcode').text(data.mapId);
 
             $('.bs-panel-statistics').show();
@@ -169,10 +169,10 @@ function Game() {
         });
     }
 
-    this.MakeTurn = function(moveNum) {
+    this.MakeTurn = function(gameName, moveNum) {
 
         var self = this;
-        $.post("/Game/Turn", { turnNum: moveNum }, function (data) {
+        $.post("/Game/Turn", {gameName: gameName, turnNum: moveNum }, function (data) {
 
             if (data.stat.IsGameOver) {
 
@@ -234,7 +234,7 @@ function Game() {
                 if (typeof (mapElm) != 'undefined')
                     mapElm.html('');
 
-                game.MakeStart(['human', 'robot2', 'robot2', 'robot2']);
+                game.MakeStart(uuidGen(), ['human', 'robot2', 'robot2', 'robot2']);
             });
         }
     }
@@ -250,7 +250,7 @@ var makeUserHandler = function (i, j) {
 
         var action = game.moves.GetActionMove(i, j);
         if (action != null) {
-            game.MakeTurn(action.MoveNum);
+            game.MakeTurn(game.gameName, action.MoveNum);
         }
         //else alert('нет хода');
     };
@@ -428,8 +428,7 @@ function Moves(map) {
         $('#with-coin').prop('checked', true);
         this.DrawPirateAvailableMoves(currentPirate);
     }
-
-
+    
     this.DrawPirateAvailableMoves = function(num) {
 
         var withCoin = false;
@@ -519,8 +518,6 @@ function Moves(map) {
 
 }
 
-
-
 /// ===========================================
 /// Отображение статистики по игрокам на экране
 /// ===========================================
@@ -581,8 +578,10 @@ function Teams(teams) {
         }
         return winner;
     }
-
 }
 
-
-
+function uuidGen() {
+    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+        (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+    );
+}
