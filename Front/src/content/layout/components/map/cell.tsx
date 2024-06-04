@@ -1,5 +1,8 @@
 import cn from 'classnames'
-import { Fields } from './constants';
+import { useDispatch, useSelector } from 'react-redux'
+import { toggle } from '../../../../redux/gameSlice'
+
+import { ReduxState } from '../../../../redux/types'
 import './cell.css'
 
 interface CellProps {
@@ -8,15 +11,17 @@ interface CellProps {
 }
 
 function Cell(props: CellProps) {
-
     const {row, col} = props;
+    const num = useSelector<ReduxState>((state) => state.game.fields[col][row])
+    const dispatch = useDispatch()
 
     return (
         <div className={cn(
             'cell', {
-            'cell-water': Fields[col][row] == 0,
-            'cell-ground': Fields[col][row] == 1,
-        })}></div>
+            'cell-water': num == 0,
+            'cell-ground': num == 1,
+        })}
+        onClick={() => dispatch(toggle({col, row}))}></div>
     );
   }
   
