@@ -4,6 +4,7 @@ using Jackal.Core;
 using Jackal.Core.Players;
 using JackalWebHost.Models;
 using JackalWebHost.Service;
+using JackalWebHost2.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -48,6 +49,14 @@ namespace JackalWebHost.Controllers
         public ActionResult Index()
         {
             return View("Index");
+        }
+
+        /// <summary>
+        /// Запуск игры
+        /// </summary>
+        public JsonResult Starting([FromBody] StartGameModel request)
+        {
+            return Start(request.GameName, request.Settings);
         }
 
         /// <summary>
