@@ -1,8 +1,8 @@
 import cn from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggle } from '../../../../redux/gameSlice'
+import { toggle } from '/redux/gameSlice'
 
-import { ReduxState } from '../../../../redux/types'
+import { ReduxState } from '/redux/types'
 import './cell.css'
 
 interface CellProps {
@@ -12,7 +12,7 @@ interface CellProps {
 
 function Cell(props: CellProps) {
     const {row, col} = props;
-    const num = useSelector<ReduxState>((state) => state.game.fields[col][row])
+    const num = useSelector<ReduxState, number>((state) => state.game.fields[row][col])
     const dispatch = useDispatch()
 
     return (
