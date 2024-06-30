@@ -1,7 +1,7 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {BaseApi } from '/app/config';
-import {initMap, highlightMoves } from './gameSlice';
+import {initMap, highlightMoves, applyChanges } from './gameSlice';
 import { GameStartResponse, GameTurnResponse } from './types';
 
 export const sagaActions = {
@@ -12,7 +12,6 @@ export const sagaActions = {
 
 export function* gameReset() {
   try {
-    const s = 0;
     let result: GameStartResponse = yield call(async () =>
         await axios({ url: `${BaseApi}Game/Reset`, method: 'post'})
     );
@@ -29,9 +28,7 @@ export function* gameStart(action: any) {
       let result: GameStartResponse = yield call(async () =>
           await axios({ url: `${BaseApi}Game/MakeStart`, method: 'post', data: action.payload})
       );
-      console.log(result.data.map);
       yield put(initMap(result.data.map));
-
       yield call(gameTurn, { type: sagaActions.GAME_TURN, payload: { gameName:	"afc9847e-dce9-497d-bac8-767c3d571b48"} });
 
     } catch (e) {
@@ -45,7 +42,6 @@ export function* gameTurn(action: any) {
   let mustContinue = true;
   while (mustContinue) {
     mustContinue = yield call(oneTurn, action);
-    console.log('mustContinue', mustContinue);
   }
 }
 
@@ -58,8 +54,10 @@ export function* oneTurn(action: any) {
 
     if (result.data.stat.IsHumanPlayer) {
       yield put(highlightMoves(result.data.moves));
+      yield put(applyChanges(result.data.changes));
       return false;
     }
+    yield put(applyChanges(result.data.changes));
     return true;
   } catch (e) {
     yield put({ type: "TODO_FETCH_FAILED" });
