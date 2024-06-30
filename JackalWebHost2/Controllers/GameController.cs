@@ -54,7 +54,7 @@ namespace JackalWebHost.Controllers
         /// <summary>
         /// Запуск игры
         /// </summary>
-        public JsonResult Starting([FromBody] StartGameModel request)
+        public JsonResult MakeStart([FromBody] StartGameModel request)
         {
             return Start(request.GameName, request.Settings);
         }
@@ -109,6 +109,15 @@ namespace JackalWebHost.Controllers
                 mapId = gameSettings.MapId.Value,
                 stat = service.GetStatistics(gameState.game)
             }, _options);
+        }
+
+
+        /// <summary>
+        /// Ход игры
+        /// </summary>
+        public JsonResult MakeTurn([FromBody] TurnGameModel request)
+        {
+            return Turn(request.GameName, request.TurnNum);
         }
 
         /// <summary>
