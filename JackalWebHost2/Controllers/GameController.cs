@@ -4,6 +4,7 @@ using Jackal.Core;
 using Jackal.Core.Players;
 using JackalWebHost.Models;
 using JackalWebHost.Service;
+using JackalWebHost2.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -48,6 +49,14 @@ namespace JackalWebHost.Controllers
         public ActionResult Index()
         {
             return View("Index");
+        }
+
+        /// <summary>
+        /// Запуск игры
+        /// </summary>
+        public JsonResult MakeStart([FromBody] StartGameModel request)
+        {
+            return Start(request.GameName, request.Settings);
         }
 
         /// <summary>
@@ -100,6 +109,15 @@ namespace JackalWebHost.Controllers
                 mapId = gameSettings.MapId.Value,
                 stat = service.GetStatistics(gameState.game)
             }, _options);
+        }
+
+
+        /// <summary>
+        /// Ход игры
+        /// </summary>
+        public JsonResult MakeTurn([FromBody] TurnGameModel request)
+        {
+            return Turn(request.GameName, request.TurnNum);
         }
 
         /// <summary>

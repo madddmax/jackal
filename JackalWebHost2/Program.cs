@@ -1,5 +1,6 @@
 using System;
 using JackalWebHost2.Data;
+using JackalWebHost2.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -42,12 +43,26 @@ namespace JackalWebHost2
                 options.Cookie.IsEssential = true;
             });
 
+            var myAllowSpecificOrigins = "MyAllowSpecificOrigins";
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: myAllowSpecificOrigins,
+                    act =>
+                    {
+                        act.WithOrigins("http://localhost:5173");
+                        act.AllowAnyHeader();
+                        act.AllowAnyMethod();
+                        act.AllowCredentials();
+                    });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
+                app.UseCors(myAllowSpecificOrigins);
             }
             else
             {
@@ -58,6 +73,7 @@ namespace JackalWebHost2
 
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseOptions();
 
             app.UseRouting();
 
