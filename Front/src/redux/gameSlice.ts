@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { FieldState, GameMap, GameState, GameMove } from './types';
+import { FieldState, GameCell, GameMap, GameState, GameMove } from './types';
 
 export const gameSlice = createSlice({
   name: 'game',
   initialState: {
-    fields: [[]]
+    fields: [[]],
+    lastMoves: []
   } satisfies GameState as GameState,
   reducers: {
     initMap: (state, action) => {
@@ -17,7 +18,7 @@ export const gameSlice = createSlice({
           if (!gMap.Changes[j].BackgroundImageSrc) {
             row.push({ backColor: gMap.Changes[j].BackgroundColor });
           }
-          else row.push({ image: gMap.Changes[j].BackgroundImageSrc?.indexOf('water') > 0 ? 0 : 1});
+          else row.push({ image: gMap.Changes[j].BackgroundImageSrc });
           j++;
         }
         map.push(row);
@@ -25,20 +26,34 @@ export const gameSlice = createSlice({
       state.fields = map;
     },
     highlightMoves: (state, action) => {
-      let moves = action.payload as GameMove[];
-      moves.forEach(move => {
-        const cell = state.fields[move.To.X][move.To.Y];
+
+      // undraw previous moves
+      state.lastMoves.forEach(move => {
+        const cell = state.fields[move.To.Y][move.To.X];
+        cell.moveNum = undefined;
+      });
+
+      state.lastMoves = action.payload as GameMove[];
+      state.lastMoves.forEach(move => {
+        const cell = state.fields[move.To.Y][move.To.X];
         cell.moveNum = move.MoveNum;
+      });
+    },
+    applyChanges: (state, action) => {
+      let changes = action.payload as GameCell[];
+      changes.forEach(it => {
+        const cell = state.fields[it.Y][it.X];
+        cell.image = it.BackgroundImageSrc;
       });
     },
     toggle: (state, action) => {
         const { row, col } = action.payload;
         const val = state.fields[row][col];
-        state.fields[row][col] = { image: val.image == 0 ? 1 : 0 };
+        state.fields[row][col] = { image: val.image };
     }
   },
 })
 
-export const { initMap, highlightMoves, toggle } = gameSlice.actions
+export const { initMap, highlightMoves, applyChanges, toggle } = gameSlice.actions
 
 export default gameSlice.reducer

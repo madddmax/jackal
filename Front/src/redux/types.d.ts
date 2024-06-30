@@ -3,11 +3,12 @@ export interface ReduxState {
 }
 
 export interface GameState {
-    fields: FieldState[][]
+    fields: FieldState[][];
+    lastMoves: GameMove[];
 }
 
 export interface FieldState {
-    image?: number;
+    image?: string;
     backColor?: string;
     moveNum?: number;
 }
@@ -40,6 +41,8 @@ export interface GameMap {
 interface GameCell {
     BackgroundImageSrc: string;
     BackgroundColor: string;
+    X: number;
+    Y: number;
 }
 
 export interface GameMove {
