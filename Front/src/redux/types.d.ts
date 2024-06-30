@@ -3,7 +3,13 @@ export interface ReduxState {
 }
 
 export interface GameState {
-    fields: number[][]
+    fields: FieldState[][]
+}
+
+export interface FieldState {
+    image?: number;
+    backColor?: string;
+    moveNum?: number;
 }
 
 export interface GameStartResponse {
@@ -15,12 +21,38 @@ export interface GameStartResponse {
     }
 }
 
+export interface GameTurnResponse {
+    data: {
+        changes: GameCell[];
+        stat: {
+            IsHumanPlayer: boolean;
+        };
+        moves: GameMove[];
+    }
+}
+
 export interface GameMap {
-    Changes: [GameCell];
+    Changes: GameCell[];
     Height: number;
     Width: number;
 }
 
 interface GameCell {
     BackgroundImageSrc: string;
+    BackgroundColor: string;
+}
+
+export interface GameMove {
+    MoveNum: number;
+    From: AcceptableMove;
+    To: AcceptableMove;
+    WithCoin: boolean;
+    WithRespawn: boolean;
+}
+
+interface AcceptableMove {
+    PirateNum: number;
+    Level: number;
+    X: number;
+    Y: number;
 }

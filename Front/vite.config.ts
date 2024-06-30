@@ -9,9 +9,9 @@ export default defineConfig({
     assetsDir: 'dist'
   },
   resolve: {
-    alias: [
-      { find: '/app', replacement: fileURLToPath(new URL('./src/app', import.meta.url)) },
-      { find: '/redux', replacement: fileURLToPath(new URL('./src/redux', import.meta.url)) },
-    ]
+    alias: {
+      '/app': fileURLToPath(new URL('./src/app', import.meta.url)),
+      '/redux': fileURLToPath(new URL('./src/redux', import.meta.url))
+    }
   }
 })
