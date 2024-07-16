@@ -5,6 +5,7 @@ export interface ReduxState {
 export interface GameState {
     fields: FieldState[][];
     lastMoves: GameMove[];
+    activePirate: number;
 }
 
 export interface FieldState {
@@ -76,4 +77,9 @@ interface AcceptableMove {
     Level: number;
     X: number;
     Y: number;
+}
+
+export interface PirateMoves {
+    pirate: number;
+    moves?: GameMove[];
 }

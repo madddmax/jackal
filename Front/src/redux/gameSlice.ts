@@ -1,11 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { FieldState, GameCell, GameMap, GameState, GameMove } from './types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { FieldState, GameCell, GameMap, GameState, PirateMoves } from './types';
 
 export const gameSlice = createSlice({
   name: 'game',
   initialState: {
     fields: [[]],
-    lastMoves: []
+    lastMoves: [],
+    activePirate: 1
   } satisfies GameState as GameState,
   reducers: {
     initMap: (state, action) => {
@@ -25,7 +26,7 @@ export const gameSlice = createSlice({
       }
       state.fields = map;
     },
-    highlightMoves: (state, action) => {
+    highlightMoves: (state, action: PayloadAction<PirateMoves>) => {
 
       // undraw previous moves
       state.lastMoves.forEach(move => {
@@ -33,8 +34,11 @@ export const gameSlice = createSlice({
         cell.moveNum = undefined;
       });
 
-      state.lastMoves = action.payload as GameMove[];
-      state.lastMoves.forEach(move => {
+      if (action.payload.moves) {
+        state.lastMoves = action.payload.moves;
+      }
+      state.activePirate = action.payload.pirate;
+      state.lastMoves.filter(move => move.From.PirateNum == state.activePirate).forEach(move => {
         const cell = state.fields[move.To.Y][move.To.X];
         cell.moveNum = move.MoveNum;
       });
