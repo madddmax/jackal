@@ -46,6 +46,7 @@ export const gameSlice = createSlice({
         cell.image = it.BackgroundImageSrc;
         cell.backColor = it.BackgroundColor;
         cell.rotate = it.Rotate;
+        cell.levels = it.Levels;
       });
     },
     toggle: (state, action) => {

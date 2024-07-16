@@ -11,6 +11,7 @@ export interface FieldState {
     image?: string;
     backColor?: string;
     rotate?: number;
+    levels?: GameLevel[];
     moveNum?: number;
 }
 
@@ -43,8 +44,23 @@ interface GameCell {
     BackgroundImageSrc: string;
     BackgroundColor: string;
     Rotate: number;
+    Levels: GameLevel[];
     X: number;
     Y: number;
+}
+
+interface GameLevel {
+    Level: number;
+    hasPirates: boolean;
+    Pirate?: GameThing;
+    hasCoins: boolean;
+    Coin?: GameThing
+}
+
+interface GameThing {
+    ForeColor?: string;
+    BackColor?: string;
+    Text: string;
 }
 
 export interface GameMove {
