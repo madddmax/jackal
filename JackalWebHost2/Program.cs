@@ -50,7 +50,7 @@ namespace JackalWebHost2
                 options.AddPolicy(name: devOrigins,
                     act =>
                     {
-                        act.WithOrigins(new[]{"http://localhost:5130"});
+                        act.WithOrigins(new[]{"http://localhost:5173"});
                         act.AllowAnyHeader();
                         act.AllowAnyMethod();
                         act.AllowCredentials();

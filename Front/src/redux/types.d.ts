@@ -5,11 +5,15 @@ export interface ReduxState {
 export interface GameState {
     fields: FieldState[][];
     lastMoves: GameMove[];
+    activePirate: number;
+    withCoin?: boolean;
 }
 
 export interface FieldState {
     image?: string;
     backColor?: string;
+    rotate?: number;
+    levels?: GameLevel[];
     moveNum?: number;
 }
 
@@ -41,8 +45,24 @@ export interface GameMap {
 interface GameCell {
     BackgroundImageSrc: string;
     BackgroundColor: string;
+    Rotate: number;
+    Levels: GameLevel[];
     X: number;
     Y: number;
+}
+
+interface GameLevel {
+    Level: number;
+    hasPirates: boolean;
+    Pirate?: GameThing;
+    hasCoins: boolean;
+    Coin?: GameThing
+}
+
+interface GameThing {
+    ForeColor?: string;
+    BackColor?: string;
+    Text: string;
 }
 
 export interface GameMove {
@@ -58,4 +78,10 @@ interface AcceptableMove {
     Level: number;
     X: number;
     Y: number;
+}
+
+export interface PirateMoves {
+    pirate?: number;
+    withCoin?: boolean;
+    moves?: GameMove[];
 }
