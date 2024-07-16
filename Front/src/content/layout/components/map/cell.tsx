@@ -17,8 +17,9 @@ function Cell(props: CellProps) {
     return (
         <div className='cell'
         style={{ 
-            backgroundImage: `url(${field.image})`,
+            backgroundImage: field.image ? `url(${field.image})` : '',
             backgroundColor: field.backColor || 'transparent',
+            transform: field.rotate && field.rotate > 0 ? `rotate(${field.rotate * 90}deg)` : 'none',
             opacity: field.moveNum !== undefined ? '0.5' : '1'
         }}
         onClick={() => { 

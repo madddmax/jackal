@@ -44,6 +44,8 @@ export const gameSlice = createSlice({
       changes.forEach(it => {
         const cell = state.fields[it.Y][it.X];
         cell.image = it.BackgroundImageSrc;
+        cell.backColor = it.BackgroundColor;
+        cell.rotate = it.Rotate;
       });
     },
     toggle: (state, action) => {

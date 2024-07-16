@@ -10,6 +10,7 @@ export interface GameState {
 export interface FieldState {
     image?: string;
     backColor?: string;
+    rotate?: number;
     moveNum?: number;
 }
 
@@ -41,6 +42,7 @@ export interface GameMap {
 interface GameCell {
     BackgroundImageSrc: string;
     BackgroundColor: string;
+    Rotate: number;
     X: number;
     Y: number;
 }
