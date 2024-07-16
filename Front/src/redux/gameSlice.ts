@@ -37,8 +37,16 @@ export const gameSlice = createSlice({
       if (action.payload.moves) {
         state.lastMoves = action.payload.moves;
       }
-      state.activePirate = action.payload.pirate;
-      state.lastMoves.filter(move => move.From.PirateNum == state.activePirate).forEach(move => {
+      if (action.payload.pirate) {
+        state.activePirate = action.payload.pirate;
+      }
+      if (action.payload.withCoin !== undefined) {
+        state.withCoin = action.payload.withCoin;
+      } else {
+        state.withCoin = state.lastMoves.filter(move => move.From.PirateNum == state.activePirate).some(move => move.WithCoin) || undefined;
+      }
+      
+      state.lastMoves.filter(move => move.From.PirateNum == state.activePirate && (!state.withCoin || move.WithCoin)).forEach(move => {
         const cell = state.fields[move.To.Y][move.To.X];
         cell.moveNum = move.MoveNum;
       });

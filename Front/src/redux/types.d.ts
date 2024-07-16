@@ -6,6 +6,7 @@ export interface GameState {
     fields: FieldState[][];
     lastMoves: GameMove[];
     activePirate: number;
+    withCoin?: boolean;
 }
 
 export interface FieldState {
@@ -80,6 +81,7 @@ interface AcceptableMove {
 }
 
 export interface PirateMoves {
-    pirate: number;
+    pirate?: number;
+    withCoin?: boolean;
     moves?: GameMove[];
 }

@@ -11,6 +11,7 @@ function Pirates() {
   const dispatch = useDispatch();
 
   const activePirate = useSelector<ReduxState, number>((state) => state.game.activePirate);
+  const withCoin = useSelector<ReduxState, boolean | undefined>((state) => state.game.withCoin);
 
   return (
     <>
@@ -23,6 +24,16 @@ function Pirates() {
       <Image src="/pictures/livsi.jpg" roundedCircle className={cn('photo float-end', {'photo-active': activePirate === 3 })}
         onClick={() => dispatch(highlightMoves({ pirate: 3 }))}
       />
+      {withCoin !== undefined && 
+        <div className="form-check float-end">
+          <input className="form-check-input" type="checkbox" value="" id="with-coin" checked={withCoin} onChange={() =>
+            dispatch(highlightMoves({ withCoin: !withCoin }))
+          }/>
+          <label className="form-check-label" htmlFor="with-coin">
+            с монетой
+          </label>
+        </div>
+      }
     </>  
   );
 }

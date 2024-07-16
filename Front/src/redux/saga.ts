@@ -53,7 +53,7 @@ export function* oneTurn(action: any) {
     );
 
     if (result.data.stat.IsHumanPlayer) {
-      yield put(highlightMoves({ pirate: 1, moves: result.data.moves }));
+      yield put(highlightMoves({ moves: result.data.moves }));
       yield put(applyChanges(result.data.changes));
       return false;
     }
