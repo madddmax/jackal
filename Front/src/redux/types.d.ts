@@ -3,6 +3,10 @@ export interface ReduxState {
 }
 
 export interface GameState {
+    stat?: GameStat;
+    gameName?: string;
+    mapId?: number;
+
     fields: FieldState[][];
     lastMoves: GameMove[];
     activePirate: number;
@@ -23,18 +27,36 @@ export interface GameStartResponse {
         gameName: string;
         mapId: number;
         map: GameMap;
-        stat: any;
+        stat: GameStat;
     }
 }
 
 export interface GameTurnResponse {
     data: {
         changes: GameCell[];
-        stat: {
-            IsHumanPlayer: boolean;
-        };
+        stat: GameStat;
         moves: GameMove[];
     }
+}
+
+export interface GameMainStat {
+    gameName: string;
+    mapId: number;
+}
+
+export interface GameStat {
+    TurnNo: number;
+    CurrentTeamId: number;
+    IsHumanPlayer: boolean;
+    IsGameOver: boolean;
+    Teams: GameTeamStat[];
+}
+
+interface GameTeamStat {
+    id: number;
+    name: string;
+    gold: number;
+    backcolor: string;
 }
 
 export interface GameMap {

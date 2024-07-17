@@ -14,7 +14,7 @@ function Layout() {
         <Row className='justify-content-center gap-1'>
           <Col xs={1} className={classes.pirates}><Pirates /></Col>
           <Col xs={7}><Map /></Col>
-          <Col xs={2}><Controls /></Col>
+          <Col xs={3}><Controls /></Col>
         </Row>
       </Container>
     );
