@@ -7,6 +7,7 @@ export interface GameState {
     lastMoves: GameMove[];
     activePirate: number;
     withCoin?: boolean;
+    lastPirate: number;
 }
 
 export interface FieldState {

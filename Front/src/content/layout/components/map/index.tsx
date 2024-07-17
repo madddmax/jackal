@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import Cell from './cell';
-import './map.css'
+import './map.less'
 
 import { GameState, ReduxState } from '/redux/types';
 

@@ -6,7 +6,8 @@ export const gameSlice = createSlice({
   initialState: {
     fields: [[]],
     lastMoves: [],
-    activePirate: 1
+    activePirate: 1,
+    lastPirate: 1
   } satisfies GameState as GameState,
   reducers: {
     initMap: (state, action) => {
@@ -37,20 +38,28 @@ export const gameSlice = createSlice({
       if (action.payload.moves) {
         state.lastMoves = action.payload.moves;
       }
+
+      state.activePirate = state.lastPirate;
       if (action.payload.pirate) {
         state.activePirate = action.payload.pirate;
+        state.lastPirate = action.payload.pirate;
+      } 
+      if (state.lastMoves.length > 0 && !state.lastMoves.some(move => move.From.PirateNum == state.activePirate)) {
+        state.activePirate = state.lastMoves[0].From.PirateNum;
       }
+
       if (action.payload.withCoin !== undefined) {
         state.withCoin = action.payload.withCoin;
       } else {
         state.withCoin = state.lastMoves.filter(move => move.From.PirateNum == state.activePirate).some(move => move.WithCoin) || undefined;
       }
-      
-      state.lastMoves.filter(move => move.From.PirateNum == state.activePirate && (!state.withCoin || move.WithCoin)).forEach(move => {
-        const cell = state.fields[move.To.Y][move.To.X];
-        cell.moveNum = move.MoveNum;
+
+      state.lastMoves.filter(move => move.From.PirateNum == state.activePirate &&
+        ((state.withCoin && move.WithCoin) || state.withCoin === undefined || (!state.withCoin && !move.WithCoin))).forEach(move => {
+          const cell = state.fields[move.To.Y][move.To.X];
+          cell.moveNum = move.MoveNum;
       });
-    },
+  },
     applyChanges: (state, action) => {
       let changes = action.payload as GameCell[];
       changes.forEach(it => {
