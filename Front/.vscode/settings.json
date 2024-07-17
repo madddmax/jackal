@@ -1,0 +1,15 @@
+{
+    "breadcrumbs.enabled": false,
+    "editor.formatOnSave": true,
+    "prettier.requireConfig": true,
+    "eslint.enable": true,
+    "eslint.validate": [],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "eslint.lintTask.options": "",
+    "eslint.useFlatConfig": false,
+    "editor.showUnused": false,
+    "[typescriptreact]": {
+        "javascript.preferences.importModuleSpecifier": "project-relative",
+        "typescript.preferences.importModuleSpecifier": "non-relative"
+    },
+}
