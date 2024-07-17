@@ -1,7 +1,11 @@
+@import '/app/constants.less';
+
+@map-size: @cell-size * 13 + 12;
+
 .map {
     display: table;
-    width: 662px;
-    height: 662px;
+    width: @map-size;
+    height: @map-size;
 }
 
 .map-cell {
@@ -12,7 +16,7 @@
      display: table-row;
 }
 
-.level-10 { position: absolute; width: 100%; z-index: 3; }
+.level-10 { position: absolute; width: @cell-size; z-index: 3; }
 
 .level-21 { position: absolute; margin-top: 35px; z-index: 3;}
 .level-20 { position: absolute; margin-left: 35px; z-index: 3;}

@@ -5,19 +5,24 @@ import Col from 'react-bootstrap/Col';
 import Pirates from './components/pirates';
 import Map from './components/map';
 import Controls from './components/controls';
-import classes from  './layout.module.less';
+import classes from './layout.module.less';
 
 function Layout() {
-
     return (
-      <Container>
-        <Row className='justify-content-center gap-1'>
-          <Col xs={1} className={classes.pirates}><Pirates /></Col>
-          <Col xs={7}><Map /></Col>
-          <Col xs={2}><Controls /></Col>
-        </Row>
-      </Container>
+        <Container>
+            <Row className="justify-content-center gap-1">
+                <Col xs={1} className={classes.pirates}>
+                    <Pirates />
+                </Col>
+                <Col xs={7}>
+                    <Map />
+                </Col>
+                <Col xs={3}>
+                    <Controls />
+                </Col>
+            </Row>
+        </Container>
     );
-  }
-  
-  export default Layout;
+}
+
+export default Layout;
