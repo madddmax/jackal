@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import './newgame.css';
+import classes from './newgame.module.less';
 import { useDispatch } from 'react-redux';
 import { sagaActions } from '/redux/saga';
 import { useNavigate } from 'react-router-dom';
@@ -53,19 +53,13 @@ function Newgame() {
         <Container>
             <Row className="justify-content-center">
                 <Form
+                    className={classes.newgame}
                     onSubmit={(event) => newStart(event)}
-                    style={{
-                        width: '100%',
-                        maxWidth: '500px',
-                        textAlign: 'left',
-                        backgroundColor: 'white',
-                        padding: '15px',
-                    }}
                 >
-                    <h3>Новая игра</h3>
-                    <div className="settings">
+                    {/* <h3>Новая игра</h3> */}
+                    <div className={classes.settings}>
                         <div
-                            className="player"
+                            className={classes.player}
                             onClick={() => changePlayer(0)}
                             style={{
                                 top: '200px',
@@ -74,7 +68,7 @@ function Newgame() {
                             }}
                         ></div>
                         <div
-                            className="player"
+                            className={classes.player}
                             onClick={() => changePlayer(1)}
                             style={{
                                 top: '100px',
@@ -83,7 +77,7 @@ function Newgame() {
                             }}
                         ></div>
                         <div
-                            className="player"
+                            className={classes.player}
                             onClick={() => changePlayer(2)}
                             style={{
                                 top: '0px',
@@ -92,7 +86,7 @@ function Newgame() {
                             }}
                         ></div>
                         <div
-                            className="player"
+                            className={classes.player}
                             onClick={() => changePlayer(3)}
                             style={{
                                 top: '100px',

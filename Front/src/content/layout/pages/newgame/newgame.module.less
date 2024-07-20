@@ -1,3 +1,13 @@
+@import '/content/layout/layout.module.less';
+
+.newgame {
+    &:extend(.ui-panel all);
+    &:after {
+        content: 'Новая игра';
+    }
+    max-width: 500px !important;
+}
+
 .settings {
     width: 250px !important;
     height: 250px;
