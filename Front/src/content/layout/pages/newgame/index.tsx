@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { sagaActions } from '/redux/saga';
 import { useNavigate } from 'react-router-dom';
 import { uuidGen } from '/app/global';
+import cn from 'classnames';
 
 function Newgame() {
     const dispatch = useDispatch();
@@ -58,7 +59,7 @@ function Newgame() {
                     onSubmit={(event) => newStart(event)}
                 >
                     {/* <h3>Новая игра</h3> */}
-                    <div className={classes.settings}>
+                    <div className={cn(classes.settings, 'mx-auto')}>
                         <div
                             className={classes.player}
                             onClick={() => changePlayer(0)}

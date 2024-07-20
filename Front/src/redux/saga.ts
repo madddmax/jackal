@@ -71,6 +71,10 @@ export function* oneTurn(action: any) {
                     data: action.payload,
                 }),
         );
+        if (result.data.stat.IsGameOver) {
+            yield put(applyStat(result.data.stat));
+            return false;
+        }
 
         if (result.data.stat.IsHumanPlayer) {
             yield put(highlightMoves({ moves: result.data.moves }));

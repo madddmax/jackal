@@ -1,7 +1,8 @@
 import { useSelector } from 'react-redux';
 import cn from 'classnames';
 import classes from './controls.module.less';
-import { GameStat, ReduxState } from '/redux/types';
+import { GameStat, GameTeamStat, ReduxState } from '/redux/types';
+import { Alert } from 'react-bootstrap';
 
 function Controls() {
     const stat = useSelector<ReduxState, GameStat | undefined>(
@@ -13,6 +14,20 @@ function Controls() {
     const gamecode = useSelector<ReduxState, number | undefined>(
         (state) => state.game.mapId,
     );
+
+    const getWinner = (stats: GameStat) => {
+        var maxgold = 0;
+        let winner = '';
+        stats?.Teams.forEach((team: GameTeamStat) => {
+            if (team.gold > maxgold) {
+                maxgold = team.gold;
+                winner = team.name;
+            } else if (team.gold == maxgold) {
+                winner += ' и ' + team.name;
+            }
+        });
+        return winner;
+    };
 
     return (
         <>
@@ -40,6 +55,12 @@ function Controls() {
                         ))}
                 </div>
             </div>
+
+            {stat?.IsGameOver && (
+                <Alert variant={'danger'} className="my-2">
+                    Игра закончена. Победил {getWinner(stat)}'
+                </Alert>
+            )}
         </>
     );
 }
