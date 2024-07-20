@@ -6,6 +6,7 @@ import classes from './newgame.module.less';
 import { useDispatch } from 'react-redux';
 import { sagaActions } from '/redux/saga';
 import { useNavigate } from 'react-router-dom';
+import { uuidGen } from '/app/global';
 
 function Newgame() {
     const dispatch = useDispatch();
@@ -19,7 +20,7 @@ function Newgame() {
     ]);
 
     const [randNumber, setRandNumber] = useState(() =>
-        crypto.getRandomValues(new Uint32Array(1)),
+        crypto.getRandomValues(new Int32Array(1)),
     );
 
     const getUrlByPlayer = (play: string) => {
@@ -43,8 +44,8 @@ function Newgame() {
         dispatch({
             type: sagaActions.GAME_START,
             payload: {
-                gameName: 'afc9847e-dce9-497d-bac8-767c3d571b48',
-                settings: JSON.stringify({ players, mapId: randNumber[0] }),
+                gameName: uuidGen(),
+                settings: { players, mapId: randNumber[0] },
             },
         });
     };
@@ -108,7 +109,7 @@ function Newgame() {
                             placeholder="Введите код"
                             value={randNumber[0]}
                             onChange={(event) => {
-                                let clone = new Uint32Array(1);
+                                let clone = new Int32Array(1);
                                 clone[0] = Number(event.target.value);
                                 setRandNumber(clone);
                             }}

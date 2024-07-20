@@ -56,17 +56,25 @@ namespace JackalWebHost.Controllers
         /// </summary>
         public JsonResult MakeStart([FromBody] StartGameModel request)
         {
-            return Start(request.GameName, request.Settings);
+            return InnerStart(request.GameName, request.Settings);
+        }
+
+        /// <summary>
+        /// Старый запуск игры
+        /// TODO: удалить в будущем
+        /// </summary>
+        public JsonResult Start(string gameName, string settings)
+        {
+            var gameSettings = JsonHelper.DeserialiazeWithType<GameSettings>(settings);
+            return InnerStart(gameName, gameSettings);
         }
 
         /// <summary>
         /// Запуск игры
         /// </summary>
-        public JsonResult Start(string gameName, string settings)
+        private JsonResult InnerStart(string gameName, GameSettings gameSettings)
         {
             GameState gameState = new GameState();
-
-            var gameSettings = JsonHelper.DeserialiazeWithType<GameSettings>(settings);
 
             IPlayer[] gamePlayers = new IPlayer[4];
             int index = 0;

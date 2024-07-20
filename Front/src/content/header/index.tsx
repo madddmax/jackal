@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { sagaActions } from '/redux/saga';
 import './header.css';
 import { Link } from 'react-router-dom';
+import { uuidGen } from '/app/global';
 
 function Header() {
     const dispatch = useDispatch();
@@ -14,8 +15,10 @@ function Header() {
         dispatch({
             type: sagaActions.GAME_START,
             payload: {
-                gameName: 'afc9847e-dce9-497d-bac8-767c3d571b48',
-                settings: '{"players":["human","robot2","robot2","robot2"]}',
+                gameName: uuidGen(),
+                settings: {
+                    players: ['human', 'robot2', 'robot2', 'robot2'],
+                },
             },
         });
 

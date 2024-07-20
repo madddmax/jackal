@@ -14,6 +14,9 @@ function Cell(props: CellProps) {
     const field = useSelector<ReduxState, FieldState>(
         (state) => state.game.fields[row][col],
     );
+    const gamename = useSelector<ReduxState, string | undefined>(
+        (state) => state.game.gameName,
+    );
     const dispatch = useDispatch();
 
     return (
@@ -34,8 +37,7 @@ function Cell(props: CellProps) {
                         dispatch({
                             type: sagaActions.GAME_TURN,
                             payload: {
-                                gameName:
-                                    'afc9847e-dce9-497d-bac8-767c3d571b48',
+                                gameName: gamename,
                                 turnNum: field.moveNum,
                             },
                         });
