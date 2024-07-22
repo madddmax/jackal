@@ -1,8 +1,10 @@
-﻿namespace JackalWebHost2.Models.Requests
+﻿using JackalWebHost.Models;
+
+namespace JackalWebHost2.Models.Requests
 {
     public class StartGameModel
     {
         public string GameName { get; set; }
-        public string Settings { get; set; }
+        public GameSettings Settings { get; set; }
     }
 }
