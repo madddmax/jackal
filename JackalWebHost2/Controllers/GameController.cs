@@ -48,7 +48,8 @@ namespace JackalWebHost.Controllers
         /// </summary>
         public ActionResult Index()
         {
-            return View("Index");
+            var html = System.IO.File.ReadAllText(@"./wwwroot/dist/index.html");
+            return base.Content(html, "text/html");
         }
 
         /// <summary>
