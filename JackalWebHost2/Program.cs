@@ -43,6 +43,16 @@ namespace JackalWebHost2
                 options.Cookie.IsEssential = true;
             });
 
+            var allOrigins = "AllOrigins";
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: allOrigins,
+                    act =>
+                    {
+                        act.AllowAnyOrigin();
+                    });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -57,6 +67,7 @@ namespace JackalWebHost2
                 //app.UseHsts();
             }
 
+            app.UseCors(allOrigins);
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseOptions();
