@@ -50,6 +50,8 @@ namespace JackalWebHost2
                     act =>
                     {
                         act.AllowAnyOrigin();
+                        act.AllowAnyMethod();
+                        act.AllowAnyHeader();
                     });
             });
 
