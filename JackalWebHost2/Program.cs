@@ -43,42 +43,18 @@ namespace JackalWebHost2
                 options.Cookie.IsEssential = true;
             });
 
-            var devOrigins = "DevOrigins";
-            var prodOrigins = "ProdOrigins";
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy(name: devOrigins,
-                    act =>
-                    {
-                        act.WithOrigins(new[]{"http://localhost:5173"});
-                        act.AllowAnyHeader();
-                        act.AllowAnyMethod();
-                        act.AllowCredentials();
-                    });
-                options.AddPolicy(name: prodOrigins,
-                    act =>
-                    {
-                        act.WithOrigins("http://116.203.101.2");
-                        act.AllowAnyHeader();
-                        act.AllowAnyMethod();
-                        act.AllowCredentials();
-                    });
-            });
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
-                app.UseCors(devOrigins);
             }
             else
             {
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 //app.UseHsts();
-                app.UseCors(prodOrigins);
             }
 
             //app.UseHttpsRedirection();
