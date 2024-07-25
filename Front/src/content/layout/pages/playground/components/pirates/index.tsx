@@ -19,7 +19,7 @@ function Pirates() {
     return (
         <>
             <Image
-                src="/pictures/smallet.jpg"
+                src="/pictures/pirate_1.png"
                 roundedCircle
                 className={cn('photo float-end', {
                     'photo-active': activePirate === 1,
@@ -27,7 +27,7 @@ function Pirates() {
                 onClick={() => dispatch(highlightMoves({ pirate: 1 }))}
             />
             <Image
-                src="/pictures/gokins.jpg"
+                src="/pictures/pirate_2.png"
                 roundedCircle
                 className={cn('photo float-end', {
                     'photo-active': activePirate === 2,
@@ -35,7 +35,7 @@ function Pirates() {
                 onClick={() => dispatch(highlightMoves({ pirate: 2 }))}
             />
             <Image
-                src="/pictures/livsi.jpg"
+                src="/pictures/pirate_3.png"
                 roundedCircle
                 className={cn('photo float-end', {
                     'photo-active': activePirate === 3,
