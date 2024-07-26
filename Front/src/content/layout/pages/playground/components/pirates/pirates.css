@@ -1,12 +1,11 @@
-
 .photo {
     width: 100px;
     height: 100px;
-    border: 3px white solid;
+    border: 3px gray solid;
     margin-bottom: 10px;
     cursor: pointer;
 }
 
 .photo-active {
-    border: 3px red solid;
+    border: 6px coral solid;
 }
