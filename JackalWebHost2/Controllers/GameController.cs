@@ -77,7 +77,7 @@ namespace JackalWebHost.Controllers
         {
             GameState gameState = new GameState();
 
-            IPlayer[] gamePlayers = new IPlayer[4];
+            IPlayer[] gamePlayers = new IPlayer[gameSettings.Players.Length];
             int index = 0;
 
             foreach (var pl in gameSettings.Players)
@@ -96,7 +96,7 @@ namespace JackalWebHost.Controllers
                 }
             }
 
-            while (index < 4)
+            while (index < gameSettings.Players.Length)
             {
                 gamePlayers[index++] = new SmartPlayer();
             }

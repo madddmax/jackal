@@ -17,7 +17,7 @@ function Header() {
             payload: {
                 gameName: uuidGen(),
                 settings: {
-                    players: ['human', 'robot2', 'robot2', 'robot2'],
+                    players: ['human', 'robot2'],
                 },
             },
         });
