@@ -13,6 +13,7 @@ function Newgame() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const [playersCount, setplayersCount] = useState(4);
     const [players, setPlayers] = useState([
         'human',
         'robot2',
@@ -40,15 +41,23 @@ function Newgame() {
 
     const newStart = (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('values', players, randNumber);
         navigate('/');
         dispatch({
             type: sagaActions.GAME_START,
             payload: {
                 gameName: uuidGen(),
-                settings: { players, mapId: randNumber[0] },
+                settings: {
+                    players: getPlayers(players, playersCount),
+                    mapId: randNumber[0],
+                },
             },
         });
+    };
+
+    const getPlayers = (gamers: string[], count: number): string[] => {
+        if (count == 1) return [gamers[0]];
+        else if (count == 2) return [gamers[0], gamers[2]];
+        else return gamers;
     };
 
     return (
@@ -75,6 +84,7 @@ function Newgame() {
                             style={{
                                 top: '100px',
                                 left: '0px',
+                                display: playersCount == 4 ? 'block' : 'none',
                                 backgroundImage: `url(${getUrlByPlayer(players[1])})`,
                             }}
                         ></div>
@@ -84,6 +94,7 @@ function Newgame() {
                             style={{
                                 top: '0px',
                                 left: '100px',
+                                display: playersCount != 1 ? 'block' : 'none',
                                 backgroundImage: `url(${getUrlByPlayer(players[2])})`,
                             }}
                         ></div>
@@ -93,14 +104,39 @@ function Newgame() {
                             style={{
                                 top: '100px',
                                 left: '200px',
+                                display: playersCount == 4 ? 'block' : 'none',
                                 backgroundImage: `url(${getUrlByPlayer(players[3])})`,
                             }}
                         ></div>
+                        <div
+                            className={classes.player}
+                            onClick={() =>
+                                setplayersCount((prev) => {
+                                    if (prev == 4) return 1;
+                                    else if (prev == 1) return 2;
+                                    return 4;
+                                })
+                            }
+                            style={{
+                                top: '100px',
+                                left: '100px',
+                                fontSize: '48px',
+                                lineHeight: '48px',
+                                textAlign: 'center',
+                            }}
+                        >
+                            {playersCount}
+                        </div>
                     </div>
                     <Form.Control
                         type="hidden"
                         name="players"
                         value={players}
+                    />
+                    <Form.Control
+                        type="hidden"
+                        name="playersCount"
+                        value={playersCount}
                     />
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Код карты</Form.Label>
