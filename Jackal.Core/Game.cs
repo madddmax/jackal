@@ -191,7 +191,7 @@ namespace Jackal.Core
 
         public int CurrentTeamId
         {
-            get { return TurnNo%4; }
+            get { return TurnNo % _players.Length; }
         }
 
         public IPlayer CurrentPlayer

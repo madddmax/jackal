@@ -60,17 +60,37 @@ namespace Jackal.Core
             Generator = new MapGenerator(mapId);
             Map = new Map();
             InitMap();
+            InitTeams(players);
+        }
 
-            Teams = new Team[4];
-            InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0);
-            InitTeam(1, players[1].GetType().Name, 0, (Size - 1) / 2);
-            InitTeam(2, players[2].GetType().Name, (Size - 1) / 2, (Size - 1));
-            InitTeam(3, players[3].GetType().Name, (Size - 1), (Size - 1) / 2);
-
-            Teams[0].Enemies = new[] {1, 2, 3};
-            Teams[1].Enemies = new[] {0, 2, 3};
-            Teams[2].Enemies = new[] {0, 1, 3};
-            Teams[3].Enemies = new[] {0, 1, 2};
+        private void InitTeams(IPlayer[] players)
+        {
+            Teams = new Team[players.Length];
+            switch (players.Length)
+            {
+                case 1:
+                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0);
+                    Teams[0].Enemies = [];
+                    break;
+                case 2:
+                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0);
+                    InitTeam(1, players[1].GetType().Name, (Size - 1) / 2, (Size - 1));
+                    Teams[0].Enemies = [1];
+                    Teams[1].Enemies = [0];
+                    break;
+                case 4:
+                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0);
+                    InitTeam(1, players[1].GetType().Name, 0, (Size - 1) / 2);
+                    InitTeam(2, players[2].GetType().Name, (Size - 1) / 2, (Size - 1));
+                    InitTeam(3, players[3].GetType().Name, (Size - 1), (Size - 1) / 2);
+                    Teams[0].Enemies = [1, 2, 3];
+                    Teams[1].Enemies = [0, 2, 3];
+                    Teams[2].Enemies = [0, 1, 3];
+                    Teams[3].Enemies = [0, 1, 2];
+                    break;
+                default:
+                    throw new NotSupportedException("Only one player, two players or four");
+            }
         }
 
         private void InitMap()
