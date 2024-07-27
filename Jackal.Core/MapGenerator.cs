@@ -6,7 +6,7 @@ namespace Jackal.Core
 {
     public class MapGenerator
     {
-        public const int Size = 11;
+        public const int Size = Board.Size - 2;
         public const int TotalCoins = 37;
 
         public readonly int MapId;

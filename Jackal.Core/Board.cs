@@ -8,7 +8,7 @@ namespace Jackal.Core
 {
     public class Board
     {
-        public const int Size = 13;
+        public const int Size = 11;
 
         [JsonIgnore]
         internal MapGenerator Generator;
@@ -51,6 +51,9 @@ namespace Jackal.Core
             }
         }
 
+        /// <summary>
+        /// Используется для десериализации
+        /// </summary>
         public Board()
         {
         }
@@ -485,14 +488,14 @@ namespace Jackal.Core
 
         public static IEnumerable<Position> GetShipPosibleNavaigations(Position pos)
         {
-            if (pos.X == 0 || pos.X==12)
+            if (pos.X == 0 || pos.X == Size - 1)
             {
                 if (pos.Y>2)
                     yield return new Position(pos.X,pos.Y-1);
                 if (pos.Y<10)
                     yield return new Position(pos.X,pos.Y+1);
             }
-            else if (pos.Y == 0 || pos.Y==12)
+            else if (pos.Y == 0 || pos.Y == Size - 1)
             {
                 if (pos.X>2)
                     yield return new Position(pos.X-1,pos.Y);
@@ -507,28 +510,24 @@ namespace Jackal.Core
 
         public static Position GetShipLanding(Position pos)
         {
-            if (pos.X == 0)
+            switch (pos.X)
             {
-                return new Position(1, pos.Y );
-            }
-            else if (pos.X == 12)
-            {
-                return new Position(11, pos.Y);
-            }
-            else if (pos.Y == 0)
-            {
-                return new Position(pos.X,1);
-            }
-            else if (pos.Y == 12)
-            {
-                return new Position(pos.X, 11);
-            }
-            else
-            {
-                throw new Exception("wrong ship position");
+                case 0:
+                    return new Position(1, pos.Y );
+                case Size - 1:
+                    return new Position(Size - 2, pos.Y);
+                default:
+                {
+                    if (pos.Y == 0)
+                        return new Position(pos.X,1);
+
+                    if (pos.Y == Size - 1)
+                        return new Position(pos.X, Size - 2);
+
+                    throw new Exception("wrong ship position");
+                }
             }
         }
-
 
 		public static Position GetCannonFly(int arrowsCode, Position pos)
 		{
@@ -572,16 +571,15 @@ namespace Jackal.Core
             }
             return false;
         }
-
-
+        
         public static IEnumerable<Position> GetAllEarth()
         {
-            for (int x = 1; x <= 11; x++)
+            for (int x = 1; x <= Size - 2; x++)
             {
-                for (int y = 1; y <= 11; y++)
+                for (int y = 1; y <= Size - 2; y++)
                 {
                     Position val = new Position(x, y);
-                    if (Utils.InCorners(val, 1, 11) == false)
+                    if (Utils.InCorners(val, 1, Size - 2) == false)
                     {
                         yield return val;
                     }

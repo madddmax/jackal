@@ -7,6 +7,8 @@ namespace Jackal.Core
     /// </summary>
     public class TilesPack
     {
+        private static int Total => MapGenerator.Size * MapGenerator.Size - 4;
+        
         private TilesPack()
         {
             Fill();
@@ -16,7 +18,10 @@ namespace Jackal.Core
         {
             for (int i = 1; i <= count; i++)
             {
-                var def = new TileParams() {Type=TileType.Arrow,ArrowsCode = arrowsCode};
+                if (_list.Count == Total)
+                    return;
+
+                var def = new TileParams { Type = TileType.Arrow, ArrowsCode = arrowsCode };
                 _list.Add(def);
             }
         }
@@ -25,7 +30,10 @@ namespace Jackal.Core
         {
             for (int i = 1; i <= count; i++)
             {
-                var def = new TileParams(){Type=TileType.Spinning,SpinningCount = spirnningCount};
+                if (_list.Count == Total)
+                    return;
+
+                var def = new TileParams { Type = TileType.Spinning, SpinningCount = spirnningCount };
                 _list.Add(def);
             }
         }
@@ -34,17 +42,18 @@ namespace Jackal.Core
         {
             for (int i = 1; i <= count; i++)
             {
-                var def = new TileParams() {Type = tileType};
+                if (_list.Count == Total)
+                    return;
+
+                var def = new TileParams { Type = tileType };
                 _list.Add(def);
             }
         }
 
         private void Fill()
         {
-            const int total = MapGenerator.Size*MapGenerator.Size - 4;
-            _list = new List<TileParams>(total);
-
-
+            _list = new List<TileParams>(Total);
+            
             AddDef(TileType.Chest1, 5);
             AddDef(TileType.Chest2, 5);
             AddDef(TileType.Chest3, 3);
@@ -75,7 +84,7 @@ namespace Jackal.Core
 
             AddDef(TileType.Canibal, 1);
 
-            while (_list.Count < total)
+            while (_list.Count < Total)
             {
                 AddDef(TileType.Grass);
             }
