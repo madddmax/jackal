@@ -7,8 +7,16 @@ import { GameState, ReduxState } from '/redux/types';
 function Map() {
     const game = useSelector<ReduxState, GameState>((state) => state.game);
 
+    const mapSize = 51 * game.fields.length - 1;
+
     return (
-        <div className="map">
+        <div
+            className="map"
+            style={{
+                width: mapSize,
+                height: mapSize,
+            }}
+        >
             {game.fields.map((row, rIndex) => (
                 <div
                     className="map-row"
