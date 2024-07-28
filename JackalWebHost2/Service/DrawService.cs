@@ -6,10 +6,6 @@ namespace JackalWebHost.Service
 {
     public class DrawService
     {
-
-        public const int Width = 100;
-        public const int Height = 100;
-
         public List<TileChange> Draw(Board board, Board prevBoard)
         {
             var ships = board.Teams.Select(item => item.Ship).ToList();
@@ -47,20 +43,11 @@ namespace JackalWebHost.Service
                 }
             }
 
-            /*
-            var diffPositions = new List<Position>();
-            foreach (var pirates in diffPiratesList)
-            {
-                diffPositions.AddRange(pirates.Select(item => item.Position.Position).ToList());
-            }
-            */
-
-
             List<TileChange> changes = new List<TileChange>();
 
-            for (int y = 0; y < Board.Size; y++)
+            for (int y = 0; y < board.Size; y++)
             {
-                for (int x = 0; x < Board.Size; x++)
+                for (int x = 0; x < board.Size; x++)
                 {
                     var tile = board.Map[x, y];
                     var prevTile = prevBoard.Map[x, y];
@@ -111,7 +98,6 @@ namespace JackalWebHost.Service
             };
         }
 
-
         public List<DrawMove> GetAvailableMoves(Game game)
         {
             List<DrawMove> result = new List<DrawMove>();
@@ -156,9 +142,9 @@ namespace JackalWebHost.Service
             List<TileChange> changes = new List<TileChange>();
 
             var ships = board.Teams.Select(item => item.Ship).ToList();
-            for (int y = 0; y < Board.Size; y++)
+            for (int y = 0; y < board.Size; y++)
             {
-                for (int x = 0; x < Board.Size; x++)
+                for (int x = 0; x < board.Size; x++)
                 {
                     var tile = board.Map[x, y];
                     var chg = Draw(tile, ships);
@@ -169,8 +155,8 @@ namespace JackalWebHost.Service
             }
 
             return new DrawMap{
-                Width = Board.Size,
-                Height = Board.Size,
+                Width = board.Size,
+                Height = board.Size,
                 Changes = changes
             };
         }
@@ -202,8 +188,6 @@ namespace JackalWebHost.Service
 
             return tileElement;
         }
-
-
 
         private LevelChange DrawPiratesAndCoins(TileLevel level, int levelIndex, int levelCount, Ship tileShip)
         {
@@ -253,12 +237,6 @@ namespace JackalWebHost.Service
             {
                 return;
             }
-
-            // после открытия поля - фон не меняется
-            //if (type != TileType.Unknown)
-            //{
-              //  return;
-            //}
 
             int rotateCount = 0;
 
@@ -358,8 +336,7 @@ namespace JackalWebHost.Service
             tileChange.BackgroundImageSrc = relativePath;
             tileChange.Rotate = rotateCount;
         }
-
-
+        
         public static string GetTeamColor(int teamId)
         {
             switch (teamId)
@@ -371,8 +348,5 @@ namespace JackalWebHost.Service
                 default: return null;
             }
         }
-
-
-
     }
 }

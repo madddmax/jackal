@@ -2,10 +2,10 @@ using Newtonsoft.Json;
 
 namespace Jackal.Core
 {
-    public class Map
+    public class Map(int mapSize)
     {
         [JsonProperty] 
-        private readonly Tile[,] Tiles = new Tile[Board.Size, Board.Size];
+        private readonly Tile[,] Tiles = new Tile[mapSize, mapSize];
 
         [JsonProperty] 
         public bool AirplaneUsed;

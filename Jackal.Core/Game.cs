@@ -33,7 +33,7 @@ namespace Jackal.Core
             {
                 Scores[team.Id] = 0;
             }
-            CoinsLeft = Board.CoinsOnMap;
+            CoinsLeft = Board.Generator.CoinsOnMap;
 
             _availableMoves = new List<Move>();
             _actions = new List<IGameAction>();

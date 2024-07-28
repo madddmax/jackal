@@ -70,7 +70,7 @@ namespace Jackal.Core.GameOrganizer
             Results.GamesCount++;
 
             var players = currentPlayers.Select(x => x.Player).ToArray();
-            var _board = new Board(players, _mapId);
+            var _board = new Board(players, _mapId, 13);
             var game = new Game(players, _board);
 
             while (game.IsGameOver == false)

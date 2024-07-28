@@ -9,14 +9,19 @@ namespace Jackal.Core
         public readonly int MapId;
         private readonly Random _rand;
         private readonly Dictionary<Position,Tile> _tiles;
+        
+        public readonly int CoinsOnMap;
 
-        public MapGenerator(int mapId)
+        public MapGenerator(int mapId, int mapSize)
         {
             MapId = mapId;
             _rand = new Random(MapId + 5000000);
 
-            var pack = Shuffle(TilesPack.Instance.List);
-            var positions = Board.GetAllEarth().ToList();
+            var tilesPack = new TilesPack(mapSize);
+            CoinsOnMap = tilesPack.CoinsOnMap;
+            
+            var pack = Shuffle(tilesPack.List);
+            var positions = GetAllEarth(mapSize).ToList();
 
             if (pack.Count != positions.Count)
                 throw new Exception("wrong tiles pack count");
@@ -53,6 +58,21 @@ namespace Jackal.Core
                 .ToList();
         }
 
+        private static IEnumerable<Position> GetAllEarth(int mapSize)
+        {
+            for (int x = 1; x <= mapSize - 2; x++)
+            {
+                for (int y = 1; y <= mapSize - 2; y++)
+                {
+                    Position val = new Position(x, y);
+                    if (Utils.InCorners(val, 1, mapSize - 2) == false)
+                    {
+                        yield return val;
+                    }
+                }
+            }
+        }
+        
         public Tile GetNext(Position position)
         {
             return _tiles[position];

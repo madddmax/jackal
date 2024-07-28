@@ -4,5 +4,7 @@
     {
         public string[] Players { get; set; } = null!;
         public int? MapId { get; set; }
+        
+        public int? MapSize { get; set; }
     }
 }

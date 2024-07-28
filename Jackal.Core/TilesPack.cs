@@ -7,10 +7,15 @@ namespace Jackal.Core
     /// </summary>
     public class TilesPack
     {
-        private const int TotalTiles = Board.LandSize * Board.LandSize - 4;
+        private readonly int TotalTiles;
+
+        public int CoinsOnMap { get; private set; }
         
-        private TilesPack()
+        public TilesPack(int mapSize)
         {
+            int landSize = mapSize - 2;
+            TotalTiles = landSize * landSize - 4;
+            
             Fill();
         }
 
@@ -52,8 +57,8 @@ namespace Jackal.Core
             }
         }
 
-        private static void UpdateCoinsOnMap(TileType tileType) =>
-            Board.CoinsOnMap += tileType switch
+        private void UpdateCoinsOnMap(TileType tileType) =>
+            CoinsOnMap += tileType switch
             {
                 TileType.Chest1 => 1,
                 TileType.Chest2 => 2,
@@ -65,6 +70,7 @@ namespace Jackal.Core
 
         private void Fill()
         {
+            CoinsOnMap = 0;
             _list = new List<TileParams>(TotalTiles);
             
             AddDef(TileType.Chest1, 5);
@@ -112,7 +118,5 @@ namespace Jackal.Core
                 return _list;
             }
         }
-
-        public static readonly TilesPack Instance = new TilesPack();
     }
 }

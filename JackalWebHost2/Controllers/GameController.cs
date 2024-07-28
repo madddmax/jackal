@@ -61,16 +61,6 @@ namespace JackalWebHost.Controllers
         }
 
         /// <summary>
-        /// Старый запуск игры
-        /// TODO: удалить в будущем
-        /// </summary>
-        public JsonResult Start(string gameName, string settings)
-        {
-            var gameSettings = JsonHelper.DeserialiazeWithType<GameSettings>(settings);
-            return InnerStart(gameName, gameSettings);
-        }
-
-        /// <summary>
         /// Запуск игры
         /// </summary>
         private JsonResult InnerStart(string gameName, GameSettings gameSettings)
@@ -80,20 +70,14 @@ namespace JackalWebHost.Controllers
             IPlayer[] gamePlayers = new IPlayer[gameSettings.Players.Length];
             int index = 0;
 
-            foreach (var pl in gameSettings.Players)
+            foreach (var player in gameSettings.Players)
             {
-                switch (pl)
+                gamePlayers[index++] = player switch
                 {
-                    case "robot":
-                        gamePlayers[index++] = new SmartPlayer();
-                        break;
-                    case "human":
-                        gamePlayers[index++] = new WebHumanPlayer();
-                        break;
-                    default:
-                        gamePlayers[index++] = new SmartPlayer2();
-                        break;
-                }
+                    "robot" => new SmartPlayer(),
+                    "human" => new WebHumanPlayer(),
+                    _ => new SmartPlayer2()
+                };
             }
 
             while (index < gameSettings.Players.Length)
@@ -104,7 +88,7 @@ namespace JackalWebHost.Controllers
             if (!gameSettings.MapId.HasValue)
                 gameSettings.MapId = new Random().Next();
 
-            gameState.board = new Board(gamePlayers, gameSettings.MapId.Value);
+            gameState.board = new Board(gamePlayers, gameSettings.MapId.Value, gameSettings.MapSize ?? 5);
             gameState.game = new Game(gamePlayers, gameState.board);
 
             _gamesSessionsCache.Set(gameName, gameState, _cacheEntryOptions);
@@ -119,8 +103,7 @@ namespace JackalWebHost.Controllers
                 stat = service.GetStatistics(gameState.game)
             }, _options);
         }
-
-
+        
         /// <summary>
         /// Ход игры
         /// </summary>

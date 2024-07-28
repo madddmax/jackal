@@ -11,11 +11,7 @@ namespace Jackal.Core
         /// <summary>
         /// Размер стороны поля с учетом воды, min = 5 max = 13
         /// </summary>
-        public const int Size = 11;
-        
-        public const int LandSize = Size - 2;
-        
-        public static int CoinsOnMap;
+        public readonly int Size;
 
         [JsonIgnore]
         internal MapGenerator Generator;
@@ -65,10 +61,14 @@ namespace Jackal.Core
         {
         }
 
-        public Board(IPlayer[] players, int mapId)
+        public Board(IPlayer[] players, int mapId, int mapSize)
         {
-            Generator = new MapGenerator(mapId);
-            Map = new Map();
+            if (mapSize is < 5 or > 13)
+                throw new ArgumentException("mapSize is >= 5 and <= 13");
+
+            Size = mapSize;
+            Generator = new MapGenerator(mapId, mapSize);
+            Map = new Map(mapSize);
             InitMap();
             InitTeams(players);
         }
@@ -478,8 +478,7 @@ namespace Jackal.Core
                 yield return new Position(pos.X + x, pos.Y + deltaY);
             }
         }
-
-
+        
         public static IEnumerable<Position> GetNearDeltas(Position pos)
         {
             for (int x = -1; x <= 1; x++)
@@ -492,16 +491,16 @@ namespace Jackal.Core
             }
         }
 
-        public static bool IsValidMapPosition(Position pos)
+        public bool IsValidMapPosition(Position pos)
         {
             return (
-                pos.X >= 0 && pos.X < Board.Size
-                && pos.Y >= 0 && pos.Y < Board.Size //попадаем в карту
-                && Utils.InCorners(pos, 0, Board.Size - 1) == false //не попадаем в углы карты
-                );
+                pos.X >= 0 && pos.X < Size
+                           && pos.Y >= 0 && pos.Y < Size //попадаем в карту
+                           && Utils.InCorners(pos, 0, Size - 1) == false //не попадаем в углы карты
+            );
         }
 
-        public static IEnumerable<Position> GetShipPosibleNavaigations(Position pos)
+        public IEnumerable<Position> GetShipPosibleNavaigations(Position pos)
         {
             if (pos.X == 0 || pos.X == Size - 1)
             {
@@ -523,28 +522,24 @@ namespace Jackal.Core
             }
         }
 
-        public static Position GetShipLanding(Position pos)
+        public Position GetShipLanding(Position pos)
         {
-            switch (pos.X)
-            {
-                case 0:
-                    return new Position(1, pos.Y );
-                case Size - 1:
-                    return new Position(Size - 2, pos.Y);
-                default:
-                {
-                    if (pos.Y == 0)
-                        return new Position(pos.X,1);
+            if (pos.X == 0)
+                return new Position(1, pos.Y);
 
-                    if (pos.Y == Size - 1)
-                        return new Position(pos.X, Size - 2);
+            if (pos.X == Size - 1)
+                return new Position(Size - 2, pos.Y);
 
-                    throw new Exception("wrong ship position");
-                }
-            }
+            if (pos.Y == 0)
+                return new Position(pos.X, 1);
+
+            if (pos.Y == Size - 1)
+                return new Position(pos.X, Size - 2);
+
+            throw new Exception("wrong ship position");
         }
 
-		public static Position GetCannonFly(int arrowsCode, Position pos) =>
+        public Position GetCannonFly(int arrowsCode, Position pos) =>
             arrowsCode switch
             {
                 // вверх
@@ -585,21 +580,6 @@ namespace Jackal.Core
                 }
             }
             return false;
-        }
-        
-        public static IEnumerable<Position> GetAllEarth()
-        {
-            for (int x = 1; x <= Size - 2; x++)
-            {
-                for (int y = 1; y <= Size - 2; y++)
-                {
-                    Position val = new Position(x, y);
-                    if (Utils.InCorners(val, 1, Size - 2) == false)
-                    {
-                        yield return val;
-                    }
-                }
-            }
         }
     }
 }
