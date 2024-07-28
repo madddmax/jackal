@@ -12,6 +12,10 @@ namespace Jackal.Core
         /// Размер стороны поля с учетом воды, min = 5 max = 13
         /// </summary>
         public const int Size = 11;
+        
+        public const int LandSize = Size - 2;
+        
+        public static int CoinsOnMap;
 
         [JsonIgnore]
         internal MapGenerator Generator;

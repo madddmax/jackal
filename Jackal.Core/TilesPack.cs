@@ -7,7 +7,7 @@ namespace Jackal.Core
     /// </summary>
     public class TilesPack
     {
-        private static int Total => MapGenerator.Size * MapGenerator.Size - 4;
+        private const int TotalTiles = Board.LandSize * Board.LandSize - 4;
         
         private TilesPack()
         {
@@ -18,7 +18,7 @@ namespace Jackal.Core
         {
             for (int i = 1; i <= count; i++)
             {
-                if (_list.Count == Total)
+                if (_list.Count == TotalTiles)
                     return;
 
                 var def = new TileParams { Type = TileType.Arrow, ArrowsCode = arrowsCode };
@@ -30,7 +30,7 @@ namespace Jackal.Core
         {
             for (int i = 1; i <= count; i++)
             {
-                if (_list.Count == Total)
+                if (_list.Count == TotalTiles)
                     return;
 
                 var def = new TileParams { Type = TileType.Spinning, SpinningCount = spirnningCount };
@@ -42,17 +42,30 @@ namespace Jackal.Core
         {
             for (int i = 1; i <= count; i++)
             {
-                if (_list.Count == Total)
+                if (_list.Count == TotalTiles)
                     return;
+
+                UpdateCoinsOnMap(tileType);
 
                 var def = new TileParams { Type = tileType };
                 _list.Add(def);
             }
         }
 
+        private static void UpdateCoinsOnMap(TileType tileType) =>
+            Board.CoinsOnMap += tileType switch
+            {
+                TileType.Chest1 => 1,
+                TileType.Chest2 => 2,
+                TileType.Chest3 => 3,
+                TileType.Chest4 => 4,
+                TileType.Chest5 => 5,
+                _ => 0
+            };
+
         private void Fill()
         {
-            _list = new List<TileParams>(Total);
+            _list = new List<TileParams>(TotalTiles);
             
             AddDef(TileType.Chest1, 5);
             AddDef(TileType.Chest2, 5);
@@ -84,7 +97,7 @@ namespace Jackal.Core
 
             AddDef(TileType.Canibal, 1);
 
-            while (_list.Count < Total)
+            while (_list.Count < TotalTiles)
             {
                 AddDef(TileType.Grass);
             }

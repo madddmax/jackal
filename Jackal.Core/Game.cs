@@ -33,7 +33,7 @@ namespace Jackal.Core
             {
                 Scores[team.Id] = 0;
             }
-            CoinsLeft = MapGenerator.TotalCoins;
+            CoinsLeft = Board.CoinsOnMap;
 
             _availableMoves = new List<Move>();
             _actions = new List<IGameAction>();
@@ -172,18 +172,8 @@ namespace Jackal.Core
             _actions.Add(action);
         }
 
-        private static bool CanLanding(Pirate pirate, Position to)
-        {
-            return ((pirate.Position.Position.Y == 0 || pirate.Position.Position.Y == Board.Size - 1) &&
-                    pirate.Position.Position.X - to.X == 0) ||
-                   ((pirate.Position.Position.X == 0 || pirate.Position.Position.X == Board.Size - 1) &&
-                    pirate.Position.Position.Y - to.Y == 0);
-        }
-
-        public bool IsGameOver
-        {
-            get { return CoinsLeft == 0 || TurnNo - 4*50 > LastActionTurnNo; }
-        }
+        public bool IsGameOver => (CoinsLeft == 0 && !Board.AllTiles(x => x.Type == TileType.Unknown).Any()) 
+                                  || TurnNo - 200 > LastActionTurnNo;
 
         public int TurnNo { get; private set; }
         public int SubTurnNo { get; private set; }
