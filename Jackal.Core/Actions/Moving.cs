@@ -28,11 +28,9 @@ namespace Jackal.Core.Actions
 
             Team ourTeam = board.Teams[pirate.TeamId];
             var ourShip = ourTeam.Ship;
-
-
+            
             var target = _to;
             var _targetTile = map[target.Position];
-
             var _sourceTile = map[_from.Position];
 
             if (_sourceTile.Type == TileType.Airplane && _from != _to && game.Board.Map.AirplaneUsed==false) //отмечаем, что мы использовали самолет
@@ -61,11 +59,10 @@ namespace Jackal.Core.Actions
                         game.KillPirate(pirate);
                         return GameActionResult.Die;
                     }
-                    else //мы попали в клетку, где должны сделать ещё свой выбор
-                    {
-                        game.NeedSubTurnPirate = pirate;
-                        game.PreviosSubTurnDirection = new Direction(_from, _to);
-                    }
+
+                    //мы попали в клетку, где должны сделать ещё свой выбор
+                    game.NeedSubTurnPirate = pirate;
+                    game.PreviosSubTurnDirection = new Direction(_from, _to);
                 }
                 else if (newTile.Type == TileType.Spinning)
                 {
@@ -111,12 +108,12 @@ namespace Jackal.Core.Actions
                     game.KillPirate(enemyPirate);
                 }
             }
-
-            //двигаем своего пирата
-
-          
-            if (_from.Position == ourShip.Position && _targetTile.Type==TileType.Water) //это мы сдвигаем корабль
+            
+            if (_from.Position == ourShip.Position && 
+                _targetTile.Type == TileType.Water &&
+                Utils.Distance(_from.Position, _to.Position) == 1) 
             {
+                //двигаем свой корабль
                 var pirateOnShips = map[ourShip.Position].Pirates;
                 foreach (var pirateOnShip in pirateOnShips)
                 {
@@ -126,8 +123,9 @@ namespace Jackal.Core.Actions
                 ourShip.Position = _to.Position;
                 _sourceTile.Pirates.Clear();
             }
-            else //сдвигает только своего пирата
+            else 
             {
+                //двигаем своего пирата
                 fromTileLevel.Pirates.Remove(pirate);
 
                 pirate.Position = _to;

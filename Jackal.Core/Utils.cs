@@ -89,5 +89,13 @@ namespace Jackal.Core
             var min = enumerable.Min(comparison);
             return enumerable.Where(x => comparison(x, min) == 0);
         }
+        
+        public static int Distance(Position pos1, Position pos2)
+        {
+            int deltaX = Math.Abs(pos1.X - pos2.X);
+            int deltaY = Math.Abs(pos1.Y - pos2.Y);
+            int totalDelta = Math.Max(deltaX, deltaY);
+            return totalDelta;
+        }
     }
 }

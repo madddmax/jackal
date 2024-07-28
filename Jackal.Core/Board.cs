@@ -174,7 +174,6 @@ namespace Jackal.Core
             var ourTeamId = task.TeamId;
             var ourTeam = Teams[ourTeamId];
             var ourShip = ourTeam.Ship;
-            bool fromShip = (ourShip.Position == source.Position);
 
             List<AvaliableMove> goodTargets = new List<AvaliableMove>();
 
@@ -189,29 +188,27 @@ namespace Jackal.Core
             }
 
             //места всех возможных ходов
-            positionsForCheck = GetAllTargetsForSubturn(source, previosDirection,ourTeam);
+            positionsForCheck = GetAllTargetsForSubturn(source, previosDirection, ourTeam);
 
             foreach (var newPosition in positionsForCheck)
             {
                 //проверяем, что на этой клетке
                 var newPositionTile = Map[newPosition.Position];
 
-                if (task.alreadyCheckedList.Count > 0 && previosDirection!=null)
+                if (task.alreadyCheckedList.Count > 0 && previosDirection != null)
                 {
                     Position incomeDelta = Position.GetDelta(previosDirection.To.Position, newPosition.Position);
                     CheckedPosition currentCheck = new CheckedPosition(newPosition, incomeDelta);
 
                     if (WasCheckedBefore(task.alreadyCheckedList, currentCheck)) //мы попали по рекурсии в ранее просмотренную клетку
                     {
-                        if ((newPositionTile.Type == TileType.Airplane) && (Map.AirplaneUsed == false)) { 
+                        if (newPositionTile.Type == TileType.Airplane && Map.AirplaneUsed == false) { 
                             // даем возможность не использовать самолет сразу!
                             goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         }
                         continue;
                     }
                 }
-
-                //var newMove = new Move(new TilePosition(source), new TilePosition(newPosition), MoveType.Usual);
 
                 switch (newPositionTile.Type)
                 {
@@ -227,21 +224,33 @@ namespace Jackal.Core
                         }
                         else if (sourceTile.Type == TileType.Water) //из воды в воду 
                         {
-                            if (source.Position != ourShip.Position && GetPosibleSwimming(task.FirstSource.Position).Contains(newPosition.Position)) //пират плавает
+                            if (source.Position != ourShip.Position && GetPosibleSwimming(task.FirstSource.Position).Contains(newPosition.Position))
                             {
-                                goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
+                                //пират плавает
+                                var action = new Moving(task.FirstSource, newPosition);
+                                var move = new AvaliableMove(task.FirstSource, newPosition, action)
+                                {
+                                    WithJumpToWater = true
+                                };
+                                goodTargets.Add(move);
                             }
                             if (source.Position == ourShip.Position && GetShipPosibleNavaigations(task.FirstSource.Position).Contains(newPosition.Position))
                             {
                                 //корабль плавает
-                                goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
+                                var action = new Moving(task.FirstSource, newPosition);
+                                var move = new AvaliableMove(task.FirstSource, newPosition, action);
+                                goodTargets.Add(move);
                             }
                         }
                         else //с земли в воду мы можем попасть только если ранее попали на клетку, требующую действия
                         {
                             if (task.NoJumpToWater == false && sourceTile.Type.RequreImmediateMove())
                             {
-                                goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)) { WithJumpToWater = true });
+                                goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition))
+                                {
+                                    WithJumpToWater = true
+                                });
+                                
                                 if (task.NoCoinMoving == false && Map[task.FirstSource].Coins > 0)
                                     goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition))
                                     {
@@ -341,7 +350,7 @@ namespace Jackal.Core
         /// <param name="source"></param>
         /// <param name="previosMove"></param>
         /// <returns></returns>
-        public List<TilePosition> GetAllTargetsForSubturn(TilePosition source, Direction previosMove,Team ourTeam)
+        public List<TilePosition> GetAllTargetsForSubturn(TilePosition source, Direction previosMove, Team ourTeam)
         {
             var sourceTile = Map[source.Position];
             var ourShip = ourTeam.Ship;
@@ -531,18 +540,18 @@ namespace Jackal.Core
             }
         }
 
-		public static Position GetCannonFly(int arrowsCode, Position pos)
-		{
-			if (arrowsCode == 0) // вверх
-				return new Position(pos.X, 12);
-			if (arrowsCode == 1) // вправо
-				return new Position(12, pos.Y);
-			if (arrowsCode == 2) // вниз
-				return new Position(pos.X, 0);
-//			if (arrowsCode == 3) // влево
-			return new Position(0, pos.Y);
-		}
-
+		public static Position GetCannonFly(int arrowsCode, Position pos) =>
+            arrowsCode switch
+            {
+                // вверх
+                0 => new Position(pos.X, Size - 1),
+                // вправо
+                1 => new Position(Size - 1, pos.Y),
+                // вниз
+                2 => new Position(pos.X, 0),
+                // влево
+                _ => new Position(0, pos.Y)
+            };
 
         public IEnumerable<Position> GetArrowsDeltas(int arrowsCode, Position source)
         {
