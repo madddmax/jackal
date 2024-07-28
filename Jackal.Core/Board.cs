@@ -8,6 +8,9 @@ namespace Jackal.Core
 {
     public class Board
     {
+        /// <summary>
+        /// Размер стороны поля с учетом воды, min = 5 max = 13
+        /// </summary>
         public const int Size = 11;
 
         [JsonIgnore]
@@ -145,8 +148,7 @@ namespace Jackal.Core
             }
             Teams[teamId] = new Team(teamId, name, ship, pirates);
         }
-
-
+        
         public List<AvaliableMove> GetAllAvaliableMoves(GetAllAvaliableMovesTask task)
         {
             return GetAllAvaliableMoves(task, task.FirstSource, task.PreviosSource);
@@ -317,7 +319,7 @@ namespace Jackal.Core
                             goodTargets.AddRange(GetAllAvaliableMoves(task, newPosition, source));
                         }
                         else {
-                            // если нет самолета, то клетка работает как трава!
+                            // если нет самолета, то клетка работает как пустое поле
                             goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                             if (task.NoCoinMoving == false && Map[task.FirstSource].Coins > 0
                                 && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
@@ -490,17 +492,17 @@ namespace Jackal.Core
         {
             if (pos.X == 0 || pos.X == Size - 1)
             {
-                if (pos.Y>2)
-                    yield return new Position(pos.X,pos.Y-1);
-                if (pos.Y<10)
-                    yield return new Position(pos.X,pos.Y+1);
+                if (pos.Y > 2)
+                    yield return new Position(pos.X, pos.Y - 1);
+                if (pos.Y < Size - 3)
+                    yield return new Position(pos.X, pos.Y + 1);
             }
             else if (pos.Y == 0 || pos.Y == Size - 1)
             {
-                if (pos.X>2)
-                    yield return new Position(pos.X-1,pos.Y);
-                if (pos.X<10)
-                    yield return new Position(pos.X+1,pos.Y);
+                if (pos.X > 2)
+                    yield return new Position(pos.X - 1, pos.Y);
+                if (pos.X < Size - 3)
+                    yield return new Position(pos.X + 1, pos.Y);
             }
             else
             {
