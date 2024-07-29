@@ -28,18 +28,21 @@ function Pirates() {
     return (
         <>
             <Pirate
+                key="pirate_1"
                 photo="/pictures/pirate_1.png"
                 isActive={activePirate === 1}
                 withCoin={activePirate === 1 ? withCoin : undefined}
                 onClick={onClick(1)}
             />
             <Pirate
+                key="pirate_2"
                 photo="/pictures/pirate_2.png"
                 isActive={activePirate === 2}
                 withCoin={activePirate === 2 ? withCoin : undefined}
                 onClick={onClick(2)}
             />
             <Pirate
+                key="pirate_3"
                 photo="/pictures/pirate_3.png"
                 isActive={activePirate === 3}
                 withCoin={activePirate === 3 ? withCoin : undefined}

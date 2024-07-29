@@ -22,6 +22,7 @@ function Cell(props: CellProps) {
     return (
         <>
             <div
+                key="main_cell"
                 className="cell"
                 style={{
                     backgroundImage: field.image ? `url(${field.image})` : '',
@@ -46,7 +47,10 @@ function Cell(props: CellProps) {
             ></div>
             {field.levels &&
                 field.levels.map((it) => (
-                    <div className={`level-${field.levels?.length}${it.Level}`}>
+                    <div
+                        key={`cell_level_${it.Level}`}
+                        className={`level-${field.levels?.length}${it.Level}`}
+                    >
                         {it.Coin && (
                             <div
                                 className="coins"
