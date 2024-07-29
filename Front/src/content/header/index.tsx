@@ -18,6 +18,7 @@ function Header() {
                 gameName: uuidGen(),
                 settings: {
                     players: ['human', 'robot2'],
+                    mapSize: 11,
                 },
             },
         });

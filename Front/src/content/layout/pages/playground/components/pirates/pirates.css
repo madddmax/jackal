@@ -1,3 +1,7 @@
+.photo-position {
+    position: relative;
+}
+
 .photo {
     width: 100px;
     height: 100px;
@@ -8,4 +12,14 @@
 
 .photo-active {
     border: 6px coral solid;
+}
+
+.moneta {
+    position: absolute;
+    background: transparent;
+    top: 60px;
+    left: 60px;
+    width: 30px;
+    height: 30px;
+    border: 1px gray solid;
 }

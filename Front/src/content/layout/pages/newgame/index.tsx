@@ -24,6 +24,7 @@ function Newgame() {
     const [randNumber, setRandNumber] = useState(() =>
         crypto.getRandomValues(new Int32Array(1)),
     );
+    const [mapSize, setMapSize] = useState(11);
 
     const getUrlByPlayer = (play: string) => {
         if (play === 'human') return '/pictures/human.png';
@@ -49,6 +50,7 @@ function Newgame() {
                 settings: {
                     players: getPlayers(players, playersCount),
                     mapId: randNumber[0],
+                    mapSize,
                 },
             },
         });
@@ -138,6 +140,22 @@ function Newgame() {
                         name="playersCount"
                         value={playersCount}
                     />
+                    <div className="mt-3">
+                        <div>
+                            <Form.Label>Размер карты: {mapSize}</Form.Label>
+                            <Form.Range
+                                value={mapSize}
+                                min={5}
+                                max={13}
+                                step={2}
+                                name="mapSize"
+                                onChange={(e) =>
+                                    setMapSize(Number(e.target.value))
+                                }
+                                className="custom-slider"
+                            />
+                        </div>
+                    </div>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Код карты</Form.Label>
                         <Form.Control
