@@ -4,7 +4,6 @@ namespace Jackal.Core
 {
     public class AvaliableMove
     {
-        public bool WithJumpToWater;
         public TilePosition Source;
         public TilePosition Target;
         public MoveType MoveType=MoveType.Usual;
@@ -18,7 +17,7 @@ namespace Jackal.Core
         {
             Source = source;
             Target = target;
-            ActionList=new GameActionList(actions);
+            ActionList = new GameActionList(actions);
         }
     }
 }

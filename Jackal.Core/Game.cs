@@ -153,10 +153,6 @@ namespace Jackal.Core
                 targets.AddRange(temp);
             }
 
-            //если есть ходы, которые не приводят к прыжку в воду, то выбираем только их
-            if (targets.Any(x => x.WithJumpToWater == false))
-                targets = targets.Where(x => x.WithJumpToWater == false).ToList();
-
             foreach (AvaliableMove avaliableMove in targets)
             {
                 Move move = new Move(avaliableMove.Source, avaliableMove.Target, avaliableMove.MoveType);
