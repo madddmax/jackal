@@ -9,13 +9,6 @@ namespace JackalWebHost.Service
         public List<TileChange> Draw(Board board, Board prevBoard)
         {
             var ships = board.Teams.Select(item => item.Ship).ToList();
-            /*
-            var diffPiratesList =
-                from curr in board.AllPirates
-                join prev in prevBoard.AllPirates on curr.Id equals prev.Id
-                where curr.Position != prev.Position
-                select new List<Pirate> { curr, prev };
-            */
 
             var diffPositions = new HashSet<Position>();
 
@@ -43,7 +36,7 @@ namespace JackalWebHost.Service
                 }
             }
 
-            List<TileChange> changes = new List<TileChange>();
+            var changes = new List<TileChange>();
 
             for (int y = 0; y < board.Size; y++)
             {
@@ -67,18 +60,16 @@ namespace JackalWebHost.Service
 
             return changes;
         }
-
-
+        
         /// <summary>
         /// Формирование статистики после хода
         /// </summary>
-        public GameStatistics GetStatistics(Game game)
+        public static GameStatistics GetStatistics(Game game)
         {
-            List<DrawTeam> teams = new List<DrawTeam>();
+            var teams = new List<DrawTeam>();
             foreach (var team in game.Board.Teams)
             {
-                int goldCount;
-                game.Scores.TryGetValue(team.Id, out goldCount);
+                game.Scores.TryGetValue(team.Id, out var goldCount);
                 teams.Add(new DrawTeam
                 {
                     backcolor = GetTeamColor(team.Id),
@@ -98,48 +89,57 @@ namespace JackalWebHost.Service
             };
         }
 
-        public List<DrawMove> GetAvailableMoves(Game game)
+        public static List<DrawMove> GetAvailableMoves(Game game)
         {
-            List<DrawMove> result = new List<DrawMove>();
-            List<LevelPosition> pirates = new List<LevelPosition>();
+            var result = new List<DrawMove>();
+            var pirates = new List<LevelPosition>();
 
             int index = 0;
             int mindex = 1;
             foreach (var move in game.GetAvailableMoves())
             {
-                var pirate = pirates.FirstOrDefault(p => (p.X == move.From.X) && (p.Y == move.From.Y) && (p.Level == move.From.Level));
+                var pirate = pirates.FirstOrDefault(p =>
+                    p.X == move.From.X && p.Y == move.From.Y && p.Level == move.From.Level
+                );
+                
                 if (pirate == null)
                 {
+                    var pirateIds = game.Board.AllPirates
+                        .Where(p => p.Position.Equals(move.From))
+                        .Select(p => p.Id)
+                        .ToList();
+                    
                     pirate = new LevelPosition
-                        {
-                            PirateNum = mindex++,
-                            X = move.From.X,
-                            Y = move.From.Y,
-                            Level = move.From.Level
-                        };
+                    {
+                        PirateIds = pirateIds,
+                        PirateNum = mindex++,
+                        X = move.From.X,
+                        Y = move.From.Y,
+                        Level = move.From.Level
+                    };
                     pirates.Add(pirate);
                 }
 
                 result.Add(new DrawMove
+                {
+                    MoveNum = index++,
+                    WithCoin = move.WithCoins,
+                    WithRespawn = move.WithRespawn,
+                    From = pirate,
+                    To = new LevelPosition
                     {
-                        MoveNum = index++,
-                        WithCoin = move.WithCoins,
-                        WithRespawn = move.WithRespawn,
-                        From = pirate,
-                        To = new LevelPosition
-                        {
-                            X = move.To.X,
-                            Y = move.To.Y,
-                            Level = move.To.Level
-                        }
-                    });
+                        X = move.To.X,
+                        Y = move.To.Y,
+                        Level = move.To.Level
+                    }
+                });
             }
             return result;
         }
 
         public DrawMap Map(Board board)
         {
-            List<TileChange> changes = new List<TileChange>();
+            var changes = new List<TileChange>();
 
             var ships = board.Teams.Select(item => item.Ship).ToList();
             for (int y = 0; y < board.Size; y++)
@@ -161,7 +161,7 @@ namespace JackalWebHost.Service
             };
         }
 
-        public TileChange Draw(Tile tile, List<Ship> ships)
+        private TileChange Draw(Tile tile, List<Ship> ships)
         {
             var tileElement = new TileChange();
 
@@ -182,20 +182,20 @@ namespace JackalWebHost.Service
             for (int i = 0; i < tile.Levels.Count; i++)
             {
                 var level = tile.Levels[i];
-                tileElement.Levels[i] = DrawPiratesAndCoins(level, i, tile.Levels.Count, tileShip);
+                tileElement.Levels[i] = DrawPiratesAndCoins(level, i, tileShip);
             }
             DrawTileBackground(tile, tileShip, ref tileElement);
 
             return tileElement;
         }
 
-        private LevelChange DrawPiratesAndCoins(TileLevel level, int levelIndex, int levelCount, Ship tileShip)
+        private static LevelChange DrawPiratesAndCoins(TileLevel level, int levelIndex, Ship? tileShip)
         {
             LevelChange levelChange = new LevelChange();
 
             var pirates = level.Pirates;
-            bool hasPirates = pirates != null && pirates.Count > 0;
-            bool hasCoins = (tileShip != null && tileShip.Coins > 0) || level.Coins > 0;
+            bool hasPirates = pirates is { Count: > 0 };
+            bool hasCoins = tileShip is { Coins: > 0 } || level.Coins > 0;
 
             levelChange.hasPirates = hasPirates;
             levelChange.hasCoins = hasCoins;
@@ -204,31 +204,36 @@ namespace JackalWebHost.Service
             // draw pirates
             if (hasPirates)
             {
-                DrawPirate pirate = new DrawPirate();
+                var pirate = new DrawPirate
+                {
+                    PirateIds = pirates.Select(p => p.Id).ToList(),
+                    ForeColor = "white",
+                    BackColor = GetTeamColor(pirates.First().TeamId),
+                    Text = pirates.Count.ToString()
+                };
 
-                pirate.ForeColor = "white";
-                pirate.BackColor = GetTeamColor(pirates.First().TeamId);
-                pirate.Text = pirates.Count().ToString();
                 levelChange.Pirate = pirate;
             }
 
             // draw coins
             if (hasCoins)
             {
-                int coins = tileShip != null ? tileShip.Coins : level.Coins;
+                int coins = tileShip?.Coins ?? level.Coins;
 
-                DrawCoin coin = new DrawCoin();
+                var coin = new DrawCoin
+                {
+                    ForeColor = "black",
+                    BackColor = "gold",
+                    Text = coins.ToString()
+                };
 
-                coin.ForeColor = "black";
-                coin.BackColor = "gold";
-                coin.Text = coins.ToString();
                 levelChange.Coin = coin;
             }
 
             return levelChange;
         }
 
-        private void DrawTileBackground(Tile tile, Ship ship, ref TileChange tileChange)
+        private static void DrawTileBackground(Tile tile, Ship? ship, ref TileChange tileChange)
         {
             TileType type = tile.Type;
 
@@ -331,22 +336,20 @@ namespace JackalWebHost.Service
                     throw new NotSupportedException();
             }
 
-            string relativePath = string.Format(@"/fields/{0}.png", filename);
+            string relativePath = $@"/fields/{filename}.png";
 
             tileChange.BackgroundImageSrc = relativePath;
             tileChange.Rotate = rotateCount;
         }
-        
-        public static string GetTeamColor(int teamId)
-        {
-            switch (teamId)
+
+        private static string GetTeamColor(int teamId) =>
+            teamId switch
             {
-                case 0: return "DarkRed";
-                case 1: return "DarkBlue";
-                case 2: return "DarkViolet";
-                case 3: return "DarkOrange";
-                default: return null;
-            }
-        }
+                0 => "DarkRed",
+                1 => "DarkBlue",
+                2 => "DarkViolet",
+                3 => "DarkOrange",
+                _ => ""
+            };
     }
 }

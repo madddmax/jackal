@@ -100,7 +100,7 @@ namespace JackalWebHost.Controllers
                 gameName = gameName,
                 map = map,
                 mapId = gameSettings.MapId.Value,
-                stat = service.GetStatistics(gameState.game)
+                stat = DrawService.GetStatistics(gameState.game)
             }, _options);
         }
         
@@ -143,9 +143,10 @@ namespace JackalWebHost.Controllers
 
             var service = new DrawService();
             return Json(new {
+                pirates = gameState.game.Board.AllPirates,
                 changes = service.Draw(gameState.board, prevBoard),
-                stat = service.GetStatistics(gameState.game),
-                moves = service.GetAvailableMoves(gameState.game)
+                stat = DrawService.GetStatistics(gameState.game),
+                moves = DrawService.GetAvailableMoves(gameState.game)
             }, _options);
         }
 

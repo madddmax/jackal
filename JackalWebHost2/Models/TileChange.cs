@@ -7,7 +7,7 @@ namespace JackalWebHost.Models
 {
     public class TileChange
     {
-        public string BackgroundImageSrc;
+        public string? BackgroundImageSrc;
         public string BackgroundColor;
         public int Rotate;
 
