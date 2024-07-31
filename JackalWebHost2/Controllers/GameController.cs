@@ -80,11 +80,6 @@ namespace JackalWebHost.Controllers
                 };
             }
 
-            while (index < gameSettings.Players.Length)
-            {
-                gamePlayers[index++] = new SmartPlayer();
-            }
-
             if (!gameSettings.MapId.HasValue)
                 gameSettings.MapId = new Random().Next();
 
@@ -98,6 +93,7 @@ namespace JackalWebHost.Controllers
 
             return Json(new {
                 gameName = gameName,
+                pirates = gameState.game.Board.AllPirates,
                 map = map,
                 mapId = gameSettings.MapId.Value,
                 stat = DrawService.GetStatistics(gameState.game)
@@ -109,13 +105,13 @@ namespace JackalWebHost.Controllers
         /// </summary>
         public JsonResult MakeTurn([FromBody] TurnGameModel request)
         {
-            return Turn(request.GameName, request.TurnNum);
+            return Turn(request.GameName, request.TurnNum, request.PirateId);
         }
 
         /// <summary>
         /// Ход игры
         /// </summary>
-        public JsonResult Turn(string gameName, int? turnNum)
+        public JsonResult Turn(string gameName, int? turnNum, Guid? pirateId)
         {
             if (!_gamesSessionsCache.TryGetValue(gameName, out GameState? gameState) || 
                 gameState == null)
@@ -129,7 +125,7 @@ namespace JackalWebHost.Controllers
             {
                 if (turnNum.HasValue)
                 {
-                    gameState.game.CurrentPlayer.SetHumanMove(turnNum.Value);
+                    gameState.game.CurrentPlayer.SetHumanMove(turnNum.Value, pirateId);
                     gameState.game.Turn();
                 }
                 else

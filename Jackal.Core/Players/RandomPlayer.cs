@@ -11,14 +11,14 @@ namespace Jackal.Core.Players
             Rnd = new Random(42);
         }
 
-        public void SetHumanMove(int moveNum)
+        public void SetHumanMove(int moveNum, Guid? pirateId)
         {
             throw new NotImplementedException();
         }
 
-        public int OnMove(GameState gameState)
+        public (int moveNum, Guid? pirateId) OnMove(GameState gameState)
         {
-            return Rnd.Next(gameState.AvailableMoves.Length);
+            return (Rnd.Next(gameState.AvailableMoves.Length), null);
         }
     }
 }

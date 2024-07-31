@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Jackal.Core;
 
 namespace Jackal.RolloPlayer2
@@ -10,7 +11,7 @@ namespace Jackal.RolloPlayer2
 			return new Rater3(board, teamId, settings);
 		}
 
-		public override int OnMove(GameState gameState)
+		public override (int moveNum, Guid? pirateId) OnMove(GameState gameState)
 		{
 			var board = gameState.Board;
 			var availableMoves = gameState.AvailableMoves;
@@ -28,9 +29,9 @@ namespace Jackal.RolloPlayer2
 			for (var i = 0; i < availableMoves.Length; i++)
 			{
 				if (availableMoves[i] == result)
-					return i;
+					return (i, null);
 			}
-			return 0;
+			return (0, null);
 		}
 	}
 }

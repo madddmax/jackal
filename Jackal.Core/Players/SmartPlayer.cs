@@ -13,12 +13,12 @@ namespace Jackal.Core.Players
             Rnd = new Random(1);
         }
 
-        public void SetHumanMove(int moveNum)
+        public void SetHumanMove(int moveNum, Guid? pirateId)
         {
             throw new NotImplementedException();
         }
 
-        public int OnMove(GameState gameState)
+        public (int moveNum, Guid? pirateId) OnMove(GameState gameState)
         {
             Board board=gameState.Board;
             Move[] availableMoves = gameState.AvailableMoves;
@@ -119,9 +119,9 @@ namespace Jackal.Core.Players
             for (int i = 0; i < availableMoves.Length; i++)
             {
                 if (availableMoves[i]== resultMove)
-                    return i;
+                    return (i, null);
             }
-            return 0;
+            return (0, null);
         }
 
         private int MinDistance(List<Position> positions, Position to)
@@ -150,7 +150,4 @@ namespace Jackal.Core.Players
             return (ship.Position == move.To.Position);
         }
     }
-
-
-  
 }

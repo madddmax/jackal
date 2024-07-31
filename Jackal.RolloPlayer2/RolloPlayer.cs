@@ -13,18 +13,17 @@ namespace Jackal.RolloPlayer2
 			Rnd = new Random();
 		}
 
-	    public void SetHumanMove(int moveNum)
+	    public void SetHumanMove(int moveNum, Guid? pirateId)
 	    {
 	        throw new NotImplementedException();
 	    }
 
-	    public virtual int OnMove(GameState gameState)
+	    public virtual (int moveNum, Guid? pirateId) OnMove(GameState gameState)
         {
 	        var board = gameState.Board;
 			var availableMoves = gameState.AvailableMoves;
 	        var teamId = gameState.TeamId;
-
-
+	        
 			var rater = CreateRater(board, teamId, Settings.Default);
 
 	        var moveRates = availableMoves.Select(rater.Rate).ToList();
@@ -37,9 +36,9 @@ namespace Jackal.RolloPlayer2
             for (var i = 0; i < availableMoves.Length; i++)
             {
 				if (availableMoves[i] == result)
-                    return i;
+                    return (i, null);
             }
-            return 0;
+            return (0, null);
         }
 
 		protected virtual Rater CreateRater(Board board, int teamId, Settings settings)

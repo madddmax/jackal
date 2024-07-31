@@ -48,18 +48,18 @@ namespace Jackal.Core
         {
             GetAvailableMoves(CurrentTeamId);
 
-            this.NeedSubTurnPirate = null;
-            this.PreviosSubTurnDirection = null;
+            NeedSubTurnPirate = null;
+            PreviosSubTurnDirection = null;
 
             if (_availableMoves.Count > 0) //есть возможные ходы
             {
-                int moveNo;
-                if (_availableMoves.Count == 1) //только один ход, сразу выбираем его
-                {
-                    moveNo = 0;
-                }
-                else //запрашиваем ход у игрока
-                {
+                // int moveNo;
+                // if (_availableMoves.Count == 1) //только один ход, сразу выбираем его
+                // {
+                //     moveNo = 0;
+                // }
+                // else //запрашиваем ход у игрока
+                //{
                     GameState gameState = new GameState();
                     gameState.AvailableMoves = _availableMoves.ToArray();
                     gameState.Board = Board;
@@ -67,11 +67,16 @@ namespace Jackal.Core
                     gameState.TurnNumber = TurnNo;
                     gameState.SubTurnNumber = SubTurnNo;
                     gameState.TeamId = CurrentTeamId;
-                    moveNo = CurrentPlayer.OnMove(gameState);
-                }
-
-                IGameAction action = _actions[moveNo];
-                Pirate pirate = Board.Teams[CurrentTeamId].Pirates.First(x => x.Position == _availableMoves[moveNo].From);
+                    var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
+                //}
+                
+                var from = _availableMoves[moveNum].From;
+                var currentTeamPirates = Board.Teams[CurrentTeamId].Pirates;
+                var pirate = 
+                    currentTeamPirates.FirstOrDefault(x => x.Id == pirateId && x.Position == from) 
+                    ?? currentTeamPirates.First(x => x.Position == from);
+                
+                IGameAction action = _actions[moveNum];
                 action.Act(this, pirate);
             }
             else //у нас нет возможных ходов - тогда если все трезвые, то все гибнут

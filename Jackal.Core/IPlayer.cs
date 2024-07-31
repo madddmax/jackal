@@ -1,4 +1,6 @@
-﻿namespace Jackal.Core
+﻿using System;
+
+namespace Jackal.Core
 {
     public interface IPlayer
     {
@@ -7,8 +9,8 @@
         /// <summary>
         /// Насильный выбор хода, для HumanPlayer
         /// </summary>
-        void SetHumanMove(int moveNum);
+        void SetHumanMove(int moveNum, Guid? pirateId);
 
-        int OnMove(GameState gameState);
+        (int moveNum, Guid? pirateId) OnMove(GameState gameState);
     }
 }

@@ -1,22 +1,27 @@
-﻿namespace Jackal.Core.Players
+﻿using System;
+
+namespace Jackal.Core.Players
 {
     public class WebHumanPlayer : IPlayer
     {
-        private int _move;
+        private int _moveNum;
+        private Guid? _pirateId;
 
         public void OnNewGame()
         {
-            _move = 0;
+            _moveNum = 0;
+            _pirateId = null;
         }
 
-        public void SetHumanMove(int moveNum)
+        public void SetHumanMove(int moveNum, Guid? pirateId)
         {
-            _move = moveNum;
+            _moveNum = moveNum;
+            _pirateId = pirateId;
         }
 
-        public int OnMove(GameState gameState)
+        public (int moveNum, Guid? pirateId) OnMove(GameState gameState)
         {
-            return _move;
+            return (_moveNum, _pirateId);
         }
     }
 }
