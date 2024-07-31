@@ -1,5 +1,5 @@
 export interface ReduxState {
-    game: GameState
+    game: GameState;
 }
 
 export interface GameState {
@@ -8,10 +8,13 @@ export interface GameState {
     mapId?: number;
 
     fields: FieldState[][];
+    pirates?: GamePirate[];
     lastMoves: GameMove[];
-    activePirate: number;
+    activePirate: string;
+    highlight_x: number;
+    highlight_y: number;
     withCoin?: boolean;
-    lastPirate: number;
+    lastPirate: string;
 }
 
 export interface FieldState {
@@ -20,6 +23,7 @@ export interface FieldState {
     rotate?: number;
     levels?: GameLevel[];
     moveNum?: number;
+    highlight?: boolean;
 }
 
 export interface GameStartResponse {
@@ -28,15 +32,16 @@ export interface GameStartResponse {
         mapId: number;
         map: GameMap;
         stat: GameStat;
-    }
+    };
 }
 
 export interface GameTurnResponse {
     data: {
+        pirates: GamePirate[];
         changes: GameCell[];
         stat: GameStat;
         moves: GameMove[];
-    }
+    };
 }
 
 export interface GameMainStat {
@@ -79,7 +84,7 @@ interface GameLevel {
     hasPirates: boolean;
     Pirate?: GameThing;
     hasCoins: boolean;
-    Coin?: GameThing
+    Coin?: GameThing;
 }
 
 interface GameThing {
@@ -97,6 +102,7 @@ export interface GameMove {
 }
 
 interface AcceptableMove {
+    PirateIds: string[];
     PirateNum: number;
     Level: number;
     X: number;
@@ -104,7 +110,18 @@ interface AcceptableMove {
 }
 
 export interface PirateMoves {
-    pirate?: number;
+    pirate?: string;
     withCoin?: boolean;
     moves?: GameMove[];
+    pirates?: GamePirate[];
+}
+
+export interface GamePirate {
+    Id: string;
+    TeamId: number;
+    Position: {
+        Level: number;
+        X: number;
+        Y: number;
+    };
 }

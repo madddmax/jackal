@@ -2,24 +2,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import { highlightMoves } from '/redux/gameSlice';
 import Pirate from './pirate';
 import './pirates.css';
-import { ReduxState } from '/redux/types';
+import { GamePirate, ReduxState } from '/redux/types';
 
 function Pirates() {
     const dispatch = useDispatch();
 
-    const activePirate = useSelector<ReduxState, number>(
+    const pirates = useSelector<ReduxState, GamePirate[] | undefined>(
+        (state) => state.game.pirates,
+    );
+    const activePirate = useSelector<ReduxState, string>(
         (state) => state.game.activePirate,
     );
     const withCoin = useSelector<ReduxState, boolean | undefined>(
         (state) => state.game.withCoin,
     );
 
-    const onClick = (num: number) => () =>
+    const onClick = (id: string) => () =>
         dispatch(
             highlightMoves({
-                pirate: num,
+                pirate: id,
                 withCoin:
-                    activePirate !== num || withCoin === undefined
+                    activePirate !== id || withCoin === undefined
                         ? undefined
                         : !withCoin,
             }),
@@ -27,24 +30,18 @@ function Pirates() {
 
     return (
         <>
-            <Pirate
-                photo="/pictures/pirate_1.png"
-                isActive={activePirate === 1}
-                withCoin={activePirate === 1 ? withCoin : undefined}
-                onClick={onClick(1)}
-            />
-            <Pirate
-                photo="/pictures/pirate_2.png"
-                isActive={activePirate === 2}
-                withCoin={activePirate === 2 ? withCoin : undefined}
-                onClick={onClick(2)}
-            />
-            <Pirate
-                photo="/pictures/pirate_3.png"
-                isActive={activePirate === 3}
-                withCoin={activePirate === 3 ? withCoin : undefined}
-                onClick={onClick(3)}
-            />
+            {pirates &&
+                pirates.map((girl, index) => (
+                    <Pirate
+                        key={`pirate_${index}`}
+                        photo={`/pictures/pirate_${index + 1}.png`}
+                        isActive={activePirate === girl.Id}
+                        withCoin={
+                            activePirate === girl.Id ? withCoin : undefined
+                        }
+                        onClick={onClick(girl.Id)}
+                    />
+                ))}
         </>
     );
 }

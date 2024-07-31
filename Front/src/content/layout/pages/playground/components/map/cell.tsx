@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { sagaActions } from '/redux/saga';
 import { FieldState, ReduxState } from '/redux/types';
+import cn from 'classnames';
 import './cell.less';
 
 interface CellProps {
@@ -22,7 +23,10 @@ function Cell(props: CellProps) {
     return (
         <>
             <div
-                className="cell"
+                key="main_cell"
+                className={cn('cell', {
+                    'sell-active': field.highlight && field.highlight === true,
+                })}
                 style={{
                     backgroundImage: field.image ? `url(${field.image})` : '',
                     backgroundColor: field.backColor || 'transparent',
@@ -46,7 +50,10 @@ function Cell(props: CellProps) {
             ></div>
             {field.levels &&
                 field.levels.map((it) => (
-                    <div className={`level-${field.levels?.length}${it.Level}`}>
+                    <div
+                        key={`cell_level_${it.Level}`}
+                        className={`level-${field.levels?.length}${it.Level}`}
+                    >
                         {it.Coin && (
                             <div
                                 className="coins"

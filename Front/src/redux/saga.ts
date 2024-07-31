@@ -77,7 +77,14 @@ export function* oneTurn(action: any) {
         }
 
         if (result.data.stat.IsHumanPlayer) {
-            yield put(highlightMoves({ moves: result.data.moves }));
+            yield put(
+                highlightMoves({
+                    moves: result.data.moves,
+                    pirates: result.data.pirates.filter(
+                        (it) => it.TeamId == result.data.stat.CurrentTeamId,
+                    ),
+                }),
+            );
         }
         yield put(applyChanges(result.data.changes));
         yield put(applyStat(result.data.stat));
