@@ -34,7 +34,7 @@ export function* gameReset() {
 
 export function* gameStart(action: any) {
     try {
-        let result: GameStartResponse = yield call(
+        let result: { data: GameStartResponse } = yield call(
             async () =>
                 await axios({
                     url: `${config.BaseApi}Game/MakeStart`,

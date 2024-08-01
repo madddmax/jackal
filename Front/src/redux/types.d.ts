@@ -6,6 +6,7 @@ export interface GameState {
     stat?: GameStat;
     gameName?: string;
     mapId?: number;
+    mapSize?: number;
 
     fields: FieldState[][];
     pirates?: GamePirate[];
@@ -27,12 +28,10 @@ export interface FieldState {
 }
 
 export interface GameStartResponse {
-    data: {
-        gameName: string;
-        mapId: number;
-        map: GameMap;
-        stat: GameStat;
-    };
+    gameName: string;
+    mapId: number;
+    map: GameMap;
+    stat: GameStat;
 }
 
 export interface GameTurnResponse {
@@ -42,11 +41,6 @@ export interface GameTurnResponse {
         stat: GameStat;
         moves: GameMove[];
     };
-}
-
-export interface GameMainStat {
-    gameName: string;
-    mapId: number;
 }
 
 export interface GameStat {
