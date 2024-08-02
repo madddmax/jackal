@@ -70,18 +70,6 @@ namespace Jackal.Core
                 IGameAction action = _actions[moveNum];
                 action.Act(this, pirate);
             }
-            else //у нас нет возможных ходов - тогда если все трезвые, то все гибнут
-            {
-                var allPirates = Board.Teams[CurrentTeamId].Pirates.ToList();
-                bool allNotDrunkPirates = allPirates.All(x => x.IsDrunk == false);
-                if (allNotDrunkPirates)
-                {
-                    foreach (var pirate in allPirates)
-                    {
-                        KillPirate(pirate);
-                    }
-                }
-            }
 
             if (NeedSubTurnPirate == null)
             {
