@@ -62,7 +62,7 @@ namespace Jackal.Core.Actions
 
                     //мы попали в клетку, где должны сделать ещё свой выбор
                     game.NeedSubTurnPirate = pirate;
-                    game.PreviosSubTurnDirection = new Direction(_from, _to);
+                    game.PrevSubTurnDirection = new Direction(_from, _to);
                 }
                 else if (newTile.Type == TileType.Spinning)
                 {

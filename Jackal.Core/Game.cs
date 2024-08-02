@@ -49,16 +49,19 @@ namespace Jackal.Core
             GetAvailableMoves(CurrentTeamId);
 
             NeedSubTurnPirate = null;
-            PreviosSubTurnDirection = null;
+            PrevSubTurnDirection = null;
 
-            if (_availableMoves.Count > 0) //есть возможные ходы
+            if (_availableMoves.Count > 0)
             {
-                GameState gameState = new GameState();
-                gameState.AvailableMoves = _availableMoves.ToArray();
-                gameState.Board = Board;
-                gameState.GameId = GameId;
-                gameState.TurnNumber = TurnNo;
-                gameState.TeamId = CurrentTeamId;
+                //есть возможные ходы
+                var gameState = new GameState
+                {
+                    AvailableMoves = _availableMoves.ToArray(),
+                    Board = Board,
+                    GameId = GameId,
+                    TurnNumber = TurnNo,
+                    TeamId = CurrentTeamId
+                };
                 var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
                 
                 var from = _availableMoves[moveNum].From;
@@ -84,7 +87,7 @@ namespace Jackal.Core
             }
         }
 
-        public Pirate NeedSubTurnPirate { private get; set; }
+        public Pirate? NeedSubTurnPirate { private get; set; }
 
         public List<Move> GetPrevAvailableMoves()
         {
@@ -105,11 +108,11 @@ namespace Jackal.Core
             Team team = Board.Teams[teamId];
 
             IEnumerable<Pirate> activePirates;
-            Direction previosDirection = null;
+            Direction? prevDirection = null;
             if (NeedSubTurnPirate != null)
             {
                 activePirates = new[] {NeedSubTurnPirate};
-                previosDirection = PreviosSubTurnDirection;
+                prevDirection = PrevSubTurnDirection;
             }
             else
             {
@@ -122,10 +125,12 @@ namespace Jackal.Core
             {
                 var position = pirate.Position;
 
-                GetAllAvaliableMovesTask task=new GetAllAvaliableMovesTask();
-                task.TeamId = teamId;
-                task.FirstSource = position;
-                task.PreviosSource = (previosDirection != null) ? previosDirection.From : null;
+                var task = new GetAllAvaliableMovesTask
+                {
+                    TeamId = teamId,
+                    FirstSource = position,
+                    PreviosSource = prevDirection != null ? prevDirection.From : null
+                };
 
                 List<AvaliableMove> temp = Board.GetAllAvaliableMoves(task);
                 targets.AddRange(temp);
@@ -148,7 +153,6 @@ namespace Jackal.Core
 
         public bool IsGameOver => (CoinsLeft == 0 && !Board.AllTiles(x => x.Type == TileType.Unknown).Any()) 
                                   || TurnNo - 200 > LastActionTurnNo;
-
         public int TurnNo { get; private set; }
         public int LastActionTurnNo { get; internal set; }
 
@@ -162,7 +166,7 @@ namespace Jackal.Core
             get { return _players[CurrentTeamId]; }
         }
 
-        public Direction PreviosSubTurnDirection;
+        public Direction? PrevSubTurnDirection;
 
         public void KillPirate(Pirate pirate)
         {
