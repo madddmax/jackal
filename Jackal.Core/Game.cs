@@ -53,22 +53,14 @@ namespace Jackal.Core
 
             if (_availableMoves.Count > 0) //есть возможные ходы
             {
-                // int moveNo;
-                // if (_availableMoves.Count == 1) //только один ход, сразу выбираем его
-                // {
-                //     moveNo = 0;
-                // }
-                // else //запрашиваем ход у игрока
-                //{
-                    GameState gameState = new GameState();
-                    gameState.AvailableMoves = _availableMoves.ToArray();
-                    gameState.Board = Board;
-                    gameState.GameId = GameId;
-                    gameState.TurnNumber = TurnNo;
-                    gameState.SubTurnNumber = SubTurnNo;
-                    gameState.TeamId = CurrentTeamId;
-                    var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
-                //}
+                GameState gameState = new GameState();
+                gameState.AvailableMoves = _availableMoves.ToArray();
+                gameState.Board = Board;
+                gameState.GameId = GameId;
+                gameState.TurnNumber = TurnNo;
+                gameState.SubTurnNumber = SubTurnNo;
+                gameState.TeamId = CurrentTeamId;
+                var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
                 
                 var from = _availableMoves[moveNum].From;
                 var currentTeamPirates = Board.Teams[CurrentTeamId].Pirates;

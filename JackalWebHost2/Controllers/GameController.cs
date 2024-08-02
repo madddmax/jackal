@@ -83,7 +83,9 @@ namespace JackalWebHost.Controllers
             if (!gameSettings.MapId.HasValue)
                 gameSettings.MapId = new Random().Next();
 
-            gameState.board = new Board(gamePlayers, gameSettings.MapId.Value, gameSettings.MapSize ?? 5);
+            int mapSize = gameSettings.MapSize ?? 5;
+            int piratesPerPlayer = gameSettings.PiratesPerPlayer ?? 1;
+            gameState.board = new Board(gamePlayers, gameSettings.MapId.Value, mapSize, piratesPerPlayer);
             gameState.game = new Game(gamePlayers, gameState.board);
 
             _gamesSessionsCache.Set(gameName, gameState, _cacheEntryOptions);

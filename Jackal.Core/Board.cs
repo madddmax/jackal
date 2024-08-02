@@ -9,7 +9,7 @@ namespace Jackal.Core
     public class Board
     {
         /// <summary>
-        /// Размер стороны поля с учетом воды, min = 5 max = 13
+        /// Размер стороны карты с учетом воды
         /// </summary>
         public readonly int Size;
 
@@ -61,7 +61,7 @@ namespace Jackal.Core
         {
         }
 
-        public Board(IPlayer[] players, int mapId, int mapSize)
+        public Board(IPlayer[] players, int mapId, int mapSize, int piratesPerPlayer)
         {
             if (mapSize is < 5 or > 13)
                 throw new ArgumentException("mapSize is >= 5 and <= 13");
@@ -70,29 +70,29 @@ namespace Jackal.Core
             Generator = new MapGenerator(mapId, mapSize);
             Map = new Map(mapSize);
             InitMap();
-            InitTeams(players);
+            InitTeams(players, piratesPerPlayer);
         }
 
-        private void InitTeams(IPlayer[] players)
+        private void InitTeams(IPlayer[] players, int piratesPerPlayer)
         {
             Teams = new Team[players.Length];
             switch (players.Length)
             {
                 case 1:
-                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0);
+                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0, piratesPerPlayer);
                     Teams[0].Enemies = [];
                     break;
                 case 2:
-                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0);
-                    InitTeam(1, players[1].GetType().Name, (Size - 1) / 2, (Size - 1));
+                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0, piratesPerPlayer);
+                    InitTeam(1, players[1].GetType().Name, (Size - 1) / 2, (Size - 1), piratesPerPlayer);
                     Teams[0].Enemies = [1];
                     Teams[1].Enemies = [0];
                     break;
                 case 4:
-                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0);
-                    InitTeam(1, players[1].GetType().Name, 0, (Size - 1) / 2);
-                    InitTeam(2, players[2].GetType().Name, (Size - 1) / 2, (Size - 1));
-                    InitTeam(3, players[3].GetType().Name, (Size - 1), (Size - 1) / 2);
+                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0, piratesPerPlayer);
+                    InitTeam(1, players[1].GetType().Name, 0, (Size - 1) / 2, piratesPerPlayer);
+                    InitTeam(2, players[2].GetType().Name, (Size - 1) / 2, (Size - 1), piratesPerPlayer);
+                    InitTeam(3, players[3].GetType().Name, (Size - 1), (Size - 1) / 2, piratesPerPlayer);
                     Teams[0].Enemies = [1, 2, 3];
                     Teams[1].Enemies = [0, 2, 3];
                     Teams[2].Enemies = [0, 1, 3];
@@ -137,10 +137,10 @@ namespace Jackal.Core
             Map[x, y] = tile;
         }
 
-        private void InitTeam(int teamId, string name, int x, int y)
+        private void InitTeam(int teamId, string teamName, int x, int y, int piratesPerPlayer)
         {
             var startPosition = new Position(x, y);
-            var pirates = new Pirate[3];
+            var pirates = new Pirate[piratesPerPlayer];
             for (int i = 0; i < pirates.Length; i++)
             {
                 pirates[i] = new Pirate(teamId, new TilePosition( startPosition));
@@ -150,7 +150,7 @@ namespace Jackal.Core
             {
                 Map[ship.Position].Pirates.Add(pirate);
             }
-            Teams[teamId] = new Team(teamId, name, ship, pirates);
+            Teams[teamId] = new Team(teamId, teamName, ship, pirates);
         }
         
         public List<AvaliableMove> GetAllAvaliableMoves(GetAllAvaliableMovesTask task)
