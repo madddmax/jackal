@@ -9,6 +9,5 @@ namespace Jackal.Core
         public Move[] AvailableMoves;
         public int TeamId;
         public int TurnNumber;
-        public int SubTurnNumber;
     }
 }

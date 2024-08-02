@@ -58,7 +58,6 @@ namespace Jackal.Core
                 gameState.Board = Board;
                 gameState.GameId = GameId;
                 gameState.TurnNumber = TurnNo;
-                gameState.SubTurnNumber = SubTurnNo;
                 gameState.TeamId = CurrentTeamId;
                 var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
                 
@@ -84,7 +83,7 @@ namespace Jackal.Core
                 }
             }
 
-            if (this.NeedSubTurnPirate == null)
+            if (NeedSubTurnPirate == null)
             {
                 //также протрезвляем всех пиратов, которые начали бухать раньше текущего хода
                 foreach (Pirate pirate in Board.Teams[CurrentTeamId].Pirates.Where(x => x.IsDrunk && x.DrunkSinceTurnNo < TurnNo))
@@ -94,11 +93,6 @@ namespace Jackal.Core
                 }
 
                 TurnNo++;
-                SubTurnNo = 0;
-            }
-            else
-            {
-                SubTurnNo++;
             }
         }
 
@@ -121,7 +115,6 @@ namespace Jackal.Core
             _actions.Clear();
             
             Team team = Board.Teams[teamId];
-            Ship ship = team.Ship;
 
             IEnumerable<Pirate> activePirates;
             Direction previosDirection = null;
@@ -169,7 +162,6 @@ namespace Jackal.Core
                                   || TurnNo - 200 > LastActionTurnNo;
 
         public int TurnNo { get; private set; }
-        public int SubTurnNo { get; private set; }
         public int LastActionTurnNo { get; internal set; }
 
         public int CurrentTeamId
