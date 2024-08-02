@@ -38,9 +38,9 @@ namespace JackalWebHost.Service
 
             var changes = new List<TileChange>();
 
-            for (int y = 0; y < board.Size; y++)
+            for (int y = 0; y < board.MapSize; y++)
             {
-                for (int x = 0; x < board.Size; x++)
+                for (int x = 0; x < board.MapSize; x++)
                 {
                     var tile = board.Map[x, y];
                     var prevTile = prevBoard.Map[x, y];
@@ -142,9 +142,9 @@ namespace JackalWebHost.Service
             var changes = new List<TileChange>();
 
             var ships = board.Teams.Select(item => item.Ship).ToList();
-            for (int y = 0; y < board.Size; y++)
+            for (int y = 0; y < board.MapSize; y++)
             {
-                for (int x = 0; x < board.Size; x++)
+                for (int x = 0; x < board.MapSize; x++)
                 {
                     var tile = board.Map[x, y];
                     var chg = Draw(tile, ships);
@@ -155,8 +155,8 @@ namespace JackalWebHost.Service
             }
 
             return new DrawMap{
-                Width = board.Size,
-                Height = board.Size,
+                Width = board.MapSize,
+                Height = board.MapSize,
                 Changes = changes
             };
         }

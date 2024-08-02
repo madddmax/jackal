@@ -11,7 +11,7 @@ namespace Jackal.Core
         /// <summary>
         /// Размер стороны карты с учетом воды
         /// </summary>
-        public readonly int Size;
+        public readonly int MapSize;
 
         [JsonIgnore]
         internal MapGenerator Generator;
@@ -43,9 +43,9 @@ namespace Jackal.Core
 
         public IEnumerable<Tile> AllTiles(Predicate<Tile> selector)
         {
-            for (int i = 0; i < Size; i++)
+            for (int i = 0; i < MapSize; i++)
             {
-                for (int j = 0; j < Size; j++)
+                for (int j = 0; j < MapSize; j++)
                 {
                     var tile = Map[i, j];
                     if (selector(tile))
@@ -66,7 +66,7 @@ namespace Jackal.Core
             if (mapSize is < 5 or > 13)
                 throw new ArgumentException("mapSize is >= 5 and <= 13");
 
-            Size = mapSize;
+            MapSize = mapSize;
             Generator = new MapGenerator(mapId, mapSize);
             Map = new Map(mapSize);
             InitMap();
@@ -79,20 +79,20 @@ namespace Jackal.Core
             switch (players.Length)
             {
                 case 1:
-                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0, piratesPerPlayer);
+                    InitTeam(0, players[0].GetType().Name, (MapSize - 1) / 2, 0, piratesPerPlayer);
                     Teams[0].Enemies = [];
                     break;
                 case 2:
-                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0, piratesPerPlayer);
-                    InitTeam(1, players[1].GetType().Name, (Size - 1) / 2, (Size - 1), piratesPerPlayer);
+                    InitTeam(0, players[0].GetType().Name, (MapSize - 1) / 2, 0, piratesPerPlayer);
+                    InitTeam(1, players[1].GetType().Name, (MapSize - 1) / 2, (MapSize - 1), piratesPerPlayer);
                     Teams[0].Enemies = [1];
                     Teams[1].Enemies = [0];
                     break;
                 case 4:
-                    InitTeam(0, players[0].GetType().Name, (Size - 1) / 2, 0, piratesPerPlayer);
-                    InitTeam(1, players[1].GetType().Name, 0, (Size - 1) / 2, piratesPerPlayer);
-                    InitTeam(2, players[2].GetType().Name, (Size - 1) / 2, (Size - 1), piratesPerPlayer);
-                    InitTeam(3, players[3].GetType().Name, (Size - 1), (Size - 1) / 2, piratesPerPlayer);
+                    InitTeam(0, players[0].GetType().Name, (MapSize - 1) / 2, 0, piratesPerPlayer);
+                    InitTeam(1, players[1].GetType().Name, 0, (MapSize - 1) / 2, piratesPerPlayer);
+                    InitTeam(2, players[2].GetType().Name, (MapSize - 1) / 2, (MapSize - 1), piratesPerPlayer);
+                    InitTeam(3, players[3].GetType().Name, (MapSize - 1), (MapSize - 1) / 2, piratesPerPlayer);
                     Teams[0].Enemies = [1, 2, 3];
                     Teams[1].Enemies = [0, 2, 3];
                     Teams[2].Enemies = [0, 1, 3];
@@ -105,19 +105,19 @@ namespace Jackal.Core
 
         private void InitMap()
         {
-            for (int i = 0; i < Size; i++)
+            for (int i = 0; i < MapSize; i++)
             {
                 SetWater(i, 0);
                 SetWater(0, i);
-                SetWater(i, Size - 1);
-                SetWater(Size - 1, i);
+                SetWater(i, MapSize - 1);
+                SetWater(MapSize - 1, i);
             }
 
-            for (int x = 1; x < Size - 1; x++)
+            for (int x = 1; x < MapSize - 1; x++)
             {
-                for (int y = 1; y < Size - 1; y++)
+                for (int y = 1; y < MapSize - 1; y++)
                 {
-                    if ((x==1 || x==Size-2) && (y==1||y==Size-2) )
+                    if ((x==1 || x==MapSize-2) && (y==1||y==MapSize-2) )
                         SetWater(x, y);
                     else
                         SetUnknown(x, y);
@@ -488,26 +488,26 @@ namespace Jackal.Core
         public bool IsValidMapPosition(Position pos)
         {
             return (
-                pos.X >= 0 && pos.X < Size
-                           && pos.Y >= 0 && pos.Y < Size //попадаем в карту
-                           && Utils.InCorners(pos, 0, Size - 1) == false //не попадаем в углы карты
+                pos.X >= 0 && pos.X < MapSize
+                           && pos.Y >= 0 && pos.Y < MapSize //попадаем в карту
+                           && Utils.InCorners(pos, 0, MapSize - 1) == false //не попадаем в углы карты
             );
         }
 
         public IEnumerable<Position> GetShipPosibleNavaigations(Position pos)
         {
-            if (pos.X == 0 || pos.X == Size - 1)
+            if (pos.X == 0 || pos.X == MapSize - 1)
             {
                 if (pos.Y > 2)
                     yield return new Position(pos.X, pos.Y - 1);
-                if (pos.Y < Size - 3)
+                if (pos.Y < MapSize - 3)
                     yield return new Position(pos.X, pos.Y + 1);
             }
-            else if (pos.Y == 0 || pos.Y == Size - 1)
+            else if (pos.Y == 0 || pos.Y == MapSize - 1)
             {
                 if (pos.X > 2)
                     yield return new Position(pos.X - 1, pos.Y);
-                if (pos.X < Size - 3)
+                if (pos.X < MapSize - 3)
                     yield return new Position(pos.X + 1, pos.Y);
             }
             else
@@ -521,14 +521,14 @@ namespace Jackal.Core
             if (pos.X == 0)
                 return new Position(1, pos.Y);
 
-            if (pos.X == Size - 1)
-                return new Position(Size - 2, pos.Y);
+            if (pos.X == MapSize - 1)
+                return new Position(MapSize - 2, pos.Y);
 
             if (pos.Y == 0)
                 return new Position(pos.X, 1);
 
-            if (pos.Y == Size - 1)
-                return new Position(pos.X, Size - 2);
+            if (pos.Y == MapSize - 1)
+                return new Position(pos.X, MapSize - 2);
 
             throw new Exception("wrong ship position");
         }
@@ -537,9 +537,9 @@ namespace Jackal.Core
             arrowsCode switch
             {
                 // вверх
-                0 => new Position(pos.X, Size - 1),
+                0 => new Position(pos.X, MapSize - 1),
                 // вправо
-                1 => new Position(Size - 1, pos.Y),
+                1 => new Position(MapSize - 1, pos.Y),
                 // вниз
                 2 => new Position(pos.X, 0),
                 // влево
