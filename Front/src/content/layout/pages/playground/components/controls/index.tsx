@@ -1,18 +1,12 @@
 import { useSelector } from 'react-redux';
 import cn from 'classnames';
 import classes from './controls.module.less';
-import { GameStat, GameTeamStat, ReduxState } from '/redux/types';
+import { GameStat, GameState, GameTeamStat, ReduxState } from '/redux/types';
 import { Alert } from 'react-bootstrap';
 
 function Controls() {
-    const stat = useSelector<ReduxState, GameStat | undefined>(
-        (state) => state.game.stat,
-    );
-    const gamename = useSelector<ReduxState, string | undefined>(
-        (state) => state.game.gameName,
-    );
-    const gamecode = useSelector<ReduxState, number | undefined>(
-        (state) => state.game.mapId,
+    const game = useSelector<ReduxState, GameState | undefined>(
+        (state) => state.game,
     );
 
     const getWinner = (stats: GameStat) => {
@@ -33,32 +27,33 @@ function Controls() {
         <>
             <div className={classes.statistic}>
                 <div>
-                    Код игры: <span>{gamename}</span>
+                    Код игры: <span>{game?.gameName}</span>
                 </div>
                 <div>
-                    Код карты: <span>{gamecode}</span>
+                    Код карты: <span>{game?.mapId}</span>
                 </div>
                 <div>
-                    Номер хода: <span>{stat && stat.TurnNo}</span>
+                    Размер карты: <span>{game?.mapSize}</span>
+                </div>
+                <div>
+                    Номер хода: <span>{game?.stat?.TurnNo}</span>
                 </div>
                 <div className={cn(classes.teams, 'container')}>
-                    {stat &&
-                        stat.Teams &&
-                        stat.Teams.map((it) => (
-                            <div
-                                className="row"
-                                style={{ backgroundColor: it.backcolor }}
-                            >
-                                <div className="col-md-8">{it.name}</div>
-                                <div className="col-md-4">{it.gold}</div>
-                            </div>
-                        ))}
+                    {game?.stat?.Teams.map((it) => (
+                        <div
+                            className="row"
+                            style={{ backgroundColor: it.backcolor }}
+                        >
+                            <div className="col-md-8">{it.name}</div>
+                            <div className="col-md-4">{it.gold}</div>
+                        </div>
+                    ))}
                 </div>
             </div>
 
-            {stat?.IsGameOver && (
+            {game?.stat?.IsGameOver && (
                 <Alert variant={'danger'} className="my-2">
-                    Игра закончена. Победил {getWinner(stat)}'
+                    Игра закончена. Победил {getWinner(game.stat)}'
                 </Alert>
             )}
         </>

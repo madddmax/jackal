@@ -18,6 +18,9 @@ function Cell(props: CellProps) {
     const gamename = useSelector<ReduxState, string | undefined>(
         (state) => state.game.gameName,
     );
+    const activePirate = useSelector<ReduxState, string>(
+        (state) => state.game.activePirate,
+    );
     const dispatch = useDispatch();
 
     return (
@@ -43,6 +46,7 @@ function Cell(props: CellProps) {
                             payload: {
                                 gameName: gamename,
                                 turnNum: field.moveNum,
+                                pirateId: activePirate,
                             },
                         });
                     }

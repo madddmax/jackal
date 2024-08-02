@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
     FieldState,
     GameCell,
-    GameMainStat,
     GameMap,
+    GameStartResponse,
     GameStat,
     GameState,
     PirateMoves,
@@ -118,9 +118,10 @@ export const gameSlice = createSlice({
                 cell.levels = it.Levels;
             });
         },
-        applyMainStat: (state, action: PayloadAction<GameMainStat>) => {
+        applyMainStat: (state, action: PayloadAction<GameStartResponse>) => {
             state.gameName = action.payload.gameName;
             state.mapId = action.payload.mapId;
+            state.mapSize = action.payload.map.Width;
         },
         applyStat: (state, action: PayloadAction<GameStat>) => {
             state.stat = action.payload;
