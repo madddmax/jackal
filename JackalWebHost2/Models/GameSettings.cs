@@ -16,10 +16,5 @@
         /// Размер стороны карты с учетом воды
         /// </summary>
         public int? MapSize { get; set; }
-        
-        /// <summary>
-        /// Начальное количество пиратов у игрока
-        /// </summary>
-        public int? PiratesPerPlayer { get; set; }
     }
 }

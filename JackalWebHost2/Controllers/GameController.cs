@@ -84,7 +84,7 @@ namespace JackalWebHost.Controllers
                 gameSettings.MapId = new Random().Next();
 
             int mapSize = gameSettings.MapSize ?? 5;
-            int piratesPerPlayer = gameSettings.PiratesPerPlayer ?? 3;
+            int piratesPerPlayer = 3;
             gameState.board = new Board(gamePlayers, gameSettings.MapId.Value, mapSize, piratesPerPlayer);
             gameState.game = new Game(gamePlayers, gameState.board);
 
