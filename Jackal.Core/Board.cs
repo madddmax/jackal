@@ -188,7 +188,7 @@ namespace Jackal.Core
             }
 
             //места всех возможных ходов
-            IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubturn(source, prevDirection, ourTeam);
+            IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(source, prevDirection, ourTeam);
 
             foreach (var newPosition in positionsForCheck)
             {
@@ -341,7 +341,7 @@ namespace Jackal.Core
         /// Возвращаем все позиции, в которые в принципе достижимы из заданной клетки за один подход
         /// (не проверяется, допустим ли такой ход)
         /// </summary>
-        public List<TilePosition> GetAllTargetsForSubturn(TilePosition source, Direction prevMove, Team ourTeam)
+        public List<TilePosition> GetAllTargetsForSubTurn(TilePosition source, Direction prevMove, Team ourTeam)
         {
             var sourceTile = Map[source.Position];
             var ourShip = ourTeam.Ship;
@@ -391,19 +391,10 @@ namespace Jackal.Core
                     rez = new[] {prevMove.From}; //возвращаемся назад
                     break;
                 case TileType.Ice:
-                    if (Map[prevMove.From.Position].Type == TileType.Horse)
-                    {
-                        //повторяем ход лошади
-                        rez = GetHorseDeltas(source.Position)
-                            .Select(x => IncomeTilePosition(x));
-                    }
-                    else //повторяем предыдущий ход
-                    {
-                        //TODO - проверка на использование самолета на предыдущем ходу - тогда мы должны повторить ход самолета
-                        var prevDelta = prevMove.GetDelta();
-                        var target = Position.AddDelta(source.Position, prevDelta);
-                        rez = new[] { target }.Select(x => IncomeTilePosition(x));
-                    }
+                    //TODO - проверка на использование самолета на предыдущем ходу - тогда мы должны повторить ход самолета
+                    var prevDelta = prevMove.GetDelta();
+                    var target = Position.AddDelta(source.Position, prevDelta);
+                    rez = new[] { target }.Select(x => IncomeTilePosition(x));
                     break;
                 case TileType.RespawnFort:
                     rez = GetNearDeltas(source.Position)
