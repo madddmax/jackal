@@ -153,9 +153,9 @@ namespace Jackal.Core
             Teams[teamId] = new Team(teamId, teamName, ship, pirates);
         }
         
-        public List<AvaliableMove> GetAllAvaliableMoves(GetAllAvaliableMovesTask task)
+        public List<AvailableMove> GetAllAvailableMoves(GetAllAvaliableMovesTask task)
         {
-            return GetAllAvaliableMoves(task, task.FirstSource, task.PreviosSource);
+            return GetAllAvailableMoves(task, task.FirstSource, task.PreviosSource);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Jackal.Core
         /// <param name="source"></param>
         /// <param name="previos"></param>
         /// <returns></returns>
-        public List<AvaliableMove> GetAllAvaliableMoves(GetAllAvaliableMovesTask task, TilePosition source, TilePosition previos)
+        public List<AvailableMove> GetAllAvailableMoves(GetAllAvaliableMovesTask task, TilePosition source, TilePosition previos)
         {
             Direction previosDirection;
             if (previos != null)
@@ -179,7 +179,7 @@ namespace Jackal.Core
             var ourTeam = Teams[ourTeamId];
             var ourShip = ourTeam.Ship;
 
-            List<AvaliableMove> goodTargets = new List<AvaliableMove>();
+            List<AvailableMove> goodTargets = new List<AvailableMove>();
 
             IEnumerable<TilePosition> positionsForCheck;
 
@@ -208,7 +208,7 @@ namespace Jackal.Core
                     {
                         if (newPositionTile.Type == TileType.Airplane && Map.AirplaneUsed == false) { 
                             // даем возможность не использовать самолет сразу!
-                            goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
+                            goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         }
                         continue;
                     }
@@ -219,9 +219,9 @@ namespace Jackal.Core
                     case TileType.Water:
                         if (ourShip.Position == newPosition.Position) //заходим на свой корабль
                         {
-                            goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition))); //всегда это можем сделать
+                            goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition))); //всегда это можем сделать
                             if (task.NoCoinMoving == false && Map[task.FirstSource].Coins > 0)
-                                goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition, true))
+                                goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition, true))
                                 {
                                     MoveType = MoveType.WithCoin
                                 });
@@ -232,14 +232,14 @@ namespace Jackal.Core
                             {
                                 //пират плавает
                                 var action = new Moving(task.FirstSource, newPosition);
-                                var move = new AvaliableMove(task.FirstSource, newPosition, action);
+                                var move = new AvailableMove(task.FirstSource, newPosition, action);
                                 goodTargets.Add(move);
                             }
                             if (source.Position == ourShip.Position && GetShipPosibleNavaigations(task.FirstSource.Position).Contains(newPosition.Position))
                             {
                                 //корабль плавает
                                 var action = new Moving(task.FirstSource, newPosition);
-                                var move = new AvaliableMove(task.FirstSource, newPosition, action);
+                                var move = new AvailableMove(task.FirstSource, newPosition, action);
                                 goodTargets.Add(move);
                             }
                         }
@@ -247,10 +247,10 @@ namespace Jackal.Core
                         {
                             if (task.NoJumpToWater == false && sourceTile.Type.RequreImmediateMove())
                             {
-                                goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
+                                goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                                 
                                 if (task.NoCoinMoving == false && Map[task.FirstSource].Coins > 0)
-                                    goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition))
+                                    goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition))
                                     {
                                         MoveType = MoveType.WithCoin
                                     });
@@ -261,32 +261,32 @@ namespace Jackal.Core
                         if (task.FirstSource == newPosition)
                         {
                             if (task.NoRespawn==false && ourTeam.Pirates.Count() < 3)
-                                goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition), new Respawn(ourTeam, newPosition.Position))
+                                goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition), new Respawn(ourTeam, newPosition.Position))
                                 {
                                     MoveType = MoveType.WithRespawn
                                 });
                         }
                         else if (newPositionTile.OccupationTeamId.HasValue == false || newPositionTile.OccupationTeamId == ourTeamId) //только если форт не занят
-                            goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
+                            goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         break;
                     case TileType.Fort:
                         if (task.NoFort == false && newPositionTile.OccupationTeamId.HasValue == false || newPositionTile.OccupationTeamId == ourTeamId) //только если форт не занят
-                            goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
+                            goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         break;
 
                     case TileType.Canibal:
                         if (task.NoCanibal==false)
-                            goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
+                            goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         break;
 
 
                     case TileType.Trap:
                         if (task.NoTrap == false)
                         {
-                            goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
+                            goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                             if (task.NoCoinMoving == false && Map[task.FirstSource].Coins > 0
                                 && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
-                                goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition, true))
+                                goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition, true))
                                 {
                                     MoveType = MoveType.WithCoin
                                 });
@@ -301,16 +301,16 @@ namespace Jackal.Core
                     case TileType.Chest5:
                     case TileType.RumBarrel:
                     case TileType.Spinning:
-                        goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
+                        goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         if (task.NoCoinMoving==false && Map[task.FirstSource].Coins > 0
                             && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
-                            goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition, true))
+                            goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition, true))
                             {
                                 MoveType = MoveType.WithCoin
                             });
                         break;
                     case TileType.Unknown:
-                        goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
+                        goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         break;
                     case TileType.Horse:
                     case TileType.Arrow:
@@ -318,19 +318,19 @@ namespace Jackal.Core
                     case TileType.Ice:
                     case TileType.Croc:
 					case TileType.Cannon:
-                        goodTargets.AddRange(GetAllAvaliableMoves(task, newPosition, source));
+                        goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source));
                         break;
                     case TileType.Airplane:
                         if (Map.AirplaneUsed == false)
                         {
-                            goodTargets.AddRange(GetAllAvaliableMoves(task, newPosition, source));
+                            goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source));
                         }
                         else {
                             // если нет самолета, то клетка работает как пустое поле
-                            goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
+                            goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                             if (task.NoCoinMoving == false && Map[task.FirstSource].Coins > 0
                                 && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
-                                goodTargets.Add(new AvaliableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition, true))
+                                goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition, true))
                                 {
                                     MoveType = MoveType.WithCoin
                                 });

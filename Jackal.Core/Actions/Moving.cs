@@ -53,7 +53,7 @@ namespace Jackal.Core.Actions
                     task.FirstSource = _to;
                     task.PreviosSource = _from;
 
-                    var targets = game.Board.GetAllAvaliableMoves(task);
+                    var targets = game.Board.GetAllAvailableMoves(task);
                     if (targets.Count == 0)
                     {
                         game.KillPirate(pirate);

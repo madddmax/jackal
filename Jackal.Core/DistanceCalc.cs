@@ -162,8 +162,8 @@ namespace Jackal.Core
 				        task.FirstSource = new TilePosition( position.Position);
 				        task.NoJumpToWater = true;
 				        task.NoCanibal = true;
-				        var avaliableMoves = _board.GetAllAvaliableMoves(task);
-				        newPos.AddRange(avaliableMoves
+				        var availableMoves = _board.GetAllAvailableMoves(task);
+				        newPos.AddRange(availableMoves
 				            .Select(p => new CalcPosition(position.Distance + position.SelfDistance(_board, _unknownSteps), p.Target.Position, _lastCalculatedStepNumber))
 				            .ToList());
 				    }

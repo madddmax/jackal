@@ -119,7 +119,7 @@ namespace Jackal.Core
                 activePirates = team.Pirates.Where(x => x.IsDrunk == false && x.IsInTrap == false);
             }
 
-            var targets = new List<AvaliableMove>();
+            var targets = new List<AvailableMove>();
 
             foreach (var pirate in activePirates)
             {
@@ -132,14 +132,14 @@ namespace Jackal.Core
                     PreviosSource = prevDirection != null ? prevDirection.From : null
                 };
 
-                List<AvaliableMove> temp = Board.GetAllAvaliableMoves(task);
+                List<AvailableMove> temp = Board.GetAllAvailableMoves(task);
                 targets.AddRange(temp);
             }
 
-            foreach (AvaliableMove avaliableMove in targets)
+            foreach (AvailableMove availableMove in targets)
             {
-                Move move = new Move(avaliableMove.Source, avaliableMove.Target, avaliableMove.MoveType);
-                GameActionList actionList = avaliableMove.ActionList;
+                Move move = new Move(availableMove.Source, availableMove.Target, availableMove.MoveType);
+                GameActionList actionList = availableMove.ActionList;
                 AddMoveAndActions(move, actionList);
             }
         }
@@ -156,15 +156,9 @@ namespace Jackal.Core
         public int TurnNo { get; private set; }
         public int LastActionTurnNo { get; internal set; }
 
-        public int CurrentTeamId
-        {
-            get { return TurnNo % _players.Length; }
-        }
+        public int CurrentTeamId => TurnNo % _players.Length;
 
-        public IPlayer CurrentPlayer
-        {
-            get { return _players[CurrentTeamId]; }
-        }
+        public IPlayer CurrentPlayer => _players[CurrentTeamId];
 
         public Direction? PrevSubTurnDirection;
 

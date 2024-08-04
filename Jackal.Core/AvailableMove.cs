@@ -2,18 +2,18 @@ using Jackal.Core.Actions;
 
 namespace Jackal.Core
 {
-    public class AvaliableMove
+    public class AvailableMove
     {
         public TilePosition Source;
         public TilePosition Target;
         public MoveType MoveType=MoveType.Usual;
         public GameActionList ActionList;
 
-        public AvaliableMove()
+        public AvailableMove()
         {
         }
 
-        public AvaliableMove(TilePosition source, TilePosition target, params IGameAction[] actions)
+        public AvailableMove(TilePosition source, TilePosition target, params IGameAction[] actions)
         {
             Source = source;
             Target = target;
