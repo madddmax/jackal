@@ -98,7 +98,8 @@ namespace JackalWebHost.Controllers
                 pirates = gameState.game.Board.AllPirates,
                 map = map,
                 mapId = gameSettings.MapId.Value,
-                stat = DrawService.GetStatistics(gameState.game)
+                stat = DrawService.GetStatistics(gameState.game),
+                moves = DrawService.GetAvailableMoves(gameState.game)
             }, _options);
         }
         
