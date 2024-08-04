@@ -44,11 +44,23 @@ export function* gameStart(action: any) {
         );
         yield put(initMap(result.data.map));
         yield put(applyMainStat(result.data));
+        if (result.data.stat.IsHumanPlayer) {
+            yield put(
+                highlightMoves({
+                    moves: result.data.moves,
+                    pirates: result.data.pirates.filter(
+                        (it) => it.TeamId == result.data.stat.CurrentTeamId,
+                    ),
+                }),
+            );
+        }
         yield put(applyStat(result.data.stat));
-        yield call(gameTurn, {
-            type: sagaActions.GAME_TURN,
-            payload: { gameName: result.data.gameName },
-        });
+        if (!result.data.stat.IsHumanPlayer || result.data.moves?.length == 0) {
+            yield call(gameTurn, {
+                type: sagaActions.GAME_TURN,
+                payload: { gameName: result.data.gameName },
+            });
+        }
     } catch (e) {
         yield put({ type: 'TODO_FETCH_FAILED' });
     }
@@ -89,7 +101,9 @@ export function* oneTurn(action: any) {
         yield put(applyChanges(result.data.changes));
         yield put(applyStat(result.data.stat));
 
-        return !result.data.stat.IsHumanPlayer;
+        return (
+            !result.data.stat.IsHumanPlayer || result.data.moves?.length == 0
+        );
     } catch (e) {
         yield put({ type: 'TODO_FETCH_FAILED' });
     }
