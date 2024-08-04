@@ -351,6 +351,8 @@ namespace Jackal.Core
             {
                 case TileType.Horse:
                     rez = GetHorseDeltas(source.Position)
+                        .Where(x => IsValidMapPosition(x))
+                        .Where(x => Map[x].Type != TileType.Water || Teams.Select(t => t.Ship.Position).Contains(x))
                         .Select(x => IncomeTilePosition(x));
                     break;
 				case TileType.Cannon:
