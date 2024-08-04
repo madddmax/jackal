@@ -361,8 +361,7 @@ namespace Jackal.Core
                         .Select(x => IncomeTilePosition(x));
                     break;
                 case TileType.Balloon:
-                    rez = Teams.Select(x => x.Ship.Position)
-                        .Select(x => IncomeTilePosition(x)); //на корабль
+                    rez = new[] { IncomeTilePosition(ourShip.Position) }; //на корабль
                     break;
                 case TileType.Airplane:
                     if (Map.AirplaneUsed == false)
