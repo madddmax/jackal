@@ -163,15 +163,13 @@ namespace Jackal.Core
         /// </summary>
         /// <param name="task"></param>
         /// <param name="source"></param>
-        /// <param name="previos"></param>
+        /// <param name="prev"></param>
         /// <returns></returns>
-        public List<AvailableMove> GetAllAvailableMoves(GetAllAvaliableMovesTask task, TilePosition source, TilePosition previos)
+        public List<AvailableMove> GetAllAvailableMoves(GetAllAvaliableMovesTask task, TilePosition source, TilePosition prev)
         {
-            Direction previosDirection;
-            if (previos != null)
-                previosDirection = new Direction(previos, source);
-            else
-                previosDirection = new Direction(source, source);
+            var prevDirection = prev != null 
+                ? new Direction(prev, source) 
+                : new Direction(source, source);
 
             var sourceTile = Map[source.Position];
 
@@ -181,27 +179,25 @@ namespace Jackal.Core
 
             List<AvailableMove> goodTargets = new List<AvailableMove>();
 
-            IEnumerable<TilePosition> positionsForCheck;
-
             if (sourceTile.Type.RequreImmediateMove()) //для клеток с редиректами запоминаем, что в текущую клетку уже не надо возвращаться
             {
-                Position previosMoveDelta = null;
+                Position? prevMoveDelta = null;
                 if (sourceTile.Type == TileType.Ice)
-                    previosMoveDelta = previosDirection.GetDelta();
-                task.alreadyCheckedList.Add(new CheckedPosition(source, previosMoveDelta)); //запоминаем, что эту клетку просматривать уже не надо
+                    prevMoveDelta = prevDirection.GetDelta();
+                task.alreadyCheckedList.Add(new CheckedPosition(source, prevMoveDelta)); //запоминаем, что эту клетку просматривать уже не надо
             }
 
             //места всех возможных ходов
-            positionsForCheck = GetAllTargetsForSubturn(source, previosDirection, ourTeam);
+            IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubturn(source, prevDirection, ourTeam);
 
             foreach (var newPosition in positionsForCheck)
             {
                 //проверяем, что на этой клетке
                 var newPositionTile = Map[newPosition.Position];
 
-                if (task.alreadyCheckedList.Count > 0 && previosDirection != null)
+                if (task.alreadyCheckedList.Count > 0 && prevDirection != null)
                 {
-                    Position incomeDelta = Position.GetDelta(previosDirection.To.Position, newPosition.Position);
+                    Position incomeDelta = Position.GetDelta(prevDirection.To.Position, newPosition.Position);
                     CheckedPosition currentCheck = new CheckedPosition(newPosition, incomeDelta);
 
                     if (WasCheckedBefore(task.alreadyCheckedList, currentCheck)) //мы попали по рекурсии в ранее просмотренную клетку
@@ -345,10 +341,7 @@ namespace Jackal.Core
         /// Возвращаем все позиции, в которые в принципе достижимы из заданной клетки за один подход
         /// (не проверяется, допустим ли такой ход)
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="previosMove"></param>
-        /// <returns></returns>
-        public List<TilePosition> GetAllTargetsForSubturn(TilePosition source, Direction previosMove, Team ourTeam)
+        public List<TilePosition> GetAllTargetsForSubturn(TilePosition source, Direction prevMove, Team ourTeam)
         {
             var sourceTile = Map[source.Position];
             var ourShip = ourTeam.Ship;
@@ -382,7 +375,7 @@ namespace Jackal.Core
                             .Select(x => x.Position)
                             .Select(x => IncomeTilePosition(x));
                         rez = shipTargets.Concat(airplaneTargets);
-                        if (previosMove.From != source)
+                        if (prevMove.From != source)
                             rez = rez.Concat(new []{source}); //ход "остаемся на месте"
                     }
                     else
@@ -394,10 +387,10 @@ namespace Jackal.Core
                     }
                     break;
                 case TileType.Croc:
-                    rez = new[] {previosMove.From}; //возвращаемся назад
+                    rez = new[] {prevMove.From}; //возвращаемся назад
                     break;
                 case TileType.Ice:
-                    if (Map[previosMove.From.Position].Type == TileType.Horse)
+                    if (Map[prevMove.From.Position].Type == TileType.Horse)
                     {
                         //повторяем ход лошади
                         rez = GetHorseDeltas(source.Position)
@@ -406,8 +399,8 @@ namespace Jackal.Core
                     else //повторяем предыдущий ход
                     {
                         //TODO - проверка на использование самолета на предыдущем ходу - тогда мы должны повторить ход самолета
-                        var previosDelta = previosMove.GetDelta();
-                        Position target = Position.AddDelta(source.Position, previosDelta);
+                        var prevDelta = prevMove.GetDelta();
+                        var target = Position.AddDelta(source.Position, prevDelta);
                         rez = new[] { target }.Select(x => IncomeTilePosition(x));
                     }
                     break;
