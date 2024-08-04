@@ -31,7 +31,9 @@ export interface GameStartResponse {
     gameName: string;
     mapId: number;
     map: GameMap;
+    pirates: GamePirate[];
     stat: GameStat;
+    moves: GameMove[];
 }
 
 export interface GameTurnResponse {
