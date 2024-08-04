@@ -124,19 +124,12 @@ namespace JackalWebHost.Controllers
 
             var prevBoardStr = JsonHelper.SerialiazeWithType(gameState.board);
 
-            if (gameState.game.CurrentPlayer is WebHumanPlayer)
+            if (gameState.game.CurrentPlayer is WebHumanPlayer && turnNum.HasValue)
             {
-                if (turnNum.HasValue)
-                {
-                    gameState.game.CurrentPlayer.SetHumanMove(turnNum.Value, pirateId);
-                    gameState.game.Turn();
-                }
-                else
-                {
-                    // если пользователь не сделал выбор, то перезапрашиваем ход
-                }
+                gameState.game.CurrentPlayer.SetHumanMove(turnNum.Value, pirateId);
             }
-            else gameState.game.Turn();
+
+            gameState.game.Turn();
 
             var prevBoard = JsonHelper.DeserialiazeWithType<Board>(prevBoardStr);
 
