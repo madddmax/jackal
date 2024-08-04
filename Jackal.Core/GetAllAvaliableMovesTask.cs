@@ -12,7 +12,6 @@ namespace Jackal.Core
         public bool NoTrap;
         public bool NoCanibal;
         public bool NoRespawn;
-        public bool NoJumpToWater;
         public bool NoFort;
     }
 }

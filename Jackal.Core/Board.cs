@@ -245,12 +245,12 @@ namespace Jackal.Core
                         }
                         else //с земли в воду мы можем попасть только если ранее попали на клетку, требующую действия
                         {
-                            if (task.NoJumpToWater == false && sourceTile.Type.RequreImmediateMove())
+                            if (sourceTile.Type.RequreImmediateMove())
                             {
                                 goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                                 
                                 if (task.NoCoinMoving == false && Map[task.FirstSource].Coins > 0)
-                                    goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition))
+                                    goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition, true))
                                     {
                                         MoveType = MoveType.WithCoin
                                     });
