@@ -11,13 +11,17 @@ export interface GameState {
     fields: FieldState[][];
     pirates?: GamePirate[];
     lastMoves: GameMove[];
-    activePirate: string;
+    teams: TeamState[];
+    currentTeamId?: number;
     highlight_x: number;
     highlight_y: number;
-    withCoin?: boolean;
-    lastPirate: string;
 }
 
+export interface TeamState {
+    id: number;
+    activePirate: string;
+    lastPirate: string;
+}
 export interface FieldState {
     image?: string;
     backColor?: string;
@@ -37,12 +41,10 @@ export interface GameStartResponse {
 }
 
 export interface GameTurnResponse {
-    data: {
-        pirates: GamePirate[];
-        changes: GameCell[];
-        stat: GameStat;
-        moves: GameMove[];
-    };
+    pirates: GamePirate[];
+    changes: GameCell[];
+    stat: GameStat;
+    moves: GameMove[];
 }
 
 export interface GameStat {
@@ -106,10 +108,17 @@ interface AcceptableMove {
 }
 
 export interface PirateMoves {
-    pirate?: string;
-    withCoin?: boolean;
     moves?: GameMove[];
-    pirates?: GamePirate[];
+}
+
+export interface PirateChoose {
+    pirate: string;
+    withCoin?: boolean;
+}
+
+export interface PirateChanges {
+    pirates: GamePirate[];
+    moves: GameMove[];
 }
 
 export interface GamePirate {
@@ -120,4 +129,5 @@ export interface GamePirate {
         X: number;
         Y: number;
     };
+    WithCoin?: boolean;
 }
