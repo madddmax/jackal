@@ -134,9 +134,11 @@ namespace JackalWebHost.Controllers
             var prevBoard = JsonHelper.DeserialiazeWithType<Board>(prevBoardStr);
 
             var service = new DrawService();
+            (List<PirateChange> pirateChanges, List<TileChange> tileChanges) = service.Draw(gameState.board, prevBoard);
             return Json(new {
                 pirates = gameState.game.Board.AllPirates,
-                changes = service.Draw(gameState.board, prevBoard),
+                pirateChanges = pirateChanges,
+                changes = tileChanges,
                 stat = DrawService.GetStatistics(gameState.game),
                 moves = DrawService.GetAvailableMoves(gameState.game)
             }, _options);

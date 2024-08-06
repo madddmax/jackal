@@ -6,37 +6,52 @@ namespace JackalWebHost.Service
 {
     public class DrawService
     {
-        public List<TileChange> Draw(Board board, Board prevBoard)
+        public (List<PirateChange> pirateChanges, List<TileChange> tileChanges) Draw(Board board, Board prevBoard)
         {
             var ships = board.Teams.Select(item => item.Ship).ToList();
-
+            
+            var pirateChanges = new List<PirateChange>();
             var diffPositions = new HashSet<Position>();
 
-            //нам нужны координаты клеток, где поменялось расположение пиратов
             var idList = board.AllPirates.Union(prevBoard.AllPirates).Select(x => x.Id).Distinct();
             foreach (var guid in idList)
             {
                 var newPirate = board.AllPirates.FirstOrDefault(x => x.Id == guid);
                 var oldPirate = prevBoard.AllPirates.FirstOrDefault(x => x.Id == guid);
+
+                PirateChange pirateChange;
                 if (newPirate == null)
                 {
+                    pirateChange = new PirateChange(oldPirate) { IsAlive = false };
+                    pirateChanges.Add(pirateChange);
+                    
                     diffPositions.Add(oldPirate.Position.Position);
                 }
                 else if (oldPirate == null)
                 {
+                    pirateChange = new PirateChange(newPirate) { IsAlive = true };
+                    pirateChanges.Add(pirateChange);
+                    
                     diffPositions.Add(newPirate.Position.Position);
                 }
                 else if (oldPirate.Position != newPirate.Position
                          || oldPirate.IsDrunk != newPirate.IsDrunk
                          || oldPirate.IsInTrap != newPirate.IsInTrap)
                 {
+                    pirateChange = new PirateChange(newPirate)
+                    {
+                        IsDrunk = oldPirate.IsDrunk != newPirate.IsDrunk ? newPirate.IsDrunk : null,
+                        IsInTrap = oldPirate.IsInTrap != newPirate.IsInTrap ? newPirate.IsInTrap : null
+                    };
+                    pirateChanges.Add(pirateChange);
+                    
                     diffPositions.Add(oldPirate.Position.Position);
                     diffPositions.Add(newPirate.Position.Position);
                 }
             }
 
-            var changes = new List<TileChange>();
-
+            //координаты клеток, где поменялось расположение пиратов
+            var tileChanges = new List<TileChange>();
             for (int y = 0; y < board.MapSize; y++)
             {
                 for (int x = 0; x < board.MapSize; x++)
@@ -52,12 +67,12 @@ namespace JackalWebHost.Service
                         var chg = Draw(tile, ships);
                         chg.X = x;
                         chg.Y = y;
-                        changes.Add(chg);
+                        tileChanges.Add(chg);
                     }
                 }
             }
 
-            return changes;
+            return (pirateChanges, tileChanges);
         }
         
         /// <summary>
