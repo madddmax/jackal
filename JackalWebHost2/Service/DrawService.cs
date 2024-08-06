@@ -28,8 +28,7 @@ namespace JackalWebHost.Service
                 }
                 else if (oldPirate.Position != newPirate.Position
                          || oldPirate.IsDrunk != newPirate.IsDrunk
-                         || oldPirate.IsInTrap != newPirate.IsInTrap
-                         || oldPirate.IsInLove != newPirate.IsInLove)
+                         || oldPirate.IsInTrap != newPirate.IsInTrap)
                 {
                     diffPositions.Add(oldPirate.Position.Position);
                     diffPositions.Add(newPirate.Position.Position);

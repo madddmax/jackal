@@ -21,12 +21,6 @@ namespace Jackal.Core
 
         [JsonProperty]
         public bool IsInTrap;
-
-        /// <summary>
-        /// todo Устанавливать, если пират нашел женщину
-        /// </summary>
-        [JsonProperty]
-        public bool IsInLove;
         
         public Pirate(int teamId, TilePosition position)
         {
