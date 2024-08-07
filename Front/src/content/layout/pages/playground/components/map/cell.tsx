@@ -40,6 +40,7 @@ function Cell(props: CellProps) {
                             ? `rotate(${field.rotate * 90}deg)`
                             : 'none',
                     opacity: field.moveNum !== undefined ? '0.5' : '1',
+                    cursor: field.moveNum !== undefined ? 'pointer' : 'default',
                 }}
                 onClick={() => {
                     if (field.moveNum !== undefined) {

@@ -10,6 +10,8 @@ import {
     PirateChoose,
     PirateMoves,
 } from './types';
+import { getAnotherRandomValue, getRandomValues } from '/app/global';
+import { Constants } from '/app/constants';
 
 export const gameSlice = createSlice({
     name: 'game',
@@ -51,6 +53,7 @@ export const gameSlice = createSlice({
                 id: it.id,
                 activePirate: '',
                 lastPirate: '',
+                hasPhotos: false,
             }));
         },
         setTeam: (state, action: PayloadAction<number>) => {
@@ -59,6 +62,21 @@ export const gameSlice = createSlice({
                 action.payload !== state.currentTeamId
             ) {
                 state.currentTeamId = action.payload;
+            }
+            let team = state.teams.find((it) => it.id == state.currentTeamId!)!;
+            if (!team.hasPhotos) {
+                let arr = getRandomValues(
+                    Constants.PhotoMinId,
+                    Constants.PhotoMaxId,
+                    state.pirates?.filter((it) => it.TeamId == team.id)
+                        .length ?? 0,
+                );
+                state.pirates
+                    ?.filter((it) => it.TeamId == team.id)
+                    .forEach((it, index) => {
+                        it.PhotoId = arr[index];
+                    });
+                team.hasPhotos = true;
             }
         },
         choosePirate: (state, action: PayloadAction<PirateChoose>) => {
@@ -129,12 +147,27 @@ export const gameSlice = createSlice({
         },
         applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {
             action.payload.changes.forEach((it) => {
-                let pirate = state.pirates!.find((pr) => pr.Id === it.Id)!;
-                pirate.Position = it.Position;
                 if (it.IsAlive === false) {
                     state.pirates = state.pirates?.filter(
                         (pr) => pr.Id !== it.Id,
                     );
+                } else if (it.IsAlive === true) {
+                    let nm = getAnotherRandomValue(
+                        Constants.PhotoMinId,
+                        Constants.PhotoMaxId,
+                        state.pirates
+                            ?.filter((pr) => pr.TeamId == it.TeamId)
+                            .map((pr) => pr.PhotoId ?? 0) ?? [],
+                    );
+                    state.pirates?.push({
+                        Id: it.Id,
+                        TeamId: it.TeamId,
+                        Position: it.Position,
+                        PhotoId: nm,
+                    });
+                } else {
+                    let pirate = state.pirates!.find((pr) => pr.Id === it.Id)!;
+                    pirate.Position = it.Position;
                 }
             });
 

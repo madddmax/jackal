@@ -21,6 +21,7 @@ export interface TeamState {
     id: number;
     activePirate: string;
     lastPirate: string;
+    hasPhotos: boolean;
 }
 export interface FieldState {
     image?: string;
@@ -132,6 +133,7 @@ export interface GamePirate {
         Y: number;
     };
     WithCoin?: boolean;
+    PhotoId?: number;
 }
 
 export interface PirateDiff {

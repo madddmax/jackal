@@ -34,7 +34,7 @@ function Pirates() {
                     .map((girl, index) => (
                         <Pirate
                             key={`pirate_${index}`}
-                            photo={`/pictures/pirate_${index + 1}.png`}
+                            photoId={girl.PhotoId || 0}
                             isActive={team.activePirate === girl.Id}
                             withCoin={girl.WithCoin}
                             onClick={onClick(girl)}
