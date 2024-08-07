@@ -1,6 +1,6 @@
 ﻿namespace JackalWebHost.Models
 {
-    public class LevelPosition
+    public class PiratePosition
     {
         public List<Guid> PirateIds;
         public int PirateNum;

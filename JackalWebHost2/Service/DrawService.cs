@@ -106,7 +106,7 @@ namespace JackalWebHost.Service
         public static List<DrawMove> GetAvailableMoves(Game game)
         {
             var result = new List<DrawMove>();
-            var pirates = new List<LevelPosition>();
+            var pirates = new List<PiratePosition>();
 
             int index = 0;
             int mindex = 1;
@@ -123,7 +123,7 @@ namespace JackalWebHost.Service
                         .Select(p => p.Id)
                         .ToList();
                     
-                    pirate = new LevelPosition
+                    pirate = new PiratePosition
                     {
                         PirateIds = pirateIds,
                         PirateNum = mindex++,
@@ -140,7 +140,7 @@ namespace JackalWebHost.Service
                     WithCoin = move.WithCoins,
                     WithRespawn = move.WithRespawn,
                     From = pirate,
-                    To = new LevelPosition
+                    To = new PiratePosition
                     {
                         X = move.To.X,
                         Y = move.To.Y,
