@@ -50,6 +50,7 @@ export const gameSlice = createSlice({
             state.teams = action.payload.stat.Teams.map((it) => ({
                 id: it.id,
                 activePirate: '',
+                lastPirate: '',
             }));
         },
         setTeam: (state, action: PayloadAction<number>) => {
@@ -127,21 +128,30 @@ export const gameSlice = createSlice({
                 });
         },
         applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {
-            let girls = [] as string[];
-            action.payload.moves
-                .filter((move) => move.WithCoin)
-                .forEach((move) => {
-                    girls.push(...move.From.PirateIds);
-                });
-            let girlIds = new Set(girls);
-            state.pirates?.forEach((it) => {
-                let pos = action.payload.pirates?.find(
-                    (pt) => pt.Id === it.Id,
-                )?.Position;
-                if (pos) it.Position = pos;
-                if (!girlIds.has(it.Id)) it.WithCoin = undefined;
-                else it.WithCoin = it.WithCoin ?? true;
+            action.payload.changes.forEach((it) => {
+                let pirate = state.pirates!.find((pr) => pr.Id === it.Id)!;
+                pirate.Position = it.Position;
+                if (it.IsAlive === false) {
+                    state.pirates = state.pirates?.filter(
+                        (pr) => pr.Id !== it.Id,
+                    );
+                }
             });
+
+            if (action.payload.isHumanPlayer) {
+                let girls = [] as string[];
+                action.payload.moves
+                    .filter((move) => move.WithCoin)
+                    .forEach((move) => {
+                        girls.push(...move.From.PirateIds);
+                    });
+                let girlIds = new Set(girls);
+                state.pirates?.forEach((it) => {
+                    it.WithCoin = girlIds.has(it.Id)
+                        ? (it.WithCoin ?? true)
+                        : undefined;
+                });
+            }
         },
         applyChanges: (state, action: PayloadAction<GameCell[]>) => {
             action.payload.forEach((it) => {

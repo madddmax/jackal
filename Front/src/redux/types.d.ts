@@ -42,6 +42,7 @@ export interface GameStartResponse {
 
 export interface GameTurnResponse {
     pirates: GamePirate[];
+    pirateChanges: PirateDiff[];
     changes: GameCell[];
     stat: GameStat;
     moves: GameMove[];
@@ -117,8 +118,9 @@ export interface PirateChoose {
 }
 
 export interface PirateChanges {
-    pirates: GamePirate[];
+    changes: PirateDiff[];
     moves: GameMove[];
+    isHumanPlayer: boolean;
 }
 
 export interface GamePirate {
@@ -130,4 +132,17 @@ export interface GamePirate {
         Y: number;
     };
     WithCoin?: boolean;
+}
+
+export interface PirateDiff {
+    Id: string;
+    TeamId: number;
+    Position: {
+        Level: number;
+        X: number;
+        Y: number;
+    };
+    IsAlive?: boolean;
+    IsDrunk?: boolean;
+    IsInTrap?: boolean;
 }

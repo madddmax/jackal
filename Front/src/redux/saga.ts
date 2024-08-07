@@ -84,14 +84,15 @@ export function* oneTurn(action: any) {
             return false;
         }
 
+        yield put(
+            applyPirateChanges({
+                moves: result.data.moves,
+                changes: result.data.pirateChanges,
+                isHumanPlayer: result.data.stat.IsHumanPlayer,
+            }),
+        );
         if (result.data.stat.IsHumanPlayer) {
             yield put(setTeam(result.data.stat.CurrentTeamId));
-            yield put(
-                applyPirateChanges({
-                    moves: result.data.moves,
-                    pirates: result.data.pirates,
-                }),
-            );
             yield put(highlightMoves({ moves: result.data.moves }));
         }
         yield put(applyChanges(result.data.changes));
