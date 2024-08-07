@@ -2,13 +2,13 @@ using Jackal.Core;
 
 namespace JackalWebHost.Models;
 
-public record PirateChange(Pirate pirate)
+public class PirateChange(Pirate pirate)
 {
     public Guid Id = pirate.Id;
     
     public int TeamId = pirate.TeamId;
     
-    public TilePosition Position = pirate.Position;
+    public LevelPosition Position = new(pirate.Position);
     
     public bool? IsAlive;
     
