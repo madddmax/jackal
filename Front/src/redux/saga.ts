@@ -3,10 +3,12 @@ import axios from 'axios';
 import config from '/app/config';
 import {
     initMap,
+    setTeam,
     highlightMoves,
+    applyPirateChanges,
     applyChanges,
     applyStat,
-    applyMainStat,
+    initGame,
 } from './gameSlice';
 import { GameStartResponse, GameTurnResponse } from './types';
 
@@ -43,16 +45,10 @@ export function* gameStart(action: any) {
                 }),
         );
         yield put(initMap(result.data.map));
-        yield put(applyMainStat(result.data));
+        yield put(initGame(result.data));
         if (result.data.stat.IsHumanPlayer) {
-            yield put(
-                highlightMoves({
-                    moves: result.data.moves,
-                    pirates: result.data.pirates.filter(
-                        (it) => it.TeamId == result.data.stat.CurrentTeamId,
-                    ),
-                }),
-            );
+            yield put(setTeam(result.data.stat.CurrentTeamId));
+            yield put(highlightMoves({ moves: result.data.moves }));
         }
         yield put(applyStat(result.data.stat));
         if (!result.data.stat.IsHumanPlayer || result.data.moves?.length == 0) {
@@ -75,7 +71,7 @@ export function* gameTurn(action: any) {
 
 export function* oneTurn(action: any) {
     try {
-        let result: GameTurnResponse = yield call(
+        let result: { data: GameTurnResponse } = yield call(
             async () =>
                 await axios({
                     url: `${config.BaseApi}Game/MakeTurn`,
@@ -88,15 +84,16 @@ export function* oneTurn(action: any) {
             return false;
         }
 
+        yield put(
+            applyPirateChanges({
+                moves: result.data.moves,
+                changes: result.data.pirateChanges,
+                isHumanPlayer: result.data.stat.IsHumanPlayer,
+            }),
+        );
         if (result.data.stat.IsHumanPlayer) {
-            yield put(
-                highlightMoves({
-                    moves: result.data.moves,
-                    pirates: result.data.pirates.filter(
-                        (it) => it.TeamId == result.data.stat.CurrentTeamId,
-                    ),
-                }),
-            );
+            yield put(setTeam(result.data.stat.CurrentTeamId));
+            yield put(highlightMoves({ moves: result.data.moves }));
         }
         yield put(applyChanges(result.data.changes));
         yield put(applyStat(result.data.stat));

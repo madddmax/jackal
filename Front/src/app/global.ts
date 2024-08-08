@@ -6,3 +6,34 @@ export const uuidGen = () => {
         ).toString(16),
     );
 };
+
+export const getRandomValues = (
+    min: number,
+    max: number,
+    count: number,
+): number[] => {
+    if (max - min < count) return [];
+
+    let arr = [] as number[];
+    while (arr.length < count) {
+        let x = Math.floor(Math.random() * (max - min) + min);
+        if (!arr.includes(x)) {
+            arr.push(x);
+        }
+    }
+    return arr;
+};
+
+export const getAnotherRandomValue = (
+    min: number,
+    max: number,
+    except: number[],
+): number => {
+    if (max - min < except.length) return 0;
+
+    let num = except.length > 0 ? except[0] : min;
+    while (except.includes(num)) {
+        num = Math.floor(Math.random() * (max - min) + min);
+    }
+    return num;
+};

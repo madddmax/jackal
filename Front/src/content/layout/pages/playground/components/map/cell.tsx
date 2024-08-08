@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 
 import { sagaActions } from '/redux/saga';
-import { FieldState, ReduxState } from '/redux/types';
+import { FieldState, ReduxState, TeamState } from '/redux/types';
 import cn from 'classnames';
 import './cell.less';
 
@@ -18,9 +18,11 @@ function Cell(props: CellProps) {
     const gamename = useSelector<ReduxState, string | undefined>(
         (state) => state.game.gameName,
     );
-    const activePirate = useSelector<ReduxState, string>(
-        (state) => state.game.activePirate,
+    const team = useSelector<ReduxState, TeamState>(
+        (state) =>
+            state.game.teams.find((it) => it.id === state.game.currentTeamId!)!,
     );
+
     const dispatch = useDispatch();
 
     return (
@@ -38,6 +40,7 @@ function Cell(props: CellProps) {
                             ? `rotate(${field.rotate * 90}deg)`
                             : 'none',
                     opacity: field.moveNum !== undefined ? '0.5' : '1',
+                    cursor: field.moveNum !== undefined ? 'pointer' : 'default',
                 }}
                 onClick={() => {
                     if (field.moveNum !== undefined) {
@@ -46,7 +49,7 @@ function Cell(props: CellProps) {
                             payload: {
                                 gameName: gamename,
                                 turnNum: field.moveNum,
-                                pirateId: activePirate,
+                                pirateId: team.activePirate,
                             },
                         });
                     }

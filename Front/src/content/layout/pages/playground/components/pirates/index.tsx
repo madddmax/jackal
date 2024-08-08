@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { highlightMoves } from '/redux/gameSlice';
+import { choosePirate } from '/redux/gameSlice';
 import Pirate from './pirate';
 import './pirates.css';
-import { GamePirate, ReduxState } from '/redux/types';
+import { GamePirate, ReduxState, TeamState } from '/redux/types';
 
 function Pirates() {
     const dispatch = useDispatch();
@@ -10,38 +10,36 @@ function Pirates() {
     const pirates = useSelector<ReduxState, GamePirate[] | undefined>(
         (state) => state.game.pirates,
     );
-    const activePirate = useSelector<ReduxState, string>(
-        (state) => state.game.activePirate,
-    );
-    const withCoin = useSelector<ReduxState, boolean | undefined>(
-        (state) => state.game.withCoin,
+    const team = useSelector<ReduxState, TeamState>(
+        (state) =>
+            state.game.teams.find((it) => it.id === state.game.currentTeamId!)!,
     );
 
-    const onClick = (id: string) => () =>
+    const onClick = (girl: GamePirate) => () =>
         dispatch(
-            highlightMoves({
-                pirate: id,
+            choosePirate({
+                pirate: girl.Id,
                 withCoin:
-                    activePirate !== id || withCoin === undefined
-                        ? undefined
-                        : !withCoin,
+                    team.activePirate !== girl.Id
+                        ? girl.WithCoin
+                        : !girl.WithCoin,
             }),
         );
 
     return (
         <>
             {pirates &&
-                pirates.map((girl, index) => (
-                    <Pirate
-                        key={`pirate_${index}`}
-                        photo={`/pictures/pirate_${index + 1}.png`}
-                        isActive={activePirate === girl.Id}
-                        withCoin={
-                            activePirate === girl.Id ? withCoin : undefined
-                        }
-                        onClick={onClick(girl.Id)}
-                    />
-                ))}
+                pirates
+                    .filter((it) => it.TeamId == team.id)
+                    .map((girl, index) => (
+                        <Pirate
+                            key={`pirate_${index}`}
+                            photoId={girl.PhotoId || 0}
+                            isActive={team.activePirate === girl.Id}
+                            withCoin={girl.WithCoin}
+                            onClick={onClick(girl)}
+                        />
+                    ))}
         </>
     );
 }
