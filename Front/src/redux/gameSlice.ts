@@ -56,6 +56,13 @@ export const gameSlice = createSlice({
                 lastPirate: '',
                 hasPhotos: false,
             }));
+
+            const width = window.innerWidth;
+            const height = window.innerHeight - 56;
+            const mSize = width > height ? height : width;
+            if (mSize > 560) {
+                state.cellSize = Math.floor(mSize / state.mapSize / 10) * 10;
+            }
         },
         setTeam: (state, action: PayloadAction<number>) => {
             if (
@@ -95,6 +102,7 @@ export const gameSlice = createSlice({
             gameSlice.caseReducers.highlightMoves(state, highlightMoves({}));
         },
         highlightMoves: (state, action: PayloadAction<PirateMoves>) => {
+            console.log('highlightMoves');
             // undraw previous moves
             state.lastMoves.forEach((move) => {
                 const cell = state.fields[move.To.Y][move.To.X];
