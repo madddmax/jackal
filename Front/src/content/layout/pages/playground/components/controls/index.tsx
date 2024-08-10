@@ -41,6 +41,7 @@ function Controls() {
                 <div className={cn(classes.teams, 'container')}>
                     {game?.stat?.Teams.map((it) => (
                         <div
+                            key={`ctrl_${it.id}`}
                             className="row"
                             style={{ backgroundColor: it.backcolor }}
                         >
