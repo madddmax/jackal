@@ -7,6 +7,7 @@ export interface GameState {
     gameName?: string;
     mapId?: number;
     mapSize?: number;
+    cellSize: number;
 
     fields: FieldState[][];
     pirates?: GamePirate[];
