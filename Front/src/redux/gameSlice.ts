@@ -16,6 +16,7 @@ import { Constants } from '/app/constants';
 export const gameSlice = createSlice({
     name: 'game',
     initialState: {
+        cellSize: 50,
         fields: [[]],
         lastMoves: [],
         teams: [],
