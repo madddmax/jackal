@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Jackal.Core
 {
-    public class MapGenerator : IMapGenerator
+    public class ClassicMapGenerator : IMapGenerator
     {
         public int MapId { get; }
         private readonly Random _rand;
@@ -12,7 +12,7 @@ namespace Jackal.Core
         
         public int CoinsOnMap { get; }
 
-        public MapGenerator(int mapId, int mapSize)
+        public ClassicMapGenerator(int mapId, int mapSize)
         {
             MapId = mapId;
             _rand = new Random(MapId + 5000000);
