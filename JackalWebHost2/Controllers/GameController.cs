@@ -136,7 +136,6 @@ namespace JackalWebHost.Controllers
             var service = new DrawService();
             (List<PirateChange> pirateChanges, List<TileChange> tileChanges) = service.Draw(gameState.board, prevBoard);
             return Json(new {
-                pirates = gameState.game.Board.AllPirates,
                 pirateChanges = pirateChanges,
                 changes = tileChanges,
                 stat = DrawService.GetStatistics(gameState.game),
