@@ -68,7 +68,7 @@ namespace Jackal.Core.Actions
                 {
                     _to = new TilePosition(_to.Position, newTile.SpinningCount - 1);
                 }
-                else if (newTile.Type == TileType.Canibal)
+                else if (newTile.Type == TileType.Cannibal)
                 {
                     game.KillPirate(pirate);
                     return GameActionResult.Die;
@@ -179,7 +179,7 @@ namespace Jackal.Core.Actions
                         }
                     }
                     break;
-                case TileType.Canibal:
+                case TileType.Cannibal:
                     game.KillPirate(pirate);
                     return GameActionResult.Die;
             }

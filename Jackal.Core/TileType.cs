@@ -21,7 +21,7 @@
         Croc,
         Spinning,
         Trap,
-        Canibal,
+        Cannibal,
 		Cannon
     }
 }

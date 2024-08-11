@@ -101,7 +101,7 @@ namespace Jackal.Core
 
             AddDef(TileType.Trap, 3);
 
-            AddDef(TileType.Canibal, 1);
+            AddDef(TileType.Cannibal, 1);
 
             while (_list.Count < TotalTiles)
             {

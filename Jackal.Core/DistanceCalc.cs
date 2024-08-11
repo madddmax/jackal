@@ -83,7 +83,7 @@ namespace Jackal.Core
 				var tile = board.Map[Position];
 				switch (tile.Type)
 				{
-					case TileType.Canibal:
+					case TileType.Cannibal:
 					case TileType.Croc:
 					case TileType.Water:
 					case TileType.Trap:

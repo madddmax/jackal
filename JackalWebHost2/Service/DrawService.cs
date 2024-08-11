@@ -318,7 +318,7 @@ namespace JackalWebHost.Service
                 case TileType.Trap:
                     filename = @"trap";
                     break;
-                case TileType.Canibal:
+                case TileType.Cannibal:
                     filename = @"canibal";
                     break;
                 case TileType.Spinning:

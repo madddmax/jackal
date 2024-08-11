@@ -270,7 +270,7 @@ namespace Jackal.Core
                             goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         break;
 
-                    case TileType.Canibal:
+                    case TileType.Cannibal:
                         if (task.NoCanibal==false)
                             goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         break;
