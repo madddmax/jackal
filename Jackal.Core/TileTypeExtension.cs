@@ -5,7 +5,7 @@
         /// <summary>
         /// Клетка требует немедленного движения по попаданию на неё?
         /// </summary>
-        public static bool RequreImmediateMove(this TileType type, bool used = false)
+        public static bool RequireImmediateMove(this TileType type, bool used = false)
         {
             return type == TileType.Arrow
                    || type == TileType.Horse

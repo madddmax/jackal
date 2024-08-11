@@ -170,7 +170,7 @@ namespace Jackal.Core
 
             List<AvailableMove> goodTargets = new List<AvailableMove>();
 
-            if (sourceTile.Type.RequreImmediateMove()) //для клеток с редиректами запоминаем, что в текущую клетку уже не надо возвращаться
+            if (sourceTile.Type.RequireImmediateMove()) //для клеток с редиректами запоминаем, что в текущую клетку уже не надо возвращаться
             {
                 Position? prevMoveDelta = null;
                 if (sourceTile.Type == TileType.Ice)
@@ -233,7 +233,7 @@ namespace Jackal.Core
                         }
                         else //с земли в воду мы можем попасть только если ранее попали на клетку, требующую действия
                         {
-                            if (sourceTile.Type.RequreImmediateMove())
+                            if (sourceTile.Type.RequireImmediateMove())
                             {
                                 goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                                 
@@ -361,7 +361,7 @@ namespace Jackal.Core
                     {
                         rez = AllTiles(x =>
                                 (x.Type != TileType.Water || x.Position == ourShip.Position)
-                                && x.Type.RequreImmediateMove(x.Used) == false
+                                && x.Type.RequireImmediateMove(x.Used) == false
                             )
                             .Select(x => x.Position)
                             .Select(IncomeTilePosition);

@@ -50,7 +50,7 @@ namespace Jackal.Core.Actions
 
                 game.LastActionTurnNo = game.TurnNo;
 
-                if (newTile.Type.RequreImmediateMove())
+                if (newTile.Type.RequireImmediateMove())
                 {
                     var task = new GetAllAvaliableMovesTask();
                     task.TeamId = pirate.TeamId;
