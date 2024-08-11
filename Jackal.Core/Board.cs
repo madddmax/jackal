@@ -360,8 +360,7 @@ namespace Jackal.Core
                     if (sourceTile.Used == false)
                     {
                         rez = AllTiles(x =>
-                                (x.Type != TileType.Water || x.Position == ourShip.Position)
-                                && x.Type.RequireImmediateMove(x.Used) == false
+                                x.Type != TileType.Water || x.Position == ourShip.Position
                             )
                             .Select(x => x.Position)
                             .Select(IncomeTilePosition);

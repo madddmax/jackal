@@ -5,7 +5,7 @@
         /// <summary>
         /// Клетка требует немедленного движения по попаданию на неё?
         /// </summary>
-        public static bool RequireImmediateMove(this TileType type, bool used = false)
+        public static bool RequireImmediateMove(this TileType type)
         {
             return type == TileType.Arrow
                    || type == TileType.Horse
@@ -13,7 +13,7 @@
                    || type == TileType.Balloon
                    || type == TileType.Ice
                    || type == TileType.Crocodile
-                   || (type == TileType.Airplane && !used);
+                   || type == TileType.Airplane;
         }
 
         public static int CoinsCount(this TileType source)
