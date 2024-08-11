@@ -12,7 +12,7 @@ function Controls() {
     const getWinner = (stats: GameStat) => {
         var maxgold = 0;
         let winner = '';
-        stats?.Teams.forEach((team: GameTeamStat) => {
+        stats?.teams.forEach((team: GameTeamStat) => {
             if (team.gold > maxgold) {
                 maxgold = team.gold;
                 winner = team.name;
@@ -36,11 +36,12 @@ function Controls() {
                     Размер карты: <span>{game?.mapSize}</span>
                 </div>
                 <div>
-                    Номер хода: <span>{game?.stat?.TurnNo}</span>
+                    Номер хода: <span>{game?.stat?.turnNo}</span>
                 </div>
                 <div className={cn(classes.teams, 'container')}>
-                    {game?.stat?.Teams.map((it) => (
+                    {game?.stat?.teams.map((it) => (
                         <div
+                            key={`ctrl_${it.id}`}
                             className="row"
                             style={{ backgroundColor: it.backcolor }}
                         >
@@ -51,7 +52,7 @@ function Controls() {
                 </div>
             </div>
 
-            {game?.stat?.IsGameOver && (
+            {game?.stat?.isGameOver && (
                 <Alert variant={'danger'} className="my-2">
                     Игра закончена. Победил {getWinner(game.stat)}'
                 </Alert>

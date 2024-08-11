@@ -1,4 +1,3 @@
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
@@ -15,31 +14,29 @@ function Playground() {
     );
 
     return (
-        <Container>
-            <Row className="justify-content-center gap-1">
-                {gamename && (
-                    <>
-                        <Col
-                            xs={{ span: 12, order: 'last' }}
-                            lg={2}
-                            xl={1}
-                            className={classes.pirates}
-                        >
-                            <Pirates />
-                        </Col>
-                        <Col xs={12} lg={{ span: 9, order: 'last' }} xl={7}>
-                            <Map />
-                        </Col>
-                        <Col
-                            xs={{ span: 12, order: 'first' }}
-                            xl={{ span: 3, order: 'last' }}
-                        >
-                            <Controls />
-                        </Col>
-                    </>
-                )}
-            </Row>
-        </Container>
+        <Row className="justify-content-center gap-1">
+            {gamename && (
+                <>
+                    <Col
+                        xs={{ span: 12, order: 'last' }}
+                        lg={2}
+                        xl={1}
+                        className={classes.pirates}
+                    >
+                        <Pirates />
+                    </Col>
+                    <Col xs={12} lg={{ span: 9, order: 'last' }} xl={7}>
+                        <Map />
+                    </Col>
+                    <Col
+                        xs={{ span: 12, order: 'first' }}
+                        xl={{ span: 3, order: 'last' }}
+                    >
+                        <Controls />
+                    </Col>
+                </>
+            )}
+        </Row>
     );
 }
 

@@ -7,6 +7,7 @@ export interface GameState {
     gameName?: string;
     mapId?: number;
     mapSize?: number;
+    cellSize: number;
 
     fields: FieldState[][];
     pirates?: GamePirate[];
@@ -50,11 +51,11 @@ export interface GameTurnResponse {
 }
 
 export interface GameStat {
-    TurnNo: number;
-    CurrentTeamId: number;
-    IsHumanPlayer: boolean;
-    IsGameOver: boolean;
-    Teams: GameTeamStat[];
+    turnNo: number;
+    currentTeamId: number;
+    isHumanPlayer: boolean;
+    isGameOver: boolean;
+    teams: GameTeamStat[];
 }
 
 interface GameTeamStat {
@@ -65,48 +66,47 @@ interface GameTeamStat {
 }
 
 export interface GameMap {
-    Changes: GameCell[];
-    Height: number;
-    Width: number;
+    changes: GameCell[];
+    height: number;
+    width: number;
 }
 
 interface GameCell {
-    BackgroundImageSrc: string;
-    BackgroundColor: string;
-    Rotate: number;
-    Levels: GameLevel[];
-    X: number;
-    Y: number;
+    backgroundImageSrc: string;
+    backgroundColor: string;
+    rotate: number;
+    levels: GameLevel[];
+    x: number;
+    y: number;
 }
 
 interface GameLevel {
-    Level: number;
+    level: number;
     hasPirates: boolean;
-    Pirate?: GameThing;
+    pirate?: GameThing;
     hasCoins: boolean;
-    Coin?: GameThing;
+    coin?: GameThing;
 }
 
 interface GameThing {
-    ForeColor?: string;
-    BackColor?: string;
-    Text: string;
+    foreColor?: string;
+    backColor?: string;
+    text: string;
 }
 
 export interface GameMove {
-    MoveNum: number;
-    From: AcceptableMove;
-    To: AcceptableMove;
-    WithCoin: boolean;
-    WithRespawn: boolean;
+    moveNum: number;
+    from: AcceptableMove;
+    to: AcceptableMove;
+    withCoin: boolean;
+    withRespawn: boolean;
 }
 
 interface AcceptableMove {
-    PirateIds: string[];
-    PirateNum: number;
-    Level: number;
-    X: number;
-    Y: number;
+    pirateIds: string[];
+    level: number;
+    x: number;
+    y: number;
 }
 
 export interface PirateMoves {
@@ -125,26 +125,26 @@ export interface PirateChanges {
 }
 
 export interface GamePirate {
-    Id: string;
-    TeamId: number;
-    Position: {
-        Level: number;
-        X: number;
-        Y: number;
+    id: string;
+    teamId: number;
+    position: {
+        level: number;
+        x: number;
+        y: number;
     };
-    WithCoin?: boolean;
-    PhotoId?: number;
+    withCoin?: boolean;
+    photoId?: number;
 }
 
 export interface PirateDiff {
-    Id: string;
-    TeamId: number;
-    Position: {
-        Level: number;
-        X: number;
-        Y: number;
+    id: string;
+    teamId: number;
+    position: {
+        level: number;
+        x: number;
+        y: number;
     };
-    IsAlive?: boolean;
-    IsDrunk?: boolean;
-    IsInTrap?: boolean;
+    isAlive?: boolean;
+    isDrunk?: boolean;
+    isInTrap?: boolean;
 }

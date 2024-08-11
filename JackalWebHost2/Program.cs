@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 
 namespace JackalWebHost2
 {
@@ -25,7 +26,16 @@ namespace JackalWebHost2
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+            
+            // builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+            builder.Services.AddControllers(opt =>
+            {
+                opt.SuppressAsyncSuffixInActionNames = true;
+            }).AddNewtonsoftJson(jsonOpt =>
+            {
+                jsonOpt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                jsonOpt.SerializerSettings.DateFormatString = "dd.MM.yyyy";
+            });
 
             //builder.Services.AddAuthentication()
             //   .AddGoogle(options =>

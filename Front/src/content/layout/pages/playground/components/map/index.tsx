@@ -7,7 +7,7 @@ import { GameState, ReduxState } from '/redux/types';
 function Map() {
     const game = useSelector<ReduxState, GameState>((state) => state.game);
 
-    const mapSize = 51 * game.fields.length - 1;
+    const mapSize = (game.cellSize + 1) * game.fields.length - 1;
 
     return (
         <div
