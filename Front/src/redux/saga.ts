@@ -45,13 +45,14 @@ export function* gameStart(action: any) {
                 }),
         );
         yield put(initMap(result.data.map));
+        console.log('gameStart');
         yield put(initGame(result.data));
-        if (result.data.stat.IsHumanPlayer) {
-            yield put(setTeam(result.data.stat.CurrentTeamId));
+        if (result.data.stat.isHumanPlayer) {
+            yield put(setTeam(result.data.stat.currentTeamId));
             yield put(highlightMoves({ moves: result.data.moves }));
         }
         yield put(applyStat(result.data.stat));
-        if (!result.data.stat.IsHumanPlayer || result.data.moves?.length == 0) {
+        if (!result.data.stat.isHumanPlayer || result.data.moves?.length == 0) {
             yield call(gameTurn, {
                 type: sagaActions.GAME_TURN,
                 payload: { gameName: result.data.gameName },
@@ -79,7 +80,7 @@ export function* oneTurn(action: any) {
                     data: action.payload,
                 }),
         );
-        if (result.data.stat.IsGameOver) {
+        if (result.data.stat.isGameOver) {
             yield put(applyStat(result.data.stat));
             return false;
         }
@@ -88,18 +89,18 @@ export function* oneTurn(action: any) {
             applyPirateChanges({
                 moves: result.data.moves,
                 changes: result.data.pirateChanges,
-                isHumanPlayer: result.data.stat.IsHumanPlayer,
+                isHumanPlayer: result.data.stat.isHumanPlayer,
             }),
         );
-        if (result.data.stat.IsHumanPlayer) {
-            yield put(setTeam(result.data.stat.CurrentTeamId));
+        if (result.data.stat.isHumanPlayer) {
+            yield put(setTeam(result.data.stat.currentTeamId));
             yield put(highlightMoves({ moves: result.data.moves }));
         }
         yield put(applyChanges(result.data.changes));
         yield put(applyStat(result.data.stat));
 
         return (
-            !result.data.stat.IsHumanPlayer || result.data.moves?.length == 0
+            !result.data.stat.isHumanPlayer || result.data.moves?.length == 0
         );
     } catch (e) {
         yield put({ type: 'TODO_FETCH_FAILED' });

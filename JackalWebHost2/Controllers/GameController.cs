@@ -17,27 +17,6 @@ namespace JackalWebHost.Controllers
         private readonly MemoryCacheEntryOptions _cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromHours(1));
         
-        private readonly JsonSerializerOptions _options = new()
-        {
-            AllowTrailingCommas = false,
-            DefaultBufferSize = 1024,
-            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-            DictionaryKeyPolicy = null,
-            Encoder = null,
-            IgnoreReadOnlyFields = false,
-            IgnoreReadOnlyProperties = false,
-            IncludeFields = true,
-            MaxDepth = 10,
-            NumberHandling = JsonNumberHandling.Strict,
-            PropertyNameCaseInsensitive = true,
-            PropertyNamingPolicy = null,
-            ReadCommentHandling = JsonCommentHandling.Disallow,
-            ReferenceHandler = null,
-            TypeInfoResolver = null,
-            UnknownTypeHandling = JsonUnknownTypeHandling.JsonElement,
-            WriteIndented = false
-        };
-
         public GameController(IMemoryCache gamesSessionsCache)
         {
             _gamesSessionsCache = gamesSessionsCache;
@@ -94,13 +73,13 @@ namespace JackalWebHost.Controllers
             var map = service.Map(gameState.board);
 
             return Json(new {
-                gameName = gameName,
+                gameName,
                 pirates = gameState.game.Board.AllPirates,
-                map = map,
+                map,
                 mapId = gameSettings.MapId.Value,
                 stat = DrawService.GetStatistics(gameState.game),
                 moves = DrawService.GetAvailableMoves(gameState.game)
-            }, _options);
+            });
         }
         
         /// <summary>
@@ -137,11 +116,11 @@ namespace JackalWebHost.Controllers
             (List<PirateChange> pirateChanges, List<TileChange> tileChanges) = service.Draw(gameState.board, prevBoard);
             return Json(new {
                 pirates = gameState.game.Board.AllPirates,
-                pirateChanges = pirateChanges,
+                pirateChanges,
                 changes = tileChanges,
                 stat = DrawService.GetStatistics(gameState.game),
                 moves = DrawService.GetAvailableMoves(gameState.game)
-            }, _options);
+            });
         }
 
         /// <summary>
