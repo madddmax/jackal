@@ -5,13 +5,13 @@ namespace Jackal.Core
     /// <summary>
     /// Набор карт
     /// </summary>
-    public class TilesPack
+    public class ClassicTilesPack
     {
         private readonly int TotalTiles;
 
         public int CoinsOnMap { get; private set; }
         
-        public TilesPack(int mapSize)
+        public ClassicTilesPack(int mapSize)
         {
             int landSize = mapSize - 2;
             TotalTiles = landSize * landSize - 4;
@@ -79,11 +79,11 @@ namespace Jackal.Core
             AddDef(TileType.Chest4, 2);
             AddDef(TileType.Chest5, 1);
             AddDef(TileType.Fort, 2);
-            AddDef(TileType.RespawnFort);
+            AddDef(TileType.RespawnFort, 2);
             AddDef(TileType.RumBarrel, 4);
             AddDef(TileType.Horse, 2);
             AddDef(TileType.Balloon, 2);
-            AddDef(TileType.Airplane, 1);
+            AddDef(TileType.Airplane, 2);
             AddDef(TileType.Crocodile, 4);
             AddDef(TileType.Ice, 6);
 			AddDef(TileType.Cannon, 2);
@@ -101,7 +101,7 @@ namespace Jackal.Core
 
             AddDef(TileType.Trap, 3);
 
-            AddDef(TileType.Cannibal, 1);
+            AddDef(TileType.Cannibal, 2);
 
             while (_list.Count < TotalTiles)
             {
