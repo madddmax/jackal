@@ -7,8 +7,7 @@
         public int ArrowsCode;
 		public int CanonDirection;
         public int SpinningCount;
-
-
+        
         public TileParams Clone()
         {
             return (TileParams)this.MemberwiseClone();
