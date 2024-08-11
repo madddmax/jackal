@@ -312,7 +312,7 @@ namespace Jackal.Core
                     case TileType.Arrow:
                     case TileType.Balloon:
                     case TileType.Ice:
-                    case TileType.Croc:
+                    case TileType.Crocodile:
 					case TileType.Cannon:
                         goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source));
                         break;
@@ -387,7 +387,7 @@ namespace Jackal.Core
                             .Select(x => IncomeTilePosition(x));
                     }
                     break;
-                case TileType.Croc:
+                case TileType.Crocodile:
                     rez = new[] {prevMove.From}; //возвращаемся назад
                     break;
                 case TileType.Ice:

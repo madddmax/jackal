@@ -18,7 +18,7 @@
         Balloon,
         Ice,
         Airplane,
-        Croc,
+        Crocodile,
         Spinning,
         Trap,
         Cannibal,

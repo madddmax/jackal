@@ -84,7 +84,7 @@ namespace Jackal.Core
 				switch (tile.Type)
 				{
 					case TileType.Cannibal:
-					case TileType.Croc:
+					case TileType.Crocodile:
 					case TileType.Water:
 					case TileType.Trap:
 						return 10000;

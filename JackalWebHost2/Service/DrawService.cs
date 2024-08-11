@@ -303,7 +303,7 @@ namespace JackalWebHost.Service
                     filename = @"cannon";
                     rotateCount = tile.CannonDirection;
                     break;
-                case TileType.Croc:
+                case TileType.Crocodile:
                     filename = @"croc";
                     break;
                 case TileType.Airplane:

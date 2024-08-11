@@ -84,7 +84,7 @@ namespace Jackal.Core
             AddDef(TileType.Horse, 2);
             AddDef(TileType.Balloon, 2);
             AddDef(TileType.Airplane, 1);
-            AddDef(TileType.Croc, 4);
+            AddDef(TileType.Crocodile, 4);
             AddDef(TileType.Ice, 6);
 			AddDef(TileType.Cannon, 2);
 

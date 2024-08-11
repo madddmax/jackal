@@ -19,7 +19,7 @@
 					|| type == TileType.Cannon
                     || type == TileType.Balloon
                     || type == TileType.Ice
-                    || type == TileType.Croc
+                    || type == TileType.Crocodile
                     || type == TileType.Airplane);
         }
 
