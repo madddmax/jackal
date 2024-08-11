@@ -115,34 +115,34 @@ function Cell(props: CellProps) {
             {field.levels &&
                 field.levels.map((it) => (
                     <div
-                        key={`cell_level_${it.Level}`}
-                        className={`level-${field.levels?.length}${it.Level}`}
+                        key={`cell_level_${it.level}`}
+                        className={`level-${field.levels?.length}${it.level}`}
                         style={{
-                            marginTop: getMarginTop(field, it.Level),
-                            marginLeft: getMarginLeft(field, it.Level),
+                            marginTop: getMarginTop(field, it.level),
+                            marginLeft: getMarginLeft(field, it.level),
                             width: getWidth(field),
                         }}
                     >
-                        {it.Coin && (
+                        {it.coin && (
                             <div
                                 className="coins"
                                 style={{
                                     backgroundColor:
-                                        it.Coin.BackColor || 'transparent',
+                                        it.coin.backColor || 'transparent',
                                 }}
                             >
-                                {it.Coin.Text}
+                                {it.coin.text}
                             </div>
                         )}
-                        {it.Pirate && (
+                        {it.pirate && (
                             <div
                                 className="pirates"
                                 style={{
                                     backgroundColor:
-                                        it.Pirate.BackColor || 'transparent',
+                                        it.pirate.backColor || 'transparent',
                                 }}
                             >
-                                {it.Pirate.Text}
+                                {it.pirate.text}
                             </div>
                         )}
                     </div>

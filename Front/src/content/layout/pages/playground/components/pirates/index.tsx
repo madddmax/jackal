@@ -18,11 +18,11 @@ function Pirates() {
     const onClick = (girl: GamePirate) => () =>
         dispatch(
             choosePirate({
-                pirate: girl.Id,
+                pirate: girl.id,
                 withCoin:
-                    team.activePirate !== girl.Id
-                        ? girl.WithCoin
-                        : !girl.WithCoin,
+                    team.activePirate !== girl.id
+                        ? girl.withCoin
+                        : !girl.withCoin,
             }),
         );
 
@@ -30,13 +30,13 @@ function Pirates() {
         <>
             {pirates &&
                 pirates
-                    .filter((it) => it.TeamId == team.id)
+                    .filter((it) => it.teamId == team.id)
                     .map((girl, index) => (
                         <Pirate
                             key={`pirate_${index}`}
-                            photoId={girl.PhotoId || 0}
-                            isActive={team.activePirate === girl.Id}
-                            withCoin={girl.WithCoin}
+                            photoId={girl.photoId || 0}
+                            isActive={team.activePirate === girl.id}
+                            withCoin={girl.withCoin}
                             onClick={onClick(girl)}
                         />
                     ))}

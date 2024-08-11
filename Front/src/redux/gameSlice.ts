@@ -27,17 +27,17 @@ export const gameSlice = createSlice({
         initMap: (state, action: PayloadAction<GameMap>) => {
             let map = [];
             let j = 0;
-            for (let i = 0; i < action.payload.Height; i++) {
+            for (let i = 0; i < action.payload.height; i++) {
                 let row: FieldState[] = [];
-                for (let col = 0; col < action.payload.Width; col++) {
-                    if (!action.payload.Changes[j].BackgroundImageSrc) {
+                for (let col = 0; col < action.payload.width; col++) {
+                    if (!action.payload.changes[j].backgroundImageSrc) {
                         row.push({
                             backColor:
-                                action.payload.Changes[j].BackgroundColor,
+                                action.payload.changes[j].backgroundColor,
                         });
                     } else
                         row.push({
-                            image: action.payload.Changes[j].BackgroundImageSrc,
+                            image: action.payload.changes[j].backgroundImageSrc,
                         });
                     j++;
                 }
@@ -48,9 +48,9 @@ export const gameSlice = createSlice({
         initGame: (state, action: PayloadAction<GameStartResponse>) => {
             state.gameName = action.payload.gameName;
             state.mapId = action.payload.mapId;
-            state.mapSize = action.payload.map.Width;
+            state.mapSize = action.payload.map.width;
             state.pirates = action.payload.pirates;
-            state.teams = action.payload.stat.Teams.map((it) => ({
+            state.teams = action.payload.stat.teams.map((it) => ({
                 id: it.id,
                 activePirate: '',
                 lastPirate: '',
@@ -76,13 +76,13 @@ export const gameSlice = createSlice({
                 let arr = getRandomValues(
                     Constants.PhotoMinId,
                     Constants.PhotoMaxId,
-                    state.pirates?.filter((it) => it.TeamId == team.id)
+                    state.pirates?.filter((it) => it.teamId == team.id)
                         .length ?? 0,
                 );
                 state.pirates
-                    ?.filter((it) => it.TeamId == team.id)
+                    ?.filter((it) => it.teamId == team.id)
                     .forEach((it, index) => {
-                        it.PhotoId = arr[index];
+                        it.photoId = arr[index];
                     });
                 team.hasPhotos = true;
             }
@@ -94,8 +94,8 @@ export const gameSlice = createSlice({
 
             if (action.payload.withCoin !== undefined) {
                 state.pirates?.forEach((it) => {
-                    if (it.Id == team.activePirate) {
-                        it.WithCoin = action.payload.withCoin;
+                    if (it.id == team.activePirate) {
+                        it.withCoin = action.payload.withCoin;
                     }
                 });
             }
@@ -105,7 +105,7 @@ export const gameSlice = createSlice({
             console.log('highlightMoves');
             // undraw previous moves
             state.lastMoves.forEach((move) => {
-                const cell = state.fields[move.To.Y][move.To.X];
+                const cell = state.fields[move.to.y][move.to.x];
                 cell.moveNum = undefined;
             });
 
@@ -117,24 +117,24 @@ export const gameSlice = createSlice({
             let hasNoMoves =
                 state.lastMoves.length > 0 &&
                 !state.lastMoves.some((move) =>
-                    move.From.PirateIds.includes(team.lastPirate),
+                    move.from.pirateIds.includes(team.lastPirate),
                 );
             team.activePirate = hasNoMoves
-                ? state.lastMoves[0].From.PirateIds[0]
+                ? state.lastMoves[0].from.pirateIds[0]
                 : team.lastPirate;
 
             const pirate = state.pirates?.find(
-                (it) => it.Id == team.activePirate,
+                (it) => it.id == team.activePirate,
             );
             if (
-                pirate?.Position.X != state.highlight_x ||
-                pirate?.Position.Y != state.highlight_y
+                pirate?.position.x != state.highlight_x ||
+                pirate?.position.y != state.highlight_y
             ) {
                 const prevCell =
                     state.fields[state.highlight_y][state.highlight_x];
                 prevCell.highlight = false;
-                state.highlight_x = pirate?.Position.X || 0;
-                state.highlight_y = pirate?.Position.Y || 0;
+                state.highlight_x = pirate?.position.x || 0;
+                state.highlight_y = pirate?.position.y || 0;
                 const curCell =
                     state.fields[state.highlight_y][state.highlight_x];
                 curCell.highlight = true;
@@ -144,64 +144,64 @@ export const gameSlice = createSlice({
             state.lastMoves
                 .filter(
                     (move) =>
-                        move.From.PirateIds.includes(team.activePirate) &&
-                        ((pirate?.WithCoin && move.WithCoin) ||
-                            pirate?.WithCoin === undefined ||
-                            (!pirate?.WithCoin && !move.WithCoin)),
+                        move.from.pirateIds.includes(team.activePirate) &&
+                        ((pirate?.withCoin && move.withCoin) ||
+                            pirate?.withCoin === undefined ||
+                            (!pirate?.withCoin && !move.withCoin)),
                 )
                 .forEach((move) => {
-                    const cell = state.fields[move.To.Y][move.To.X];
-                    cell.moveNum = move.MoveNum;
+                    const cell = state.fields[move.to.y][move.to.x];
+                    cell.moveNum = move.moveNum;
                 });
         },
         applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {
             action.payload.changes.forEach((it) => {
-                if (it.IsAlive === false) {
+                if (it.isAlive === false) {
                     state.pirates = state.pirates?.filter(
-                        (pr) => pr.Id !== it.Id,
+                        (pr) => pr.id !== it.id,
                     );
-                } else if (it.IsAlive === true) {
+                } else if (it.isAlive === true) {
                     let nm = getAnotherRandomValue(
                         Constants.PhotoMinId,
                         Constants.PhotoMaxId,
                         state.pirates
-                            ?.filter((pr) => pr.TeamId == it.TeamId)
-                            .map((pr) => pr.PhotoId ?? 0) ?? [],
+                            ?.filter((pr) => pr.teamId == it.teamId)
+                            .map((pr) => pr.photoId ?? 0) ?? [],
                     );
                     state.pirates?.push({
-                        Id: it.Id,
-                        TeamId: it.TeamId,
-                        Position: it.Position,
-                        PhotoId: nm,
+                        id: it.id,
+                        teamId: it.teamId,
+                        position: it.position,
+                        photoId: nm,
                     });
                 } else {
-                    let pirate = state.pirates!.find((pr) => pr.Id === it.Id)!;
-                    pirate.Position = it.Position;
+                    let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
+                    pirate.position = it.position;
                 }
             });
 
             if (action.payload.isHumanPlayer) {
                 let girls = [] as string[];
                 action.payload.moves
-                    .filter((move) => move.WithCoin)
+                    .filter((move) => move.withCoin)
                     .forEach((move) => {
-                        girls.push(...move.From.PirateIds);
+                        girls.push(...move.from.pirateIds);
                     });
                 let girlIds = new Set(girls);
                 state.pirates?.forEach((it) => {
-                    it.WithCoin = girlIds.has(it.Id)
-                        ? (it.WithCoin ?? true)
+                    it.withCoin = girlIds.has(it.id)
+                        ? (it.withCoin ?? true)
                         : undefined;
                 });
             }
         },
         applyChanges: (state, action: PayloadAction<GameCell[]>) => {
             action.payload.forEach((it) => {
-                const cell = state.fields[it.Y][it.X];
-                cell.image = it.BackgroundImageSrc;
-                cell.backColor = it.BackgroundColor;
-                cell.rotate = it.Rotate;
-                cell.levels = it.Levels;
+                const cell = state.fields[it.y][it.x];
+                cell.image = it.backgroundImageSrc;
+                cell.backColor = it.backgroundColor;
+                cell.rotate = it.rotate;
+                cell.levels = it.levels;
             });
         },
         applyStat: (state, action: PayloadAction<GameStat>) => {
