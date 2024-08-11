@@ -33,9 +33,14 @@ namespace Jackal.Core.Actions
             var _targetTile = map[target.Position];
             var _sourceTile = map[_from.Position];
 
-            if (_sourceTile.Type == TileType.Airplane && _from != _to && game.Board.Map.AirplaneUsed==false) //отмечаем, что мы использовали самолет
-                game.Board.Map.AirplaneUsed = true;
-
+            if (_sourceTile.Type == TileType.Airplane 
+                && _from != _to 
+                && _sourceTile.Used == false)
+            {
+                //отмечаем, что мы использовали самолет
+                _sourceTile.Used = true;
+            }
+            
             //открываем клетку, если нужно
             if (_targetTile.Type == TileType.Unknown) //открываем закрытую клетку
             {

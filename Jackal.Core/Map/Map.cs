@@ -7,9 +7,6 @@ namespace Jackal.Core
         [JsonProperty] 
         private readonly Tile[,] Tiles = new Tile[mapSize, mapSize];
 
-        [JsonProperty] 
-        public bool AirplaneUsed;
-
         public Tile this[Position pos]
         {
             get { return Tiles[pos.X, pos.Y]; }

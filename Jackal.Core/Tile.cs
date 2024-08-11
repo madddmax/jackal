@@ -10,7 +10,7 @@ namespace Jackal.Core
 
         [JsonProperty]
         public readonly TileType Type;
-
+        
         [JsonProperty]
         public readonly int ArrowsCode;
 
@@ -24,25 +24,19 @@ namespace Jackal.Core
         /// Уровни клетки (0 - обычный уровень/уровень выхода с клетки)
         /// </summary>
         [JsonProperty]
-        public readonly List<TileLevel> Levels = new List<TileLevel>();
+        public readonly List<TileLevel> Levels = [];
+
+        /// <summary>
+        /// Использована (например самолет уже взлетал)
+        /// </summary>
+        [JsonProperty]
+        public bool Used;
+        
+        [JsonIgnore]
+        public int Coins => Levels[0].Coins;
 
         [JsonIgnore]
-        public int Coins
-        {
-            get
-            {
-                return Levels[0].Coins;
-            }
-        }
-
-        [JsonIgnore]
-        public int? OccupationTeamId
-        {
-            get
-            {
-                return Levels[0].OccupationTeamId;
-            }
-        }
+        public int? OccupationTeamId => Levels[0].OccupationTeamId;
 
         /// <summary>
         /// Предлагаю выкинуть пиратов из тайлов,
@@ -50,13 +44,7 @@ namespace Jackal.Core
         /// Team->Pirates->Position зачение z
         /// </summary>
         [JsonIgnore]
-        public HashSet<Pirate> Pirates
-        {
-            get
-            {
-                return Levels[0].Pirates;
-            }
-        }
+        public HashSet<Pirate> Pirates => Levels[0].Pirates;
 
         public Tile()
         {

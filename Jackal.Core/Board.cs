@@ -193,7 +193,8 @@ namespace Jackal.Core
 
                     if (WasCheckedBefore(task.alreadyCheckedList, currentCheck)) //мы попали по рекурсии в ранее просмотренную клетку
                     {
-                        if (newPositionTile.Type == TileType.Airplane && Map.AirplaneUsed == false) { 
+                        if (newPositionTile is { Type: TileType.Airplane, Used: false }) 
+                        { 
                             // даем возможность не использовать самолет сразу!
                             goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         }
@@ -265,8 +266,7 @@ namespace Jackal.Core
                         if (task.NoCanibal==false)
                             goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         break;
-
-
+                    
                     case TileType.Trap:
                         if (task.NoTrap == false)
                         {
@@ -308,7 +308,7 @@ namespace Jackal.Core
                         goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source));
                         break;
                     case TileType.Airplane:
-                        if (Map.AirplaneUsed == false)
+                        if (newPositionTile.Used == false)
                         {
                             goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source));
                         }
@@ -357,16 +357,15 @@ namespace Jackal.Core
                     rez = new[] { IncomeTilePosition(ourShip.Position) }; //на корабль
                     break;
                 case TileType.Airplane:
-                    if (Map.AirplaneUsed == false)
+                    if (sourceTile.Used == false)
                     {
-                        var shipTargets = Teams.Select(x => x.Ship.Position)
-                            .Select(x => IncomeTilePosition(x)); //на корабль
-                        var airplaneTargets = AllTiles(x => x.Type != TileType.Water
-                                                            && x.Type.RequreImmediateMove() == false
-                                                            && x.Type != TileType.Airplane)
+                        rez = AllTiles(x =>
+                                (x.Type != TileType.Water || x.Position == ourShip.Position)
+                                && x.Type.RequreImmediateMove(x.Used) == false
+                            )
                             .Select(x => x.Position)
-                            .Select(x => IncomeTilePosition(x));
-                        rez = shipTargets.Concat(airplaneTargets);
+                            .Select(IncomeTilePosition);
+                        
                         if (prevMove.From != source)
                             rez = rez.Concat(new []{source}); //ход "остаемся на месте"
                     }
