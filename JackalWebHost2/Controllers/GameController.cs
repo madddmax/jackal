@@ -73,9 +73,15 @@ namespace JackalWebHost.Controllers
             var service = new DrawService();
             var map = service.Map(gameState.board);
 
+            List<PirateChange> pirateChanges = [];
+            foreach (var pirate in gameState.game.Board.AllPirates)
+            {
+                pirateChanges.Add(new PirateChange(pirate));
+            }
+            
             return Json(new {
                 gameName,
-                pirates = gameState.game.Board.AllPirates,
+                pirates = pirateChanges,
                 map,
                 mapId = gameSettings.MapId.Value,
                 stat = DrawService.GetStatistics(gameState.game),
