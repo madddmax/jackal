@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+import Image from 'react-bootstrap/Image';
 
 import { sagaActions } from '/redux/saga';
 import { FieldState, ReduxState, TeamState } from '/redux/types';
@@ -17,6 +18,9 @@ function Cell(props: CellProps) {
     );
     const cellSize = useSelector<ReduxState, number>(
         (state) => state.game.cellSize,
+    );
+    const pirateSize = useSelector<ReduxState, number>(
+        (state) => state.game.pirateSize,
     );
     const gamename = useSelector<ReduxState, string | undefined>(
         (state) => state.game.gameName,
@@ -116,7 +120,7 @@ function Cell(props: CellProps) {
                 field.levels.map((it) => (
                     <div
                         key={`cell_level_${it.level}`}
-                        className={`level-${field.levels?.length}${it.level}`}
+                        className="level"
                         style={{
                             marginTop: getMarginTop(field, it.level),
                             marginLeft: getMarginLeft(field, it.level),
@@ -135,15 +139,30 @@ function Cell(props: CellProps) {
                             </div>
                         )}
                         {it.pirate && (
-                            <div
-                                className="pirates"
+                            <Image
+                                src="/pictures/pirate_2.png"
+                                roundedCircle
+                                className={cn('pirates')}
                                 style={{
-                                    backgroundColor:
-                                        it.pirate.backColor || 'transparent',
+                                    border: `2px ${it.pirate.backColor || 'transparent'} solid`,
+                                    // backgroundImage: `url(/pictures/pirate_2.png)`,
+                                    width: pirateSize,
+                                    height: pirateSize,
                                 }}
-                            >
-                                {it.pirate.text}
-                            </div>
+                            />
+
+                            // <div
+                            //     className="pirates"
+                            //     style={{
+                            //         backgroundColor:
+                            //             it.pirate.backColor || 'transparent',
+                            //         backgroundImage: `url(/pictures/pirate_2.png)`,
+                            //         width: pirateSize,
+                            //         height: pirateSize,
+                            //     }}
+                            // >
+                            //     {it.pirate.text}
+                            // </div>
                         )}
                     </div>
                 ))}

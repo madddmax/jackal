@@ -17,6 +17,7 @@ export const gameSlice = createSlice({
     name: 'game',
     initialState: {
         cellSize: 50,
+        pirateSize: 15,
         fields: [[]],
         lastMoves: [],
         teams: [],
@@ -62,6 +63,7 @@ export const gameSlice = createSlice({
             const mSize = width > height ? height : width;
             if (mSize > 560) {
                 state.cellSize = Math.floor(mSize / state.mapSize / 10) * 10;
+                state.pirateSize = state.cellSize * 0.5;
             }
         },
         setTeam: (state, action: PayloadAction<number>) => {
