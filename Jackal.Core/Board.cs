@@ -8,20 +8,14 @@ namespace Jackal.Core
 {
     public class Board
     {
+        [JsonIgnore]
+        public readonly IMapGenerator Generator;
+        
         /// <summary>
         /// Размер стороны карты с учетом воды
         /// </summary>
         public readonly int MapSize;
-
-        [JsonIgnore]
-        internal MapGenerator Generator;
-
-        [JsonIgnore]
-        public int MapId
-        {
-            get { return Generator.MapId; }
-        }
-
+        
         public Map Map;
 
         public Team[] Teams;
@@ -61,13 +55,10 @@ namespace Jackal.Core
         {
         }
 
-        public Board(IPlayer[] players, int mapId, int mapSize, int piratesPerPlayer)
+        public Board(IPlayer[] players, IMapGenerator mapGenerator, int mapSize, int piratesPerPlayer)
         {
-            if (mapSize is < 5 or > 13)
-                throw new ArgumentException("mapSize is >= 5 and <= 13");
-
+            Generator = mapGenerator;
             MapSize = mapSize;
-            Generator = new MapGenerator(mapId, mapSize);
             Map = new Map(mapSize);
             InitMap();
             InitTeams(players, piratesPerPlayer);

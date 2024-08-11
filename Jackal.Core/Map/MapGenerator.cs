@@ -4,13 +4,13 @@ using System.Linq;
 
 namespace Jackal.Core
 {
-    public class MapGenerator
+    public class MapGenerator : IMapGenerator
     {
-        public readonly int MapId;
+        public int MapId { get; }
         private readonly Random _rand;
         private readonly Dictionary<Position,Tile> _tiles;
         
-        public readonly int CoinsOnMap;
+        public int CoinsOnMap { get; }
 
         public MapGenerator(int mapId, int mapSize)
         {
