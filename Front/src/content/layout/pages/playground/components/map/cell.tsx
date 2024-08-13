@@ -11,23 +11,13 @@ interface CellProps {
     col: number;
 }
 
-function Cell(props: CellProps) {
-    const { row, col } = props;
-    const field = useSelector<ReduxState, FieldState>(
-        (state) => state.game.fields[row][col],
-    );
-    const cellSize = useSelector<ReduxState, number>(
-        (state) => state.game.cellSize,
-    );
-    const pirateSize = useSelector<ReduxState, number>(
-        (state) => state.game.pirateSize,
-    );
-    const gamename = useSelector<ReduxState, string | undefined>(
-        (state) => state.game.gameName,
-    );
+function Cell({ row, col }: CellProps) {
+    const field = useSelector<ReduxState, FieldState>((state) => state.game.fields[row][col]);
+    const cellSize = useSelector<ReduxState, number>((state) => state.game.cellSize);
+    const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
+    const gamename = useSelector<ReduxState, string | undefined>((state) => state.game.gameName);
     const team = useSelector<ReduxState, TeamState>(
-        (state) =>
-            state.game.teams.find((it) => it.id === state.game.currentTeamId!)!,
+        (state) => state.game.teams.find((it) => it.id === state.game.currentTeamId!)!,
     );
 
     const mul_x_times = cellSize / 50;
@@ -96,10 +86,7 @@ function Cell(props: CellProps) {
                     height: cellSize,
                     backgroundImage: field.image ? `url(${field.image})` : '',
                     backgroundColor: field.backColor || 'transparent',
-                    transform:
-                        field.rotate && field.rotate > 0
-                            ? `rotate(${field.rotate * 90}deg)`
-                            : 'none',
+                    transform: field.rotate && field.rotate > 0 ? `rotate(${field.rotate * 90}deg)` : 'none',
                     opacity: field.moveNum !== undefined ? '0.5' : '1',
                     cursor: field.moveNum !== undefined ? 'pointer' : 'default',
                 }}
@@ -131,8 +118,7 @@ function Cell(props: CellProps) {
                             <div
                                 className="coins"
                                 style={{
-                                    backgroundColor:
-                                        it.coin.backColor || 'transparent',
+                                    backgroundColor: it.coin.backColor || 'transparent',
                                 }}
                             >
                                 {it.coin.text}
