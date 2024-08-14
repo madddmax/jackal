@@ -84,21 +84,23 @@ function Cell({ row, col }: CellProps) {
                     backgroundImage: field.image ? `url(${field.image})` : '',
                     backgroundColor: field.backColor || 'transparent',
                     transform: field.rotate && field.rotate > 0 ? `rotate(${field.rotate * 90}deg)` : 'none',
-                    opacity: field.moveNum !== undefined ? '0.5' : '1',
-                    cursor: field.moveNum !== undefined ? 'pointer' : 'default',
+                    opacity: field.availableMove?.num !== undefined ? '0.5' : '1',
+                    cursor: field.availableMove?.num !== undefined ? 'pointer' : 'default',
                 }}
-                onClick={() => {
-                    if (field.moveNum !== undefined && field.movePirate != undefined) {
-                        dispatch({
-                            type: sagaActions.GAME_TURN,
-                            payload: {
-                                gameName: gamename,
-                                turnNum: field.moveNum,
-                                pirateId: field.movePirate,
-                            },
-                        });
-                    }
-                }}
+                onClick={
+                    field.availableMove
+                        ? () => {
+                              dispatch({
+                                  type: sagaActions.GAME_TURN,
+                                  payload: {
+                                      gameName: gamename,
+                                      turnNum: field.availableMove!.num,
+                                      pirateId: field!.availableMove!.pirate,
+                                  },
+                              });
+                          }
+                        : undefined
+                }
             ></div>
             {field.levels &&
                 field.levels.map((it) => (

@@ -103,8 +103,7 @@ export const gameSlice = createSlice({
             // undraw previous moves
             state.lastMoves.forEach((move) => {
                 const cell = state.fields[move.to.y][move.to.x];
-                cell.moveNum = undefined;
-                cell.movePirate = undefined;
+                cell.availableMove = undefined;
             });
 
             if (action.payload.moves) {
@@ -127,6 +126,8 @@ export const gameSlice = createSlice({
                 curCell.highlight = true;
             }
 
+            if (!pirate) return;
+
             // собственно подсвечиваем ходы
             state.lastMoves
                 .filter(
@@ -138,8 +139,10 @@ export const gameSlice = createSlice({
                 )
                 .forEach((move) => {
                     const cell = state.fields[move.to.y][move.to.x];
-                    cell.moveNum = move.moveNum;
-                    cell.movePirate = pirate?.id;
+                    cell.availableMove = {
+                        num: move.moveNum,
+                        pirate: pirate.id,
+                    };
                 });
         },
         applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {
