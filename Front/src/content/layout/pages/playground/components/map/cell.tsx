@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+import Image from 'react-bootstrap/Image';
 
 import { sagaActions } from '/redux/saga';
 import { FieldState, ReduxState, TeamState } from '/redux/types';
@@ -10,20 +11,13 @@ interface CellProps {
     col: number;
 }
 
-function Cell(props: CellProps) {
-    const { row, col } = props;
-    const field = useSelector<ReduxState, FieldState>(
-        (state) => state.game.fields[row][col],
-    );
-    const cellSize = useSelector<ReduxState, number>(
-        (state) => state.game.cellSize,
-    );
-    const gamename = useSelector<ReduxState, string | undefined>(
-        (state) => state.game.gameName,
-    );
+function Cell({ row, col }: CellProps) {
+    const field = useSelector<ReduxState, FieldState>((state) => state.game.fields[row][col]);
+    const cellSize = useSelector<ReduxState, number>((state) => state.game.cellSize);
+    const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
+    const gamename = useSelector<ReduxState, string | undefined>((state) => state.game.gameName);
     const team = useSelector<ReduxState, TeamState>(
-        (state) =>
-            state.game.teams.find((it) => it.id === state.game.currentTeamId!)!,
+        (state) => state.game.teams.find((it) => it.id === state.game.currentTeamId!)!,
     );
 
     const mul_x_times = cellSize / 50;
@@ -92,10 +86,7 @@ function Cell(props: CellProps) {
                     height: cellSize,
                     backgroundImage: field.image ? `url(${field.image})` : '',
                     backgroundColor: field.backColor || 'transparent',
-                    transform:
-                        field.rotate && field.rotate > 0
-                            ? `rotate(${field.rotate * 90}deg)`
-                            : 'none',
+                    transform: field.rotate && field.rotate > 0 ? `rotate(${field.rotate * 90}deg)` : 'none',
                     opacity: field.moveNum !== undefined ? '0.5' : '1',
                     cursor: field.moveNum !== undefined ? 'pointer' : 'default',
                 }}
@@ -116,7 +107,7 @@ function Cell(props: CellProps) {
                 field.levels.map((it) => (
                     <div
                         key={`cell_level_${it.level}`}
-                        className={`level-${field.levels?.length}${it.level}`}
+                        className="level"
                         style={{
                             marginTop: getMarginTop(field, it.level),
                             marginLeft: getMarginLeft(field, it.level),
@@ -127,23 +118,37 @@ function Cell(props: CellProps) {
                             <div
                                 className="coins"
                                 style={{
-                                    backgroundColor:
-                                        it.coin.backColor || 'transparent',
+                                    backgroundColor: it.coin.backColor || 'transparent',
                                 }}
                             >
                                 {it.coin.text}
                             </div>
                         )}
                         {it.pirate && (
-                            <div
-                                className="pirates"
+                            <Image
+                                src="/pictures/pirate_2.png"
+                                roundedCircle
+                                className={cn('pirates')}
                                 style={{
-                                    backgroundColor:
-                                        it.pirate.backColor || 'transparent',
+                                    border: `2px ${it.pirate.backColor || 'transparent'} solid`,
+                                    // backgroundImage: `url(/pictures/pirate_2.png)`,
+                                    width: pirateSize,
+                                    height: pirateSize,
                                 }}
-                            >
-                                {it.pirate.text}
-                            </div>
+                            />
+
+                            // <div
+                            //     className="pirates"
+                            //     style={{
+                            //         backgroundColor:
+                            //             it.pirate.backColor || 'transparent',
+                            //         backgroundImage: `url(/pictures/pirate_2.png)`,
+                            //         width: pirateSize,
+                            //         height: pirateSize,
+                            //     }}
+                            // >
+                            //     {it.pirate.text}
+                            // </div>
                         )}
                     </div>
                 ))}
