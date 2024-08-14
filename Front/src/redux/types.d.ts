@@ -31,6 +31,7 @@ export interface FieldState {
     rotate?: number;
     levels?: GameLevel[];
     moveNum?: number;
+    movePirate?: string;
     highlight?: boolean;
 }
 

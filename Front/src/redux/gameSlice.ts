@@ -104,6 +104,7 @@ export const gameSlice = createSlice({
             state.lastMoves.forEach((move) => {
                 const cell = state.fields[move.to.y][move.to.x];
                 cell.moveNum = undefined;
+                cell.movePirate = undefined;
             });
 
             if (action.payload.moves) {
@@ -138,6 +139,7 @@ export const gameSlice = createSlice({
                 .forEach((move) => {
                     const cell = state.fields[move.to.y][move.to.x];
                     cell.moveNum = move.moveNum;
+                    cell.movePirate = pirate?.id;
                 });
         },
         applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {
