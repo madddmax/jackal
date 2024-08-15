@@ -158,15 +158,15 @@ namespace Jackal.Core
         /// <returns></returns>
         private List<AvailableMove> GetAllAvailableMoves(GetAllAvaliableMovesTask task, TilePosition source, TilePosition prev)
         {
-            var prevDirection = prev != null 
+            Direction? prevDirection = prev != null 
                 ? new Direction(prev, source) 
                 : new Direction(source, source);
 
-            var sourceTile = Map[source.Position];
+            Tile sourceTile = Map[source.Position];
 
-            var ourTeamId = task.TeamId;
-            var ourTeam = Teams[ourTeamId];
-            var ourShip = ourTeam.Ship;
+            int ourTeamId = task.TeamId;
+            Team ourTeam = Teams[ourTeamId];
+            Ship ourShip = ourTeam.Ship;
 
             List<AvailableMove> goodTargets = new List<AvailableMove>();
 
@@ -182,7 +182,7 @@ namespace Jackal.Core
             //места всех возможных ходов
             IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(source, prevDirection, ourTeam);
 
-            foreach (var newPosition in positionsForCheck)
+            foreach (TilePosition newPosition in positionsForCheck)
             {
                 //проверяем, что на этой клетке
                 var newPositionTile = Map[newPosition.Position];
