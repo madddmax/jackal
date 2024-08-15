@@ -41,15 +41,9 @@ namespace Jackal.Core.Actions
 
                 if (newTile.Type.RequireImmediateMove())
                 {
-                    var task = new AvailableMovesTask
-                    {
-                        TeamId = pirate.TeamId,
-                        NoCoinMoving = true,
-                        FirstSource = to,
-                        PreviosSource = from
-                    };
-
-                    var targets = game.Board.GetAllAvailableMoves(task);
+                    AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, from, true);
+                    List<AvailableMove> targets = game.Board.GetAllAvailableMoves(task);
+                    
                     if (targets.Count == 0)
                     {
                         game.KillPirate(pirate);

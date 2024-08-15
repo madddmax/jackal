@@ -2,16 +2,16 @@
 
 namespace Jackal.Core
 {
-    public class AvailableMovesTask
+    public class AvailableMovesTask(int teamId, TilePosition source, TilePosition? prev, bool noCoinMoving = false)
     {
-        public int TeamId;
-        public List<CheckedPosition> alreadyCheckedList = new List<CheckedPosition>();
-        public TilePosition FirstSource;
-        public TilePosition PreviosSource;
-        public bool NoCoinMoving ;
-        public bool NoTrap;
-        public bool NoCanibal;
-        public bool NoRespawn;
-        public bool NoFort;
+        public readonly List<CheckedPosition> AlreadyCheckedList = [];
+        
+        public readonly int TeamId = teamId;
+
+        public readonly TilePosition Source = source;
+        
+        public readonly TilePosition? Prev = prev;
+        
+        public readonly bool NoCoinMoving = noCoinMoving;
     }
 }

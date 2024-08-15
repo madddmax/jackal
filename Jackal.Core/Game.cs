@@ -123,14 +123,8 @@ namespace Jackal.Core
 
             foreach (var pirate in activePirates)
             {
-                var position = pirate.Position;
-
-                var task = new AvailableMovesTask
-                {
-                    TeamId = teamId,
-                    FirstSource = position,
-                    PreviosSource = prevDirection != null ? prevDirection.From : null
-                };
+                TilePosition? prev = prevDirection != null ? prevDirection.From : null;
+                AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, prev);
 
                 List<AvailableMove> temp = Board.GetAllAvailableMoves(task);
                 targets.AddRange(temp);
