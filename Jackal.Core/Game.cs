@@ -125,7 +125,7 @@ namespace Jackal.Core
             {
                 var position = pirate.Position;
 
-                var task = new GetAllAvaliableMovesTask
+                var task = new AvailableMovesTask
                 {
                     TeamId = teamId,
                     FirstSource = position,

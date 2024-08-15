@@ -2,7 +2,7 @@
 
 namespace Jackal.Core
 {
-    public class GetAllAvaliableMovesTask
+    public class AvailableMovesTask
     {
         public int TeamId;
         public List<CheckedPosition> alreadyCheckedList = new List<CheckedPosition>();

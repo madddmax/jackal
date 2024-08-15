@@ -41,7 +41,7 @@ namespace Jackal.Core.Actions
 
                 if (newTile.Type.RequireImmediateMove())
                 {
-                    var task = new GetAllAvaliableMovesTask
+                    var task = new AvailableMovesTask
                     {
                         TeamId = pirate.TeamId,
                         NoCoinMoving = true,

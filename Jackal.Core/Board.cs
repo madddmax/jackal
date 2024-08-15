@@ -144,7 +144,7 @@ namespace Jackal.Core
             Teams[teamId] = new Team(teamId, teamName, ship, pirates);
         }
         
-        public List<AvailableMove> GetAllAvailableMoves(GetAllAvaliableMovesTask task)
+        public List<AvailableMove> GetAllAvailableMoves(AvailableMovesTask task)
         {
             return GetAllAvailableMoves(task, task.FirstSource, task.PreviosSource);
         }
@@ -156,7 +156,7 @@ namespace Jackal.Core
         /// <param name="source"></param>
         /// <param name="prev"></param>
         /// <returns></returns>
-        private List<AvailableMove> GetAllAvailableMoves(GetAllAvaliableMovesTask task, TilePosition source, TilePosition prev)
+        private List<AvailableMove> GetAllAvailableMoves(AvailableMovesTask task, TilePosition source, TilePosition prev)
         {
             Direction? prevDirection = prev != null 
                 ? new Direction(prev, source) 

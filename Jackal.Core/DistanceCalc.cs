@@ -156,7 +156,7 @@ namespace Jackal.Core
 				        //Не проверяем ходы до клеток, до которых уже просчитали самые короткие маршруты
 				        var checkedPositions = _calculated.Where(c => c.Value.IsShortestDistance(_unknownSteps)).Select(c => new CheckedPosition(new TilePosition(c.Value.Position))).ToList();
 
-				        var task = new GetAllAvaliableMovesTask();
+				        var task = new AvailableMovesTask();
 				        task.TeamId = _teamId;
                         task.alreadyCheckedList=new List<CheckedPosition>(checkedPositions);
 				        task.FirstSource = new TilePosition( position.Position);
