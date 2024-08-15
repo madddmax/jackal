@@ -156,7 +156,7 @@ namespace Jackal.Core
         /// <param name="source"></param>
         /// <param name="prev"></param>
         /// <returns></returns>
-        public List<AvailableMove> GetAllAvailableMoves(GetAllAvaliableMovesTask task, TilePosition source, TilePosition prev)
+        private List<AvailableMove> GetAllAvailableMoves(GetAllAvaliableMovesTask task, TilePosition source, TilePosition prev)
         {
             var prevDirection = prev != null 
                 ? new Direction(prev, source) 
@@ -175,6 +175,7 @@ namespace Jackal.Core
                 Position? prevMoveDelta = null;
                 if (sourceTile.Type == TileType.Ice)
                     prevMoveDelta = prevDirection.GetDelta();
+                
                 task.alreadyCheckedList.Add(new CheckedPosition(source, prevMoveDelta)); //запоминаем, что эту клетку просматривать уже не надо
             }
 
@@ -198,6 +199,7 @@ namespace Jackal.Core
                             // даем возможность не использовать самолет сразу!
                             goodTargets.Add(new AvailableMove(task.FirstSource, newPosition, new Moving(task.FirstSource, newPosition)));
                         }
+                        
                         continue;
                     }
                 }
@@ -332,7 +334,7 @@ namespace Jackal.Core
         /// Возвращаем все позиции, в которые в принципе достижимы из заданной клетки за один подход
         /// (не проверяется, допустим ли такой ход)
         /// </summary>
-        public List<TilePosition> GetAllTargetsForSubTurn(TilePosition source, Direction prevMove, Team ourTeam)
+        private List<TilePosition> GetAllTargetsForSubTurn(TilePosition source, Direction prevMove, Team ourTeam)
         {
             var sourceTile = Map[source.Position];
             var ourShip = ourTeam.Ship;

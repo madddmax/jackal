@@ -96,8 +96,6 @@ namespace Jackal.Core.Actions
             foreach (var enemyPirate in enemyPirates)
             {
                 Team enemyTeam = board.Teams[enemyPirate.TeamId];
-                //tile.Coins += enemyPirate.Coins;
-                //enemyPirate.Coins = 0;
 
                 if (_targetTile.Type != TileType.Water) //возвращаем врага на его корабль
                 {
@@ -146,7 +144,6 @@ namespace Jackal.Core.Actions
                 if (ourTeam.Ship.Position == _to.Position)  //перенос монеты на корабль
                 {
                     ourShip.Coins++;
-                    //_pirate.Coins++;
 
                     game.Scores[pirate.TeamId]++;
                     game.CoinsLeft--;
