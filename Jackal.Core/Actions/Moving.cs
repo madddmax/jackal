@@ -1,61 +1,53 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Jackal.Core.Actions
 {
-    class Moving : IGameAction
+    internal class Moving(TilePosition from, TilePosition to, bool withCoin = false) : IGameAction
     {
-        private TilePosition _from;
-        private  TilePosition _to;
-        private bool _withCoin;
-
-        public Moving(TilePosition from, TilePosition to, bool withCoin = false)
-        {
-            _to = to;
-            _from = from;
-            _withCoin = withCoin;
-        }
-
         public GameActionResult Act(Game game, Pirate pirate)
         {
-            if (_from == _to) //нет движения
+            if (from == to) //нет движения
             {
                 return GameActionResult.Live;
             }
 
-            var board = game.Board;
-            var map = game.Board.Map;
+            Board board = game.Board;
+            Map map = game.Board.Map;
 
             Team ourTeam = board.Teams[pirate.TeamId];
-            var ourShip = ourTeam.Ship;
+            Ship ourShip = ourTeam.Ship;
             
-            var _targetTile = map[_to.Position];
-            var _sourceTile = map[_from.Position];
+            Tile targetTile = map[to.Position];
+            Tile sourceTile = map[from.Position];
 
-            if (_sourceTile.Type == TileType.Airplane 
-                && _from != _to 
-                && _sourceTile.Used == false)
+            if (sourceTile.Type == TileType.Airplane 
+                && from != to 
+                && sourceTile.Used == false)
             {
                 //отмечаем, что мы использовали самолет
-                _sourceTile.Used = true;
+                sourceTile.Used = true;
             }
             
             //открываем клетку, если нужно
-            if (_targetTile.Type == TileType.Unknown) //открываем закрытую клетку
+            if (targetTile.Type == TileType.Unknown) //открываем закрытую клетку
             {
-                var newTile = board.Generator.GetNext(_to.Position);
-                board.Map[_to.Position] = newTile;
-                _targetTile = newTile;
+                var newTile = board.Generator.GetNext(to.Position);
+                board.Map[to.Position] = newTile;
+                targetTile = newTile;
 
                 game.LastActionTurnNo = game.TurnNo;
 
                 if (newTile.Type.RequireImmediateMove())
                 {
-                    var task = new GetAllAvaliableMovesTask();
-                    task.TeamId = pirate.TeamId;
-                    task.NoCoinMoving = true;
-                    task.FirstSource = _to;
-                    task.PreviosSource = _from;
+                    var task = new GetAllAvaliableMovesTask
+                    {
+                        TeamId = pirate.TeamId,
+                        NoCoinMoving = true,
+                        FirstSource = to,
+                        PreviosSource = from
+                    };
 
                     var targets = game.Board.GetAllAvailableMoves(task);
                     if (targets.Count == 0)
@@ -66,11 +58,11 @@ namespace Jackal.Core.Actions
 
                     //мы попали в клетку, где должны сделать ещё свой выбор
                     game.NeedSubTurnPirate = pirate;
-                    game.PrevSubTurnDirection = new Direction(_from, _to);
+                    game.PrevSubTurnDirection = new Direction(from, to);
                 }
                 else if (newTile.Type == TileType.Spinning)
                 {
-                    _to = new TilePosition(_to.Position, newTile.SpinningCount - 1);
+                    to = new TilePosition(to.Position, newTile.SpinningCount - 1);
                 }
                 else if (newTile.Type == TileType.Cannibal)
                 {
@@ -80,23 +72,29 @@ namespace Jackal.Core.Actions
             }
 
             //проверяем, не попадаем ли мы на чужой корабль - тогда мы погибли
-            var enemyShips = game.Board.Teams.Where(x => x != ourTeam).Select(x => x.Ship.Position);
-            if (enemyShips.Contains(_to.Position))
+            IEnumerable<Position> enemyShips = game.Board.Teams
+                .Where(x => x != ourTeam)
+                .Select(x => x.Ship.Position);
+            
+            if (enemyShips.Contains(to.Position))
             {
                 game.KillPirate(pirate);
                 return GameActionResult.Die;
             }
 
-            var fromTileLevel = map[_from];
-            var targetTileLevel = map[_to];
+            TileLevel fromTileLevel = map[from];
+            TileLevel targetTileLevel = map[to];
 
             //убиваем чужих пиратов
-            var enemyPirates = targetTileLevel.Pirates.Where(x => x.TeamId != pirate.TeamId).ToList();
+            List<Pirate> enemyPirates = targetTileLevel.Pirates
+                .Where(x => x.TeamId != pirate.TeamId)
+                .ToList();
+            
             foreach (var enemyPirate in enemyPirates)
             {
                 Team enemyTeam = board.Teams[enemyPirate.TeamId];
 
-                if (_targetTile.Type != TileType.Water) //возвращаем врага на его корабль
+                if (targetTile.Type != TileType.Water) //возвращаем врага на его корабль
                 {
                     enemyPirate.Position = new TilePosition(enemyTeam.Ship.Position);
                     board.Map[enemyTeam.Ship.Position].Pirates.Add(enemyPirate);
@@ -111,36 +109,37 @@ namespace Jackal.Core.Actions
                 }
             }
             
-            if (_from.Position == ourShip.Position && 
-                _targetTile.Type == TileType.Water &&
-                Utils.Distance(_from.Position, _to.Position) == 1) 
+            if (from.Position == ourShip.Position && 
+                targetTile.Type == TileType.Water &&
+                Utils.Distance(from.Position, to.Position) == 1) 
             {
                 //двигаем свой корабль
                 var pirateOnShips = map[ourShip.Position].Pirates;
                 foreach (var pirateOnShip in pirateOnShips)
                 {
-                    pirateOnShip.Position = _to;
+                    pirateOnShip.Position = to;
                     targetTileLevel.Pirates.Add(pirateOnShip);
                 }
-                ourShip.Position = _to.Position;
-                _sourceTile.Pirates.Clear();
+                ourShip.Position = to.Position;
+                sourceTile.Pirates.Clear();
             }
             else 
             {
                 //двигаем своего пирата
                 fromTileLevel.Pirates.Remove(pirate);
 
-                pirate.Position = _to;
+                pirate.Position = to;
                 targetTileLevel.Pirates.Add(pirate);
             }
 
-            if (_withCoin)
+            if (withCoin)
             {
-                if (fromTileLevel.Coins == 0) throw new Exception("No coins");
+                if (fromTileLevel.Coins == 0) 
+                    throw new Exception("No coins");
 
                 fromTileLevel.Coins--;
 
-                if (ourTeam.Ship.Position == _to.Position)  //перенос монеты на корабль
+                if (ourTeam.Ship.Position == to.Position)  //перенос монеты на корабль
                 {
                     ourShip.Coins++;
 
@@ -149,7 +148,7 @@ namespace Jackal.Core.Actions
 
                     game.LastActionTurnNo = game.TurnNo;
                 }
-                else if (_targetTile.Type == TileType.Water) // если монета попала в воду, то она тонет
+                else if (targetTile.Type == TileType.Water) // если монета попала в воду, то она тонет
                 {
                     game.CoinsLeft--;
                     game.LastActionTurnNo = game.TurnNo;
@@ -161,20 +160,20 @@ namespace Jackal.Core.Actions
             }
 
             //проводим пьянку для пирата
-            switch (_targetTile.Type)
+            switch (targetTile.Type)
             {
                 case TileType.RumBarrel:
                     pirate.DrunkSinceTurnNo = game.TurnNo;
                     pirate.IsDrunk = true;
                     break;
                 case TileType.Trap:
-                    if (_targetTile.Pirates.Count == 1)
+                    if (targetTile.Pirates.Count == 1)
                     {
                         pirate.IsInTrap = true;
                     }
                     else
                     {
-                        foreach (Pirate pirateOnTile in _targetTile.Pirates)
+                        foreach (Pirate pirateOnTile in targetTile.Pirates)
                         {
                             pirateOnTile.IsInTrap = false;
                         }
