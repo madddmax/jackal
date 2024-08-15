@@ -29,8 +29,7 @@ namespace Jackal.Core.Actions
             Team ourTeam = board.Teams[pirate.TeamId];
             var ourShip = ourTeam.Ship;
             
-            var target = _to;
-            var _targetTile = map[target.Position];
+            var _targetTile = map[_to.Position];
             var _sourceTile = map[_from.Position];
 
             if (_sourceTile.Type == TileType.Airplane 
@@ -44,8 +43,8 @@ namespace Jackal.Core.Actions
             //открываем клетку, если нужно
             if (_targetTile.Type == TileType.Unknown) //открываем закрытую клетку
             {
-                var newTile = board.Generator.GetNext(target.Position);
-                board.Map[target.Position] = newTile;
+                var newTile = board.Generator.GetNext(_to.Position);
+                board.Map[_to.Position] = newTile;
                 _targetTile = newTile;
 
                 game.LastActionTurnNo = game.TurnNo;
