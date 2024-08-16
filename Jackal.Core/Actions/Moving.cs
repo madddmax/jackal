@@ -41,7 +41,7 @@ namespace Jackal.Core.Actions
 
                 if (newTile.Type.RequireImmediateMove())
                 {
-                    AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, from, true);
+                    AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, from);
                     List<AvailableMove> targets = game.Board.GetAllAvailableMoves(task);
                     
                     if (targets.Count == 0)

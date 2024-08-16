@@ -210,7 +210,7 @@ namespace Jackal.Core
                         if (ourShip.Position == newPosition.Position) //заходим на свой корабль
                         {
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition))); //всегда это можем сделать
-                            if (task.NoCoinMoving == false && Map[task.Source].Coins > 0)
+                            if (Map[task.Source].Coins > 0)
                                 goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition, true))
                                 {
                                     MoveType = MoveType.WithCoin
@@ -239,7 +239,7 @@ namespace Jackal.Core
                             {
                                 goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition)));
                                 
-                                if (task.NoCoinMoving == false && Map[task.Source].Coins > 0)
+                                if (Map[task.Source].Coins > 0)
                                     goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition, true))
                                     {
                                         MoveType = MoveType.WithCoin
@@ -270,7 +270,7 @@ namespace Jackal.Core
                     
                     case TileType.Trap:
                         goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition)));
-                        if (task.NoCoinMoving == false && Map[task.Source].Coins > 0
+                        if (Map[task.Source].Coins > 0
                             && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition, true))
                             {
@@ -287,7 +287,7 @@ namespace Jackal.Core
                     case TileType.RumBarrel:
                     case TileType.Spinning:
                         goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition)));
-                        if (task.NoCoinMoving==false && Map[task.Source].Coins > 0
+                        if (Map[task.Source].Coins > 0
                             && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition, true))
                             {
@@ -313,7 +313,7 @@ namespace Jackal.Core
                         else {
                             // если нет самолета, то клетка работает как пустое поле
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition)));
-                            if (task.NoCoinMoving == false && Map[task.Source].Coins > 0
+                            if (Map[task.Source].Coins > 0
                                 && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
                                 goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition, true))
                                 {
