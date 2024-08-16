@@ -265,19 +265,7 @@ namespace Jackal.Core
                         break;
 
                     case TileType.Cannibal:
-                        goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition)));
-                        break;
-                    
                     case TileType.Trap:
-                        goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition)));
-                        if (Map[task.Source].Coins > 0
-                            && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
-                            goodTargets.Add(new AvailableMove(task.Source, newPosition, new Moving(task.Source, newPosition, true))
-                            {
-                                MoveType = MoveType.WithCoin
-                            });
-                        break;
-
                     case TileType.Grass:
                     case TileType.Chest1:
                     case TileType.Chest2:
