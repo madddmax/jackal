@@ -158,10 +158,6 @@ namespace Jackal.Core
         /// <returns></returns>
         private List<AvailableMove> GetAllAvailableMoves(AvailableMovesTask task, TilePosition source, TilePosition prev)
         {
-            Direction prevDirection = prev != null 
-                ? new Direction(prev, source) 
-                : new Direction(source, source);
-
             Tile sourceTile = Map[source.Position];
 
             int ourTeamId = task.TeamId;
@@ -174,13 +170,13 @@ namespace Jackal.Core
             {
                 Position? prevMoveDelta = null;
                 if (sourceTile.Type == TileType.Ice)
-                    prevMoveDelta = prevDirection.GetDelta();
+                    prevMoveDelta = Position.GetDelta(prev.Position, source.Position);
                 
                 task.AlreadyCheckedList.Add(new CheckedPosition(source, prevMoveDelta)); //запоминаем, что эту клетку просматривать уже не надо
             }
 
             //места всех возможных ходов
-            IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(source, prevDirection, ourTeam);
+            IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(source, prev, ourTeam);
 
             foreach (TilePosition newPosition in positionsForCheck)
             {
@@ -318,7 +314,7 @@ namespace Jackal.Core
         /// Возвращаем все позиции, в которые в принципе достижимы из заданной клетки за один подход
         /// (не проверяется, допустим ли такой ход)
         /// </summary>
-        private List<TilePosition> GetAllTargetsForSubTurn(TilePosition source, Direction prevMove, Team ourTeam)
+        private List<TilePosition> GetAllTargetsForSubTurn(TilePosition source, TilePosition prev, Team ourTeam)
         {
             var sourceTile = Map[source.Position];
             var ourShip = ourTeam.Ship;
@@ -351,7 +347,7 @@ namespace Jackal.Core
                             .Select(x => x.Position)
                             .Select(IncomeTilePosition);
                         
-                        if (prevMove.From != source)
+                        if (prev != source)
                             rez = rez.Concat(new []{source}); //ход "остаемся на месте"
                     }
                     else
@@ -363,11 +359,11 @@ namespace Jackal.Core
                     }
                     break;
                 case TileType.Crocodile:
-                    rez = new[] {prevMove.From}; //возвращаемся назад
+                    rez = new[] {prev}; //возвращаемся назад
                     break;
                 case TileType.Ice:
                     //TODO - проверка на использование самолета на предыдущем ходу - тогда мы должны повторить ход самолета
-                    var prevDelta = prevMove.GetDelta();
+                    var prevDelta = Position.GetDelta(prev.Position, source.Position);
                     var target = Position.AddDelta(source.Position, prevDelta);
                     rez = new[] { target }.Select(x => IncomeTilePosition(x));
                     break;

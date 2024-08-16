@@ -2,7 +2,7 @@
 
 namespace Jackal.Core
 {
-    public class AvailableMovesTask(int teamId, TilePosition source, TilePosition? prev)
+    public class AvailableMovesTask(int teamId, TilePosition source, TilePosition prev)
     {
         public readonly List<CheckedPosition> AlreadyCheckedList = [];
         
@@ -10,6 +10,6 @@ namespace Jackal.Core
 
         public readonly TilePosition Source = source;
         
-        public readonly TilePosition? Prev = prev;
+        public readonly TilePosition Prev = prev;
     }
 }
