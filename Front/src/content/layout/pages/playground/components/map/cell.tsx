@@ -123,31 +123,18 @@ function Cell({ row, col }: CellProps) {
                                 {it.coin.text}
                             </div>
                         )}
-                        {it.pirate && (
+                        {it.pirates && it.pirates.length > 0 && (
                             <Image
-                                src="/pictures/pirate_2.png"
+                                src={`/pictures/pirate_${it.pirates[0].photoId}.png`}
                                 roundedCircle
                                 className={cn('pirates')}
                                 style={{
-                                    border: `2px ${it.pirate.backColor || 'transparent'} solid`,
+                                    border: `2px ${'DarkRed' || 'transparent'} solid`,
                                     // backgroundImage: `url(/pictures/pirate_2.png)`,
                                     width: pirateSize,
                                     height: pirateSize,
                                 }}
                             />
-
-                            // <div
-                            //     className="pirates"
-                            //     style={{
-                            //         backgroundColor:
-                            //             it.pirate.backColor || 'transparent',
-                            //         backgroundImage: `url(/pictures/pirate_2.png)`,
-                            //         width: pirateSize,
-                            //         height: pirateSize,
-                            //     }}
-                            // >
-                            //     {it.pirate.text}
-                            // </div>
                         )}
                     </div>
                 ))}

@@ -23,13 +23,12 @@ export interface TeamState {
     id: number;
     activePirate: string;
     lastPirate: string;
-    hasPhotos: boolean;
 }
 export interface FieldState {
     image?: string;
     backColor?: string;
     rotate?: number;
-    levels?: GameLevel[];
+    levels: GameLevel[];
     availableMove?: {
         num: number;
         pirate: string;
@@ -86,10 +85,16 @@ interface GameCell {
 
 interface GameLevel {
     level: number;
-    hasPirates: boolean;
     pirate?: GameThing;
+    pirates?: CellPirate[];
     hasCoins: boolean;
     coin?: GameThing;
+}
+
+export interface CellPirate {
+    id: string;
+    withCoin?: boolean;
+    photoId?: number;
 }
 
 interface GameThing {
