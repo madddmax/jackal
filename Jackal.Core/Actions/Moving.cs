@@ -30,8 +30,8 @@ namespace Jackal.Core.Actions
                 sourceTile.Used = true;
             }
             
-            //открываем клетку, если нужно
-            if (targetTile.Type == TileType.Unknown) //открываем закрытую клетку
+            //открываем закрытую клетку
+            if (targetTile.Type == TileType.Unknown)
             {
                 var newTile = board.Generator.GetNext(to.Position);
                 board.Map[to.Position] = newTile;
@@ -97,7 +97,7 @@ namespace Jackal.Core.Actions
                     enemyPirate.IsDrunk = false;
                     enemyPirate.DrunkSinceTurnNo = null;
                 }
-                else //убиаваем совсем
+                else //убиваем совсем
                 {
                     game.KillPirate(enemyPirate);
                 }

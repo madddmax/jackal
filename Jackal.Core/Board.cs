@@ -158,7 +158,7 @@ namespace Jackal.Core
         /// <returns></returns>
         private List<AvailableMove> GetAllAvailableMoves(AvailableMovesTask task, TilePosition source, TilePosition prev)
         {
-            Direction? prevDirection = prev != null 
+            Direction prevDirection = prev != null 
                 ? new Direction(prev, source) 
                 : new Direction(source, source);
 
@@ -187,9 +187,9 @@ namespace Jackal.Core
                 //проверяем, что на этой клетке
                 var newPositionTile = Map[newPosition.Position];
 
-                if (task.AlreadyCheckedList.Count > 0 && prevDirection != null)
+                if (task.AlreadyCheckedList.Count > 0)
                 {
-                    Position incomeDelta = Position.GetDelta(prevDirection.To.Position, newPosition.Position);
+                    Position incomeDelta = Position.GetDelta(source.Position, newPosition.Position);
                     CheckedPosition currentCheck = new CheckedPosition(newPosition, incomeDelta);
 
                     if (WasCheckedBefore(task.AlreadyCheckedList, currentCheck)) //мы попали по рекурсии в ранее просмотренную клетку
