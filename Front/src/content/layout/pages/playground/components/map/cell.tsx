@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Image from 'react-bootstrap/Image';
 
 import { sagaActions } from '/redux/saga';
-import { FieldState, ReduxState, TeamState } from '/redux/types';
+import { FieldState, ReduxState } from '/redux/types';
 import cn from 'classnames';
 import './cell.less';
 
@@ -16,9 +16,6 @@ function Cell({ row, col }: CellProps) {
     const cellSize = useSelector<ReduxState, number>((state) => state.game.cellSize);
     const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
     const gamename = useSelector<ReduxState, string | undefined>((state) => state.game.gameName);
-    const team = useSelector<ReduxState, TeamState>(
-        (state) => state.game.teams.find((it) => it.id === state.game.currentTeamId!)!,
-    );
 
     const mul_x_times = cellSize / 50;
     const addSize = (mul_x_times - 1) * 10;
@@ -87,21 +84,23 @@ function Cell({ row, col }: CellProps) {
                     backgroundImage: field.image ? `url(${field.image})` : '',
                     backgroundColor: field.backColor || 'transparent',
                     transform: field.rotate && field.rotate > 0 ? `rotate(${field.rotate * 90}deg)` : 'none',
-                    opacity: field.moveNum !== undefined ? '0.5' : '1',
-                    cursor: field.moveNum !== undefined ? 'pointer' : 'default',
+                    opacity: field.availableMove?.num !== undefined ? '0.5' : '1',
+                    cursor: field.availableMove?.num !== undefined ? 'pointer' : 'default',
                 }}
-                onClick={() => {
-                    if (field.moveNum !== undefined) {
-                        dispatch({
-                            type: sagaActions.GAME_TURN,
-                            payload: {
-                                gameName: gamename,
-                                turnNum: field.moveNum,
-                                pirateId: team.activePirate,
-                            },
-                        });
-                    }
-                }}
+                onClick={
+                    field.availableMove
+                        ? () => {
+                              dispatch({
+                                  type: sagaActions.GAME_TURN,
+                                  payload: {
+                                      gameName: gamename,
+                                      turnNum: field.availableMove!.num,
+                                      pirateId: field!.availableMove!.pirate,
+                                  },
+                              });
+                          }
+                        : undefined
+                }
             ></div>
             {field.levels &&
                 field.levels.map((it) => (
@@ -124,31 +123,18 @@ function Cell({ row, col }: CellProps) {
                                 {it.coin.text}
                             </div>
                         )}
-                        {it.pirate && (
+                        {it.pirates && it.pirates.length > 0 && (
                             <Image
-                                src="/pictures/pirate_2.png"
+                                src={`/pictures/pirate_${it.pirates[0].photoId}.png`}
                                 roundedCircle
                                 className={cn('pirates')}
                                 style={{
-                                    border: `2px ${it.pirate.backColor || 'transparent'} solid`,
+                                    border: `2px ${'DarkRed' || 'transparent'} solid`,
                                     // backgroundImage: `url(/pictures/pirate_2.png)`,
                                     width: pirateSize,
                                     height: pirateSize,
                                 }}
                             />
-
-                            // <div
-                            //     className="pirates"
-                            //     style={{
-                            //         backgroundColor:
-                            //             it.pirate.backColor || 'transparent',
-                            //         backgroundImage: `url(/pictures/pirate_2.png)`,
-                            //         width: pirateSize,
-                            //         height: pirateSize,
-                            //     }}
-                            // >
-                            //     {it.pirate.text}
-                            // </div>
                         )}
                     </div>
                 ))}

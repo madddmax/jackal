@@ -31,13 +31,16 @@ export const gameSlice = createSlice({
             for (let i = 0; i < action.payload.height; i++) {
                 let row: FieldState[] = [];
                 for (let col = 0; col < action.payload.width; col++) {
-                    if (!action.payload.changes[j].backgroundImageSrc) {
+                    const change = action.payload.changes[j];
+                    if (!change.backgroundImageSrc) {
                         row.push({
-                            backColor: action.payload.changes[j].backgroundColor,
+                            backColor: change.backgroundColor,
+                            levels: change.levels,
                         });
                     } else
                         row.push({
-                            image: action.payload.changes[j].backgroundImageSrc,
+                            image: change.backgroundImageSrc,
+                            levels: change.levels,
                         });
                     j++;
                 }
@@ -49,13 +52,24 @@ export const gameSlice = createSlice({
             state.gameName = action.payload.gameName;
             state.mapId = action.payload.mapId;
             state.mapSize = action.payload.map.width;
-            state.pirates = action.payload.pirates;
             state.teams = action.payload.stat.teams.map((it) => ({
                 id: it.id,
                 activePirate: '',
                 lastPirate: '',
-                hasPhotos: false,
             }));
+            state.pirates = action.payload.pirates;
+            state.teams.forEach((team) => {
+                let arr = getRandomValues(
+                    Constants.PhotoMinId,
+                    Constants.PhotoMaxId,
+                    state.pirates?.filter((it) => it.teamId == team.id).length ?? 0,
+                );
+                state.pirates
+                    ?.filter((it) => it.teamId == team.id)
+                    .forEach((it, index) => {
+                        it.photoId = arr[index];
+                    });
+            });
 
             const width = window.innerWidth;
             const height = window.innerHeight - 56;
@@ -68,20 +82,6 @@ export const gameSlice = createSlice({
         setTeam: (state, action: PayloadAction<number>) => {
             if (action.payload !== undefined && action.payload !== state.currentTeamId) {
                 state.currentTeamId = action.payload;
-            }
-            let team = state.teams.find((it) => it.id == state.currentTeamId!)!;
-            if (!team.hasPhotos) {
-                let arr = getRandomValues(
-                    Constants.PhotoMinId,
-                    Constants.PhotoMaxId,
-                    state.pirates?.filter((it) => it.teamId == team.id).length ?? 0,
-                );
-                state.pirates
-                    ?.filter((it) => it.teamId == team.id)
-                    .forEach((it, index) => {
-                        it.photoId = arr[index];
-                    });
-                team.hasPhotos = true;
             }
         },
         choosePirate: (state, action: PayloadAction<PirateChoose>) => {
@@ -103,7 +103,7 @@ export const gameSlice = createSlice({
             // undraw previous moves
             state.lastMoves.forEach((move) => {
                 const cell = state.fields[move.to.y][move.to.x];
-                cell.moveNum = undefined;
+                cell.availableMove = undefined;
             });
 
             if (action.payload.moves) {
@@ -126,6 +126,8 @@ export const gameSlice = createSlice({
                 curCell.highlight = true;
             }
 
+            if (!pirate) return;
+
             // собственно подсвечиваем ходы
             state.lastMoves
                 .filter(
@@ -137,7 +139,10 @@ export const gameSlice = createSlice({
                 )
                 .forEach((move) => {
                     const cell = state.fields[move.to.y][move.to.x];
-                    cell.moveNum = move.moveNum;
+                    cell.availableMove = {
+                        num: move.moveNum,
+                        pirate: pirate.id,
+                    };
                 });
         },
         applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {
@@ -158,7 +163,22 @@ export const gameSlice = createSlice({
                     });
                 } else {
                     let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
+
+                    const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
+                    // console.log('prevLevel.pirates', pirate.position.x, pirate.position.y, prevLevel.pirates);
+                    if (prevLevel.pirates != undefined) {
+                        prevLevel.pirates = prevLevel.pirates.filter((it) => it.id != pirate.id);
+                        if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
+                    }
                     pirate.position = it.position;
+
+                    const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
+                    const drawPirate = {
+                        id: pirate.id,
+                        photoId: pirate.photoId,
+                    };
+                    if (level.pirates == undefined) level.pirates = [drawPirate];
+                    else level.pirates.push(drawPirate);
                 }
             });
 
@@ -180,10 +200,19 @@ export const gameSlice = createSlice({
         applyChanges: (state, action: PayloadAction<GameCell[]>) => {
             action.payload.forEach((it) => {
                 const cell = state.fields[it.y][it.x];
-                cell.image = it.backgroundImageSrc;
-                cell.backColor = it.backgroundColor;
-                cell.rotate = it.rotate;
-                cell.levels = it.levels;
+                console.log('applyChanges', it.x, it.y);
+                if (cell.image != it.backgroundImageSrc) {
+                    cell.image = it.backgroundImageSrc;
+                    cell.backColor = it.backgroundColor;
+                    cell.rotate = it.rotate;
+                    cell.levels = it.levels;
+                } else {
+                    cell.levels = it.levels.map((lev) => ({
+                        ...lev,
+                        pirate: undefined,
+                        pirates: cell.levels[lev.level].pirates,
+                    }));
+                }
             });
         },
         applyStat: (state, action: PayloadAction<GameStat>) => {

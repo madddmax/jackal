@@ -1,15 +1,7 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
 import axios from 'axios';
 import config from '/app/config';
-import {
-    initMap,
-    setTeam,
-    highlightMoves,
-    applyPirateChanges,
-    applyChanges,
-    applyStat,
-    initGame,
-} from './gameSlice';
+import { initMap, setTeam, highlightMoves, applyPirateChanges, applyChanges, applyStat, initGame } from './gameSlice';
 import { GameStartResponse, GameTurnResponse } from './types';
 
 export const sagaActions = {
@@ -84,7 +76,8 @@ export function* oneTurn(action: any) {
             yield put(applyStat(result.data.stat));
             return false;
         }
-
+        console.log('gameTurn');
+        yield put(applyChanges(result.data.changes));
         yield put(
             applyPirateChanges({
                 moves: result.data.moves,
@@ -96,12 +89,9 @@ export function* oneTurn(action: any) {
             yield put(setTeam(result.data.stat.currentTeamId));
             yield put(highlightMoves({ moves: result.data.moves }));
         }
-        yield put(applyChanges(result.data.changes));
         yield put(applyStat(result.data.stat));
 
-        return (
-            !result.data.stat.isHumanPlayer || result.data.moves?.length == 0
-        );
+        return !result.data.stat.isHumanPlayer || result.data.moves?.length == 0;
     } catch (e) {
         yield put({ type: 'TODO_FETCH_FAILED' });
     }
