@@ -1,5 +1,5 @@
 let config = {
-    BaseApi: "http://localhost:5130/"
+    BaseApi: "http://localhost:5130/",
     HasDebug: true,
 }
 if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
