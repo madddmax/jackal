@@ -1,4 +1,4 @@
-import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
     CellPirate,
     FieldState,
@@ -22,12 +22,12 @@ export const gameSlice = createSlice({
         fields: [[]],
         lastMoves: [],
         teams: [],
-        currentTeam: {
+        currentHumanTeam: {
             id: -1,
             activePirate: '',
             lastPirate: '',
-            isHumanPlayer: false,
-            group: 'somali',
+            isHumanPlayer: true,
+            group: 'girls',
         },
         highlight_x: 0,
         highlight_y: 0,
@@ -92,27 +92,25 @@ export const gameSlice = createSlice({
                 state.pirateSize = state.cellSize * 0.5;
             }
         },
-        setTeam: (state, action: PayloadAction<number>) => {
-            if (action.payload !== undefined && action.payload !== state.currentTeam.id) {
-                state.currentTeamId = action.payload;
-                state.currentTeam = state.teams.find((it) => it.id == action.payload)!;
+        setCurrentHumanTeam: (state, action: PayloadAction<number>) => {
+            if (action.payload !== undefined && action.payload !== state.currentHumanTeam.id) {
+                state.currentHumanTeam = state.teams.find((it) => it.id == action.payload)!;
             }
         },
-        choosePirate: (state, action: PayloadAction<PirateChoose>) => {
-            // let team = state.teams.find((it) => it.id == state.currentTeamId!)!;
-            state.currentTeam.activePirate = action.payload.pirate;
-            state.currentTeam.lastPirate = action.payload.pirate;
+        chooseHumanPirate: (state, action: PayloadAction<PirateChoose>) => {
+            state.currentHumanTeam.activePirate = action.payload.pirate;
+            state.currentHumanTeam.lastPirate = action.payload.pirate;
 
             if (action.payload.withCoin !== undefined) {
                 state.pirates?.forEach((it) => {
-                    if (it.id == state.currentTeam.activePirate) {
+                    if (it.id == state.currentHumanTeam.activePirate) {
                         it.withCoin = action.payload.withCoin;
                     }
                 });
             }
-            gameSlice.caseReducers.highlightMoves(state, highlightMoves({}));
+            gameSlice.caseReducers.highlightHumanMoves(state, highlightHumanMoves({}));
         },
-        highlightMoves: (state, action: PayloadAction<PirateMoves>) => {
+        highlightHumanMoves: (state, action: PayloadAction<PirateMoves>) => {
             console.log('highlightMoves');
             // undraw previous moves
             state.lastMoves.forEach((move) => {
@@ -124,16 +122,14 @@ export const gameSlice = createSlice({
                 state.lastMoves = action.payload.moves;
             }
 
-            // let team = state.teams.find((it) => it.id == state.currentTeamId!)!;
-
             let hasNoMoves =
                 state.lastMoves.length > 0 &&
-                !state.lastMoves.some((move) => move.from.pirateIds.includes(state.currentTeam.lastPirate));
-            state.currentTeam.activePirate = hasNoMoves
+                !state.lastMoves.some((move) => move.from.pirateIds.includes(state.currentHumanTeam.lastPirate));
+            state.currentHumanTeam.activePirate = hasNoMoves
                 ? state.lastMoves[0].from.pirateIds[0]
-                : state.currentTeam.lastPirate;
+                : state.currentHumanTeam.lastPirate;
 
-            const pirate = state.pirates?.find((it) => it.id == state.currentTeam.activePirate);
+            const pirate = state.pirates?.find((it) => it.id == state.currentHumanTeam.activePirate);
             if (pirate?.position.x != state.highlight_x || pirate?.position.y != state.highlight_y) {
                 const prevCell = state.fields[state.highlight_y][state.highlight_x];
                 prevCell.highlight = false;
@@ -149,7 +145,7 @@ export const gameSlice = createSlice({
             state.lastMoves
                 .filter(
                     (move) =>
-                        move.from.pirateIds.includes(state.currentTeam.activePirate) &&
+                        move.from.pirateIds.includes(state.currentHumanTeam.activePirate) &&
                         ((pirate?.withCoin && move.withCoin) ||
                             pirate?.withCoin === undefined ||
                             (!pirate?.withCoin && !move.withCoin)),
@@ -240,7 +236,15 @@ export const gameSlice = createSlice({
     },
 });
 
-export const { initMap, setTeam, choosePirate, highlightMoves, applyPirateChanges, applyChanges, initGame, applyStat } =
-    gameSlice.actions;
+export const {
+    initMap,
+    setCurrentHumanTeam,
+    chooseHumanPirate,
+    highlightHumanMoves,
+    applyPirateChanges,
+    applyChanges,
+    initGame,
+    applyStat,
+} = gameSlice.actions;
 
 export default gameSlice.reducer;

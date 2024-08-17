@@ -14,8 +14,7 @@ export interface GameState {
     pirates?: GamePirate[];
     lastMoves: GameMove[];
     teams: TeamState[];
-    currentTeam: TeamState;
-    currentTeamId?: number;
+    currentHumanTeam: TeamState;
     highlight_x: number;
     highlight_y: number;
 }
