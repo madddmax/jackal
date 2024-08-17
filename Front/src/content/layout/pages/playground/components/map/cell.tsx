@@ -125,12 +125,11 @@ function Cell({ row, col }: CellProps) {
                         )}
                         {it.pirates && it.pirates.length > 0 && (
                             <Image
-                                src={`/pictures/pirate_${it.pirates[0].photoId}.png`}
+                                src={`/pictures/${it.pirates[0].group}/pirate_${it.pirates[0].photoId}.png`}
                                 roundedCircle
                                 className={cn('pirates')}
                                 style={{
                                     border: `2px ${'DarkRed' || 'transparent'} solid`,
-                                    // backgroundImage: `url(/pictures/pirate_2.png)`,
                                     width: pirateSize,
                                     height: pirateSize,
                                 }}
