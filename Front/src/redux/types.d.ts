@@ -14,7 +14,7 @@ export interface GameState {
     pirates?: GamePirate[];
     lastMoves: GameMove[];
     teams: TeamState[];
-    currentTeamId?: number;
+    currentHumanTeam: TeamState;
     highlight_x: number;
     highlight_y: number;
 }
@@ -23,6 +23,8 @@ export interface TeamState {
     id: number;
     activePirate: string;
     lastPirate: string;
+    isHumanPlayer: boolean;
+    group: string;
 }
 export interface FieldState {
     image?: string;
@@ -94,7 +96,8 @@ interface GameLevel {
 export interface CellPirate {
     id: string;
     withCoin?: boolean;
-    photoId?: number;
+    group: string;
+    photoId: number;
 }
 
 interface GameThing {
@@ -142,7 +145,8 @@ export interface GamePirate {
         y: number;
     };
     withCoin?: boolean;
-    photoId?: number;
+    group: string;
+    photoId: number;
 }
 
 export interface PirateDiff {

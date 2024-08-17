@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
+    CellPirate,
     FieldState,
     GameCell,
     GameMap,
@@ -10,7 +11,7 @@ import {
     PirateChoose,
     PirateMoves,
 } from './types';
-import { getAnotherRandomValue, getRandomValues } from '/app/global';
+import { debugLog, getAnotherRandomValue, getRandomValues } from '/app/global';
 import { Constants } from '/app/constants';
 
 export const gameSlice = createSlice({
@@ -21,6 +22,13 @@ export const gameSlice = createSlice({
         fields: [[]],
         lastMoves: [],
         teams: [],
+        currentHumanTeam: {
+            id: -1,
+            activePirate: '',
+            lastPirate: '',
+            isHumanPlayer: true,
+            group: 'girls',
+        },
         highlight_x: 0,
         highlight_y: 0,
     } satisfies GameState as GameState,
@@ -56,8 +64,11 @@ export const gameSlice = createSlice({
                 id: it.id,
                 activePirate: '',
                 lastPirate: '',
+                isHumanPlayer: it.name.includes('Human'),
+                group: it.name.includes('Human') ? 'girls' : 'somali',
             }));
             state.pirates = action.payload.pirates;
+            debugLog('state.teams', state.teams);
             state.teams.forEach((team) => {
                 let arr = getRandomValues(
                     Constants.PhotoMinId,
@@ -68,8 +79,10 @@ export const gameSlice = createSlice({
                     ?.filter((it) => it.teamId == team.id)
                     .forEach((it, index) => {
                         it.photoId = arr[index];
+                        it.group = team.group;
                     });
             });
+            debugLog('state.pirates', state.pirates);
 
             const width = window.innerWidth;
             const height = window.innerHeight - 56;
@@ -79,26 +92,25 @@ export const gameSlice = createSlice({
                 state.pirateSize = state.cellSize * 0.5;
             }
         },
-        setTeam: (state, action: PayloadAction<number>) => {
-            if (action.payload !== undefined && action.payload !== state.currentTeamId) {
-                state.currentTeamId = action.payload;
+        setCurrentHumanTeam: (state, action: PayloadAction<number>) => {
+            if (action.payload !== undefined && action.payload !== state.currentHumanTeam.id) {
+                state.currentHumanTeam = state.teams.find((it) => it.id == action.payload)!;
             }
         },
-        choosePirate: (state, action: PayloadAction<PirateChoose>) => {
-            let team = state.teams.find((it) => it.id == state.currentTeamId!)!;
-            team.activePirate = action.payload.pirate;
-            team.lastPirate = action.payload.pirate;
+        chooseHumanPirate: (state, action: PayloadAction<PirateChoose>) => {
+            state.currentHumanTeam.activePirate = action.payload.pirate;
+            state.currentHumanTeam.lastPirate = action.payload.pirate;
 
             if (action.payload.withCoin !== undefined) {
                 state.pirates?.forEach((it) => {
-                    if (it.id == team.activePirate) {
+                    if (it.id == state.currentHumanTeam.activePirate) {
                         it.withCoin = action.payload.withCoin;
                     }
                 });
             }
-            gameSlice.caseReducers.highlightMoves(state, highlightMoves({}));
+            gameSlice.caseReducers.highlightHumanMoves(state, highlightHumanMoves({}));
         },
-        highlightMoves: (state, action: PayloadAction<PirateMoves>) => {
+        highlightHumanMoves: (state, action: PayloadAction<PirateMoves>) => {
             console.log('highlightMoves');
             // undraw previous moves
             state.lastMoves.forEach((move) => {
@@ -110,13 +122,14 @@ export const gameSlice = createSlice({
                 state.lastMoves = action.payload.moves;
             }
 
-            let team = state.teams.find((it) => it.id == state.currentTeamId!)!;
             let hasNoMoves =
                 state.lastMoves.length > 0 &&
-                !state.lastMoves.some((move) => move.from.pirateIds.includes(team.lastPirate));
-            team.activePirate = hasNoMoves ? state.lastMoves[0].from.pirateIds[0] : team.lastPirate;
+                !state.lastMoves.some((move) => move.from.pirateIds.includes(state.currentHumanTeam.lastPirate));
+            state.currentHumanTeam.activePirate = hasNoMoves
+                ? state.lastMoves[0].from.pirateIds[0]
+                : state.currentHumanTeam.lastPirate;
 
-            const pirate = state.pirates?.find((it) => it.id == team.activePirate);
+            const pirate = state.pirates?.find((it) => it.id == state.currentHumanTeam.activePirate);
             if (pirate?.position.x != state.highlight_x || pirate?.position.y != state.highlight_y) {
                 const prevCell = state.fields[state.highlight_y][state.highlight_x];
                 prevCell.highlight = false;
@@ -132,7 +145,7 @@ export const gameSlice = createSlice({
             state.lastMoves
                 .filter(
                     (move) =>
-                        move.from.pirateIds.includes(team.activePirate) &&
+                        move.from.pirateIds.includes(state.currentHumanTeam.activePirate) &&
                         ((pirate?.withCoin && move.withCoin) ||
                             pirate?.withCoin === undefined ||
                             (!pirate?.withCoin && !move.withCoin)),
@@ -159,6 +172,7 @@ export const gameSlice = createSlice({
                         id: it.id,
                         teamId: it.teamId,
                         position: it.position,
+                        group: state.teams.find((tm) => tm.id == it.teamId)!.group,
                         photoId: nm,
                     });
                 } else {
@@ -173,9 +187,10 @@ export const gameSlice = createSlice({
                     pirate.position = it.position;
 
                     const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
-                    const drawPirate = {
+                    const drawPirate: CellPirate = {
                         id: pirate.id,
                         photoId: pirate.photoId,
+                        group: pirate.group,
                     };
                     if (level.pirates == undefined) level.pirates = [drawPirate];
                     else level.pirates.push(drawPirate);
@@ -221,7 +236,15 @@ export const gameSlice = createSlice({
     },
 });
 
-export const { initMap, setTeam, choosePirate, highlightMoves, applyPirateChanges, applyChanges, initGame, applyStat } =
-    gameSlice.actions;
+export const {
+    initMap,
+    setCurrentHumanTeam,
+    chooseHumanPirate,
+    highlightHumanMoves,
+    applyPirateChanges,
+    applyChanges,
+    initGame,
+    applyStat,
+} = gameSlice.actions;
 
 export default gameSlice.reducer;

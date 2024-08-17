@@ -4,17 +4,18 @@ import Image from 'react-bootstrap/Image';
 import './pirates.css';
 
 interface PirateProps {
+    group: string;
     photoId: number;
     isActive: boolean;
     withCoin: boolean | undefined;
     onClick: () => void;
 }
 
-const Pirate = ({ photoId, isActive, withCoin, onClick }: PirateProps) => {
+const Pirate = ({ group, photoId, isActive, withCoin, onClick }: PirateProps) => {
     return (
         <div className="photo-position float-end">
             <Image
-                src={`/pictures/pirate_${photoId}.png`}
+                src={`/pictures/${group}/pirate_${photoId}.png`}
                 roundedCircle
                 className={cn('photo', {
                     'photo-active': isActive,
@@ -23,17 +24,9 @@ const Pirate = ({ photoId, isActive, withCoin, onClick }: PirateProps) => {
             />
             {withCoin !== undefined && (
                 <>
-                    <Image
-                        src="/pictures/ruble.png"
-                        roundedCircle
-                        className={cn('moneta')}
-                    />
+                    <Image src="/pictures/ruble.png" roundedCircle className={cn('moneta')} />
                     {!withCoin && (
-                        <Image
-                            src="/pictures/cross-linear-icon.png"
-                            roundedCircle
-                            className={cn('moneta')}
-                        />
+                        <Image src="/pictures/cross-linear-icon.png" roundedCircle className={cn('moneta')} />
                     )}
                 </>
             )}
