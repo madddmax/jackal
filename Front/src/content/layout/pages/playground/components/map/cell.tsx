@@ -19,44 +19,45 @@ function Cell({ row, col }: CellProps) {
 
     const mul_x_times = cellSize / 50;
     const addSize = (mul_x_times - 1) * 10;
+    const unitSize = cellSize - pirateSize / 2;
     const getMarginTop = (field: FieldState, level: number) => {
         if (field.levels?.length === 3) {
-            if (level === 2) return cellSize * 0.7 + addSize;
-            else if (level == 1) return cellSize * 0.3 + addSize;
+            if (level === 2) return unitSize * 0.7 + addSize;
+            else if (level == 1) return unitSize * 0.3 + addSize;
         } else if (field.levels?.length === 2) {
-            if (level === 1) return cellSize * 0.7 + addSize;
+            if (level === 1) return unitSize * 0.7 + addSize;
         } else if (field.levels?.length === 4) {
-            if (level === 3) return cellSize * 0.7 + addSize;
-            else if (level == 2) return cellSize * 0.5;
-            else if (level == 1) return cellSize * 0.2;
+            if (level === 3) return unitSize * 0.7 + addSize;
+            else if (level == 2) return unitSize * 0.5;
+            else if (level == 1) return unitSize * 0.2;
         } else if (field.levels?.length === 5) {
             if (level === 4) return addSize;
             else if (level == 3) return addSize;
-            else if (level == 2) return cellSize * 0.3;
-            else if (level == 1) return cellSize * 0.7 - addSize;
-            else if (level == 0) return cellSize * 0.7;
+            else if (level == 2) return unitSize * 0.3;
+            else if (level == 1) return unitSize * 0.7 - addSize;
+            else if (level == 0) return unitSize * 0.7;
         }
         return 0;
     };
 
     const getMarginLeft = (field: FieldState, level: number) => {
         if (field.levels?.length === 3) {
-            if (level === 2) return cellSize * 0.7 + addSize;
+            if (level === 2) return unitSize * 0.7 + addSize;
             else if (level == 1) return addSize * 3;
-            else if (level == 0) return cellSize * 0.7 + addSize;
+            else if (level == 0) return unitSize * 0.7 + addSize;
         } else if (field.levels?.length === 2) {
-            if (level === 0) return cellSize * 0.7 + addSize;
+            if (level === 0) return unitSize * 0.7 + addSize;
         } else if (field.levels?.length === 4) {
-            if (level === 3) return cellSize * 0.7 - addSize;
+            if (level === 3) return unitSize * 0.7 - addSize;
             else if (level == 2) return addSize * 2;
-            else if (level == 1) return cellSize * 0.5 + addSize;
+            else if (level == 1) return unitSize * 0.5 + addSize;
             else if (level == 0) return addSize * 2;
         } else if (field.levels?.length === 5) {
-            if (level === 4) return cellSize * 0.7 + addSize;
-            else if (level === 3) return cellSize * 0.3 + addSize;
+            if (level === 4) return unitSize * 0.7 + addSize;
+            else if (level === 3) return unitSize * 0.3 + addSize;
             else if (level == 2) return addSize;
             else if (level == 1) return addSize * 3;
-            else if (level == 0) return cellSize * 0.7;
+            else if (level == 0) return unitSize * 0.7;
         }
 
         return 0;
