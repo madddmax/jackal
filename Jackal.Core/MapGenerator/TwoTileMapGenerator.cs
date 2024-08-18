@@ -3,10 +3,10 @@ using System.Collections.Generic;
 namespace Jackal.Core;
 
 /// <summary>
-/// Нижняя береговая линия - золото,
-/// остальные все клетки людоеды
+/// Нижняя береговая линия firstTile,
+/// остальные все клетки secondTile
 /// </summary>
-public class GoldAndCannibalMapGenerator : IMapGenerator
+public class TwoTileMapGenerator(TileParams firstTileParams, TileParams secondTileParams) : IMapGenerator
 {
     private readonly Dictionary<Position, Tile> _tiles = new();
     
@@ -18,11 +18,8 @@ public class GoldAndCannibalMapGenerator : IMapGenerator
     {
         if (!_tiles.ContainsKey(position))
         {
-            var tileParams = new TileParams
-            {
-                Position = position,
-                Type = position.Y == 1 ? TileType.Chest1 : TileType.Cannibal,
-            };
+            var tileParams = position.Y == 1 ? firstTileParams : secondTileParams;
+            tileParams.Position = position;
             
             var tile = new Tile(tileParams);
             if (tile.Type.CoinsCount() > 0)

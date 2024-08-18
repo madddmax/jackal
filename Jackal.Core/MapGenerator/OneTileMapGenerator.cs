@@ -2,10 +2,11 @@ using System.Collections.Generic;
 
 namespace Jackal.Core;
 
-public class OneTileMapGenerator(TileParams tileParams) : IMapGenerator
+/// <summary>
+/// Все клетки oneTileParams
+/// </summary>
+public class OneTileMapGenerator(TileParams oneTileParams) : IMapGenerator
 {
-    private readonly TileParams _tileParams = tileParams;
-
     private readonly Dictionary<Position, Tile> _tiles = new();
     
     public int MapId { get; } = 0;
@@ -16,8 +17,8 @@ public class OneTileMapGenerator(TileParams tileParams) : IMapGenerator
     {
         if (!_tiles.ContainsKey(position))
         {
-            _tileParams.Position = position;
-            _tiles[position] = new Tile(_tileParams);
+            oneTileParams.Position = position;
+            _tiles[position] = new Tile(oneTileParams);
         }
         
         return _tiles[position];
