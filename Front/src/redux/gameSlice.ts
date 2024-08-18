@@ -60,12 +60,15 @@ export const gameSlice = createSlice({
             state.gameName = action.payload.gameName;
             state.mapId = action.payload.mapId;
             state.mapSize = action.payload.map.width;
+            let index = 1;
             state.teams = action.payload.stat.teams.map((it) => ({
                 id: it.id,
                 activePirate: '',
                 lastPirate: '',
                 isHumanPlayer: it.name.includes('Human'),
-                group: it.name.includes('Human') ? 'girls' : 'somali',
+                group: it.name.includes('Human')
+                    ? Constants.groups[0]
+                    : Constants.groups[index++] || Constants.groups[2],
             }));
             state.pirates = action.payload.pirates;
             debugLog('state.teams', state.teams);
@@ -78,7 +81,7 @@ export const gameSlice = createSlice({
                 state.pirates
                     ?.filter((it) => it.teamId == team.id)
                     .forEach((it, index) => {
-                        it.photoId = arr[index];
+                        (it.photo = `${team.group}/pirate_${arr[index]}`), (it.photoId = arr[index]);
                         it.group = team.group;
                     });
             });
@@ -165,8 +168,9 @@ export const gameSlice = createSlice({
 
                     const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
                     if (prevLevel.pirates != undefined) {
-                        prevLevel.pirates = prevLevel.pirates.filter((pr) => pr.id !== it.id);
-                        if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
+                        let prevLevelPirate = prevLevel.pirates.find((pr) => pr.id === it.id);
+                        prevLevelPirate!.photo = 'skull';
+                        prevLevelPirate!.isTransparent = true;
                     }
 
                     state.pirates = state.pirates?.filter((pr) => pr.id !== it.id);
@@ -176,11 +180,13 @@ export const gameSlice = createSlice({
                         Constants.PhotoMaxId,
                         state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ?? [],
                     );
+                    let teamGroup = state.teams.find((tm) => tm.id == it.teamId)!.group;
                     state.pirates?.push({
                         id: it.id,
                         teamId: it.teamId,
                         position: it.position,
-                        group: state.teams.find((tm) => tm.id == it.teamId)!.group,
+                        group: teamGroup,
+                        photo: `${teamGroup}/pirate_${nm}`,
                         photoId: nm,
                     });
                 } else {
@@ -196,8 +202,7 @@ export const gameSlice = createSlice({
                     const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
                     const drawPirate: CellPirate = {
                         id: pirate.id,
-                        photoId: pirate.photoId,
-                        group: pirate.group,
+                        photo: pirate.photo,
                     };
                     if (level.pirates == undefined) level.pirates = [drawPirate];
                     else level.pirates.push(drawPirate);
@@ -222,7 +227,6 @@ export const gameSlice = createSlice({
         applyChanges: (state, action: PayloadAction<GameCell[]>) => {
             action.payload.forEach((it) => {
                 const cell = state.fields[it.y][it.x];
-                console.log('applyChanges', it.x, it.y);
                 if (cell.image != it.backgroundImageSrc) {
                     cell.image = it.backgroundImageSrc;
                     cell.backColor = it.backgroundColor;

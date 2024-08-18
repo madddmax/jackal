@@ -126,11 +126,13 @@ function Cell({ row, col }: CellProps) {
                         )}
                         {it.pirates && it.pirates.length > 0 && (
                             <Image
-                                src={`/pictures/${it.pirates[0].group}/pirate_${it.pirates[0].photoId}.png`}
-                                roundedCircle
+                                src={`/pictures/${it.pirates[0].photo}.png`}
+                                roundedCircle={!it.pirates[0].isTransparent}
                                 className={cn('pirates')}
                                 style={{
-                                    border: `2px ${'DarkRed' || 'transparent'} solid`,
+                                    border: it.pirates[0].isTransparent
+                                        ? 'none'
+                                        : `2px ${'DarkRed' || 'transparent'} solid`,
                                     width: pirateSize,
                                     height: pirateSize,
                                 }}
