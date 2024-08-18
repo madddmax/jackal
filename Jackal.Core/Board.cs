@@ -214,14 +214,16 @@ namespace Jackal.Core
                         }
                         else if (sourceTile.Type == TileType.Water) //из воды в воду 
                         {
-                            if (source.Position != ourShip.Position && GetPosibleSwimming(task.Source.Position).Contains(newPosition.Position))
+                            if (source.Position != ourShip.Position && 
+                                GetPosibleSwimming(task.Source.Position).Contains(newPosition.Position))
                             {
                                 //пират плавает
                                 var action = new Moving(task.Source, newPosition);
                                 var move = new AvailableMove(task.Source, newPosition, action);
                                 goodTargets.Add(move);
                             }
-                            if (source.Position == ourShip.Position && GetShipPosibleNavaigations(task.Source.Position).Contains(newPosition.Position))
+                            if (source.Position == ourShip.Position && 
+                                GetPossibleShipMoves(task.Source.Position, MapSize).Contains(newPosition.Position))
                             {
                                 //корабль плавает
                                 var action = new Moving(task.Source, newPosition);
@@ -390,7 +392,7 @@ namespace Jackal.Core
                 case TileType.Water:
                     if (source.Position == ourShip.Position) //с своего корабля
                     {
-                        rez = GetShipPosibleNavaigations(source.Position)
+                        rez = GetPossibleShipMoves(source.Position, MapSize)
                             .Concat(new[] {GetShipLanding(source.Position)})
                             .Select(x => IncomeTilePosition(x));
                     }
@@ -450,21 +452,21 @@ namespace Jackal.Core
             );
         }
 
-        public IEnumerable<Position> GetShipPosibleNavaigations(Position pos)
+        public static IEnumerable<Position> GetPossibleShipMoves(Position shipPosition, int mapSize)
         {
-            if (pos.X == 0 || pos.X == MapSize - 1)
+            if (shipPosition.X == 0 || shipPosition.X == mapSize - 1)
             {
-                if (pos.Y > 2)
-                    yield return new Position(pos.X, pos.Y - 1);
-                if (pos.Y < MapSize - 3)
-                    yield return new Position(pos.X, pos.Y + 1);
+                if (shipPosition.Y > 2)
+                    yield return new Position(shipPosition.X, shipPosition.Y - 1);
+                if (shipPosition.Y < mapSize - 3)
+                    yield return new Position(shipPosition.X, shipPosition.Y + 1);
             }
-            else if (pos.Y == 0 || pos.Y == MapSize - 1)
+            else if (shipPosition.Y == 0 || shipPosition.Y == mapSize - 1)
             {
-                if (pos.X > 2)
-                    yield return new Position(pos.X - 1, pos.Y);
-                if (pos.X < MapSize - 3)
-                    yield return new Position(pos.X + 1, pos.Y);
+                if (shipPosition.X > 2)
+                    yield return new Position(shipPosition.X - 1, shipPosition.Y);
+                if (shipPosition.X < mapSize - 3)
+                    yield return new Position(shipPosition.X + 1, shipPosition.Y);
             }
             else
             {

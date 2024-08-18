@@ -105,7 +105,7 @@ namespace Jackal.Core.Actions
             
             if (from.Position == ourShip.Position && 
                 targetTile.Type == TileType.Water &&
-                Utils.Distance(from.Position, to.Position) == 1) 
+                Board.GetPossibleShipMoves(ourShip.Position, game.Board.MapSize).Contains(to.Position)) 
             {
                 //двигаем свой корабль
                 var pirateOnShips = map[ourShip.Position].Pirates;
