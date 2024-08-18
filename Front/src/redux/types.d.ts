@@ -96,8 +96,8 @@ interface GameLevel {
 export interface CellPirate {
     id: string;
     withCoin?: boolean;
-    group: string;
-    photoId: number;
+    isTransparent?: boolean;
+    photo: string;
 }
 
 interface GameThing {
@@ -146,6 +146,7 @@ export interface GamePirate {
     };
     withCoin?: boolean;
     group: string;
+    photo: string;
     photoId: number;
 }
 
