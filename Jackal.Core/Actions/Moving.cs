@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Jackal.Core.Actions
 {
-    internal class Moving(TilePosition from, TilePosition to, bool withCoin = false) : IGameAction
+    internal class Moving(TilePosition from, TilePosition to, TilePosition prev, bool withCoin = false) : IGameAction
     {
         public GameActionResult Act(Game game, Pirate pirate)
         {
@@ -52,7 +52,7 @@ namespace Jackal.Core.Actions
 
                     //мы попали в клетку, где должны сделать ещё свой выбор
                     game.NeedSubTurnPirate = pirate;
-                    game.PrevSubTurnDirection = new Direction(from, to);
+                    game.PrevSubTurnPosition = prev;
                 }
                 else if (newTile.Type == TileType.Spinning)
                 {

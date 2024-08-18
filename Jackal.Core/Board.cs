@@ -180,8 +180,8 @@ namespace Jackal.Core
 
             foreach (TilePosition newPosition in positionsForCheck)
             {
-                var moving = new Moving(source, newPosition);
-                var movingWithCoin = new Moving(task.Source, newPosition, true);
+                var moving = new Moving(task.Source, newPosition, source);
+                var movingWithCoin = new Moving(task.Source, newPosition, source, true);
                 
                 //проверяем, что на этой клетке
                 var newPositionTile = Map[newPosition.Position];

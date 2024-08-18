@@ -49,7 +49,7 @@ namespace Jackal.Core
             GetAvailableMoves(CurrentTeamId);
 
             NeedSubTurnPirate = null;
-            PrevSubTurnDirection = null;
+            PrevSubTurnPosition = null;
 
             if (_availableMoves.Count > 0)
             {
@@ -89,7 +89,7 @@ namespace Jackal.Core
 
         public Pirate? NeedSubTurnPirate { private get; set; }
         
-        public Direction? PrevSubTurnDirection { get; set; }
+        public TilePosition? PrevSubTurnPosition { get; set; }
 
         public List<Move> GetPrevAvailableMoves()
         {
@@ -116,7 +116,7 @@ namespace Jackal.Core
             var targets = new List<AvailableMove>();
             foreach (var pirate in activePirates)
             {
-                TilePosition prev = PrevSubTurnDirection?.From ?? pirate.Position;
+                TilePosition prev = PrevSubTurnPosition ?? pirate.Position;
                 AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, prev);
 
                 List<AvailableMove> temp = Board.GetAllAvailableMoves(task);
