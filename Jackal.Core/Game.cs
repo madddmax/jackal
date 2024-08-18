@@ -88,6 +88,8 @@ namespace Jackal.Core
         }
 
         public Pirate? NeedSubTurnPirate { private get; set; }
+        
+        public Direction? PrevSubTurnDirection { get; set; }
 
         public List<Move> GetPrevAvailableMoves()
         {
@@ -107,23 +109,14 @@ namespace Jackal.Core
             
             Team team = Board.Teams[teamId];
 
-            IEnumerable<Pirate> activePirates;
-            Direction? prevDirection = null;
-            if (NeedSubTurnPirate != null)
-            {
-                activePirates = new[] {NeedSubTurnPirate};
-                prevDirection = PrevSubTurnDirection;
-            }
-            else
-            {
-                activePirates = team.Pirates.Where(x => x.IsDrunk == false && x.IsInTrap == false);
-            }
+            IEnumerable<Pirate> activePirates = NeedSubTurnPirate != null 
+                ? new[] {NeedSubTurnPirate} 
+                : team.Pirates.Where(x => x is { IsDrunk: false, IsInTrap: false });
 
             var targets = new List<AvailableMove>();
-
             foreach (var pirate in activePirates)
             {
-                TilePosition prev = prevDirection != null ? prevDirection.From : pirate.Position;
+                TilePosition prev = PrevSubTurnDirection?.From ?? pirate.Position;
                 AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, prev);
 
                 List<AvailableMove> temp = Board.GetAllAvailableMoves(task);
@@ -153,8 +146,6 @@ namespace Jackal.Core
         public int CurrentTeamId => TurnNo % _players.Length;
 
         public IPlayer CurrentPlayer => _players[CurrentTeamId];
-
-        public Direction? PrevSubTurnDirection;
 
         public void KillPirate(Pirate pirate)
         {
