@@ -60,12 +60,15 @@ export const gameSlice = createSlice({
             state.gameName = action.payload.gameName;
             state.mapId = action.payload.mapId;
             state.mapSize = action.payload.map.width;
+            let index = 1;
             state.teams = action.payload.stat.teams.map((it) => ({
                 id: it.id,
                 activePirate: '',
                 lastPirate: '',
                 isHumanPlayer: it.name.includes('Human'),
-                group: it.name.includes('Human') ? 'girls' : 'somali',
+                group: it.name.includes('Human')
+                    ? Constants.groups[0]
+                    : Constants.groups[index++] || Constants.groups[2],
             }));
             state.pirates = action.payload.pirates;
             debugLog('state.teams', state.teams);
@@ -224,7 +227,6 @@ export const gameSlice = createSlice({
         applyChanges: (state, action: PayloadAction<GameCell[]>) => {
             action.payload.forEach((it) => {
                 const cell = state.fields[it.y][it.x];
-                console.log('applyChanges', it.x, it.y);
                 if (cell.image != it.backgroundImageSrc) {
                     cell.image = it.backgroundImageSrc;
                     cell.backColor = it.backgroundColor;
