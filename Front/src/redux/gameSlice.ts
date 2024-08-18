@@ -161,6 +161,14 @@ export const gameSlice = createSlice({
         applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {
             action.payload.changes.forEach((it) => {
                 if (it.isAlive === false) {
+                    let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
+
+                    const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
+                    if (prevLevel.pirates != undefined) {
+                        prevLevel.pirates = prevLevel.pirates.filter((pr) => pr.id !== it.id);
+                        if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
+                    }
+
                     state.pirates = state.pirates?.filter((pr) => pr.id !== it.id);
                 } else if (it.isAlive === true) {
                     let nm = getAnotherRandomValue(
@@ -179,7 +187,6 @@ export const gameSlice = createSlice({
                     let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
 
                     const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
-                    // console.log('prevLevel.pirates', pirate.position.x, pirate.position.y, prevLevel.pirates);
                     if (prevLevel.pirates != undefined) {
                         prevLevel.pirates = prevLevel.pirates.filter((it) => it.id != pirate.id);
                         if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
