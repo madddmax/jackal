@@ -61,19 +61,19 @@ namespace Jackal.Core.Actions
                     return GameActionResult.Die;
                 }
             }
-            
-            if (from != to && sourceTile is { Type: TileType.Airplane, Used: false })
+
+            //отмечаем, что мы использовали самолет
+            if (from != to)
             {
-                //отмечаем, что мы использовали самолет
-                sourceTile.Used = true;
+                if(targetTile is { Type: TileType.Airplane, Used: false })
+                    targetTile.Used = true;
+                
+                if(sourceTile is { Type: TileType.Airplane, Used: false })
+                    sourceTile.Used = true;
+                
+                if(prevTile is { Type: TileType.Airplane, Used: false })
+                    prevTile.Used = true;
             }
-            
-            // TODO-MAD
-            // if (from != to && targetTile is { Type: TileType.Airplane, Used: false })
-            // {
-            //     //отмечаем, что мы использовали самолет
-            //     targetTile.Used = true;
-            // }
 
             //проверяем, не попадаем ли мы на чужой корабль - тогда мы погибли
             IEnumerable<Position> enemyShips = game.Board.Teams
