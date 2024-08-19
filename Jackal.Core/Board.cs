@@ -152,10 +152,6 @@ namespace Jackal.Core
         /// <summary>
         /// Возвращаем список всех полей, в которые можно попасть из исходного поля
         /// </summary>
-        /// <param name="task"></param>
-        /// <param name="source"></param>
-        /// <param name="prev"></param>
-        /// <returns></returns>
         private List<AvailableMove> GetAllAvailableMoves(AvailableMovesTask task, TilePosition source, TilePosition prev)
         {
             Tile sourceTile = Map[source.Position];
@@ -320,6 +316,7 @@ namespace Jackal.Core
         private List<TilePosition> GetAllTargetsForSubTurn(TilePosition source, TilePosition prev, Team ourTeam)
         {
             var sourceTile = Map[source.Position];
+            var prevTile = Map[prev.Position];
             var ourShip = ourTeam.Ship;
 
             IEnumerable<TilePosition> rez;
@@ -349,9 +346,6 @@ namespace Jackal.Core
                             )
                             .Select(x => x.Position)
                             .Select(IncomeTilePosition);
-                        
-                        if (prev != source)
-                            rez = rez.Concat(new []{source}); //ход "остаемся на месте"
                     }
                     else
                     {
@@ -365,10 +359,19 @@ namespace Jackal.Core
                     rez = new[] {prev}; //возвращаемся назад
                     break;
                 case TileType.Ice:
-                    //TODO - проверка на использование самолета на предыдущем ходу - тогда мы должны повторить ход самолета
+                    if (prevTile is { Type: TileType.Airplane, Used: false })
+                    {
+                        rez = AllTiles(x =>
+                                x.Type != TileType.Water || x.Position == ourShip.Position
+                            )
+                            .Select(x => x.Position)
+                            .Select(IncomeTilePosition);
+                        break;
+                    }
+
                     var prevDelta = Position.GetDelta(prev.Position, source.Position);
                     var target = Position.AddDelta(source.Position, prevDelta);
-                    rez = new[] { target }.Select(x => IncomeTilePosition(x));
+                    rez = new[] { target }.Select(IncomeTilePosition);
                     break;
                 case TileType.RespawnFort:
                     rez = GetNearDeltas(source.Position)
@@ -529,7 +532,8 @@ namespace Jackal.Core
             {
                 if (info.Position == currentCheck.Position)
                 {
-                    if (info.IncomeDelta == null || info.IncomeDelta == currentCheck.IncomeDelta) return true;
+                    if (info.IncomeDelta == null || info.IncomeDelta == currentCheck.IncomeDelta) 
+                        return true;
                 }
             }
             return false;

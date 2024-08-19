@@ -7,10 +7,19 @@
         public int ArrowsCode;
 		public int CanonDirection;
         public int SpinningCount;
+
+        public TileParams()
+        {
+        }
+        
+        public TileParams(TileType type)
+        {
+            Type = type;
+        }
         
         public TileParams Clone()
         {
-            return (TileParams)this.MemberwiseClone();
+            return (TileParams)MemberwiseClone();
         }
     }
 }

@@ -21,21 +21,12 @@ namespace Jackal.Core.Actions
             
             Tile targetTile = map[to.Position];
             Tile sourceTile = map[from.Position];
-
-            if (sourceTile.Type == TileType.Airplane 
-                && from != to 
-                && sourceTile.Used == false)
-            {
-                //отмечаем, что мы использовали самолет
-                sourceTile.Used = true;
-            }
             
             //открываем закрытую клетку
             if (targetTile.Type == TileType.Unknown)
             {
                 var newTile = board.Generator.GetNext(to.Position);
                 board.Map[to.Position] = newTile;
-                targetTile = newTile;
 
                 game.LastActionTurnNo = game.TurnNo;
 
@@ -63,6 +54,14 @@ namespace Jackal.Core.Actions
                     game.KillPirate(pirate);
                     return GameActionResult.Die;
                 }
+            }
+            
+            if (sourceTile.Type == TileType.Airplane 
+                && from != to 
+                && sourceTile.Used == false)
+            {
+                //отмечаем, что мы использовали самолет
+                sourceTile.Used = true;
             }
 
             //проверяем, не попадаем ли мы на чужой корабль - тогда мы погибли

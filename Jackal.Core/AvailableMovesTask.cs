@@ -2,14 +2,14 @@
 
 namespace Jackal.Core
 {
-    public class AvailableMovesTask(int teamId, TilePosition source, TilePosition prev)
+    /// <summary>
+    /// Задача на поиск доступных ходов
+    /// </summary>
+    /// <param name="TeamId">ИД команды</param>
+    /// <param name="Source">Текущая позиция</param>
+    /// <param name="Prev">Предыдущая позиция</param>
+    public record AvailableMovesTask(int TeamId, TilePosition Source, TilePosition Prev)
     {
         public readonly List<CheckedPosition> AlreadyCheckedList = [];
-        
-        public readonly int TeamId = teamId;
-
-        public readonly TilePosition Source = source;
-        
-        public readonly TilePosition Prev = prev;
     }
 }
