@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Jackal.Core;
+﻿using Jackal.Core;
 using Jackal.Core.Players;
 using JackalWebHost.Models;
 using JackalWebHost.Service;
@@ -10,18 +8,11 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace JackalWebHost.Controllers
 {
-    public class GameController : Controller
+    public class GameController(IMemoryCache gamesSessionsCache) : Controller
     {
-        private readonly IMemoryCache _gamesSessionsCache;
-
         private readonly MemoryCacheEntryOptions _cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromHours(1));
-        
-        public GameController(IMemoryCache gamesSessionsCache)
-        {
-            _gamesSessionsCache = gamesSessionsCache;
-        }
-        
+
         /// <summary>
         /// Главное окно
         /// </summary>
@@ -36,15 +27,8 @@ namespace JackalWebHost.Controllers
         /// </summary>
         public JsonResult MakeStart([FromBody] StartGameModel request)
         {
-            return InnerStart(request.GameName, request.Settings);
-        }
-
-        /// <summary>
-        /// Запуск игры
-        /// </summary>
-        private JsonResult InnerStart(string gameName, GameSettings gameSettings)
-        {
             GameState gameState = new GameState();
+            GameSettings gameSettings = request.Settings;
 
             IPlayer[] gamePlayers = new IPlayer[gameSettings.Players.Length];
             int index = 0;
@@ -59,8 +43,7 @@ namespace JackalWebHost.Controllers
                 };
             }
 
-            if (!gameSettings.MapId.HasValue)
-                gameSettings.MapId = new Random().Next();
+            gameSettings.MapId ??= new Random().Next();
 
             int mapSize = gameSettings.MapSize ?? 5;
             var classicMap = new ClassicMapGenerator(gameSettings.MapId.Value, mapSize);
@@ -68,7 +51,7 @@ namespace JackalWebHost.Controllers
             gameState.board = new Board(gamePlayers, classicMap, mapSize, piratesPerPlayer);
             gameState.game = new Game(gamePlayers, gameState.board);
 
-            _gamesSessionsCache.Set(gameName, gameState, _cacheEntryOptions);
+            gamesSessionsCache.Set(request.GameName, gameState, _cacheEntryOptions);
 
             var service = new DrawService();
             var map = service.Map(gameState.board);
@@ -80,7 +63,7 @@ namespace JackalWebHost.Controllers
             }
             
             return Json(new {
-                gameName,
+                gameName = request.GameName,
                 pirates = pirateChanges,
                 map,
                 mapId = gameSettings.MapId.Value,
@@ -94,25 +77,17 @@ namespace JackalWebHost.Controllers
         /// </summary>
         public JsonResult MakeTurn([FromBody] TurnGameModel request)
         {
-            return Turn(request.GameName, request.TurnNum, request.PirateId);
-        }
-
-        /// <summary>
-        /// Ход игры
-        /// </summary>
-        public JsonResult Turn(string gameName, int? turnNum, Guid? pirateId)
-        {
-            if (!_gamesSessionsCache.TryGetValue(gameName, out GameState? gameState) || 
+            if (!gamesSessionsCache.TryGetValue(request.GameName, out GameState? gameState) || 
                 gameState == null)
             {
                 return Json(new { error = true });
             }
 
             var prevBoardStr = JsonHelper.SerialiazeWithType(gameState.board);
-
-            if (gameState.game.CurrentPlayer is WebHumanPlayer && turnNum.HasValue)
+            
+            if (gameState.game.CurrentPlayer is WebHumanPlayer && request.TurnNum.HasValue)
             {
-                gameState.game.CurrentPlayer.SetHumanMove(turnNum.Value, pirateId);
+                gameState.game.CurrentPlayer.SetHumanMove(request.TurnNum.Value, request.PirateId);
             }
 
             gameState.game.Turn();
@@ -127,16 +102,6 @@ namespace JackalWebHost.Controllers
                 stat = DrawService.GetStatistics(gameState.game),
                 moves = DrawService.GetAvailableMoves(gameState.game)
             });
-        }
-
-        /// <summary>
-        /// Сброс игры
-        /// </summary>
-        public JsonResult Reset()
-        {
-            HttpContext.Session.Set("data", Array.Empty<byte>());
-
-            return Json(new { result = "ok" });
         }
     }
 }
