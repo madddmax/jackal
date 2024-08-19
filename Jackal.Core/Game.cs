@@ -87,8 +87,16 @@ namespace Jackal.Core
             }
         }
 
+        /// <summary>
+        /// TODO-MAD является результатом действия -
+        /// Пират которому требуется дополнительный ход 
+        /// </summary>
         public Pirate? NeedSubTurnPirate { private get; set; }
         
+        /// <summary>
+        /// TODO-MAD является результатом действия -
+        /// Предыдущая позиция пирата которому требуется дополнительный ход
+        /// </summary>     
         public TilePosition? PrevSubTurnPosition { get; set; }
 
         public List<Move> GetPrevAvailableMoves()
@@ -137,13 +145,31 @@ namespace Jackal.Core
             _actions.Add(action);
         }
 
+        /// <summary>
+        /// Конец игры
+        /// </summary>
         public bool IsGameOver => (CoinsLeft == 0 && !Board.AllTiles(x => x.Type == TileType.Unknown).Any()) 
                                   || TurnNo - 200 > LastActionTurnNo;
+        
+        /// <summary>
+        /// Текущий ход - определяет какая команда ходит
+        /// </summary>
         public int TurnNo { get; private set; }
+        
+        /// <summary>
+        /// Последний ход когда производилось действие:
+        /// открытие новой клетки или перенос монеты 
+        /// </summary>
         public int LastActionTurnNo { get; internal set; }
 
+        /// <summary>
+        /// ИД команды которая ходит
+        /// </summary>
         public int CurrentTeamId => TurnNo % _players.Length;
 
+        /// <summary>
+        /// Игрок который ходит
+        /// </summary>
         public IPlayer CurrentPlayer => _players[CurrentTeamId];
 
         public void KillPirate(Pirate pirate)
