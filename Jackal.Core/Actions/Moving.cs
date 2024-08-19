@@ -65,8 +65,7 @@ namespace Jackal.Core.Actions
             //отмечаем, что мы использовали самолет
             if (from != to)
             {
-                if(targetTile is { Type: TileType.Airplane, Used: false })
-                    targetTile.Used = true;
+                // TODO-LOW - повторный заход на клетку с самолетом использует его что не верно
                 
                 if(sourceTile is { Type: TileType.Airplane, Used: false })
                     sourceTile.Used = true;
