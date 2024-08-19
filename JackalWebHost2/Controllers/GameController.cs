@@ -45,10 +45,16 @@ namespace JackalWebHost.Controllers
 
             gameSettings.MapId ??= new Random().Next();
 
+            // TODO-MIKE для ручной отладки можно использовать закомментированные генераторы карт
             int mapSize = gameSettings.MapSize ?? 5;
-            var classicMap = new ClassicMapGenerator(gameSettings.MapId.Value, mapSize);
+            IMapGenerator mapGenerator = new ClassicMapGenerator(gameSettings.MapId.Value, mapSize);
+            // mapGenerator = new OneTileMapGenerator(new TileParams(TileType.Trap));
+            // mapGenerator = new TwoTileMapGenerator(
+            //     new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.GetCodeFromString("10000000") },
+            //     new TileParams(TileType.Crocodile));
+            
             int piratesPerPlayer = 3;
-            gameState.board = new Board(gamePlayers, classicMap, mapSize, piratesPerPlayer);
+            gameState.board = new Board(gamePlayers, mapGenerator, mapSize, piratesPerPlayer);
             gameState.game = new Game(gamePlayers, gameState.board);
 
             gamesSessionsCache.Set(request.GameName, gameState, _cacheEntryOptions);
