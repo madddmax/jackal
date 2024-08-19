@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Jackal.Core;
 
 /// <summary>
@@ -8,29 +6,12 @@ namespace Jackal.Core;
 /// </summary>
 public class TwoTileMapGenerator(TileParams firstTileParams, TileParams secondTileParams) : IMapGenerator
 {
-    private readonly Dictionary<Position, Tile> _tiles = new();
-    
-    public int MapId => 0;
+    private readonly ThreeTileMapGenerator _mapGenerator = 
+        new(firstTileParams, secondTileParams, secondTileParams);
 
-    public int CoinsOnMap { get; private set; } = 0;
+    public int MapId => _mapGenerator.MapId;
 
-    public Tile GetNext(Position position)
-    {
-        if (!_tiles.ContainsKey(position))
-        {
-            var tileParams = position.Y == 1 ? firstTileParams : secondTileParams;
-            tileParams.Position = position;
-            
-            var tile = new Tile(tileParams);
-            if (tile.Type.CoinsCount() > 0)
-            {
-                tile.Levels[0].Coins = tile.Type.CoinsCount();
-                CoinsOnMap += tile.Type.CoinsCount();
-            }
+    public int CoinsOnMap => _mapGenerator.CoinsOnMap;
 
-            _tiles[position] = tile;
-        }
-        
-        return _tiles[position];
-    }
+    public Tile GetNext(Position position) => _mapGenerator.GetNext(position);
 }
