@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
-import Image from 'react-bootstrap/Image';
 
 import { sagaActions } from '/redux/saga';
 import { FieldState, ReduxState } from '/redux/types';
 import cn from 'classnames';
 import './cell.less';
+import PiratePhoto from './piratePhoto';
 
 interface CellProps {
     row: number;
@@ -125,18 +125,7 @@ function Cell({ row, col }: CellProps) {
                             </div>
                         )}
                         {it.pirates && it.pirates.length > 0 && (
-                            <Image
-                                src={`/pictures/${it.pirates[0].photo}.png`}
-                                roundedCircle={!it.pirates[0].isTransparent}
-                                className={cn('pirates')}
-                                style={{
-                                    border: it.pirates[0].isTransparent
-                                        ? 'none'
-                                        : `2px ${'DarkRed' || 'transparent'} solid`,
-                                    width: pirateSize,
-                                    height: pirateSize,
-                                }}
-                            />
+                            <PiratePhoto pirates={it.pirates} pirateSize={pirateSize} />
                         )}
                     </div>
                 ))}

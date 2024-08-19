@@ -98,6 +98,7 @@ export interface CellPirate {
     withCoin?: boolean;
     isTransparent?: boolean;
     photo: string;
+    photoId: number;
 }
 
 interface GameThing {
