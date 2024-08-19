@@ -33,14 +33,14 @@ namespace Jackal.Core.Actions
                 if (newTile.Type.RequireImmediateMove())
                 {
                     AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, from);
-                    List<AvailableMove> targets = game.Board.GetAllAvailableMoves(task);
+                    List<AvailableMove> moves = game.Board.GetAllAvailableMoves(task, task.Source, task.Prev);
                     
-                    if (targets.Count == 0)
+                    if (moves.Count == 0)
                     {
                         game.KillPirate(pirate);
                         return GameActionResult.Die;
                     }
-
+                    
                     //мы попали в клетку, где должны сделать ещё свой выбор
                     game.NeedSubTurnPirate = pirate;
                     game.PrevSubTurnPosition = prev;

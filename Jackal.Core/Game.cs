@@ -118,9 +118,8 @@ namespace Jackal.Core
             {
                 TilePosition prev = PrevSubTurnPosition ?? pirate.Position;
                 AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, prev);
-
-                List<AvailableMove> temp = Board.GetAllAvailableMoves(task);
-                targets.AddRange(temp);
+                List<AvailableMove> moves = Board.GetAllAvailableMoves(task, task.Source, task.Prev);
+                targets.AddRange(moves);
             }
 
             foreach (AvailableMove availableMove in targets)

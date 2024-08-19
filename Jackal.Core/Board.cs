@@ -143,16 +143,11 @@ namespace Jackal.Core
             }
             Teams[teamId] = new Team(teamId, teamName, ship, pirates);
         }
-        
-        public List<AvailableMove> GetAllAvailableMoves(AvailableMovesTask task)
-        {
-            return GetAllAvailableMoves(task, task.Source, task.Prev);
-        }
 
         /// <summary>
         /// Возвращаем список всех полей, в которые можно попасть из исходного поля
         /// </summary>
-        private List<AvailableMove> GetAllAvailableMoves(AvailableMovesTask task, TilePosition source, TilePosition prev)
+        public List<AvailableMove> GetAllAvailableMoves(AvailableMovesTask task, TilePosition source, TilePosition prev)
         {
             Tile sourceTile = Map[source.Position];
 
