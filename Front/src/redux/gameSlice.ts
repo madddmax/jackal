@@ -203,6 +203,7 @@ export const gameSlice = createSlice({
                     const drawPirate: CellPirate = {
                         id: pirate.id,
                         photo: pirate.photo,
+                        photoId: pirate.photoId,
                     };
                     if (level.pirates == undefined) level.pirates = [drawPirate];
                     else level.pirates.push(drawPirate);
