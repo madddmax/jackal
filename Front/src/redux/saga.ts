@@ -47,6 +47,13 @@ export function* gameStart(action: any) {
         yield put(initMap(result.data.map));
         console.log('gameStart');
         yield put(initGame(result.data));
+        yield put(
+            applyPirateChanges({
+                moves: result.data.moves,
+                changes: result.data.pirates,
+                isHumanPlayer: result.data.stat.isHumanPlayer,
+            }),
+        );
         if (result.data.stat.isHumanPlayer) {
             yield put(setCurrentHumanTeam(result.data.stat.currentTeamId));
             yield put(highlightHumanMoves({ moves: result.data.moves }));
