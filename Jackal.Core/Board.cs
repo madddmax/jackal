@@ -147,7 +147,8 @@ namespace Jackal.Core
         /// <summary>
         /// Возвращаем список всех полей, в которые можно попасть из исходного поля
         /// </summary>
-        public List<AvailableMove> GetAllAvailableMoves(AvailableMovesTask task, TilePosition source, TilePosition prev)
+        public List<AvailableMove> GetAllAvailableMoves(
+            AvailableMovesTask task, TilePosition source, TilePosition prev, bool airplaneFlying)
         {
             Tile sourceTile = Map[source.Position];
 
@@ -167,7 +168,7 @@ namespace Jackal.Core
             }
 
             //места всех возможных ходов
-            IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(source, prev, ourTeam);
+            IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(source, prev, ourTeam, airplaneFlying);
 
             foreach (TilePosition newPosition in positionsForCheck)
             {
@@ -281,12 +282,12 @@ namespace Jackal.Core
                     case TileType.Ice:
                     case TileType.Crocodile:
 					case TileType.Cannon:
-                        goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source));
+                        goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source, airplaneFlying));
                         break;
                     case TileType.Airplane:
                         if (newPositionTile.Used == false)
                         {
-                            goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source));
+                            goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source, true));
                         }
                         else {
                             // если нет самолета, то клетка работает как пустое поле
@@ -308,10 +309,10 @@ namespace Jackal.Core
         /// Возвращаем все позиции, в которые в принципе достижимы из заданной клетки за один подход
         /// (не проверяется, допустим ли такой ход)
         /// </summary>
-        private List<TilePosition> GetAllTargetsForSubTurn(TilePosition source, TilePosition prev, Team ourTeam)
+        private List<TilePosition> GetAllTargetsForSubTurn(
+            TilePosition source, TilePosition prev, Team ourTeam, bool airplaneFlying)
         {
             var sourceTile = Map[source.Position];
-            var prevTile = Map[prev.Position];
             var ourShip = ourTeam.Ship;
 
             IEnumerable<TilePosition> rez;
@@ -351,10 +352,20 @@ namespace Jackal.Core
                     }
                     break;
                 case TileType.Crocodile:
+                    if (airplaneFlying)
+                    {
+                        rez = AllTiles(x =>
+                                x.Type != TileType.Water || x.Position == ourShip.Position
+                            )
+                            .Select(x => x.Position)
+                            .Select(IncomeTilePosition);
+                        break;
+                    }     
+                    
                     rez = new[] {prev}; //возвращаемся назад
                     break;
                 case TileType.Ice:
-                    if (prevTile is { Type: TileType.Airplane, Used: false })
+                    if (airplaneFlying)
                     {
                         rez = AllTiles(x =>
                                 x.Type != TileType.Water || x.Position == ourShip.Position

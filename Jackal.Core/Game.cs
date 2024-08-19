@@ -84,6 +84,7 @@ namespace Jackal.Core
                 }
 
                 TurnNo++;
+                SubTurnAirplaneFlying = false;
             }
         }
 
@@ -99,6 +100,12 @@ namespace Jackal.Core
         /// </summary>     
         public TilePosition? PrevSubTurnPosition { get; set; }
 
+        /// <summary>
+        /// TODO-MAD является результатом действия -
+        /// Полет на самолете
+        /// </summary>
+        public bool SubTurnAirplaneFlying { get; set; }
+        
         public List<Move> GetPrevAvailableMoves()
         {
             return _availableMoves;
@@ -126,7 +133,7 @@ namespace Jackal.Core
             {
                 TilePosition prev = PrevSubTurnPosition ?? pirate.Position;
                 AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, prev);
-                List<AvailableMove> moves = Board.GetAllAvailableMoves(task, task.Source, task.Prev);
+                List<AvailableMove> moves = Board.GetAllAvailableMoves(task, task.Source, task.Prev, SubTurnAirplaneFlying);
                 targets.AddRange(moves);
             }
 

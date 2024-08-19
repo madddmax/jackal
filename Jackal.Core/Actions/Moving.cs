@@ -21,6 +21,7 @@ namespace Jackal.Core.Actions
             
             Tile targetTile = map[to.Position];
             Tile sourceTile = map[from.Position];
+            Tile prevTile = map[prev.Position];
             
             //открываем закрытую клетку
             if (targetTile.Type == TileType.Unknown)
@@ -32,8 +33,12 @@ namespace Jackal.Core.Actions
 
                 if (newTile.Type.RequireImmediateMove())
                 {
+                    var airplaneFlying = prevTile is { Type: TileType.Airplane, Used: false } ||
+                                         (game.SubTurnAirplaneFlying && prevTile.Type == TileType.Ice) ||
+                                         (game.SubTurnAirplaneFlying && prevTile.Type == TileType.Crocodile);
+                    
                     AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, from);
-                    List<AvailableMove> moves = game.Board.GetAllAvailableMoves(task, task.Source, task.Prev);
+                    List<AvailableMove> moves = game.Board.GetAllAvailableMoves(task, task.Source, task.Prev, airplaneFlying);
                     
                     if (moves.Count == 0)
                     {
@@ -44,6 +49,7 @@ namespace Jackal.Core.Actions
                     //мы попали в клетку, где должны сделать ещё свой выбор
                     game.NeedSubTurnPirate = pirate;
                     game.PrevSubTurnPosition = prev;
+                    game.SubTurnAirplaneFlying = airplaneFlying;
                 }
                 else if (newTile.Type == TileType.Spinning)
                 {
@@ -56,13 +62,18 @@ namespace Jackal.Core.Actions
                 }
             }
             
-            if (sourceTile.Type == TileType.Airplane 
-                && from != to 
-                && sourceTile.Used == false)
+            if (from != to && sourceTile is { Type: TileType.Airplane, Used: false })
             {
                 //отмечаем, что мы использовали самолет
                 sourceTile.Used = true;
             }
+            
+            // TODO-MAD
+            // if (from != to && targetTile is { Type: TileType.Airplane, Used: false })
+            // {
+            //     //отмечаем, что мы использовали самолет
+            //     targetTile.Used = true;
+            // }
 
             //проверяем, не попадаем ли мы на чужой корабль - тогда мы погибли
             IEnumerable<Position> enemyShips = game.Board.Teams
