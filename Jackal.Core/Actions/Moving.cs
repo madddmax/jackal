@@ -38,7 +38,7 @@ namespace Jackal.Core.Actions
                                          (game.SubTurnAirplaneFlying && prevTile.Type == TileType.Ice) ||
                                          (game.SubTurnAirplaneFlying && prevTile.Type == TileType.Crocodile);
                     
-                    AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, from);
+                    AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, prev);
                     List<AvailableMove> moves = game.Board.GetAllAvailableMoves(task, task.Source, task.Prev, airplaneFlying);
                     
                     if (moves.Count == 0)
@@ -66,8 +66,6 @@ namespace Jackal.Core.Actions
             //отмечаем, что мы использовали самолет
             if (from != to)
             {
-                // TODO-LOW - повторный заход на клетку с самолетом использует его что не верно
-                
                 if(sourceTile is { Type: TileType.Airplane, Used: false })
                     sourceTile.Used = true;
                 
