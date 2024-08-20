@@ -6,16 +6,16 @@ namespace Jackal.Core
 {
     public static class ArrowsCodesHelper
     {
-        public static readonly int[] ArrowsTypes = new[]
-        {
-            GetCodeFromString("10000000"),
-            GetCodeFromString("01000100"),
-            GetCodeFromString("01000000"),
-            GetCodeFromString("01010101"),
-            GetCodeFromString("10101010"),
-            GetCodeFromString("00101001"),
-            GetCodeFromString("00100010")
-        };
+        public static readonly int[] ArrowsTypes =
+        [
+            GetCodeFromString("10000000"), // одна стрелка перпендикулярно вверх
+            GetCodeFromString("01000100"), // две стрелки по диагонали правый верхний - левый нижний угол
+            GetCodeFromString("01000000"), // одна стрелка по диагонали правый верхний угол
+            GetCodeFromString("01010101"), // четыре стрелки по диагонали на все углы
+            GetCodeFromString("10101010"), // четыре стрелки перпендикулярно на все стороны
+            GetCodeFromString("00101001"), // три стрелки одна по диагонали левый верхний угол, две перпендикулярно право и низ
+            GetCodeFromString("00100010") // две стрелки перпендикулярно на правую и левую стороны
+        ];
 
         public class ArrowSearchResult
         {
@@ -25,9 +25,9 @@ namespace Jackal.Core
 
         public static ArrowSearchResult Search(int code)
         {
-            for (int arrowType = 0; arrowType < ArrowsCodesHelper.ArrowsTypes.Length; arrowType++)
+            for (int arrowType = 0; arrowType < ArrowsTypes.Length; arrowType++)
             {
-                int arrowsCode = ArrowsCodesHelper.ArrowsTypes[arrowType];
+                int arrowsCode = ArrowsTypes[arrowType];
                 for (int rotateCount = 0; rotateCount <= 3; rotateCount++)
                 {
                     if (arrowsCode == code) return new ArrowSearchResult() {ArrowType = arrowType, RotateCount = rotateCount};
@@ -47,8 +47,6 @@ namespace Jackal.Core
         /// <summary>
         /// Поворот по часовой стрелке
         /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
         public static int DoRotate(int code)
         {
             code &= 255;
