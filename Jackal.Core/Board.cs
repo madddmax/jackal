@@ -313,6 +313,7 @@ namespace Jackal.Core
             TilePosition source, TilePosition prev, Team ourTeam, bool airplaneFlying)
         {
             var sourceTile = Map[source.Position];
+            var prevTile = Map[prev.Position];
             var ourShip = ourTeam.Ship;
 
             IEnumerable<TilePosition> rez;
@@ -360,9 +361,14 @@ namespace Jackal.Core
                             .Select(x => x.Position)
                             .Select(IncomeTilePosition);
                         break;
-                    }     
+                    }
+
+                    //возвращаемся назад
+                    var returnTile = prevTile.Type == TileType.Spinning
+                        ? new TilePosition(prev.Position, prevTile.SpinningCount - 1)
+                        : new TilePosition(prev.Position);
                     
-                    rez = new[] {prev}; //возвращаемся назад
+                    rez = new[] { returnTile };
                     break;
                 case TileType.Ice:
                     if (airplaneFlying)
