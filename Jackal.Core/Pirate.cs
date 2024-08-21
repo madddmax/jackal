@@ -21,5 +21,8 @@ namespace Jackal.Core
 
         [JsonProperty]
         public bool IsInTrap;
+        
+        // TODO-MAD Оптимизация DrawService - заполнять при изменении позиции и сбрасывать каждый ход
+        public bool Changed;
     }
 }
