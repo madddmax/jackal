@@ -22,7 +22,9 @@ namespace JackalWebHost.Service
                 PirateChange pirateChange;
                 if (newPirate == null)
                 {
-                    pirateChange = new PirateChange(oldPirate) { IsAlive = false };
+                    var deadPirate = board.DeadPirates.First(x => x.Id == oldPirate.Id);
+                    
+                    pirateChange = new PirateChange(deadPirate) { IsAlive = false };
                     pirateChanges.Add(pirateChange);
                     
                     diffPositions.Add(oldPirate.Position.Position);

@@ -34,6 +34,9 @@ namespace Jackal.Core
                 return allPirates;
             }
         }
+        
+        [JsonIgnore]
+        public List<Pirate>? DeadPirates { get; set; }
 
         public IEnumerable<Tile> AllTiles(Predicate<Tile> selector)
         {

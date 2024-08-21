@@ -185,6 +185,9 @@ namespace Jackal.Core
             Board.Teams[teamId].Pirates = Board.Teams[teamId].Pirates.Where(x => x != pirate).ToArray();
             var tile = Board.Map[pirate.Position];
             tile.Pirates.Remove(pirate);
+
+            Board.DeadPirates ??= [];
+            Board.DeadPirates.Add(pirate);
         }
     }
 }
