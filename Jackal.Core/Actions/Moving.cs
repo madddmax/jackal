@@ -12,7 +12,7 @@ namespace Jackal.Core.Actions
             {
                 return GameActionResult.Live;
             }
-
+            
             Board board = game.Board;
             Map map = game.Board.Map;
 
@@ -26,13 +26,12 @@ namespace Jackal.Core.Actions
             //открываем закрытую клетку
             if (targetTile.Type == TileType.Unknown)
             {
-                var newTile = board.Generator.GetNext(to.Position);
-                board.Map[to.Position] = newTile;
-                targetTile = newTile;
+                targetTile = board.Generator.GetNext(to.Position);
+                board.Map[to.Position] = targetTile;
 
                 game.LastActionTurnNo = game.TurnNo;
 
-                if (newTile.Type.RequireImmediateMove())
+                if (targetTile.Type.RequireImmediateMove())
                 {
                     var airplaneFlying = prevTile is { Type: TileType.Airplane, Used: false } ||
                                          (game.SubTurnAirplaneFlying && prevTile.Type == TileType.Ice) ||
@@ -52,14 +51,9 @@ namespace Jackal.Core.Actions
                     game.PrevSubTurnPosition = prev;
                     game.SubTurnAirplaneFlying = airplaneFlying;
                 }
-                else if (newTile.Type == TileType.Spinning)
+                else if (targetTile.Type == TileType.Spinning)
                 {
-                    to = new TilePosition(to.Position, newTile.SpinningCount - 1);
-                }
-                else if (newTile.Type == TileType.Cannibal)
-                {
-                    game.KillPirate(pirate);
-                    return GameActionResult.Die;
+                    to = new TilePosition(to.Position, targetTile.SpinningCount - 1);
                 }
             }
 
