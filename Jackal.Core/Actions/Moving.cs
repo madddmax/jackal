@@ -24,39 +24,71 @@ namespace Jackal.Core.Actions
             Tile prevTile = map[prev.Position];
             
             //открываем закрытую клетку
+            bool newTile = false;
             if (targetTile.Type == TileType.Unknown)
             {
                 targetTile = board.Generator.GetNext(to.Position);
                 board.Map[to.Position] = targetTile;
-
                 game.LastActionTurnNo = game.TurnNo;
-
-                if (targetTile.Type.RequireImmediateMove())
-                {
-                    var airplaneFlying = prevTile is { Type: TileType.Airplane, Used: false } ||
-                                         (game.SubTurnAirplaneFlying && prevTile.Type == TileType.Ice) ||
-                                         (game.SubTurnAirplaneFlying && prevTile.Type == TileType.Crocodile);
-                    
-                    AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, prev);
-                    List<AvailableMove> moves = game.Board.GetAllAvailableMoves(task, task.Source, task.Prev, airplaneFlying);
-                    
-                    if (moves.Count == 0)
-                    {
-                        game.KillPirate(pirate);
-                        return GameActionResult.Die;
-                    }
-                    
-                    //мы попали в клетку, где должны сделать ещё свой выбор
-                    game.NeedSubTurnPirate = pirate;
-                    game.PrevSubTurnPosition = prev;
-                    game.SubTurnAirplaneFlying = airplaneFlying;
-                }
-                else if (targetTile.Type == TileType.Spinning)
-                {
-                    to = new TilePosition(to.Position, targetTile.SpinningCount - 1);
-                }
+                newTile = true;
             }
+            
+            if (newTile && targetTile.Type == TileType.Spinning)
+            {
+                to = new TilePosition(to.Position, targetTile.SpinningCount - 1);
+            }
+            
+            TileLevel fromTileLevel = map[from];
+            TileLevel targetTileLevel = map[to];
+            
+            if (from.Position == ourShip.Position && 
+                targetTile.Type == TileType.Water &&
+                Board.GetPossibleShipMoves(ourShip.Position, game.Board.MapSize).Contains(to.Position)) 
+            {
+                //двигаем свой корабль
+                var pirateOnShips = map[ourShip.Position].Pirates;
+                foreach (var pirateOnShip in pirateOnShips)
+                {
+                    pirateOnShip.Position = to;
+                    targetTileLevel.Pirates.Add(pirateOnShip);
+                }
+                ourShip.Position = to.Position;
+                sourceTile.Pirates.Clear();
+            }
+            else 
+            {
+                //двигаем своего пирата
+                fromTileLevel.Pirates.Remove(pirate);
 
+                pirate.Position = to;
+                targetTileLevel.Pirates.Add(pirate);
+            }            
+            
+            if (newTile && targetTile.Type.RequireImmediateMove())
+            {
+                var airplaneFlying = targetTile.Type is TileType.Ice or TileType.Crocodile &&
+                                     (prevTile is { Type: TileType.Airplane, Used: false } ||
+                                      game.SubTurnAirplaneFlying);
+
+                AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, prev);
+                List<AvailableMove> moves = game.Board.GetAllAvailableMoves(task, task.Source, task.Prev, airplaneFlying);
+
+                if (moves.Count == 0)
+                {
+                    game.KillPirate(pirate);
+                    return GameActionResult.Die;
+                }
+
+                //мы попали в клетку, где должны сделать ещё свой выбор
+                game.NeedSubTurnPirate = pirate;
+                game.PrevSubTurnPosition = prev;
+                game.SubTurnAirplaneFlying = airplaneFlying;
+            }
+            else
+            {
+                game.SubTurnAirplaneFlying = false;
+            }
+            
             //отмечаем, что мы использовали самолет
             if (from != to)
             {
@@ -77,9 +109,6 @@ namespace Jackal.Core.Actions
                 game.KillPirate(pirate);
                 return GameActionResult.Die;
             }
-
-            TileLevel fromTileLevel = map[from];
-            TileLevel targetTileLevel = map[to];
 
             //убиваем чужих пиратов
             List<Pirate> enemyPirates = targetTileLevel.Pirates
@@ -103,29 +132,6 @@ namespace Jackal.Core.Actions
                 {
                     game.KillPirate(enemyPirate);
                 }
-            }
-            
-            if (from.Position == ourShip.Position && 
-                targetTile.Type == TileType.Water &&
-                Board.GetPossibleShipMoves(ourShip.Position, game.Board.MapSize).Contains(to.Position)) 
-            {
-                //двигаем свой корабль
-                var pirateOnShips = map[ourShip.Position].Pirates;
-                foreach (var pirateOnShip in pirateOnShips)
-                {
-                    pirateOnShip.Position = to;
-                    targetTileLevel.Pirates.Add(pirateOnShip);
-                }
-                ourShip.Position = to.Position;
-                sourceTile.Pirates.Clear();
-            }
-            else 
-            {
-                //двигаем своего пирата
-                fromTileLevel.Pirates.Remove(pirate);
-
-                pirate.Position = to;
-                targetTileLevel.Pirates.Add(pirate);
             }
 
             if (withCoin)
