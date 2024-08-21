@@ -10,13 +10,7 @@ function Pirates() {
     const pirates = useSelector<ReduxState, GamePirate[] | undefined>((state) => state.game.pirates);
     const team = useSelector<ReduxState, TeamState>((state) => state.game.currentHumanTeam);
 
-    const onClick = (girl: GamePirate) => () =>
-        dispatch(
-            chooseHumanPirate({
-                pirate: girl.id,
-                withCoin: girl.withCoin === undefined || team.activePirate !== girl.id ? girl.withCoin : !girl.withCoin,
-            }),
-        );
+    const onClick = (girl: GamePirate) => () => dispatch(chooseHumanPirate({ pirate: girl.id }));
 
     return (
         <>

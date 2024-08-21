@@ -128,7 +128,6 @@ export interface PirateMoves {
 
 export interface PirateChoose {
     pirate: string;
-    withCoin?: boolean;
 }
 
 export interface PirateChanges {
