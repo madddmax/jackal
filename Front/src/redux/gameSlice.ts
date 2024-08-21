@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 import {
     CellPirate,
     FieldState,
@@ -98,11 +98,21 @@ export const gameSlice = createSlice({
         setCurrentHumanTeam: (state, action: PayloadAction<number>) => {
             if (action.payload !== undefined && action.payload !== state.currentHumanTeam.id) {
                 state.currentHumanTeam = state.teams.find((it) => it.id == action.payload)!;
+                debugLog('setCurrentHumanTeam', current(state.currentHumanTeam));
             }
         },
         chooseHumanPirate: (state, action: PayloadAction<PirateChoose>) => {
             state.currentHumanTeam.activePirate = action.payload.pirate;
             state.currentHumanTeam.lastPirate = action.payload.pirate;
+            state.teams
+                .filter((it) => it.id === state.currentHumanTeam.id)
+                .forEach((it) => {
+                    it.activePirate = action.payload.pirate;
+                    it.lastPirate = action.payload.pirate;
+                });
+
+            debugLog('setCurrentHumanTeam', current(state.currentHumanTeam));
+            debugLog('teams', current(state.teams));
 
             if (action.payload.withCoin !== undefined) {
                 state.pirates?.forEach((it) => {
@@ -128,6 +138,7 @@ export const gameSlice = createSlice({
             let hasNoMoves =
                 state.lastMoves.length > 0 &&
                 !state.lastMoves.some((move) => move.from.pirateIds.includes(state.currentHumanTeam.lastPirate));
+            debugLog('hasNoMoves', state.currentHumanTeam.lastPirate, hasNoMoves);
             state.currentHumanTeam.activePirate = hasNoMoves
                 ? state.lastMoves[0].from.pirateIds[0]
                 : state.currentHumanTeam.lastPirate;
@@ -165,12 +176,20 @@ export const gameSlice = createSlice({
             action.payload.changes.forEach((it) => {
                 if (it.isAlive === false) {
                     let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
-
+                    debugLog('dead pirate', current(pirate));
                     const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
+                    debugLog(
+                        'prevLevel.pirates',
+                        current(pirate).position.x,
+                        current(pirate).position.y,
+                        current(prevLevel).pirates,
+                    );
                     if (prevLevel.pirates != undefined) {
                         let prevLevelPirate = prevLevel.pirates.find((pr) => pr.id === it.id);
-                        prevLevelPirate!.photo = 'skull';
-                        prevLevelPirate!.isTransparent = true;
+                        if (prevLevelPirate) {
+                            prevLevelPirate.photo = 'skull';
+                            prevLevelPirate.isTransparent = true;
+                        }
                     }
 
                     state.pirates = state.pirates?.filter((pr) => pr.id !== it.id);
@@ -191,8 +210,15 @@ export const gameSlice = createSlice({
                     });
                 } else {
                     let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
+                    debugLog('moved pirate', current(pirate));
 
                     const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
+                    debugLog(
+                        'prevLevel.pirates',
+                        current(pirate).position.x,
+                        current(pirate).position.y,
+                        current(prevLevel).pirates,
+                    );
                     if (prevLevel.pirates != undefined) {
                         prevLevel.pirates = prevLevel.pirates.filter((it) => it.id != pirate.id);
                         if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
@@ -200,6 +226,7 @@ export const gameSlice = createSlice({
                     pirate.position = it.position;
 
                     const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
+                    debugLog('drawPirate', current(pirate).position.x, current(pirate).position.y, current(pirate).id);
                     const drawPirate: CellPirate = {
                         id: pirate.id,
                         photo: pirate.photo,
@@ -232,14 +259,12 @@ export const gameSlice = createSlice({
                     cell.image = it.backgroundImageSrc;
                     cell.backColor = it.backgroundColor;
                     cell.rotate = it.rotate;
-                    cell.levels = it.levels;
-                } else {
-                    cell.levels = it.levels.map((lev) => ({
-                        ...lev,
-                        pirate: undefined,
-                        pirates: cell.levels[lev.level].pirates,
-                    }));
                 }
+                cell.levels = it.levels.map((lev) => ({
+                    ...lev,
+                    pirate: undefined,
+                    pirates: cell?.levels && cell?.levels[lev.level]?.pirates,
+                }));
             });
         },
         applyStat: (state, action: PayloadAction<GameStat>) => {
