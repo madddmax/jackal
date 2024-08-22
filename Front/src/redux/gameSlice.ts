@@ -102,6 +102,12 @@ export const gameSlice = createSlice({
             }
         },
         chooseHumanPirate: (state, action: PayloadAction<PirateChoose>) => {
+            let pirate = state.pirates!.find((it) => it.id === action.payload.pirate)!;
+            let withCoin =
+                pirate.withCoin === undefined || state.currentHumanTeam.activePirate !== pirate.id
+                    ? pirate.withCoin
+                    : !pirate.withCoin;
+
             state.currentHumanTeam.activePirate = action.payload.pirate;
             state.currentHumanTeam.lastPirate = action.payload.pirate;
             state.teams
@@ -112,14 +118,13 @@ export const gameSlice = createSlice({
                 });
 
             debugLog('setCurrentHumanTeam', current(state.currentHumanTeam));
-            debugLog('teams', current(state.teams));
+            debugLog('withCoin', withCoin);
 
-            if (action.payload.withCoin !== undefined) {
-                state.pirates?.forEach((it) => {
-                    if (it.id == state.currentHumanTeam.activePirate) {
-                        it.withCoin = action.payload.withCoin;
-                    }
-                });
+            if (withCoin !== undefined) {
+                pirate.withCoin = withCoin;
+                const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
+                const cellPirate = level.pirates?.find((it) => it.id == pirate.id);
+                if (cellPirate) cellPirate.withCoin = withCoin;
             }
             gameSlice.caseReducers.highlightHumanMoves(state, highlightHumanMoves({}));
         },
@@ -231,6 +236,7 @@ export const gameSlice = createSlice({
                         id: pirate.id,
                         photo: pirate.photo,
                         photoId: pirate.photoId,
+                        withCoin: pirate.withCoin,
                     };
                     if (level.pirates == undefined) level.pirates = [drawPirate];
                     else level.pirates.push(drawPirate);
@@ -246,9 +252,15 @@ export const gameSlice = createSlice({
                     });
                 let girlIds = new Set(girls);
                 state.pirates?.forEach((it) => {
-                    it.withCoin = girlIds.has(it.id)
+                    let changeCoin = girlIds.has(it.id)
                         ? true //(it.withCoin ?? true)
                         : undefined;
+                    if (changeCoin != it.withCoin) {
+                        it.withCoin = changeCoin;
+                        const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
+                        const pr = level.pirates?.find((pr) => pr.id == it.id)!;
+                        pr.withCoin = changeCoin;
+                    }
                 });
             }
         },
