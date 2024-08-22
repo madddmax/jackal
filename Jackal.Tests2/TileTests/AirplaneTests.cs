@@ -8,7 +8,7 @@ namespace Jackal.Tests2.TileTests;
 public class AirplaneTests
 {
     [Fact]
-    public void AvailableMovesTest()
+    public void OneAirplane_GetAvailableMoves_ReturnWholeMapAndOwnShip()
     {
         // Arrange
         var airplaneOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Airplane));
@@ -20,11 +20,12 @@ public class AirplaneTests
         
         // Assert - все поле 5 клеток + свой корабль
         Assert.Equal(6, moves.Count);
+        Assert.Equal(new TilePosition(2, 1), moves.First().From);
         Assert.Equivalent(new List<TilePosition>
             {
-                new(1, 2), // клетка с самолетом
+                new(1, 2), 
                 new(2, 0), // свой корабль
-                new(2, 1),
+                new(2, 1), // клетка с самолетом
                 new(2, 2),
                 new(2, 3),
                 new(3, 2)
