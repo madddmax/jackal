@@ -27,12 +27,12 @@ namespace Jackal.Core.Players
             List<Move> goodMoves = new List<Move>();
             foreach (Move move in availableMoves)
             {
-                //çîëîòî íà êîðàáëü
+                //золото на корабль
                 if (move.WithCoins && TargetIsShip(board, teamId, move)) goodMoves.Add(move);
             }
             if (goodMoves.Count == 0)
             {
-                //ïåðåìåùàåì çîëîòî áëèæå ê êîðàáëþ
+                //перемещаем золото ближе к кораблю
                 var ship = board.Teams[teamId].Ship;
                 List<Tuple<int, Move>> list = new List<Tuple<int, Move>>();
                 foreach (Move move in availableMoves
@@ -49,7 +49,7 @@ namespace Jackal.Core.Players
                     goodMoves = list.Where(x => x.Item1 == minDistance).Select(x => x.Item2).ToList();
                 }
             }
-            if (goodMoves.Count == 0) //óíè÷òîæàåì âðàãà, åñëè îí ðÿäîì
+            if (goodMoves.Count == 0) //уничтожаем врага, если он рядом
             {
                 foreach (Move move in availableMoves)
                 {
@@ -59,12 +59,12 @@ namespace Jackal.Core.Players
             if (goodMoves.Count == 0)
             {
                 List<Tile> tilesWithGold = new List<Tile>();
-                //åñëè íà êàðòå åñòü îòêðûòîå çîëîòî, òî èäåì ê íåìó
+                //если на карте есть открытое золото, то идем к нему
                 foreach (var tile in board.AllTiles(x => x.Type != TileType.Water && x.Coins > 0))
                 {
                     tilesWithGold.Add(tile);
                 }
-                if (tilesWithGold.Count > 0) //íà êàðòå åñòü çîëîòî
+                if (tilesWithGold.Count > 0) //на карте есть золото
                 {
                     List<Tuple<int, Move>> list = new List<Tuple<int, Move>>();
 
@@ -88,12 +88,12 @@ namespace Jackal.Core.Players
             if (goodMoves.Count == 0)
             {
                 List<Tile> tilesWithUnknown = new List<Tile>();
-                //åñëè íà êàðòå åñòü íåîòêðûòûé ó÷àñòîê çîëîòî, òî èäåì ê íåìó
+                //если на карте есть неоткрытый участок золото, то идем к нему
                 foreach (var tile in board.AllTiles(x => x.Type == TileType.Unknown))
                 {
                     tilesWithUnknown.Add(tile);
                 }
-                if (tilesWithUnknown.Count > 0) //íà êàðòå åñòü íåîòêðûòûé ó÷àñòîê 
+                if (tilesWithUnknown.Count > 0) //на карте есть неоткрытый участок 
                 {
                     List<Tuple<int, Move>> list = new List<Tuple<int, Move>>();
 
@@ -112,7 +112,7 @@ namespace Jackal.Core.Players
                 }
             }
 
-            //âûáèðàåì äîñòóïíûé õîä
+            //выбираем доступный ход
             if (goodMoves.Count == 0)
             {
                 goodMoves.AddRange(availableMoves);
