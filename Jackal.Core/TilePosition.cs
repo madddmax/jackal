@@ -22,6 +22,7 @@ namespace Jackal.Core
         {
         }
         
+        [JsonConstructor]
         public TilePosition(Position position, int level = 0)
         {
             if (position == null) 
