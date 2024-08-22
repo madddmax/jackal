@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Jackal.Core;
 using Jackal.Core.Players;
@@ -12,6 +13,8 @@ public class TestGame
 {
     private readonly Game _testGame;
     
+    public Board Board => _testGame.Board;
+    
     public TestGame (IMapGenerator generator)
     {
         IPlayer[] players = [new WebHumanPlayer()];
@@ -22,6 +25,11 @@ public class TestGame
     public List<Move> GetAvailableMoves()
     {
         return _testGame.GetAvailableMoves();
+    }
+
+    public void SetHumanMove(int moveNum, Guid? pirateId = null)
+    {
+        _testGame.CurrentPlayer.SetHumanMove(moveNum, pirateId);
     }
     
     public void Turn()
