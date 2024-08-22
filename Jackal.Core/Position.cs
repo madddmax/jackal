@@ -10,7 +10,6 @@ namespace Jackal.Core
         [JsonProperty] 
         public readonly int Y;
 
-
         public Position()
         {
         }
