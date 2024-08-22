@@ -11,14 +11,35 @@ namespace Jackal.Tests2;
 /// </summary>
 public class TestGame
 {
+    /// <summary>
+    /// Минимальный размер карты 5x5, поле 5 клеток
+    /// </summary>
+    private const int MapSize = 5;
+
+    /// <summary>
+    /// Один пират на команду
+    /// </summary>
+    private const int PiratesPerPlayer = 1;
+
+    /// <summary>
+    /// Тестовая игра
+    /// </summary>
     private readonly Game _testGame;
     
+    /// <summary>
+    /// Игровое поле
+    /// </summary>
     public Board Board => _testGame.Board;
+    
+    /// <summary>
+    /// Текущий ход - определяет какая команда ходит
+    /// </summary>
+    public int TurnNo => _testGame.TurnNo;
     
     public TestGame (IMapGenerator generator)
     {
         IPlayer[] players = [new WebHumanPlayer()];
-        var board = new Board(players, generator, 5, 1);
+        var board = new Board(players, generator, MapSize, PiratesPerPlayer);
         _testGame = new Game(players, board);
     }
 
@@ -27,7 +48,7 @@ public class TestGame
         return _testGame.GetAvailableMoves();
     }
 
-    public void SetHumanMove(int moveNum, Guid? pirateId = null)
+    public void SetMove(int moveNum, Guid? pirateId = null)
     {
         _testGame.CurrentPlayer.SetHumanMove(moveNum, pirateId);
     }
