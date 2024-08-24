@@ -94,15 +94,15 @@ namespace Jackal.Core
                 int arrowsCode = ArrowsCodesHelper.ArrowsTypes[arrowType];
                 AddArrowDef(arrowsCode, 3);
             }
+            
+            AddDef(TileType.Trap, 3);
+            AddDef(TileType.Cannibal, 2);
+            
             AddSpinningDef(2, 5);
             AddSpinningDef(3, 4);
             AddSpinningDef(4, 2);
             AddSpinningDef(5, 1);
-
-            AddDef(TileType.Trap, 3);
-
-            AddDef(TileType.Cannibal, 2);
-
+            
             while (_list.Count < TotalTiles)
             {
                 AddDef(TileType.Grass);
