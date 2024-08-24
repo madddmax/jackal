@@ -37,9 +37,9 @@ namespace JackalWebHost.Controllers
             {
                 gamePlayers[index++] = player switch
                 {
-                    "robot" => new SmartPlayer(),
+                    "robot" => new EasyPlayer(),
                     "human" => new WebHumanPlayer(),
-                    _ => new SmartPlayer2()
+                    _ => new EasyPlayer()
                 };
             }
 
