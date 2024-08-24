@@ -155,8 +155,8 @@ namespace Jackal.Core
         /// <summary>
         /// Конец игры
         /// </summary>
-        public bool IsGameOver => (CoinsLeft == 0 && !Board.AllTiles(x => x.Type == TileType.Unknown).Any()) 
-                                  || TurnNo - 200 > LastActionTurnNo;
+        public bool IsGameOver => (CoinsLeft == 0 && !Board.AllTiles(x => x.Type == TileType.Unknown).Any())
+                                  || TurnNo - 50 * _players.Length > LastActionTurnNo;
         
         /// <summary>
         /// Текущий ход - определяет какая команда ходит
