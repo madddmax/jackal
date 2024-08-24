@@ -166,10 +166,10 @@ namespace Jackal.Core.Players
                     var minDistance = goldPositions
                         .Select(p => Distance(p, move.To.Position) + move.To.Level)
                         .Min();
-
+                    
                     var goldPosition = goldPositions
                         .First(p => Distance(p, move.To.Position) + move.To.Level == minDistance);
-
+                    
                     minDistance = Distance(goldPosition, move.To.Position) + move.To.Level;
                     list.Add(new Tuple<int, Move>(minDistance, move));
                 }
@@ -186,29 +186,13 @@ namespace Jackal.Core.Players
             if (goodMoves.Count == 0 && unknownPositions.Count != 0)
             {
                 // идем к самой ближней неизвестной клетке
-                goodMoves = safeAvailableMoves
-                    .Where(x => x.WithCoins == false)
-                    .Where(m => unknownPositions.Contains(m.To.Position))
-                    .ToList();
-                
-                if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum)) 
-                    return (goodMoveNum, null);
-                
                 List<Tuple<int, Move>> list = new List<Tuple<int, Move>>();
                 foreach (Move move in safeAvailableMoves
                              .Where(x => x.WithCoins == false)
                              .Where(x => !waterPositions.Contains(x.From.Position))
                              .Where(x => IsEnemyNear(x.To.Position, board, teamId) == false))
                 {
-
-                    var minDistance = unknownPositions
-                        .Select(p => Distance(p, move.To.Position) + move.To.Level)
-                        .Min();
-                    
-                    var unknownPosition = unknownPositions
-                        .First(p => Distance(p, move.To.Position) + move.To.Level == minDistance);
-                    
-                    minDistance = Distance(unknownPosition, move.To.Position) + move.To.Level;
+                    var minDistance = MinDistance(unknownPositions, move.To.Position) + move.To.Level;
                     list.Add(new Tuple<int, Move>(minDistance, move));
                 }
 
@@ -310,6 +294,11 @@ namespace Jackal.Core.Players
         {
             var ship = board.Teams[teamId].Ship;
             return ship.Position == move.To.Position;
+        }
+        
+        private static int MinDistance(List<Position> positions, Position to)
+        {
+            return positions.ConvertAll(x => Distance(x, to)).Min();
         }
         
         private static int Distance(Position pos1, Position pos2)
