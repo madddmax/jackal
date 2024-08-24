@@ -81,6 +81,11 @@ namespace Jackal.Core.Players
                 if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum))
                     return (goodMoveNum, null);
             }
+
+            // заносим золото на корабль
+            goodMoves = gameState.AvailableMoves.Where(move => move.WithCoins && TargetIsShip(board, teamId, move)).ToList();
+            if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum))
+                return (goodMoveNum, null);
             
             // не ходим по чужим кораблям, людоедам и держим бабу
             Move[] safeAvailableMoves = gameState.AvailableMoves
@@ -93,16 +98,6 @@ namespace Jackal.Core.Players
             bool hasMoveWithCoins = safeAvailableMoves.Any(m => m.WithCoins);
             if (hasMoveWithCoins)
             {
-                foreach (Move move in safeAvailableMoves)
-                {
-                    // тащим золото на корабль
-                    if (move.WithCoins && TargetIsShip(board, teamId, move))
-                        goodMoves.Add(move);
-
-                    if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum))
-                        return (goodMoveNum, null);
-                }
-
                 // перемещаем золото ближе к кораблю
                 var escapePositions = board.AllTiles(x => x.Type == TileType.Balloon)
                     .Select(x => x.Position)
@@ -145,11 +140,9 @@ namespace Jackal.Core.Players
             if (goodMoves.Count == 0)
             {
                 // уничтожаем врага, если он рядом
-                foreach (Move move in gameState.AvailableMoves)
-                {
-                    if (IsEnemyPosition(move.To.Position, board, teamId)) 
-                        goodMoves.Add(move);
-                }
+                goodMoves = gameState.AvailableMoves.Where(move => IsEnemyPosition(move.To.Position, board, teamId)).ToList();
+                if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum))
+                    return (goodMoveNum, null);
             }
 
             if (goodMoves.Count == 0 && goldPositions.Count > 0 && !hasMoveWithCoins)
