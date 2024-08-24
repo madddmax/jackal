@@ -13,7 +13,11 @@ interface PiratePhotoProps {
 const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
     const dispatch = useDispatch();
 
-    const onClick = (girl: CellPirate) => dispatch(chooseHumanPirate({ pirate: girl.id }));
+    const onClick = (girl: CellPirate) => {
+        dispatch(chooseHumanPirate({ pirate: girl.id }));
+    };
+
+    const coinSize = pirateSize * 0.3 > 15 ? pirateSize * 0.3 : 15;
 
     return (
         <>
@@ -37,6 +41,8 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
                     style={{
                         top: pirateSize * 0.6,
                         left: pirateSize * 0.6,
+                        width: coinSize,
+                        height: coinSize,
                     }}
                 />
             )}

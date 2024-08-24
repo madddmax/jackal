@@ -87,10 +87,11 @@ interface GameCell {
 
 interface GameLevel {
     level: number;
-    pirate?: GameThing;
     pirates?: CellPirate[];
     hasCoins: boolean;
-    coin?: GameThing;
+    coin?: {
+        text: string;
+    };
 }
 
 export interface CellPirate {
@@ -99,12 +100,6 @@ export interface CellPirate {
     isTransparent?: boolean;
     photo: string;
     photoId: number;
-}
-
-interface GameThing {
-    foreColor?: string;
-    backColor?: string;
-    text: string;
 }
 
 export interface GameMove {

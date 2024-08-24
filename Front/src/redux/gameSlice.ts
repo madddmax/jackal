@@ -182,7 +182,8 @@ export const gameSlice = createSlice({
                 if (it.isAlive === false) {
                     let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
                     debugLog('dead pirate', current(pirate));
-                    const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
+                    const prevCell = state.fields[pirate.position.y][pirate.position.x];
+                    const prevLevel = prevCell.levels[pirate.position.level];
                     debugLog(
                         'prevLevel.pirates',
                         current(pirate).position.x,
@@ -192,7 +193,7 @@ export const gameSlice = createSlice({
                     if (prevLevel.pirates != undefined) {
                         let prevLevelPirate = prevLevel.pirates.find((pr) => pr.id === it.id);
                         if (prevLevelPirate) {
-                            prevLevelPirate.photo = 'skull';
+                            prevLevelPirate.photo = prevCell.image?.includes('arrow') ? 'skull' : 'skull_light';
                             prevLevelPirate.isTransparent = true;
                         }
                     }
