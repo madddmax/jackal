@@ -85,7 +85,7 @@ const Level = ({ cellSize, pirateSize, field, data }: LevelProps) => {
                 width: getWidth(field),
             }}
         >
-            {data.coin && <CoinPhoto coin={data.coin} pirate={pirate} />}
+            {data.coin && <CoinPhoto coinCount={Number(data.coin.text)} pirate={pirate} pirateSize={pirateSize} />}
             {pirate && <PiratePhoto pirate={pirate} pirateSize={pirateSize} />}
         </div>
     );

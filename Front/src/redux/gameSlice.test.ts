@@ -1,17 +1,47 @@
-import reducer, { setCurrentHumanTeam } from './gameSlice';
+import reducer, { setCurrentHumanTeam, chooseHumanPirate } from './gameSlice';
 import { GameState } from './types';
 
-test('should handle a todo being added to an empty list', () => {
+describe('redux logic tests', () => {
     const previousState: GameState = {
         cellSize: 50,
         pirateSize: 15,
-        fields: [[]],
+        fields: [
+            [{ levels: [{ level: 0, hasCoins: false }] }],
+            [{ levels: [{ level: 0, hasCoins: false }] }],
+            [{ levels: [{ level: 0, hasCoins: false }] }],
+        ],
         lastMoves: [],
+        pirates: [
+            {
+                id: '100',
+                teamId: 1,
+                position: {
+                    level: 0,
+                    x: 0,
+                    y: 1,
+                },
+                group: 'girls',
+                photo: 'pirate_10',
+                photoId: 10,
+            },
+            {
+                id: '200',
+                teamId: 2,
+                position: {
+                    level: 0,
+                    x: 0,
+                    y: 2,
+                },
+                group: 'somali',
+                photo: 'pirate_20',
+                photoId: 20,
+            },
+        ],
         teams: [
             {
                 id: 2,
-                activePirate: '123',
-                lastPirate: '123',
+                activePirate: '200',
+                lastPirate: '200',
                 isHumanPlayer: false,
                 group: 'somali',
             },
@@ -27,15 +57,40 @@ test('should handle a todo being added to an empty list', () => {
         highlight_y: 0,
     };
 
-    expect(reducer(previousState, setCurrentHumanTeam(2))).toEqual(
-        expect.objectContaining({
-            currentHumanTeam: {
-                id: 2,
-                activePirate: '123',
-                lastPirate: '123',
-                isHumanPlayer: false,
-                group: 'somali',
-            },
-        }),
-    );
+    test('Устанавливаем текущую команду', () => {
+        expect(reducer(previousState, setCurrentHumanTeam(2))).toEqual(
+            expect.objectContaining({
+                currentHumanTeam: {
+                    id: 2,
+                    activePirate: '200',
+                    lastPirate: '200',
+                    isHumanPlayer: false,
+                    group: 'somali',
+                },
+            }),
+        );
+    });
+
+    test('Выбираем активного пирата', () => {
+        expect(reducer(previousState, chooseHumanPirate({ pirate: '200' }))).toEqual(
+            expect.objectContaining({
+                currentHumanTeam: {
+                    activePirate: '200',
+                    lastPirate: '200',
+                    group: 'girls',
+                    id: -1,
+                    isHumanPlayer: true,
+                },
+                teams: [
+                    {
+                        activePirate: '200',
+                        lastPirate: '200',
+                        group: 'somali',
+                        id: 2,
+                        isHumanPlayer: false,
+                    },
+                ],
+            }),
+        );
+    });
 });
