@@ -23,16 +23,21 @@ namespace Jackal.Core.Players
             int teamId = gameState.TeamId;
             Board board = gameState.Board;
             var ship = board.Teams[teamId].Ship;
+
+            var enemyShipPositions = board.Teams
+                .Select(t => t.Ship.Position)
+                .Where(p => p != ship.Position)
+                .ToList();
             
             var unknownPositions = board
                 .AllTiles(x => x.Type == TileType.Unknown)
                 .Select(x => x.Position)
                 .ToList();
-            
+
             var waterPositions = board
                 .AllTiles(x => x.Type == TileType.Water)
                 .Select(x => x.Position)
-                .Except(board.Teams.Select(t => t.Ship.Position))
+                .Except(new[] { ship.Position })
                 .ToList();
             
             var goldPositions = board
@@ -77,10 +82,10 @@ namespace Jackal.Core.Players
                     return (goodMoveNum, null);
             }
             
-            // не прыгаем в воду, не ходим по людоедам и не уходим с бабы
+            // не ходим по чужим кораблям, людоедам и держим бабу
             Move[] safeAvailableMoves = gameState.AvailableMoves
                 .Where(x => x.To != x.From)
-                .Where(x => !waterPositions.Contains(x.To.Position))
+                .Where(x => !enemyShipPositions.Contains(x.To.Position))
                 .Where(x => !cannibalPositions.Contains(x.To.Position))
                 .Where(x => !respawnPositions.Contains(x.From.Position))
                 .ToArray();
@@ -108,6 +113,7 @@ namespace Jackal.Core.Players
                 List<Tuple<int, Move>> list = [];
                 foreach (Move move in safeAvailableMoves
                              .Where(x => x.WithCoins)
+                             .Where(x => !waterPositions.Contains(x.To.Position))
                              .Where(x => IsEnemyNear(x.To.Position, board, teamId) == false))
                 {
                     // идем к самому ближнему выходу
@@ -160,6 +166,7 @@ namespace Jackal.Core.Players
                 List<Tuple<int, Move>> list = [];
                 foreach (Move move in safeAvailableMoves
                              .Where(x => x.WithCoins == false)
+                             .Where(x => !waterPositions.Contains(x.From.Position))
                              .Where(x => IsEnemyNear(x.To.Position, board, teamId) == false))
                 {
 
@@ -197,6 +204,7 @@ namespace Jackal.Core.Players
                 List<Tuple<int, Move>> list = new List<Tuple<int, Move>>();
                 foreach (Move move in safeAvailableMoves
                              .Where(x => x.WithCoins == false)
+                             .Where(x => !waterPositions.Contains(x.From.Position))
                              .Where(x => IsEnemyNear(x.To.Position, board, teamId) == false))
                 {
 
@@ -224,9 +232,7 @@ namespace Jackal.Core.Players
                 var shipPosition = board.Teams[teamId].Ship.Position;
                 
                 List<Tuple<int, Move>> list = [];
-                foreach (Move move in gameState.AvailableMoves
-                             .Where(x => waterPositions.Contains(x.From.Position))
-                             .Where(x => waterPositions.Contains(x.To.Position)))
+                foreach (Move move in gameState.AvailableMoves.Where(x => waterPositions.Contains(x.From.Position)))
                 {
                     int distance = WaterDistance(shipPosition, move.To.Position);
                     list.Add(new Tuple<int, Move>(distance, move));
