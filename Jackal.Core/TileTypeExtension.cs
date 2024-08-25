@@ -13,7 +13,8 @@
                    || type == TileType.Balloon
                    || type == TileType.Ice
                    || type == TileType.Crocodile
-                   || type == TileType.Airplane;
+                   || type == TileType.Airplane
+                   || type == TileType.Lighthouse;
         }
 
         public static int CoinsCount(this TileType source)

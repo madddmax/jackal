@@ -106,10 +106,11 @@ namespace Jackal.Core
         /// </summary>
         public bool SubTurnAirplaneFlying { get; set; }
         
-        public List<Move> GetPrevAvailableMoves()
-        {
-            return _availableMoves;
-        }
+        /// <summary>
+        /// TODO-MAD является результатом действия -
+        /// Количество просмотров карты с маяка
+        /// </summary>
+        public int SubTurnLighthouseViewCount { get; set; }
 
         public List<Move> GetAvailableMoves()
         {

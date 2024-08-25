@@ -242,6 +242,7 @@ namespace Jackal.Core
                             }
                         }
                         break;
+                    
                     case TileType.RespawnFort:
                         if (task.Source == newPosition)
                         {
@@ -259,27 +260,10 @@ namespace Jackal.Core
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
                         break;
 
-                    case TileType.Cannibal:
-                    case TileType.Trap:
-                    case TileType.Grass:
-                    case TileType.Chest1:
-                    case TileType.Chest2:
-                    case TileType.Chest3:
-                    case TileType.Chest4:
-                    case TileType.Chest5:
-                    case TileType.RumBarrel:
-                    case TileType.Spinning:
-                        goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
-                        if (Map[task.Source].Coins > 0
-                            && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
-                            goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
-                            {
-                                MoveType = MoveType.WithCoin
-                            });
-                        break;
                     case TileType.Unknown:
                         goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
                         break;
+                    
                     case TileType.Horse:
                     case TileType.Arrow:
                     case TileType.Balloon:
@@ -289,12 +273,12 @@ namespace Jackal.Core
                         goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source, airplaneFlying));
                         break;
                     case TileType.Airplane:
+                    case TileType.Lighthouse:   
                         if (newPositionTile.Used == false)
                         {
                             goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source, true));
                         }
                         else {
-                            // если нет самолета, то клетка работает как пустое поле
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
                             if (Map[task.Source].Coins > 0
                                 && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
@@ -304,6 +288,15 @@ namespace Jackal.Core
                                 });
                         }
                         break;
+                    default:
+                        goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
+                        if (Map[task.Source].Coins > 0
+                            && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
+                            goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
+                            {
+                                MoveType = MoveType.WithCoin
+                            });
+                        break;         
                 }
             }
             return goodTargets;
@@ -317,20 +310,25 @@ namespace Jackal.Core
             TilePosition source, TilePosition prev, Team ourTeam, bool airplaneFlying)
         {
             var sourceTile = Map[source.Position];
-            var prevTile = Map[prev.Position];
             var ourShip = ourTeam.Ship;
 
-            IEnumerable<TilePosition> rez;
+            IEnumerable<TilePosition> rez = GetNearDeltas(source.Position)
+                .Where(IsValidMapPosition)
+                .Where(x => Map[x].Type != TileType.Water || x == ourShip.Position)
+                .Select(IncomeTilePosition);
+            
             switch (sourceTile.Type)
             {
                 case TileType.Horse:
                     rez = GetHorseDeltas(source.Position)
                         .Where(IsValidMapPosition)
-                        .Where(x => Map[x].Type != TileType.Water || Teams.Select(t => t.Ship.Position).Contains(x))
+                        .Where(x =>
+                            Map[x].Type != TileType.Water || Teams.Select(t => t.Ship.Position).Contains(x)
+                        )
                         .Select(IncomeTilePosition);
                     break;
 				case TileType.Cannon:
-					rez = new []{IncomeTilePosition(GetCannonFly(sourceTile.CannonDirection, source.Position))};
+                    rez = new[] { IncomeTilePosition(GetCannonFly(sourceTile.CannonDirection, source.Position)) };
 					break;
                 case TileType.Arrow:
                     rez = GetArrowsDeltas(sourceTile.ArrowsCode, source.Position)
@@ -339,21 +337,20 @@ namespace Jackal.Core
                 case TileType.Balloon:
                     rez = new[] { IncomeTilePosition(ourShip.Position) }; //на корабль
                     break;
+                case TileType.Lighthouse:
+                    if (sourceTile.Used == false)
+                    {
+                        rez = AllTiles(x => x.Type == TileType.Unknown)
+                            .Select(x => IncomeTilePosition(x.Position));
+                    }
+                    break;
                 case TileType.Airplane:
                     if (sourceTile.Used == false)
                     {
                         rez = AllTiles(x =>
                                 x.Type != TileType.Water || x.Position == ourShip.Position
                             )
-                            .Select(x => x.Position)
-                            .Select(IncomeTilePosition);
-                    }
-                    else
-                    {
-                        rez = GetNearDeltas(source.Position)
-                            .Where(IsValidMapPosition)
-                            .Where(x => Map[x].Type != TileType.Water || x == ourShip.Position)
-                            .Select(IncomeTilePosition);
+                            .Select(x => IncomeTilePosition(x.Position));
                     }
                     break;
                 case TileType.Crocodile:
@@ -362,17 +359,11 @@ namespace Jackal.Core
                         rez = AllTiles(x =>
                                 x.Type != TileType.Water || x.Position == ourShip.Position
                             )
-                            .Select(x => x.Position)
-                            .Select(IncomeTilePosition);
+                            .Select(x => IncomeTilePosition(x.Position));
                         break;
                     }
-
-                    //возвращаемся назад
-                    var returnTile = prevTile.Type == TileType.Spinning
-                        ? new TilePosition(prev.Position, prevTile.SpinningCount - 1)
-                        : new TilePosition(prev.Position);
                     
-                    rez = new[] { returnTile };
+                    rez = new[] { IncomeTilePosition(prev.Position) };
                     break;
                 case TileType.Ice:
                     if (airplaneFlying)
@@ -380,53 +371,37 @@ namespace Jackal.Core
                         rez = AllTiles(x =>
                                 x.Type != TileType.Water || x.Position == ourShip.Position
                             )
-                            .Select(x => x.Position)
-                            .Select(IncomeTilePosition);
+                            .Select(x => IncomeTilePosition(x.Position));
                         break;
                     }
 
                     var prevDelta = Position.GetDelta(prev.Position, source.Position);
                     var target = Position.AddDelta(source.Position, prevDelta);
-                    rez = new[] { target }.Select(IncomeTilePosition);
+                    rez = new[] { IncomeTilePosition(target) };
                     break;
                 case TileType.RespawnFort:
-                    rez = GetNearDeltas(source.Position)
-                        .Where(IsValidMapPosition)
-                        .Where(x => Map[x].Type != TileType.Water || x==ourShip.Position)
-                        .Select(IncomeTilePosition)
-                        .Concat(new[] {source});
+                    rez = rez.Concat(new[] {source});
                     break;
                 case TileType.Spinning:
-                    if (source.Level == 0)
-                    {
-                        rez = GetNearDeltas(source.Position)
-                            .Where(IsValidMapPosition)
-                            .Where(x => Map[x].Type != TileType.Water || x == ourShip.Position)
-                            .Select(IncomeTilePosition);
-                    }
-                    else
+                    if (source.Level > 0)
                     {
                         rez = new[] {new TilePosition(source.Position, source.Level - 1)};
                     }
                     break;
                 case TileType.Water:
-                    if (source.Position == ourShip.Position) //с своего корабля
+                    if (source.Position == ourShip.Position)
                     {
+                        // со своего корабля
                         rez = GetPossibleShipMoves(source.Position, MapSize)
                             .Concat(new[] {GetShipLanding(source.Position)})
                             .Select(IncomeTilePosition);
                     }
-                    else //пират плавает в воде
+                    else
                     {
+                        // пират плавает в воде
                         rez = GetPossibleSwimming(source.Position)
                             .Select(IncomeTilePosition);
                     }
-                    break;
-                default:
-                    rez = GetNearDeltas(source.Position)
-                        .Where(IsValidMapPosition)
-                        .Where(x => Map[x].Type != TileType.Water || x == ourShip.Position)
-                        .Select(IncomeTilePosition);
                     break;
             }
             
@@ -435,10 +410,9 @@ namespace Jackal.Core
 
         private TilePosition IncomeTilePosition(Position pos)
         {
-            if (IsValidMapPosition(pos) && Map[pos].Type == TileType.Spinning)
-                return new TilePosition(pos, Map[pos].SpinningCount - 1);
-
-            return new TilePosition(pos);
+            return IsValidMapPosition(pos) && Map[pos].Type == TileType.Spinning
+                ? new TilePosition(pos, Map[pos].SpinningCount - 1)
+                : new TilePosition(pos);
         }
 
         private static IEnumerable<Position> GetHorseDeltas(Position pos)

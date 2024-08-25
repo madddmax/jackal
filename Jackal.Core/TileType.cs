@@ -22,6 +22,7 @@
         Spinning,
         Trap,
         Cannibal,
-		Cannon
+		Cannon,
+        Lighthouse
     }
 }

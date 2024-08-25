@@ -97,6 +97,7 @@ namespace Jackal.Core
             
             AddDef(TileType.Trap, 3);
             AddDef(TileType.Cannibal, 2);
+            AddDef(TileType.Lighthouse, 2);
             
             AddSpinningDef(2, 5);
             AddSpinningDef(3, 4);

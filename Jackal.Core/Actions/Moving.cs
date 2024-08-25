@@ -33,6 +33,37 @@ namespace Jackal.Core.Actions
                 newTile = true;
             }
             
+            // нашли маяк
+            if (targetTile is { Type: TileType.Lighthouse, Used: false })
+            {
+                game.SubTurnLighthouseViewCount += 4;
+
+                // отмечаем что использовали маяк если нашли его маяком
+                if (sourceTile is { Type: TileType.Lighthouse, Used: false })
+                {
+                    targetTile.Used = true;
+                }
+            }
+            
+            // просматриваем какрту с маяка
+            if (sourceTile is { Type: TileType.Lighthouse, Used: false } && game.SubTurnLighthouseViewCount > 0)
+            {
+                game.SubTurnLighthouseViewCount--;
+                
+                // отмечаем что использовали маяк
+                if (game.SubTurnLighthouseViewCount == 0)
+                {
+                    sourceTile.Used = true;
+                }
+                else
+                {
+                    game.NeedSubTurnPirate = pirate;
+                    game.PrevSubTurnPosition = prev;
+                }
+                
+                return GameActionResult.Live;
+            }
+            
             if (newTile && targetTile.Type == TileType.Spinning)
             {
                 to = new TilePosition(to.Position, targetTile.SpinningCount - 1);
@@ -55,14 +86,14 @@ namespace Jackal.Core.Actions
                 ourShip.Position = to.Position;
                 sourceTile.Pirates.Clear();
             }
-            else 
+            else
             {
                 //двигаем своего пирата
                 fromTileLevel.Pirates.Remove(pirate);
 
                 pirate.Position = to;
                 targetTileLevel.Pirates.Add(pirate);
-            }            
+            }
             
             if (newTile && targetTile.Type.RequireImmediateMove())
             {
