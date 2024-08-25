@@ -214,6 +214,14 @@ export const gameSlice = createSlice({
                         photo: `${teamGroup}/pirate_${nm}`,
                         photoId: nm,
                     });
+                    const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
+                    const drawPirate: CellPirate = {
+                        id: it.id,
+                        photo: `${teamGroup}/pirate_${nm}`,
+                        photoId: nm,
+                    };
+                    if (level.pirates == undefined) level.pirates = [drawPirate];
+                    else level.pirates.push(drawPirate);
                 } else {
                     let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
                     debugLog('moved pirate', current(pirate));
