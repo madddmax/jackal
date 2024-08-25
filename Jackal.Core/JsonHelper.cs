@@ -4,16 +4,16 @@ namespace Jackal.Core
 {
     public static class JsonHelper
     {
-        private static readonly JsonSerializerSettings _typeNameSerializer = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Objects };
+        private static readonly JsonSerializerSettings TypeNameSerializer = new() { TypeNameHandling = TypeNameHandling.Objects };
 
-        public static string SerialiazeWithType<T>(T obj, Formatting formatting = Formatting.None)
+        public static string SerializeWithType<T>(T obj, Formatting formatting = Formatting.None)
         {
-            return JsonConvert.SerializeObject(obj, formatting, _typeNameSerializer);
+            return JsonConvert.SerializeObject(obj, formatting, TypeNameSerializer);
         }
 
-        public static T DeserialiazeWithType<T>(string str)
+        public static T? DeserializeWithType<T>(string str)
         {
-            return JsonConvert.DeserializeObject<T>(str, _typeNameSerializer);
+            return JsonConvert.DeserializeObject<T>(str, TypeNameSerializer);
         }
     }
 }

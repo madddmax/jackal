@@ -89,7 +89,7 @@ namespace JackalWebHost.Controllers
                 return Json(new { error = true });
             }
 
-            var prevBoardStr = JsonHelper.SerialiazeWithType(gameState.board);
+            var prevBoardStr = JsonHelper.SerializeWithType(gameState.board);
             
             if (gameState.game.CurrentPlayer is WebHumanPlayer && request.TurnNum.HasValue)
             {
@@ -98,7 +98,7 @@ namespace JackalWebHost.Controllers
 
             gameState.game.Turn();
 
-            var prevBoard = JsonHelper.DeserialiazeWithType<Board>(prevBoardStr);
+            var prevBoard = JsonHelper.DeserializeWithType<Board>(prevBoardStr);
 
             var service = new DrawService();
             (List<PirateChange> pirateChanges, List<TileChange> tileChanges) = service.Draw(gameState.board, prevBoard);

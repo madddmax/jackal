@@ -16,7 +16,7 @@ namespace Jackal.Core
         /// </summary>
         public readonly int MapSize;
         
-        public Map Map;
+        public readonly Map Map;
 
         public Team[] Teams;
 
@@ -51,11 +51,12 @@ namespace Jackal.Core
             }
         }
 
-        /// <summary>
-        /// Используется для десериализации
-        /// </summary>
-        public Board()
+        [JsonConstructor]
+        public Board(int mapSize, Map map, Team[] teams)
         {
+            MapSize = mapSize;
+            Map = map;
+            Teams = teams;
         }
 
         public Board(IPlayer[] players, IMapGenerator mapGenerator, int mapSize, int piratesPerPlayer)
@@ -213,7 +214,7 @@ namespace Jackal.Core
                         else if (sourceTile.Type == TileType.Water) //из воды в воду 
                         {
                             if (source.Position != ourShip.Position && 
-                                GetPosibleSwimming(task.Source.Position).Contains(newPosition.Position))
+                                GetPossibleSwimming(task.Source.Position).Contains(newPosition.Position))
                             {
                                 //пират плавает
                                 var move = new AvailableMove(task.Source, newPosition, moving);
@@ -324,16 +325,16 @@ namespace Jackal.Core
             {
                 case TileType.Horse:
                     rez = GetHorseDeltas(source.Position)
-                        .Where(x => IsValidMapPosition(x))
+                        .Where(IsValidMapPosition)
                         .Where(x => Map[x].Type != TileType.Water || Teams.Select(t => t.Ship.Position).Contains(x))
-                        .Select(x => IncomeTilePosition(x));
+                        .Select(IncomeTilePosition);
                     break;
 				case TileType.Cannon:
 					rez = new []{IncomeTilePosition(GetCannonFly(sourceTile.CannonDirection, source.Position))};
 					break;
                 case TileType.Arrow:
                     rez = GetArrowsDeltas(sourceTile.ArrowsCode, source.Position)
-                        .Select(x => IncomeTilePosition(x));
+                        .Select(IncomeTilePosition);
                     break;
                 case TileType.Balloon:
                     rez = new[] { IncomeTilePosition(ourShip.Position) }; //на корабль
@@ -350,9 +351,9 @@ namespace Jackal.Core
                     else
                     {
                         rez = GetNearDeltas(source.Position)
-                            .Where(x => IsValidMapPosition(x))
+                            .Where(IsValidMapPosition)
                             .Where(x => Map[x].Type != TileType.Water || x == ourShip.Position)
-                            .Select(x => IncomeTilePosition(x));
+                            .Select(IncomeTilePosition);
                     }
                     break;
                 case TileType.Crocodile:
@@ -390,18 +391,18 @@ namespace Jackal.Core
                     break;
                 case TileType.RespawnFort:
                     rez = GetNearDeltas(source.Position)
-                        .Where(x => IsValidMapPosition(x))
+                        .Where(IsValidMapPosition)
                         .Where(x => Map[x].Type != TileType.Water || x==ourShip.Position)
-                        .Select(x => IncomeTilePosition(x))
+                        .Select(IncomeTilePosition)
                         .Concat(new[] {source});
                     break;
                 case TileType.Spinning:
                     if (source.Level == 0)
                     {
                         rez = GetNearDeltas(source.Position)
-                            .Where(x => IsValidMapPosition(x))
+                            .Where(IsValidMapPosition)
                             .Where(x => Map[x].Type != TileType.Water || x == ourShip.Position)
-                            .Select(x => IncomeTilePosition(x));
+                            .Select(IncomeTilePosition);
                     }
                     else
                     {
@@ -413,33 +414,34 @@ namespace Jackal.Core
                     {
                         rez = GetPossibleShipMoves(source.Position, MapSize)
                             .Concat(new[] {GetShipLanding(source.Position)})
-                            .Select(x => IncomeTilePosition(x));
+                            .Select(IncomeTilePosition);
                     }
                     else //пират плавает в воде
                     {
-                        rez = GetPosibleSwimming(source.Position)
-                            .Select(x => IncomeTilePosition(x));
+                        rez = GetPossibleSwimming(source.Position)
+                            .Select(IncomeTilePosition);
                     }
                     break;
                 default:
                     rez = GetNearDeltas(source.Position)
-                        .Where(x => IsValidMapPosition(x))
+                        .Where(IsValidMapPosition)
                         .Where(x => Map[x].Type != TileType.Water || x == ourShip.Position)
-                        .Select(x => IncomeTilePosition(x));
+                        .Select(IncomeTilePosition);
                     break;
             }
+            
             return rez.Where(x => IsValidMapPosition(x.Position)).ToList();
         }
 
-        TilePosition IncomeTilePosition(Position pos)
+        private TilePosition IncomeTilePosition(Position pos)
         {
-            if (IsValidMapPosition(pos) && Map[pos].Type==TileType.Spinning)
-                return new TilePosition(pos,Map[pos].SpinningCount-1);
-            else
-                return new TilePosition(pos);
+            if (IsValidMapPosition(pos) && Map[pos].Type == TileType.Spinning)
+                return new TilePosition(pos, Map[pos].SpinningCount - 1);
+
+            return new TilePosition(pos);
         }
 
-        public static IEnumerable<Position> GetHorseDeltas(Position pos)
+        private static IEnumerable<Position> GetHorseDeltas(Position pos)
         {
             for (int x = -2; x <= 2; x++)
             {
@@ -449,8 +451,8 @@ namespace Jackal.Core
                 yield return new Position(pos.X + x, pos.Y + deltaY);
             }
         }
-        
-        public static IEnumerable<Position> GetNearDeltas(Position pos)
+
+        private static IEnumerable<Position> GetNearDeltas(Position pos)
         {
             for (int x = -1; x <= 1; x++)
             {
@@ -462,7 +464,7 @@ namespace Jackal.Core
             }
         }
 
-        public bool IsValidMapPosition(Position pos)
+        private bool IsValidMapPosition(Position pos)
         {
             return (
                 pos.X >= 0 && pos.X < MapSize
@@ -493,7 +495,7 @@ namespace Jackal.Core
             }
         }
 
-        public Position GetShipLanding(Position pos)
+        private Position GetShipLanding(Position pos)
         {
             if (pos.X == 0)
                 return new Position(1, pos.Y);
@@ -510,7 +512,7 @@ namespace Jackal.Core
             throw new Exception("wrong ship position");
         }
 
-        public Position GetCannonFly(int arrowsCode, Position pos) =>
+        private Position GetCannonFly(int arrowsCode, Position pos) =>
             arrowsCode switch
             {
                 // вверх
@@ -523,7 +525,7 @@ namespace Jackal.Core
                 _ => new Position(0, pos.Y)
             };
 
-        public IEnumerable<Position> GetArrowsDeltas(int arrowsCode, Position source)
+        private static IEnumerable<Position> GetArrowsDeltas(int arrowsCode, Position source)
         {
             foreach (var delta in ArrowsCodesHelper.GetExitDeltas(arrowsCode))
             {
@@ -534,14 +536,12 @@ namespace Jackal.Core
         /// <summary>
         /// Все возможные цели для плавающего пирата
         /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
-        public IEnumerable<Position> GetPosibleSwimming(Position pos)
+        private IEnumerable<Position> GetPossibleSwimming(Position pos)
         {
-            return GetNearDeltas(pos).Where(x => IsValidMapPosition(x)).Where(x => Map[x].Type == TileType.Water);
+            return GetNearDeltas(pos).Where(IsValidMapPosition).Where(x => Map[x].Type == TileType.Water);
         }
 
-        public bool WasCheckedBefore(List<CheckedPosition> alreadyCheckedList, CheckedPosition currentCheck)
+        private static bool WasCheckedBefore(List<CheckedPosition> alreadyCheckedList, CheckedPosition currentCheck)
         {
             foreach (var info in alreadyCheckedList)
             {
@@ -551,6 +551,7 @@ namespace Jackal.Core
                         return true;
                 }
             }
+            
             return false;
         }
     }
