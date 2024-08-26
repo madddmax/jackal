@@ -12,11 +12,6 @@ namespace Jackal.Tests2;
 public class TestGame
 {
     /// <summary>
-    /// Минимальный размер карты 5x5, поле 5 клеток
-    /// </summary>
-    private const int MapSize = 5;
-
-    /// <summary>
     /// Один пират на команду
     /// </summary>
     private const int PiratesPerPlayer = 1;
@@ -35,11 +30,21 @@ public class TestGame
     /// Текущий ход - определяет какая команда ходит
     /// </summary>
     public int TurnNo => _testGame.TurnNo;
+
+    /// <summary>
+    /// Конец игры
+    /// </summary>
+    public bool IsGameOver => _testGame.IsGameOver;
     
-    public TestGame (IMapGenerator generator)
+    /// <summary>
+    /// Ctor
+    /// </summary>
+    /// <param name="generator">Генератор карты</param>
+    /// <param name="mapSize">Размер карты вместе с морем, по умолчанию минимальный 5x5 (поле из 5 клеток)</param>
+    public TestGame (IMapGenerator generator, int mapSize = 5)
     {
         IPlayer[] players = [new WebHumanPlayer()];
-        var board = new Board(players, generator, MapSize, PiratesPerPlayer);
+        var board = new Board(players, generator, mapSize, PiratesPerPlayer);
         _testGame = new Game(players, board);
     }
 
