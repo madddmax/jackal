@@ -8,14 +8,20 @@ namespace Jackal.Core;
 /// остальные все клетки thirdTile
 /// </summary>
 public class ThreeTileMapGenerator(
-    TileParams firstTileParams, TileParams secondTileParams, TileParams thirdTileParams) : IMapGenerator
+    TileParams firstTileParams, TileParams secondTileParams, TileParams thirdTileParams, int coinsOnMap = 0) : IMapGenerator
 {
     private readonly Dictionary<Position, Tile> _tiles = new();
     
+    /// <summary>
+    /// Идентификатор карты
+    /// </summary>
     public int MapId => 0;
 
-    public int CoinsOnMap { get; private set; } = 0;
-
+    /// <summary>
+    /// Монет на карте, нужно сразу рассчитать т.к. используется при инициализации Game
+    /// </summary>
+    public int CoinsOnMap { get; } = coinsOnMap;
+    
     public Tile GetNext(Position position)
     {
         if (!_tiles.ContainsKey(position))
@@ -33,7 +39,6 @@ public class ThreeTileMapGenerator(
             if (tile.Type.CoinsCount() > 0)
             {
                 tile.Levels[0].Coins = tile.Type.CoinsCount();
-                CoinsOnMap += tile.Type.CoinsCount();
             }
 
             _tiles[position] = tile;

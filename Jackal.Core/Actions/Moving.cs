@@ -36,8 +36,10 @@ namespace Jackal.Core.Actions
             // нашли маяк
             if (targetTile is { Type: TileType.Lighthouse, Used: false })
             {
-                game.SubTurnLighthouseViewCount += 4;
-
+                var unknownTilesCount = game.Board.AllTiles(x => x.Type == TileType.Unknown).Count();
+                var remainedTilesViewCount = unknownTilesCount - game.SubTurnLighthouseViewCount + 1;
+                game.SubTurnLighthouseViewCount += remainedTilesViewCount < 4 ? remainedTilesViewCount : 4;
+                
                 // отмечаем что использовали маяк если нашли его маяком
                 if (sourceTile is { Type: TileType.Lighthouse, Used: false })
                 {

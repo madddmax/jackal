@@ -46,7 +46,7 @@ public class LighthouseTests
         // Act - высадка с корабля на маяк
         game.Turn();
         
-        // по очереди смотрим неизвестные клетки
+        // по очереди смотрим неизвестные клетки: все пустые поля
         game.Turn();
         game.Turn();
         game.Turn();
@@ -56,4 +56,48 @@ public class LighthouseTests
         Assert.True(game.IsGameOver);
         Assert.Equal(1, game.TurnNo);
     }
+    
+    [Fact]
+    public void LighthouseThenSearch3LighthouseAndChest_GetAvailableMoves_ReturnNearestMoves()
+    {
+        // Arrange
+        const int coinsOnMap = 1;
+        var lighthouseChestLineMap = new ThreeTileMapGenerator(
+            new TileParams(TileType.Lighthouse),
+            new TileParams(TileType.Lighthouse),
+            new TileParams(TileType.Chest1),
+            coinsOnMap
+        );
+        var game = new TestGame(lighthouseChestLineMap);
+        
+        // Act - высадка с корабля на маяк
+        game.Turn();
+        
+        // по очереди смотрим неизвестные клетки: 3 маяка и 1 сундук
+        game.Turn();
+        game.Turn();
+        game.Turn();
+        game.Turn();
+        
+        List<Move> moves = game.GetAvailableMoves();
+        
+        // Assert - доступно 4 хода на соседние клетки с маяка в месте высадки
+        Assert.Equal(4, moves.Count);
+        Assert.Equal(new TilePosition(2, 1), moves.First().From);
+        Assert.Equivalent(new List<TilePosition>
+            {
+                new(1, 2), // соседний маяк
+                new(2, 0), // свой корабль
+                new(2, 2), // соседний маяк
+                new(3, 2) // соседний маяк
+            },
+            moves.Select(m => m.To)
+        );
+        
+        // Все поле открыто, золото есть = игра продолжается
+        Assert.False(game.IsGameOver);
+        Assert.Equal(1, game.TurnNo);
+    }
+    
+    // todo - возвращать withSearch
 }
