@@ -1,11 +1,11 @@
-﻿namespace JackalWebHost.Models
+﻿namespace JackalWebHost.Models;
+
+public class DrawMove
 {
-    public class DrawMove
-    {
-        public int MoveNum;
-        public PiratePosition From;
-        public PiratePosition To;
-        public bool WithCoin;
-        public bool WithRespawn; 
-    }
+    public int MoveNum;
+    public PiratePosition From;
+    public PiratePosition To;
+    public bool WithCoin;
+    public bool WithRespawn;
+    public bool WithLighthouse;
 }

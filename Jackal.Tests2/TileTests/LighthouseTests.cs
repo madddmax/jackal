@@ -30,6 +30,9 @@ public class LighthouseTests
             },
             moves.Select(m => m.To)
         );
+        
+        // тип хода - открытие клетки с маяка
+        Assert.True(moves.All(m => m.WithLighthouse));
         Assert.Equal(0, game.TurnNo);
     }
     
@@ -94,10 +97,11 @@ public class LighthouseTests
             moves.Select(m => m.To)
         );
         
+        // тип хода - обычный
+        Assert.True(moves.All(m => m.Type == MoveType.Usual));
+        
         // Все поле открыто, золото есть = игра продолжается
         Assert.False(game.IsGameOver);
         Assert.Equal(1, game.TurnNo);
     }
-    
-    // todo - возвращать withSearch
 }

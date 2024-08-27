@@ -6,7 +6,7 @@ namespace Jackal.Core
     {
         public TilePosition Source;
         public TilePosition Target;
-        public MoveType MoveType=MoveType.Usual;
+        public MoveType MoveType = MoveType.Usual;
         public GameActionList ActionList;
 
         public AvailableMove()

@@ -141,6 +141,7 @@ namespace JackalWebHost.Service
                     MoveNum = index++,
                     WithCoin = move.WithCoins,
                     WithRespawn = move.WithRespawn,
+                    WithLighthouse = move.WithLighthouse,
                     From = pirate,
                     To = new PiratePosition
                     {

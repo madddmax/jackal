@@ -201,6 +201,16 @@ namespace Jackal.Core
 
                 switch (newPositionTile.Type)
                 {
+                    case TileType.Unknown:
+                        var availableMove = new AvailableMove(task.Source, newPosition, moving)
+                        {
+                            MoveType = sourceTile is { Type: TileType.Lighthouse, Used: false }
+                                ? MoveType.WithLighthouse
+                                : MoveType.Usual
+                        };
+                        goodTargets.Add(availableMove);
+                        break;
+                    
                     case TileType.Water:
                         if (ourShip.Position == newPosition.Position) //заходим на свой корабль
                         {
@@ -259,10 +269,6 @@ namespace Jackal.Core
                         if (newPositionTile.OccupationTeamId.HasValue == false || newPositionTile.OccupationTeamId == ourTeamId) //только если форт не занят
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
                         break;
-
-                    case TileType.Unknown:
-                        goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
-                        break;
                     
                     case TileType.Horse:
                     case TileType.Arrow:
@@ -273,7 +279,6 @@ namespace Jackal.Core
                         goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source, airplaneFlying));
                         break;
                     case TileType.Airplane:
-                    case TileType.Lighthouse:   
                         if (newPositionTile.Used == false)
                         {
                             goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source, true));

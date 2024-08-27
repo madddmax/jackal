@@ -7,8 +7,20 @@ namespace Jackal.Core
         [JsonProperty]
         public readonly MoveType Type;
 
-        public bool WithCoins { get { return Type == MoveType.WithCoin; } }
-	    public bool WithRespawn{ get { return Type == MoveType.WithRespawn; } }
+        /// <summary>
+        /// Перенос монеты
+        /// </summary>
+        public bool WithCoins => Type == MoveType.WithCoin;
+
+        /// <summary>
+        /// Воскрешение пирата на бабе
+        /// </summary>
+        public bool WithRespawn => Type == MoveType.WithRespawn;
+
+        /// <summary>
+        /// Открытие неизвестной клетки с маяка
+        /// </summary>
+        public bool WithLighthouse => Type == MoveType.WithLighthouse;
 
         public bool Equals(Move other)
         {
