@@ -6,6 +6,8 @@ public class PirateChange(Pirate pirate)
 {
     public Guid Id = pirate.Id;
     
+    public PirateType Type = pirate.Type;
+    
     public int TeamId = pirate.TeamId;
     
     public LevelPosition Position = new(pirate.Position);

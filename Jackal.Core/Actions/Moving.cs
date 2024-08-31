@@ -68,9 +68,10 @@ namespace Jackal.Core.Actions
             }
             
             // нашли Бен Ганна
-            if (newTile && targetTile.Type == TileType.BenGunn)
+            if (targetTile is { Type: TileType.BenGunn, Used: false })
             {
                 game.AddPirate(pirate.TeamId, to, PirateType.BenGunn);
+                targetTile.Used = true;
             }
             
             if (newTile && targetTile.Type == TileType.Spinning)
