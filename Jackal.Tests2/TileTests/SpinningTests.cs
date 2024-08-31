@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Jackal.Core;
 using Xunit;
@@ -21,13 +20,11 @@ public class SpinningTests
         
         // доходим до конца клетки джунгли-вертушка
         game.Turn();
-        List<Move> moves = game.GetAvailableMoves();
         
         // выбираем ход - вперед на крокодила
-        int moveNum = moves.FindIndex(a => a.To == new TilePosition(2, 2));
-        game.SetMove(moveNum);
-        game.Turn();
-        moves = game.GetAvailableMoves();
+        game.SetMoveAndTurn(2, 2);
+
+        var moves = game.GetAvailableMoves();
         
         // Assert - возврат на начало клетки джунгли-вертушка
         Assert.Single(moves);

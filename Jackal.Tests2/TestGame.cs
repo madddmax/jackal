@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Jackal.Core;
 using Jackal.Core.Players;
@@ -52,14 +51,20 @@ public class TestGame
     {
         return _testGame.GetAvailableMoves();
     }
-
-    public void SetMove(int moveNum, Guid? pirateId = null)
-    {
-        _testGame.CurrentPlayer.SetHumanMove(moveNum, pirateId);
-    }
     
     public void Turn()
     {
+        _testGame.CurrentPlayer.SetHumanMove(0, null);
+        _testGame.Turn();
+    }
+    
+    public void SetMoveAndTurn(int x, int y)
+    {
+        var position = new TilePosition(x, y);
+        var moves = _testGame.GetAvailableMoves();
+        var moveNum = moves.FindIndex(a => a.To == position);
+        
+        _testGame.CurrentPlayer.SetHumanMove(moveNum, null);
         _testGame.Turn();
     }
 }

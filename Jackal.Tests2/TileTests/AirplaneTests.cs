@@ -16,7 +16,7 @@ public class AirplaneTests
         
         // Act - высадка с корабля на самолет
         game.Turn();
-        List<Move> moves = game.GetAvailableMoves();
+        var moves = game.GetAvailableMoves();
         
         // Assert - все поле 5 клеток + свой корабль
         Assert.Equal(6, moves.Count);
@@ -44,13 +44,11 @@ public class AirplaneTests
         
         // Act - высадка с корабля на самолет
         game.Turn();
-        List<Move> moves = game.GetAvailableMoves();
         
         // выбираем ход - вперед на следующий самолет
-        int moveNum = moves.FindIndex(a => a.To == new TilePosition(2, 2));
-        game.SetMove(moveNum);
-        game.Turn();
-        moves = game.GetAvailableMoves();
+        game.SetMoveAndTurn(2, 2);
+
+        var moves = game.GetAvailableMoves();
         
         // Assert - все поле 5 клеток + свой корабль 
         Assert.Equal(6, moves.Count);
@@ -83,13 +81,11 @@ public class AirplaneTests
         
         // Act - высадка с корабля на самолет
         game.Turn();
-        List<Move> moves = game.GetAvailableMoves();
         
         // выбираем ход - вперед на лед
-        int moveNum = moves.FindIndex(a => a.To == new TilePosition(2, 2));
-        game.SetMove(moveNum);
-        game.Turn();
-        moves = game.GetAvailableMoves();
+        game.SetMoveAndTurn(2, 2);
+
+        var moves = game.GetAvailableMoves();
         
         // Assert - все поле 5 клеток + свой корабль, кроме открытого льда 
         Assert.Equal(5, moves.Count);
@@ -119,13 +115,11 @@ public class AirplaneTests
         
         // Act - высадка с корабля на самолет
         game.Turn();
-        List<Move> moves = game.GetAvailableMoves();
         
         // выбираем ход - вперед на крокодила
-        int moveNum = moves.FindIndex(a => a.To == new TilePosition(2, 2));
-        game.SetMove(moveNum);
-        game.Turn();
-        moves = game.GetAvailableMoves();
+        game.SetMoveAndTurn(2, 2);
+
+        var moves = game.GetAvailableMoves();
         
         // Assert - все поле 5 клеток + свой корабль, кроме открытого крокодила
         Assert.Equal(5, moves.Count);
@@ -156,15 +150,11 @@ public class AirplaneTests
         
         // Act - высадка с корабля на самолет
         game.Turn();
-        List<Move> moves = game.GetAvailableMoves();
         
         // выбираем ход - вперед на одинарную стрелку перпендикулярно вверх
-        int moveNum = moves.FindIndex(a => a.To == new TilePosition(2, 2));
-        game.SetMove(moveNum);
-        game.Turn();
+        game.SetMoveAndTurn(2, 2);
         
         // единственный ход - вперед по стрелке на крокодила
-        game.SetMove(0);
         game.Turn();
         
         // Assert - пират помер
@@ -187,18 +177,12 @@ public class AirplaneTests
         
         // Act - высадка с корабля на самолет
         game.Turn();
-        List<Move> moves = game.GetAvailableMoves();
         
         // выбираем ход - вперед через клетку на крокодила
-        int moveNum = moves.FindIndex(a => a.To == new TilePosition(2, 3));
-        game.SetMove(moveNum);
-        game.Turn();
-        moves = game.GetAvailableMoves();
+        game.SetMoveAndTurn(2, 3);
         
         // выбираем ход - на стрелку перед открытым крокодилом
-        moveNum = moves.FindIndex(a => a.To == new TilePosition(2, 2));
-        game.SetMove(moveNum);
-        game.Turn();
+        game.SetMoveAndTurn(2, 2);
         
         // Assert - пират помер
         Assert.Empty(game.Board.AllPirates);

@@ -104,4 +104,51 @@ public class LighthouseTests
         Assert.False(game.IsGameOver);
         Assert.Equal(1, game.TurnNo);
     }
+    
+    [Fact]
+    public void LighthouseThenSearch2LighthouseThenSearch10Crocodile_GetAvailableMoves_ReturnNearestMoves()
+    {
+        // Arrange
+        var lighthouseCrocodileLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.Lighthouse),
+            new TileParams(TileType.Crocodile)
+        );
+        var mapSize = 7; // карта большая - возможно движение корабля
+        var game = new TestGame(lighthouseCrocodileLineMap, mapSize);
+        
+        // Act - высадка с корабля вперед на маяк
+        game.SetMoveAndTurn(3, 1);
+        
+        // выбираем ход просветку - влево на маяк 1
+        game.SetMoveAndTurn(2, 1);
+        
+        // выбираем ход просветку - вправо на маяк 2
+        game.SetMoveAndTurn(4, 1);
+        
+        // по очереди смотрим неизвестные клетки с крокодилами, т.к. только они остались
+        game.Turn(); // 1
+        game.Turn(); // 2
+        game.Turn(); // 3
+        game.Turn(); // 4
+        game.Turn(); // 5
+        game.Turn(); // 6
+        game.Turn(); // 7
+        game.Turn(); // 8
+        game.Turn(); // 9
+        game.Turn(); // 10
+        // в результате с 3-ех маяков посмотрели 12 клеток = 2 маяка + 10 крокодилов
+        
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - доступно >= 3 хода с маяка в месте высадки, т.к. впереди крокодилы или неизвестные клетки
+        Assert.True(moves.Count >= 3);
+        Assert.Equal(new TilePosition(3, 1), moves.First().From);
+        Assert.Contains(new TilePosition(2, 1), moves.Select(m => m.To)); // левый маяк
+        Assert.Contains(new TilePosition(3, 0), moves.Select(m => m.To)); // свой корабль
+        Assert.Contains(new TilePosition(4, 1), moves.Select(m => m.To)); // правый маяк
+        
+        // тип хода - обычный
+        Assert.True(moves.All(m => m.Type == MoveType.Usual));
+        Assert.Equal(1, game.TurnNo);
+    }
 }
