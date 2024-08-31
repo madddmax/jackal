@@ -190,5 +190,14 @@ namespace Jackal.Core
             Board.DeadPirates ??= [];
             Board.DeadPirates.Add(pirate);
         }
+
+        public void AddPirate(int teamId, TilePosition position, PirateType type)
+        {
+            var newPirate = new Pirate(teamId, position, type);
+            Board.Teams[teamId].Pirates = Board.Teams[teamId].Pirates.Concat(new[] { newPirate }).ToArray();
+            
+            var tile = Board.Map[position];
+            tile.Pirates.Add(newPirate);
+        }
     }
 }

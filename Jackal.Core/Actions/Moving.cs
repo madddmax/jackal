@@ -8,7 +8,8 @@ namespace Jackal.Core.Actions
     {
         public GameActionResult Act(Game game, Pirate pirate)
         {
-            if (from == to) //нет движения
+            // нет движения
+            if (from == to)
             {
                 return GameActionResult.Live;
             }
@@ -23,7 +24,7 @@ namespace Jackal.Core.Actions
             Tile sourceTile = map[from.Position];
             Tile prevTile = map[prev.Position];
             
-            //открываем закрытую клетку
+            // открываем закрытую клетку
             bool newTile = false;
             if (targetTile.Type == TileType.Unknown)
             {
@@ -64,6 +65,12 @@ namespace Jackal.Core.Actions
                 }
                 
                 return GameActionResult.Live;
+            }
+            
+            // нашли Бен Ганна
+            if (newTile && targetTile.Type == TileType.BenGunn)
+            {
+                game.AddPirate(pirate.TeamId, to, PirateType.BenGunn);
             }
             
             if (newTile && targetTile.Type == TileType.Spinning)

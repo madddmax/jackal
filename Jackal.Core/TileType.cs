@@ -23,6 +23,7 @@
         Trap,
         Cannibal,
 		Cannon,
-        Lighthouse
+        Lighthouse,
+        BenGunn
     }
 }

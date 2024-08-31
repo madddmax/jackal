@@ -327,6 +327,9 @@ namespace JackalWebHost.Service
                 case TileType.Lighthouse:
                     filename = @"pharos";
                     break;
+                case TileType.BenGunn:
+                    filename = @"bengunn";
+                    break;
                 case TileType.Spinning:
                     switch (tile.SpinningCount)
                     {

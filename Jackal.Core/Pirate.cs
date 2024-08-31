@@ -3,10 +3,13 @@ using Newtonsoft.Json;
 
 namespace Jackal.Core
 {
-    public class Pirate(int teamId, TilePosition position)
+    public class Pirate(int teamId, TilePosition position, PirateType type)
     {
         [JsonProperty]
         public readonly Guid Id = Guid.NewGuid();
+
+        [JsonProperty]
+        public PirateType Type = type;
 
         [JsonProperty]
         public readonly int TeamId = teamId;

@@ -138,7 +138,7 @@ namespace Jackal.Core
             var pirates = new Pirate[piratesPerPlayer];
             for (int i = 0; i < pirates.Length; i++)
             {
-                pirates[i] = new Pirate(teamId, new TilePosition( startPosition));
+                pirates[i] = new Pirate(teamId, new TilePosition(startPosition), PirateType.Usual);
             }
             var ship = new Ship(teamId, startPosition);
             foreach (var pirate in pirates)
@@ -257,7 +257,7 @@ namespace Jackal.Core
                         if (task.Source == newPosition)
                         {
                             if (ourTeam.Pirates.Length < 3)
-                                goodTargets.Add(new AvailableMove(task.Source, newPosition, moving, new Respawn(ourTeam, newPosition.Position))
+                                goodTargets.Add(new AvailableMove(task.Source, newPosition, moving, new Respawn())
                                 {
                                     MoveType = MoveType.WithRespawn
                                 });

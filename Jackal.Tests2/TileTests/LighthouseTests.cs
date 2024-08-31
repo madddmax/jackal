@@ -16,7 +16,7 @@ public class LighthouseTests
         
         // Act - высадка с корабля на маяк
         game.Turn();
-        List<Move> moves = game.GetAvailableMoves();
+        var moves = game.GetAvailableMoves();
         
         // Assert - все оставшиеся неизвестные клетки: поле 5 клеток минус открытый маяк
         Assert.Equal(4, moves.Count);
@@ -82,7 +82,7 @@ public class LighthouseTests
         game.Turn();
         game.Turn();
         
-        List<Move> moves = game.GetAvailableMoves();
+        var moves = game.GetAvailableMoves();
         
         // Assert - доступно 4 хода на соседние клетки с маяка в месте высадки
         Assert.Equal(4, moves.Count);

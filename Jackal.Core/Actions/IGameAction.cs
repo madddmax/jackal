@@ -2,6 +2,6 @@
 {
     public interface IGameAction
     {
-        GameActionResult Act(Game game,Pirate pirate);
+        GameActionResult Act(Game game, Pirate pirate);
     }
 }
