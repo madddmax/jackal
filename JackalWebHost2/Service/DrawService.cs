@@ -276,19 +276,19 @@ namespace JackalWebHost.Service
                     filename = @"empty1";
                     break;
                 case TileType.Chest1:
-                    filename = @"chest1";
+                    filename = @"empty1";
                     break;
                 case TileType.Chest2:
-                    filename = @"chest2";
+                    filename = @"empty2";
                     break;
                 case TileType.Chest3:
-                    filename = @"chest3";
+                    filename = @"empty3";
                     break;
                 case TileType.Chest4:
-                    filename = @"chest4";
+                    filename = @"empty4";
                     break;
                 case TileType.Chest5:
-                    filename = @"chest5";
+                    filename = @"empty4";
                     break;
                 case TileType.Fort:
                     filename = @"fort";
