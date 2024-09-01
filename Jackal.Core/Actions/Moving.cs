@@ -11,6 +11,8 @@ namespace Jackal.Core.Actions
             // нет движения
             if (from == to)
             {
+                // придерживаем самолет
+                // воскрешаемся на форте
                 return GameActionResult.Live;
             }
             
@@ -74,6 +76,13 @@ namespace Jackal.Core.Actions
                 targetTile.Used = true;
             }
             
+            // воздушный шар переносит сразу на наш корабль
+            if (targetTile.Type == TileType.Balloon)
+            {
+                to = new TilePosition(ourShip.Position);
+            }
+            
+            // ходим по клетке вертушке
             if (newTile && targetTile.Type == TileType.Spinning)
             {
                 to = new TilePosition(to.Position, targetTile.SpinningCount - 1);

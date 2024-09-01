@@ -272,7 +272,6 @@ namespace Jackal.Core
                     
                     case TileType.Horse:
                     case TileType.Arrow:
-                    case TileType.Balloon:
                     case TileType.Ice:
                     case TileType.Crocodile:
 					case TileType.Cannon:
@@ -338,9 +337,6 @@ namespace Jackal.Core
                 case TileType.Arrow:
                     rez = GetArrowsDeltas(sourceTile.ArrowsCode, source.Position)
                         .Select(IncomeTilePosition);
-                    break;
-                case TileType.Balloon:
-                    rez = new[] { IncomeTilePosition(ourShip.Position) }; //на корабль
                     break;
                 case TileType.Lighthouse:
                     if (sourceTile.Used == false)
