@@ -26,7 +26,7 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
                 roundedCircle={!pirate.isTransparent}
                 className={cn('pirates')}
                 style={{
-                    border: pirate.isTransparent ? 'none' : `2px ${'DarkRed' || 'transparent'} solid`,
+                    border: pirate.isTransparent ? 'none' : `2px ${pirate.backgroundColor || 'transparent'} solid`,
                     width: pirateSize,
                     height: pirateSize,
                     cursor: 'pointer',

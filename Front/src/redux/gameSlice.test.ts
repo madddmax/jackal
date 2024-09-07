@@ -44,6 +44,7 @@ describe('redux logic tests', () => {
                 activePirate: '200',
                 lastPirate: '200',
                 isHumanPlayer: false,
+                backColor: 'red',
                 group: {
                     id: Constants.teamIds.somali,
                     photoMaxId: 7,
@@ -55,6 +56,7 @@ describe('redux logic tests', () => {
             activePirate: '',
             lastPirate: '',
             isHumanPlayer: true,
+            backColor: 'red',
             group: {
                 id: Constants.teamIds.girls,
                 photoMaxId: 7,
@@ -72,6 +74,7 @@ describe('redux logic tests', () => {
                     activePirate: '200',
                     lastPirate: '200',
                     isHumanPlayer: false,
+                    backColor: 'red',
                     group: {
                         id: Constants.teamIds.somali,
                         photoMaxId: 7,
@@ -87,6 +90,7 @@ describe('redux logic tests', () => {
                 currentHumanTeam: {
                     activePirate: '200',
                     lastPirate: '200',
+                    backColor: 'red',
                     group: {
                         id: Constants.teamIds.girls,
                         photoMaxId: 7,
@@ -98,6 +102,7 @@ describe('redux logic tests', () => {
                     {
                         activePirate: '200',
                         lastPirate: '200',
+                        backColor: 'red',
                         group: {
                             id: Constants.teamIds.somali,
                             photoMaxId: 7,
