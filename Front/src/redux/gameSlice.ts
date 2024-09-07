@@ -27,7 +27,10 @@ export const gameSlice = createSlice({
             activePirate: '',
             lastPirate: '',
             isHumanPlayer: true,
-            group: 'girls',
+            group: {
+                id: 'girls',
+                photoMaxId: 7,
+            },
         },
         highlight_x: 0,
         highlight_y: 0,
@@ -60,29 +63,38 @@ export const gameSlice = createSlice({
             state.gameName = action.payload.gameName;
             state.mapId = action.payload.mapId;
             state.mapSize = action.payload.map.width;
-            let index = 1;
-            state.teams = action.payload.stat.teams.map((it) => ({
-                id: it.id,
-                activePirate: '',
-                lastPirate: '',
-                isHumanPlayer: it.name.includes('Human'),
-                group: it.name.includes('Human')
-                    ? Constants.groups[0]
-                    : Constants.groups[index++] || Constants.groups[2],
-            }));
+            let humIndex = 0;
+            let botIndex = 0;
+            state.teams = action.payload.stat.teams.map((it) => {
+                let index = it.name.includes('Human') ? humIndex++ : botIndex++;
+                return {
+                    id: it.id,
+                    activePirate: '',
+                    lastPirate: '',
+                    isHumanPlayer: it.name.includes('Human'),
+                    group: it.name.includes('Human')
+                        ? Constants.groups.find((gr) => gr.id == Constants.humanTeamIds[index]) ||
+                          Constants.groups.find((gr) => gr.id == Constants.humanTeamIds[0]) ||
+                          Constants.groups[0]
+                        : Constants.groups.find((gr) => gr.id == Constants.robotTeamIds[index]) ||
+                          Constants.groups.find((gr) => gr.id == Constants.robotTeamIds[0]) ||
+                          Constants.groups[0],
+                };
+            });
             state.pirates = action.payload.pirates;
             debugLog('state.teams', state.teams);
             state.teams.forEach((team) => {
                 let arr = getRandomValues(
-                    Constants.PhotoMinId,
-                    Constants.PhotoMaxId,
+                    1,
+                    team.group.photoMaxId,
                     state.pirates?.filter((it) => it.teamId == team.id).length ?? 0,
                 );
                 state.pirates
                     ?.filter((it) => it.teamId == team.id)
                     .forEach((it, index) => {
-                        (it.photo = `${team.group}/pirate_${arr[index]}`), (it.photoId = arr[index]);
-                        it.group = team.group;
+                        (it.photo = `${team.group.id}/pirate_${arr[index]}${team.group.extension || '.png'}`),
+                            (it.photoId = arr[index]);
+                        it.groupId = team.group.id;
                     });
             });
             debugLog('state.pirates', state.pirates);
@@ -193,31 +205,31 @@ export const gameSlice = createSlice({
                     if (prevLevel.pirates != undefined) {
                         let prevLevelPirate = prevLevel.pirates.find((pr) => pr.id === it.id);
                         if (prevLevelPirate) {
-                            prevLevelPirate.photo = prevCell.image?.includes('arrow') ? 'skull' : 'skull_light';
+                            prevLevelPirate.photo = prevCell.image?.includes('arrow') ? 'skull.png' : 'skull_light.png';
                             prevLevelPirate.isTransparent = true;
                         }
                     }
 
                     state.pirates = state.pirates?.filter((pr) => pr.id !== it.id);
                 } else if (it.isAlive === true) {
+                    let teamGroup = state.teams.find((tm) => tm.id == it.teamId)!.group;
                     let nm = getAnotherRandomValue(
-                        Constants.PhotoMinId,
-                        Constants.PhotoMaxId,
+                        1,
+                        teamGroup.photoMaxId,
                         state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ?? [],
                     );
-                    let teamGroup = state.teams.find((tm) => tm.id == it.teamId)!.group;
                     state.pirates?.push({
                         id: it.id,
                         teamId: it.teamId,
                         position: it.position,
-                        group: teamGroup,
-                        photo: `${teamGroup}/pirate_${nm}`,
+                        groupId: teamGroup.id,
+                        photo: `${teamGroup.id}/pirate_${nm}${teamGroup.extension || '.png'}`,
                         photoId: nm,
                     });
                     const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
                     const drawPirate: CellPirate = {
                         id: it.id,
-                        photo: `${teamGroup}/pirate_${nm}`,
+                        photo: `${teamGroup.id}/pirate_${nm}${teamGroup.extension || '.png'}`,
                         photoId: nm,
                     };
                     if (level.pirates == undefined) level.pirates = [drawPirate];

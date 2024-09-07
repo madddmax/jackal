@@ -1,5 +1,6 @@
 import reducer, { setCurrentHumanTeam, chooseHumanPirate } from './gameSlice';
 import { GameState } from './types';
+import { Constants } from '/app/constants';
 
 describe('redux logic tests', () => {
     const previousState: GameState = {
@@ -20,7 +21,7 @@ describe('redux logic tests', () => {
                     x: 0,
                     y: 1,
                 },
-                group: 'girls',
+                groupId: Constants.teamIds.girls,
                 photo: 'pirate_10',
                 photoId: 10,
             },
@@ -32,7 +33,7 @@ describe('redux logic tests', () => {
                     x: 0,
                     y: 2,
                 },
-                group: 'somali',
+                groupId: Constants.teamIds.somali,
                 photo: 'pirate_20',
                 photoId: 20,
             },
@@ -43,7 +44,10 @@ describe('redux logic tests', () => {
                 activePirate: '200',
                 lastPirate: '200',
                 isHumanPlayer: false,
-                group: 'somali',
+                group: {
+                    id: Constants.teamIds.somali,
+                    photoMaxId: 7,
+                },
             },
         ],
         currentHumanTeam: {
@@ -51,7 +55,10 @@ describe('redux logic tests', () => {
             activePirate: '',
             lastPirate: '',
             isHumanPlayer: true,
-            group: 'girls',
+            group: {
+                id: Constants.teamIds.girls,
+                photoMaxId: 7,
+            },
         },
         highlight_x: 0,
         highlight_y: 0,
@@ -65,7 +72,10 @@ describe('redux logic tests', () => {
                     activePirate: '200',
                     lastPirate: '200',
                     isHumanPlayer: false,
-                    group: 'somali',
+                    group: {
+                        id: Constants.teamIds.somali,
+                        photoMaxId: 7,
+                    },
                 },
             }),
         );
@@ -77,7 +87,10 @@ describe('redux logic tests', () => {
                 currentHumanTeam: {
                     activePirate: '200',
                     lastPirate: '200',
-                    group: 'girls',
+                    group: {
+                        id: Constants.teamIds.girls,
+                        photoMaxId: 7,
+                    },
                     id: -1,
                     isHumanPlayer: true,
                 },
@@ -85,7 +98,10 @@ describe('redux logic tests', () => {
                     {
                         activePirate: '200',
                         lastPirate: '200',
-                        group: 'somali',
+                        group: {
+                            id: Constants.teamIds.somali,
+                            photoMaxId: 7,
+                        },
                         id: 2,
                         isHumanPlayer: false,
                     },

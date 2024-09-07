@@ -24,8 +24,13 @@ export interface TeamState {
     activePirate: string;
     lastPirate: string;
     isHumanPlayer: boolean;
-    group: string;
+    group: {
+        id: string;
+        photoMaxId: number;
+        extension?: string;
+    };
 }
+
 export interface FieldState {
     image?: string;
     backColor?: string;
@@ -140,7 +145,7 @@ export interface GamePirate {
         y: number;
     };
     withCoin?: boolean;
-    group: string;
+    groupId: string;
     photo: string;
     photoId: number;
 }

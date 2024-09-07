@@ -14,7 +14,7 @@ const Pirate = ({ photo, isActive, withCoin, onClick }: PirateProps) => {
     return (
         <div className="photo-position float-end">
             <Image
-                src={`/pictures/${photo}.png`}
+                src={`/pictures/${photo}`}
                 roundedCircle
                 className={cn('photo', {
                     'photo-active': isActive,
