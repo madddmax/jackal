@@ -111,7 +111,6 @@ namespace JackalWebHost.Service
             var pirates = new List<PiratePosition>();
 
             int index = 0;
-            int mindex = 1;
             foreach (var move in game.GetAvailableMoves())
             {
                 var pirate = pirates.FirstOrDefault(p =>
@@ -128,7 +127,6 @@ namespace JackalWebHost.Service
                     pirate = new PiratePosition
                     {
                         PirateIds = pirateIds,
-                        PirateNum = mindex++,
                         X = move.From.X,
                         Y = move.From.Y,
                         Level = move.From.Level
