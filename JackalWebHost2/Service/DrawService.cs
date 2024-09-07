@@ -199,38 +199,21 @@ namespace JackalWebHost.Service
             for (int i = 0; i < tile.Levels.Count; i++)
             {
                 var level = tile.Levels[i];
-                tileElement.Levels[i] = DrawPiratesAndCoins(level, i, tileShip);
+                tileElement.Levels[i] = DrawCoins(level, i, tileShip);
             }
             DrawTileBackground(tile, tileShip, ref tileElement);
 
             return tileElement;
         }
 
-        private static LevelChange DrawPiratesAndCoins(TileLevel level, int levelIndex, Ship? tileShip)
+        private static LevelChange DrawCoins(TileLevel level, int levelIndex, Ship? tileShip)
         {
             LevelChange levelChange = new LevelChange();
-
-            var pirates = level.Pirates;
-            bool hasPirates = pirates is { Count: > 0 };
+            
             bool hasCoins = tileShip is { Coins: > 0 } || level.Coins > 0;
-
-            levelChange.hasPirates = hasPirates;
+            
             levelChange.hasCoins = hasCoins;
             levelChange.Level = levelIndex;
-
-            // draw pirates
-            if (hasPirates)
-            {
-                var pirate = new DrawPirate
-                {
-                    PirateIds = pirates.Select(p => p.Id).ToList(),
-                    ForeColor = "white",
-                    BackColor = GetTeamColor(pirates.First().TeamId),
-                    Text = pirates.Count.ToString()
-                };
-
-                levelChange.Pirate = pirate;
-            }
 
             // draw coins
             if (hasCoins)
