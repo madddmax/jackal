@@ -22,11 +22,11 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
     return (
         <>
             <Image
-                src={`/pictures/${pirate.photo}.png`}
+                src={`/pictures/${pirate.photo}`}
                 roundedCircle={!pirate.isTransparent}
                 className={cn('pirates')}
                 style={{
-                    border: pirate.isTransparent ? 'none' : `2px ${'DarkRed' || 'transparent'} solid`,
+                    border: pirate.isTransparent ? 'none' : `2px ${pirate.backgroundColor || 'transparent'} solid`,
                     width: pirateSize,
                     height: pirateSize,
                     cursor: 'pointer',
