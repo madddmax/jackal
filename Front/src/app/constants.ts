@@ -26,7 +26,7 @@ export const Constants = {
         },
         {
             id: teamIds.redalert,
-            photoMaxId: 7,
+            photoMaxId: 6,
             extension: '.jpg',
         },
         {
