@@ -1,4 +1,4 @@
-const teamIds = {
+const groupIds = {
     girls: 'girls',
     caribian: 'caribian',
     somali: 'somali',
@@ -8,34 +8,41 @@ const teamIds = {
 };
 
 export const Constants = {
-    teamIds,
-    humanTeamIds: [teamIds.girls, teamIds.caribian],
-    robotTeamIds: [teamIds.skulls, teamIds.redalert, teamIds.orcs, teamIds.caribian, teamIds.somali],
+    pirateTypes: {
+        Base: 0,
+        Gann: 1,
+    },
+    groupIds,
+    humanGroupIds: [groupIds.redalert, groupIds.caribian],
+    robotGroupIds: [groupIds.skulls, groupIds.redalert, groupIds.orcs, groupIds.caribian, groupIds.somali],
     groups: [
         {
-            id: teamIds.girls,
+            id: groupIds.girls,
             photoMaxId: 7,
+            gannMaxId: 5,
         },
         {
-            id: teamIds.caribian,
+            id: groupIds.caribian,
             photoMaxId: 12,
         },
         {
-            id: teamIds.somali,
+            id: groupIds.somali,
             photoMaxId: 9,
         },
         {
-            id: teamIds.redalert,
+            id: groupIds.redalert,
             photoMaxId: 6,
+            gannMaxId: 5,
             extension: '.jpg',
         },
         {
-            id: teamIds.orcs,
+            id: groupIds.orcs,
             photoMaxId: 7,
+            gannMaxId: 3,
             extension: '.jpg',
         },
         {
-            id: teamIds.skulls,
+            id: groupIds.skulls,
             photoMaxId: 6,
         },
     ],
