@@ -21,9 +21,10 @@ describe('redux logic tests', () => {
                     x: 0,
                     y: 1,
                 },
-                groupId: Constants.teamIds.girls,
+                groupId: Constants.groupIds.girls,
                 photo: 'pirate_10',
                 photoId: 10,
+                type: Constants.pirateTypes.Base,
             },
             {
                 id: '200',
@@ -33,9 +34,10 @@ describe('redux logic tests', () => {
                     x: 0,
                     y: 2,
                 },
-                groupId: Constants.teamIds.somali,
+                groupId: Constants.groupIds.somali,
                 photo: 'pirate_20',
                 photoId: 20,
+                type: Constants.pirateTypes.Base,
             },
         ],
         teams: [
@@ -46,7 +48,7 @@ describe('redux logic tests', () => {
                 isHumanPlayer: false,
                 backColor: 'red',
                 group: {
-                    id: Constants.teamIds.somali,
+                    id: Constants.groupIds.somali,
                     photoMaxId: 7,
                 },
             },
@@ -58,7 +60,7 @@ describe('redux logic tests', () => {
             isHumanPlayer: true,
             backColor: 'red',
             group: {
-                id: Constants.teamIds.girls,
+                id: Constants.groupIds.girls,
                 photoMaxId: 7,
             },
         },
@@ -76,7 +78,7 @@ describe('redux logic tests', () => {
                     isHumanPlayer: false,
                     backColor: 'red',
                     group: {
-                        id: Constants.teamIds.somali,
+                        id: Constants.groupIds.somali,
                         photoMaxId: 7,
                     },
                 },
@@ -92,7 +94,7 @@ describe('redux logic tests', () => {
                     lastPirate: '200',
                     backColor: 'red',
                     group: {
-                        id: Constants.teamIds.girls,
+                        id: Constants.groupIds.girls,
                         photoMaxId: 7,
                     },
                     id: -1,
@@ -104,7 +106,7 @@ describe('redux logic tests', () => {
                         lastPirate: '200',
                         backColor: 'red',
                         group: {
-                            id: Constants.teamIds.somali,
+                            id: Constants.groupIds.somali,
                             photoMaxId: 7,
                         },
                         id: 2,

@@ -75,11 +75,11 @@ export const gameSlice = createSlice({
                     isHumanPlayer: it.name.includes('Human'),
                     backColor: it.backcolor,
                     group: it.name.includes('Human')
-                        ? Constants.groups.find((gr) => gr.id == Constants.humanTeamIds[index]) ||
-                          Constants.groups.find((gr) => gr.id == Constants.humanTeamIds[0]) ||
+                        ? Constants.groups.find((gr) => gr.id == Constants.humanGroupIds[index]) ||
+                          Constants.groups.find((gr) => gr.id == Constants.humanGroupIds[0]) ||
                           Constants.groups[0]
-                        : Constants.groups.find((gr) => gr.id == Constants.robotTeamIds[index]) ||
-                          Constants.groups.find((gr) => gr.id == Constants.robotTeamIds[0]) ||
+                        : Constants.groups.find((gr) => gr.id == Constants.robotGroupIds[index]) ||
+                          Constants.groups.find((gr) => gr.id == Constants.robotGroupIds[0]) ||
                           Constants.groups[0],
                 };
             });
@@ -94,8 +94,8 @@ export const gameSlice = createSlice({
                 state.pirates
                     ?.filter((it) => it.teamId == team.id)
                     .forEach((it, index) => {
-                        (it.photo = `${team.group.id}/pirate_${arr[index]}${team.group.extension || '.png'}`),
-                            (it.photoId = arr[index]);
+                        it.photo = `${team.group.id}/pirate_${arr[index]}${team.group.extension || '.png'}`;
+                        it.photoId = arr[index];
                         it.groupId = team.group.id;
                     });
             });
@@ -214,24 +214,40 @@ export const gameSlice = createSlice({
                     }
                     state.pirates = state.pirates?.filter((pr) => pr.id !== it.id);
                 } else if (it.isAlive === true) {
-                    let nm = getAnotherRandomValue(
-                        1,
-                        team.group.photoMaxId,
-                        state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ?? [],
-                    );
+                    let nm;
+                    let pname;
+                    if (it.type == Constants.pirateTypes.Gann && team.group.gannMaxId) {
+                        pname = 'gann';
+                        nm = getAnotherRandomValue(
+                            1,
+                            team.group.gannMaxId,
+                            state.pirates
+                                ?.filter((pr) => pr.teamId == it.teamId && it.type == Constants.pirateTypes.Gann)
+                                .map((pr) => pr.photoId ?? 0) ?? [],
+                        );
+                    } else {
+                        pname = 'pirate';
+                        nm = getAnotherRandomValue(
+                            1,
+                            team.group.photoMaxId,
+                            state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ?? [],
+                        );
+                    }
+
                     state.pirates?.push({
                         id: it.id,
                         teamId: it.teamId,
                         position: it.position,
                         groupId: team.group.id,
-                        photo: `${team.group.id}/pirate_${nm}${team.group.extension || '.png'}`,
+                        photo: `${team.group.id}/${pname}_${nm}${team.group.extension || '.png'}`,
                         photoId: nm,
+                        type: team.group.gannMaxId ? it.type : Constants.pirateTypes.Base,
                     });
                     const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
                     const drawPirate: CellPirate = {
                         id: it.id,
-                        photo: `${team.group.id}/pirate_${nm}${team.group.extension || '.png'}`,
-                        photoId: nm,
+                        photo: `${team.group.id}/${pname}_${nm}${team.group.extension || '.png'}`,
+                        photoId: nm + 100 * it.type,
                         backgroundColor: team.backColor,
                     };
                     if (level.pirates == undefined) level.pirates = [drawPirate];
