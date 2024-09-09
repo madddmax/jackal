@@ -21,6 +21,12 @@ export const gameSlice = createSlice({
         pirateSize: 15,
         fields: [[]],
         lastMoves: [],
+        initialGroups: [
+            Constants.groupIds.girls,
+            Constants.groupIds.redalert,
+            Constants.groupIds.orcs,
+            Constants.groupIds.skulls,
+        ],
         teams: [],
         currentHumanTeam: {
             id: -1,
@@ -37,6 +43,11 @@ export const gameSlice = createSlice({
         highlight_y: 0,
     } satisfies GameState as GameState,
     reducers: {
+        initGroups: (state, action: PayloadAction<number[]>) => {
+            state.initialGroups = action.payload.map((num) => {
+                return Constants.groups[num].id;
+            });
+        },
         initMap: (state, action: PayloadAction<GameMap>) => {
             let map = [];
             let j = 0;
@@ -64,23 +75,14 @@ export const gameSlice = createSlice({
             state.gameName = action.payload.gameName;
             state.mapId = action.payload.mapId;
             state.mapSize = action.payload.map.width;
-            let humIndex = 0;
-            let botIndex = 0;
-            state.teams = action.payload.stat.teams.map((it) => {
-                let index = it.name.includes('Human') ? humIndex++ : botIndex++;
+            state.teams = action.payload.stat.teams.map((it, idx) => {
                 return {
                     id: it.id,
                     activePirate: '',
                     lastPirate: '',
                     isHumanPlayer: it.name.includes('Human'),
                     backColor: it.backcolor,
-                    group: it.name.includes('Human')
-                        ? Constants.groups.find((gr) => gr.id == Constants.humanGroupIds[index]) ||
-                          Constants.groups.find((gr) => gr.id == Constants.humanGroupIds[0]) ||
-                          Constants.groups[0]
-                        : Constants.groups.find((gr) => gr.id == Constants.robotGroupIds[index]) ||
-                          Constants.groups.find((gr) => gr.id == Constants.robotGroupIds[0]) ||
-                          Constants.groups[0],
+                    group: Constants.groups.find((gr) => gr.id == state.initialGroups[idx]) || Constants.groups[0],
                 };
             });
             state.pirates = action.payload.pirates;
@@ -326,6 +328,7 @@ export const gameSlice = createSlice({
 });
 
 export const {
+    initGroups,
     initMap,
     setCurrentHumanTeam,
     chooseHumanPirate,

@@ -13,8 +13,6 @@ export const Constants = {
         Gann: 1,
     },
     groupIds,
-    humanGroupIds: [groupIds.girls, groupIds.caribian],
-    robotGroupIds: [groupIds.skulls, groupIds.redalert, groupIds.orcs, groupIds.caribian, groupIds.somali],
     groups: [
         {
             id: groupIds.girls,

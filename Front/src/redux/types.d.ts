@@ -13,6 +13,7 @@ export interface GameState {
     fields: FieldState[][];
     pirates?: GamePirate[];
     lastMoves: GameMove[];
+    initialGroups: string[];
     teams: TeamState[];
     currentHumanTeam: TeamState;
     highlight_x: number;
@@ -25,12 +26,14 @@ export interface TeamState {
     lastPirate: string;
     isHumanPlayer: boolean;
     backColor: string;
-    group: {
-        id: string;
-        photoMaxId: number;
-        gannMaxId?: number;
-        extension?: string;
-    };
+    group: TeamGroup;
+}
+
+export interface TeamGroup {
+    id: string;
+    photoMaxId: number;
+    gannMaxId?: number;
+    extension?: string;
 }
 
 export interface FieldState {
