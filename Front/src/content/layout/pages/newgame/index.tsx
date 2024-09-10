@@ -3,34 +3,33 @@ import { Button, Form } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import classes from './newgame.module.less';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { initGroups } from '/redux/gameSlice';
 import { sagaActions } from '/redux/saga';
 import { useNavigate } from 'react-router-dom';
 import { uuidGen } from '/app/global';
 import cn from 'classnames';
+import { Constants } from '/app/constants';
+import Player from './player';
+import { ReduxState } from '/redux/types';
+
+const convertGroups = (initial: string[]) =>
+    initial.map((gr) => {
+        return Constants.groups.findIndex((it) => it.id == gr) || 0;
+    });
 
 function Newgame() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const initialGroups = useSelector<ReduxState, string[]>((state) => state.game.initialGroups);
+
     const [playersCount, setplayersCount] = useState(4);
-    const [players, setPlayers] = useState([
-        'human',
-        'robot2',
-        'robot',
-        'robot2',
-    ]);
+    const [players, setPlayers] = useState(['human', 'robot2', 'robot', 'robot2']);
+    const [groups, setGroups] = useState(convertGroups(initialGroups));
 
-    const [randNumber, setRandNumber] = useState(() =>
-        crypto.getRandomValues(new Int32Array(1)),
-    );
+    const [randNumber, setRandNumber] = useState(() => crypto.getRandomValues(new Int32Array(1)));
     const [mapSize, setMapSize] = useState(11);
-
-    const getUrlByPlayer = (play: string) => {
-        if (play === 'human') return '/pictures/human.png';
-        else if (play === 'robot') return '/pictures/robot.png';
-        return '/pictures/robot2.png';
-    };
 
     const changePlayer = (pos: number) => {
         const clone = [...players];
@@ -40,9 +39,24 @@ function Newgame() {
         setPlayers(clone);
     };
 
+    const changeGroup = (pos: number) => {
+        const clone = [...groups];
+        let current = clone[pos];
+        while (clone.includes(current)) {
+            if (current + 1 >= Constants.groups.length) {
+                current = 0;
+            } else {
+                current += 1;
+            }
+        }
+        clone[pos] = current;
+        setGroups(clone);
+    };
+
     const newStart = (event: React.FormEvent) => {
         event.preventDefault();
         navigate('/');
+        dispatch(initGroups(groups));
         dispatch({
             type: sagaActions.GAME_START,
             payload: {
@@ -65,51 +79,28 @@ function Newgame() {
     return (
         <Container>
             <Row className="justify-content-center">
-                <Form
-                    className={classes.newgame}
-                    onSubmit={(event) => newStart(event)}
-                >
+                <Form className={classes.newgame} onSubmit={(event) => newStart(event)}>
                     {/* <h3>Новая игра</h3> */}
                     <div className={cn(classes.settings, 'mx-auto')}>
-                        <div
-                            className={classes.player}
-                            onClick={() => changePlayer(0)}
-                            style={{
-                                top: '200px',
-                                left: '100px',
-                                backgroundImage: `url(${getUrlByPlayer(players[0])})`,
-                            }}
-                        ></div>
-                        <div
-                            className={classes.player}
-                            onClick={() => changePlayer(1)}
-                            style={{
-                                top: '100px',
-                                left: '0px',
-                                display: playersCount == 4 ? 'block' : 'none',
-                                backgroundImage: `url(${getUrlByPlayer(players[1])})`,
-                            }}
-                        ></div>
-                        <div
-                            className={classes.player}
-                            onClick={() => changePlayer(2)}
-                            style={{
-                                top: '0px',
-                                left: '100px',
-                                display: playersCount != 1 ? 'block' : 'none',
-                                backgroundImage: `url(${getUrlByPlayer(players[2])})`,
-                            }}
-                        ></div>
-                        <div
-                            className={classes.player}
-                            onClick={() => changePlayer(3)}
-                            style={{
-                                top: '100px',
-                                left: '200px',
-                                display: playersCount == 4 ? 'block' : 'none',
-                                backgroundImage: `url(${getUrlByPlayer(players[3])})`,
-                            }}
-                        ></div>
+                        {players &&
+                            players.map((_, index) => {
+                                if (playersCount < 4 && (index == 1 || index == 3)) {
+                                    return null;
+                                }
+                                if (playersCount < 2 && index == 2) {
+                                    return null;
+                                }
+
+                                return (
+                                    <Player
+                                        position={index}
+                                        type={players[index]}
+                                        group={groups[index]}
+                                        changePlayer={() => changePlayer(index)}
+                                        changeGroup={() => changeGroup(index)}
+                                    />
+                                );
+                            })}
                         <div
                             className={classes.player}
                             onClick={() =>
@@ -120,8 +111,9 @@ function Newgame() {
                                 })
                             }
                             style={{
-                                top: '100px',
-                                left: '100px',
+                                cursor: 'pointer',
+                                top: '110px',
+                                left: '130px',
                                 fontSize: '48px',
                                 lineHeight: '48px',
                                 textAlign: 'center',
@@ -130,16 +122,8 @@ function Newgame() {
                             {playersCount}
                         </div>
                     </div>
-                    <Form.Control
-                        type="hidden"
-                        name="players"
-                        value={players}
-                    />
-                    <Form.Control
-                        type="hidden"
-                        name="playersCount"
-                        value={playersCount}
-                    />
+                    <Form.Control type="hidden" name="players" value={players} />
+                    <Form.Control type="hidden" name="playersCount" value={playersCount} />
                     <div className="mt-3">
                         <div>
                             <Form.Label>Размер карты: {mapSize}</Form.Label>
@@ -149,9 +133,7 @@ function Newgame() {
                                 max={13}
                                 step={2}
                                 name="mapSize"
-                                onChange={(e) =>
-                                    setMapSize(Number(e.target.value))
-                                }
+                                onChange={(e) => setMapSize(Number(e.target.value))}
                                 className="custom-slider"
                             />
                         </div>
