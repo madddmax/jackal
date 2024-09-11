@@ -5,6 +5,7 @@ const groupIds = {
     skulls: 'skulls',
     redalert: 'redalert',
     orcs: 'orcs',
+    anime: 'anime',
 };
 
 export const Constants = {
@@ -42,6 +43,12 @@ export const Constants = {
         {
             id: groupIds.skulls,
             photoMaxId: 6,
+        },
+        {
+            id: groupIds.anime,
+            photoMaxId: 4,
+            gannMaxId: 3,
+            extension: '.jpg',
         },
     ],
 };
