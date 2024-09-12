@@ -53,7 +53,15 @@ function Cell({ row, col }: CellProps) {
             {field.levels &&
                 field.levels
                     .filter((it) => (it.pirates && it.pirates.length > 0) || it.coin)
-                    .map((it) => <Level cellSize={cellSize} pirateSize={pirateSize} field={field} data={it} />)}
+                    .map((it, idx) => (
+                        <Level
+                            key={`cell-level-${idx}`}
+                            cellSize={cellSize}
+                            pirateSize={pirateSize}
+                            field={field}
+                            data={it}
+                        />
+                    ))}
         </>
     );
 }

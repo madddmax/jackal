@@ -10,14 +10,19 @@ export interface GameState {
     cellSize: number;
     pirateSize: number;
 
+    userSettings: StorageState;
     fields: FieldState[][];
     pirates?: GamePirate[];
     lastMoves: GameMove[];
-    initialGroups: string[];
     teams: TeamState[];
     currentHumanTeam: TeamState;
     highlight_x: number;
     highlight_y: number;
+}
+
+export interface StorageState {
+    groups: string[];
+    mapSize: number;
 }
 
 export interface TeamState {

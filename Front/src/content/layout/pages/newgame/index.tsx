@@ -4,32 +4,30 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import classes from './newgame.module.less';
 import { useDispatch, useSelector } from 'react-redux';
-import { initGroups } from '/redux/gameSlice';
+import { initMySettings } from '/redux/gameSlice';
 import { sagaActions } from '/redux/saga';
 import { useNavigate } from 'react-router-dom';
 import { uuidGen } from '/app/global';
 import cn from 'classnames';
 import { Constants } from '/app/constants';
 import Player from './player';
-import { ReduxState } from '/redux/types';
+import { ReduxState, StorageState } from '/redux/types';
 
-const convertGroups = (initial: string[]) =>
-    initial.map((gr) => {
-        return Constants.groups.findIndex((it) => it.id == gr) || 0;
-    });
+const convertGroups = (initial: string[]) => initial.map((gr) => Constants.groups.findIndex((it) => it.id == gr) || 0);
+const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.groups[num].id);
 
 function Newgame() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const initialGroups = useSelector<ReduxState, string[]>((state) => state.game.initialGroups);
+    const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
 
     const [playersCount, setplayersCount] = useState(4);
     const [players, setPlayers] = useState(['human', 'robot2', 'robot', 'robot2']);
-    const [groups, setGroups] = useState(convertGroups(initialGroups));
+    const [groups, setGroups] = useState(convertGroups(userSettings.groups));
 
     const [randNumber, setRandNumber] = useState(() => crypto.getRandomValues(new Int32Array(1)));
-    const [mapSize, setMapSize] = useState(11);
+    const [mapSize, setMapSize] = useState(userSettings.mapSize || 11);
 
     const changePlayer = (pos: number) => {
         const clone = [...players];
@@ -56,7 +54,12 @@ function Newgame() {
     const newStart = (event: React.FormEvent) => {
         event.preventDefault();
         navigate('/');
-        dispatch(initGroups(groups));
+        let myState = {
+            groups: deconvertGroups(groups),
+            mapSize,
+        } as StorageState;
+        localStorage.state = JSON.stringify(myState, null, 2);
+        dispatch(initMySettings(myState));
         dispatch({
             type: sagaActions.GAME_START,
             payload: {
@@ -93,6 +96,7 @@ function Newgame() {
 
                                 return (
                                     <Player
+                                        key={`player-pos-${index}`}
                                         position={index}
                                         type={players[index]}
                                         group={groups[index]}

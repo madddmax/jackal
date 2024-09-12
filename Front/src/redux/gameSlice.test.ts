@@ -40,7 +40,10 @@ describe('redux logic tests', () => {
                 type: Constants.pirateTypes.Base,
             },
         ],
-        initialGroups: [],
+        userSettings: {
+            groups: [],
+            mapSize: 11,
+        },
         teams: [
             {
                 id: 2,
