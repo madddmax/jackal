@@ -40,7 +40,7 @@ export const gameSlice = createSlice({
             backColor: 'red',
             group: {
                 id: 'girls',
-                photoMaxId: 7,
+                photoMaxId: 6,
             },
         },
         highlight_x: 0,

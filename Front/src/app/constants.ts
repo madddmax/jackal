@@ -17,37 +17,37 @@ export const Constants = {
     groups: [
         {
             id: groupIds.girls,
-            photoMaxId: 7,
-            gannMaxId: 5,
+            photoMaxId: 6,
+            gannMaxId: 4,
         },
         {
             id: groupIds.caribian,
-            photoMaxId: 12,
+            photoMaxId: 11,
         },
         {
             id: groupIds.somali,
-            photoMaxId: 9,
+            photoMaxId: 8,
         },
         {
             id: groupIds.redalert,
-            photoMaxId: 6,
-            gannMaxId: 5,
+            photoMaxId: 5,
+            gannMaxId: 4,
             extension: '.jpg',
         },
         {
             id: groupIds.orcs,
-            photoMaxId: 7,
-            gannMaxId: 3,
+            photoMaxId: 6,
+            gannMaxId: 2,
             extension: '.jpg',
         },
         {
             id: groupIds.skulls,
-            photoMaxId: 6,
+            photoMaxId: 5,
         },
         {
             id: groupIds.anime,
-            photoMaxId: 4,
-            gannMaxId: 3,
+            photoMaxId: 3,
+            gannMaxId: 2,
             extension: '.jpg',
         },
     ],
