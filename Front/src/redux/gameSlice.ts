@@ -48,6 +48,7 @@ export const gameSlice = createSlice({
     } satisfies GameState as GameState,
     reducers: {
         initMySettings: (state, action: PayloadAction<StorageState>) => {
+            localStorage.state = JSON.stringify(action.payload, null, 2);
             Object.assign(state.userSettings, action.payload);
         },
         initMap: (state, action: PayloadAction<GameMap>) => {

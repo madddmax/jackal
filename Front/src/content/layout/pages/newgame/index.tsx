@@ -16,6 +16,13 @@ import { ReduxState, StorageState } from '/redux/types';
 const convertGroups = (initial: string[]) => initial.map((gr) => Constants.groups.findIndex((it) => it.id == gr) || 0);
 const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.groups[num].id);
 
+const convertMapId = (val: string | number | undefined) => {
+    if (val === undefined) return undefined;
+    let clone = new Int32Array(1);
+    clone[0] = typeof val == 'string' ? Number(val) : val;
+    return clone;
+};
+
 function Newgame() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -25,8 +32,11 @@ function Newgame() {
     const [playersCount, setplayersCount] = useState(4);
     const [players, setPlayers] = useState(['human', 'robot2', 'robot', 'robot2']);
     const [groups, setGroups] = useState(convertGroups(userSettings.groups));
+    const [isStoredMap, setIsStoredMap] = useState(userSettings.mapId != undefined);
 
-    const [randNumber, setRandNumber] = useState(() => crypto.getRandomValues(new Int32Array(1)));
+    const [randNumber, setRandNumber] = useState(
+        convertMapId(userSettings.mapId) || crypto.getRandomValues(new Int32Array(1)),
+    );
     const [mapSize, setMapSize] = useState(userSettings.mapSize || 11);
 
     const changePlayer = (pos: number) => {
@@ -54,12 +64,13 @@ function Newgame() {
     const newStart = (event: React.FormEvent) => {
         event.preventDefault();
         navigate('/');
-        let myState = {
-            groups: deconvertGroups(groups),
-            mapSize,
-        } as StorageState;
-        localStorage.state = JSON.stringify(myState, null, 2);
-        dispatch(initMySettings(myState));
+        dispatch(
+            initMySettings({
+                groups: deconvertGroups(groups),
+                mapSize,
+                mapId: isStoredMap ? randNumber[0] : undefined,
+            }),
+        );
         dispatch({
             type: sagaActions.GAME_START,
             payload: {
@@ -77,6 +88,17 @@ function Newgame() {
         if (count == 1) return [gamers[0]];
         else if (count == 2) return [gamers[0], gamers[2]];
         else return gamers;
+    };
+
+    const storeMapId = (event: any) => {
+        setIsStoredMap(event.target.checked);
+        dispatch(
+            initMySettings({
+                groups: deconvertGroups(groups),
+                mapSize,
+                mapId: event.target.checked ? randNumber[0] : undefined,
+            }),
+        );
     };
 
     return (
@@ -150,10 +172,16 @@ function Newgame() {
                             placeholder="Введите код"
                             value={randNumber[0]}
                             onChange={(event) => {
-                                let clone = new Int32Array(1);
-                                clone[0] = Number(event.target.value);
-                                setRandNumber(clone);
+                                setRandNumber(convertMapId(event.target.value)!);
                             }}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                        <Form.Check
+                            type="checkbox"
+                            label="Запоминать код карты"
+                            checked={isStoredMap}
+                            onChange={storeMapId}
                         />
                     </Form.Group>
                     <Button variant="primary" type="submit">

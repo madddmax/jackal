@@ -23,6 +23,7 @@ export interface GameState {
 export interface StorageState {
     groups: string[];
     mapSize: number;
+    mapId?: number;
 }
 
 export interface TeamState {
