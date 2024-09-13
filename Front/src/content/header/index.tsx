@@ -2,14 +2,17 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { sagaActions } from '/redux/saga';
 import './header.css';
 import { Link } from 'react-router-dom';
 import { uuidGen } from '/app/global';
+import { ReduxState, StorageState } from '/redux/types';
 
 function Header() {
     const dispatch = useDispatch();
+
+    const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
 
     const quickStart = () =>
         dispatch({
@@ -18,6 +21,7 @@ function Header() {
                 gameName: uuidGen(),
                 settings: {
                     players: ['human', 'robot2'],
+                    mapId: userSettings.mapId,
                     mapSize: 11,
                 },
             },

@@ -7,11 +7,11 @@ export const uuidGen = () => {
 };
 
 export const getRandomValues = (min: number, max: number, count: number): number[] => {
-    if (max - min < count) return [];
+    if (max - min + 1 < count) return [];
 
     let arr = [] as number[];
     while (arr.length < count) {
-        let x = Math.floor(Math.random() * (max - min) + min);
+        let x = Math.floor(Math.random() * (max - min + 1) + min);
         if (!arr.includes(x)) {
             arr.push(x);
         }
@@ -20,11 +20,11 @@ export const getRandomValues = (min: number, max: number, count: number): number
 };
 
 export const getAnotherRandomValue = (min: number, max: number, except: number[]): number => {
-    if (max - min < except.length) return 0;
+    if (max - min + 1 < except.length) return 0;
 
     let num = except.length > 0 ? except[0] : min;
     while (except.includes(num)) {
-        num = Math.floor(Math.random() * (max - min) + min);
+        num = Math.floor(Math.random() * (max - min + 1) + min);
     }
     return num;
 };

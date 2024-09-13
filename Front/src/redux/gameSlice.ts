@@ -10,6 +10,7 @@ import {
     PirateChanges,
     PirateChoose,
     PirateMoves,
+    StorageState,
 } from './types';
 import { debugLog, getAnotherRandomValue, getRandomValues } from '/app/global';
 import { Constants } from '/app/constants';
@@ -21,12 +22,15 @@ export const gameSlice = createSlice({
         pirateSize: 15,
         fields: [[]],
         lastMoves: [],
-        initialGroups: [
-            Constants.groupIds.girls,
-            Constants.groupIds.redalert,
-            Constants.groupIds.orcs,
-            Constants.groupIds.skulls,
-        ],
+        userSettings: {
+            groups: [
+                Constants.groupIds.girls,
+                Constants.groupIds.redalert,
+                Constants.groupIds.orcs,
+                Constants.groupIds.skulls,
+            ],
+            mapSize: 11,
+        },
         teams: [],
         currentHumanTeam: {
             id: -1,
@@ -36,17 +40,16 @@ export const gameSlice = createSlice({
             backColor: 'red',
             group: {
                 id: 'girls',
-                photoMaxId: 7,
+                photoMaxId: 6,
             },
         },
         highlight_x: 0,
         highlight_y: 0,
     } satisfies GameState as GameState,
     reducers: {
-        initGroups: (state, action: PayloadAction<number[]>) => {
-            state.initialGroups = action.payload.map((num) => {
-                return Constants.groups[num].id;
-            });
+        initMySettings: (state, action: PayloadAction<StorageState>) => {
+            localStorage.state = JSON.stringify(action.payload, null, 2);
+            Object.assign(state.userSettings, action.payload);
         },
         initMap: (state, action: PayloadAction<GameMap>) => {
             let map = [];
@@ -82,7 +85,8 @@ export const gameSlice = createSlice({
                     lastPirate: '',
                     isHumanPlayer: it.name.includes('Human'),
                     backColor: it.backcolor,
-                    group: Constants.groups.find((gr) => gr.id == state.initialGroups[idx]) || Constants.groups[0],
+                    group:
+                        Constants.groups.find((gr) => gr.id == state.userSettings.groups[idx]) || Constants.groups[0],
                 };
             });
             state.pirates = action.payload.pirates;
@@ -328,7 +332,7 @@ export const gameSlice = createSlice({
 });
 
 export const {
-    initGroups,
+    initMySettings,
     initMap,
     setCurrentHumanTeam,
     chooseHumanPirate,

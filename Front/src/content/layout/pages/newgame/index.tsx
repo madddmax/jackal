@@ -4,32 +4,40 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import classes from './newgame.module.less';
 import { useDispatch, useSelector } from 'react-redux';
-import { initGroups } from '/redux/gameSlice';
+import { initMySettings } from '/redux/gameSlice';
 import { sagaActions } from '/redux/saga';
 import { useNavigate } from 'react-router-dom';
 import { uuidGen } from '/app/global';
 import cn from 'classnames';
 import { Constants } from '/app/constants';
 import Player from './player';
-import { ReduxState } from '/redux/types';
+import { ReduxState, StorageState } from '/redux/types';
 
-const convertGroups = (initial: string[]) =>
-    initial.map((gr) => {
-        return Constants.groups.findIndex((it) => it.id == gr) || 0;
-    });
+const convertGroups = (initial: string[]) => initial.map((gr) => Constants.groups.findIndex((it) => it.id == gr) || 0);
+const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.groups[num].id);
+
+const convertMapId = (val: string | number | undefined) => {
+    if (val === undefined) return undefined;
+    let clone = new Int32Array(1);
+    clone[0] = typeof val == 'string' ? Number(val) : val;
+    return clone;
+};
 
 function Newgame() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const initialGroups = useSelector<ReduxState, string[]>((state) => state.game.initialGroups);
+    const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
 
     const [playersCount, setplayersCount] = useState(4);
     const [players, setPlayers] = useState(['human', 'robot2', 'robot', 'robot2']);
-    const [groups, setGroups] = useState(convertGroups(initialGroups));
+    const [groups, setGroups] = useState(convertGroups(userSettings.groups));
+    const [isStoredMap, setIsStoredMap] = useState(userSettings.mapId != undefined);
 
-    const [randNumber, setRandNumber] = useState(() => crypto.getRandomValues(new Int32Array(1)));
-    const [mapSize, setMapSize] = useState(11);
+    const [randNumber, setRandNumber] = useState(
+        convertMapId(userSettings.mapId) || crypto.getRandomValues(new Int32Array(1)),
+    );
+    const [mapSize, setMapSize] = useState(userSettings.mapSize || 11);
 
     const changePlayer = (pos: number) => {
         const clone = [...players];
@@ -56,7 +64,13 @@ function Newgame() {
     const newStart = (event: React.FormEvent) => {
         event.preventDefault();
         navigate('/');
-        dispatch(initGroups(groups));
+        dispatch(
+            initMySettings({
+                groups: deconvertGroups(groups),
+                mapSize,
+                mapId: isStoredMap ? randNumber[0] : undefined,
+            }),
+        );
         dispatch({
             type: sagaActions.GAME_START,
             payload: {
@@ -76,6 +90,17 @@ function Newgame() {
         else return gamers;
     };
 
+    const storeMapId = (event: any) => {
+        setIsStoredMap(event.target.checked);
+        dispatch(
+            initMySettings({
+                groups: deconvertGroups(groups),
+                mapSize,
+                mapId: event.target.checked ? randNumber[0] : undefined,
+            }),
+        );
+    };
+
     return (
         <Container>
             <Row className="justify-content-center">
@@ -93,6 +118,7 @@ function Newgame() {
 
                                 return (
                                     <Player
+                                        key={`player-pos-${index}`}
                                         position={index}
                                         type={players[index]}
                                         group={groups[index]}
@@ -146,10 +172,16 @@ function Newgame() {
                             placeholder="Введите код"
                             value={randNumber[0]}
                             onChange={(event) => {
-                                let clone = new Int32Array(1);
-                                clone[0] = Number(event.target.value);
-                                setRandNumber(clone);
+                                setRandNumber(convertMapId(event.target.value)!);
                             }}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                        <Form.Check
+                            type="checkbox"
+                            label="Запоминать код карты"
+                            checked={isStoredMap}
+                            onChange={storeMapId}
                         />
                     </Form.Group>
                     <Button variant="primary" type="submit">
