@@ -13,6 +13,7 @@ export const Constants = {
         Base: 0,
         Gann: 1,
     },
+    commonGannMaxId: 4,
     groupIds,
     groups: [
         {

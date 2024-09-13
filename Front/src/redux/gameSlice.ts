@@ -223,16 +223,29 @@ export const gameSlice = createSlice({
                     let nm;
                     let pname;
                     if (it.type == Constants.pirateTypes.Gann && team.group.gannMaxId) {
-                        pname = 'gann';
+                        pname = `${team.group.id}/gann`;
                         nm = getAnotherRandomValue(
                             1,
                             team.group.gannMaxId,
                             state.pirates
-                                ?.filter((pr) => pr.teamId == it.teamId && it.type == Constants.pirateTypes.Gann)
+                                ?.filter((pr) => pr.teamId == it.teamId && pr.type == Constants.pirateTypes.Gann)
+                                .map((pr) => pr.photoId ?? 0) ?? [],
+                        );
+                    } else if (it.type == Constants.pirateTypes.Gann && !team.group.gannMaxId) {
+                        pname = 'commonganns/gann';
+                        nm = getAnotherRandomValue(
+                            1,
+                            Constants.commonGannMaxId,
+                            state.pirates
+                                ?.filter(
+                                    (pr) =>
+                                        pr.type == Constants.pirateTypes.Gann &&
+                                        !Constants.groups.find((gr) => gr.id == pr.id)?.gannMaxId,
+                                )
                                 .map((pr) => pr.photoId ?? 0) ?? [],
                         );
                     } else {
-                        pname = 'pirate';
+                        pname = `${team.group.id}/pirate`;
                         nm = getAnotherRandomValue(
                             1,
                             team.group.photoMaxId,
@@ -245,14 +258,14 @@ export const gameSlice = createSlice({
                         teamId: it.teamId,
                         position: it.position,
                         groupId: team.group.id,
-                        photo: `${team.group.id}/${pname}_${nm}${team.group.extension || '.png'}`,
+                        photo: `${pname}_${nm}${team.group.extension || '.png'}`,
                         photoId: nm,
-                        type: team.group.gannMaxId ? it.type : Constants.pirateTypes.Base,
+                        type: it.type,
                     });
                     const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
                     const drawPirate: CellPirate = {
                         id: it.id,
-                        photo: `${team.group.id}/${pname}_${nm}${team.group.extension || '.png'}`,
+                        photo: `${pname}_${nm}${team.group.extension || '.png'}`,
                         photoId: nm + 100 * it.type,
                         backgroundColor: team.backColor,
                     };
