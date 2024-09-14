@@ -247,6 +247,9 @@ export const gameSlice = createSlice({
                                 )
                                 .map((pr) => pr.photoId ?? 0) ?? [],
                         );
+                    } else if (it.type == Constants.pirateTypes.Friday) {
+                        pname = 'commonfridays/friday';
+                        nm = getAnotherRandomValue(1, Constants.commonFridayMaxId, []);
                     } else {
                         pname = `${team.group.id}/pirate`;
                         nm = getAnotherRandomValue(

@@ -12,8 +12,10 @@ export const Constants = {
     pirateTypes: {
         Base: 0,
         Gann: 1,
+        Friday: 2,
     },
     commonGannMaxId: 4,
+    commonFridayMaxId: 1,
     groupIds,
     groups: [
         {
