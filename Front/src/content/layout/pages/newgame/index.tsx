@@ -35,7 +35,7 @@ function Newgame() {
 
     const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
 
-    const [playersCount, setplayersCount] = useState(userSettings.playersCount || 4);
+    const [playersCount, setPlayersCount] = useState(userSettings.playersCount || 4);
     const [players, setPlayers] = useState(userSettings.players || ['human', 'robot2', 'robot', 'robot2']);
     const [groups, setGroups] = useState(convertGroups(userSettings.groups));
     const [isStoredMap, setIsStoredMap] = useState(userSettings.mapId != undefined);
@@ -134,7 +134,7 @@ function Newgame() {
                         <div
                             className={classes.player}
                             onClick={() =>
-                                setplayersCount((prev) => {
+                                setPlayersCount((prev) => {
                                     if (prev == 4) return 1;
                                     else if (prev == 1) return 2;
                                     return 4;

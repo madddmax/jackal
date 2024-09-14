@@ -30,8 +30,8 @@ export const gameSlice = createSlice({
                 Constants.groupIds.skulls,
             ],
             mapSize: 11,
-            players: ['human'],
-            playersCount: 1,
+            players: ['human', 'robot2', 'robot', 'robot2'],
+            playersCount: 4,
         },
         teams: [],
         currentHumanTeam: {
