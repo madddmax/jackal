@@ -17,7 +17,7 @@ namespace Jackal.Core
             MapId = mapId;
             _rand = new Random(MapId + 5000000);
 
-            var tilesPack = new ClassicTilesPack(mapSize);
+            var tilesPack = new ClassicTilesPack(_rand, mapSize);
             CoinsOnMap = tilesPack.CoinsOnMap;
             
             var pack = Shuffle(tilesPack.List);

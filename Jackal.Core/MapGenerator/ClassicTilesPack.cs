@@ -1,98 +1,173 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Jackal.Core
 {
     /// <summary>
-    /// Набор карт
+    /// Классический игровой набор Финам-Шакал
     /// </summary>
     public class ClassicTilesPack
     {
-        private readonly int _totalTiles;
-        private readonly List<TileParams> _list;
+        /// <summary>
+        /// Общий набор из 120 клеток,
+        /// самая большая карта 13x13 имеет 117 клеток
+        /// </summary>
+        private readonly TileParams[] _wholeSetOfTiles =
+        [
+            // 90 значимых клеток
+            new TileParams(TileType.Chest1), // 1 монета
+            new TileParams(TileType.Chest1), // 2
+            new TileParams(TileType.Chest1), // 3
+            new TileParams(TileType.Chest1), // 4
+            new TileParams(TileType.Chest1), // 5
+            new TileParams(TileType.Chest2), // 7
+            new TileParams(TileType.Chest2), // 9
+            new TileParams(TileType.Chest2), // 11
+            new TileParams(TileType.Chest2), // 13
+            new TileParams(TileType.Chest3), // 16
+            new TileParams(TileType.Chest3), // 19
+            new TileParams(TileType.Chest3), // 21
+            new TileParams(TileType.Chest4), // 25
+            new TileParams(TileType.Chest4), // 29
+            new TileParams(TileType.Chest5), // 34
+            new TileParams(TileType.Fort),
+            new TileParams(TileType.Fort),
+            new TileParams(TileType.Fort),
+            new TileParams(TileType.RespawnFort),
+            new TileParams(TileType.RespawnFort),
+            new TileParams(TileType.RumBarrel),
+            new TileParams(TileType.RumBarrel),
+            new TileParams(TileType.RumBarrel),
+            new TileParams(TileType.RumBarrel),
+            new TileParams(TileType.Horse),
+            new TileParams(TileType.Horse),
+            new TileParams(TileType.Horse),
+            new TileParams(TileType.Horse),
+            new TileParams(TileType.Balloon),
+            new TileParams(TileType.Balloon),
+            new TileParams(TileType.Balloon),
+            new TileParams(TileType.Airplane),
+            new TileParams(TileType.Airplane),
+            new TileParams(TileType.Crocodile),
+            new TileParams(TileType.Crocodile),
+            new TileParams(TileType.Crocodile),
+            new TileParams(TileType.Crocodile),
+            new TileParams(TileType.Ice),
+            new TileParams(TileType.Ice),
+            new TileParams(TileType.Ice),
+            new TileParams(TileType.Ice),
+            new TileParams(TileType.Ice),
+            new TileParams(TileType.Ice),
+            new TileParams(TileType.Cannon),
+            new TileParams(TileType.Cannon),
+            new TileParams(TileType.Cannon),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.OneArrowUp),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.OneArrowUp),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.OneArrowUp),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.OneArrowDiagonal),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.OneArrowDiagonal),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.OneArrowDiagonal),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.TwoArrowsDiagonal),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.TwoArrowsDiagonal),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.TwoArrowsDiagonal),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.TwoArrowsLeftRight),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.TwoArrowsLeftRight),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.TwoArrowsLeftRight),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.ThreeArrows),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.ThreeArrows),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.ThreeArrows),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.FourArrowsPerpendicular),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.FourArrowsPerpendicular),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.FourArrowsPerpendicular),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.FourArrowsDiagonal),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.FourArrowsDiagonal),
+            new TileParams(TileType.Arrow, ArrowsCodesHelper.FourArrowsDiagonal),
+            new TileParams(TileType.Trap),
+            new TileParams(TileType.Trap),
+            new TileParams(TileType.Trap),
+            new TileParams(TileType.Cannibal),
+            new TileParams(TileType.Cannibal),
+            new TileParams(TileType.Lighthouse),
+            new TileParams(TileType.Lighthouse),
+            new TileParams(TileType.BenGunn),
+            new TileParams(TileType.BenGunn),
+            new TileParams(TileType.Spinning) { SpinningCount = 2 },
+            new TileParams(TileType.Spinning) { SpinningCount = 2 },
+            new TileParams(TileType.Spinning) { SpinningCount = 2 },
+            new TileParams(TileType.Spinning) { SpinningCount = 2 },
+            new TileParams(TileType.Spinning) { SpinningCount = 2 },
+            new TileParams(TileType.Spinning) { SpinningCount = 3 },
+            new TileParams(TileType.Spinning) { SpinningCount = 3 },
+            new TileParams(TileType.Spinning) { SpinningCount = 3 },
+            new TileParams(TileType.Spinning) { SpinningCount = 3 },
+            new TileParams(TileType.Spinning) { SpinningCount = 4 },
+            new TileParams(TileType.Spinning) { SpinningCount = 4 },
+            new TileParams(TileType.Spinning) { SpinningCount = 4 },
+            new TileParams(TileType.Spinning) { SpinningCount = 5 },
+            new TileParams(TileType.Spinning) { SpinningCount = 5 },
+            // 30 пустых клеток
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Grass)
+        ];    
 
-        public IReadOnlyList<TileParams> List => _list;
-
+        /// <summary>
+        /// Количество монет на карте
+        /// </summary>
         public int CoinsOnMap { get; private set; }
         
-        public ClassicTilesPack(int mapSize)
-        {
-            int landSize = mapSize - 2;
-            _totalTiles = landSize * landSize - 4;
-            
-            CoinsOnMap = 0;
-            _list = new List<TileParams>(_totalTiles);
-            
-            AddDef(TileType.Chest1, 5);
-            AddDef(TileType.Chest2, 5);
-            AddDef(TileType.Chest3, 3);
-            AddDef(TileType.Chest4, 2);
-            AddDef(TileType.Chest5, 1);
-            AddDef(TileType.Fort, 2);
-            AddDef(TileType.RespawnFort, 2);
-            AddDef(TileType.RumBarrel, 4);
-            AddDef(TileType.Horse, 2);
-            AddDef(TileType.Balloon, 2);
-            AddDef(TileType.Airplane, 2);
-            AddDef(TileType.Crocodile, 4);
-            AddDef(TileType.Ice, 6);
-            AddDef(TileType.Cannon, 2);
-            
-            foreach (var arrowsCode in ArrowsCodesHelper.ArrowsTypes)
-            {
-                AddArrowDef(arrowsCode, 3);
-            }
-            
-            AddDef(TileType.Trap, 3);
-            AddDef(TileType.Cannibal, 2);
-            AddDef(TileType.Lighthouse, 2);
-            AddDef(TileType.BenGunn, 2);
-            
-            AddSpinningDef(2, 5);
-            AddSpinningDef(3, 4);
-            AddSpinningDef(4, 2);
-            AddSpinningDef(5, 1);
-            
-            while (_list.Count < _totalTiles)
-            {
-                AddDef(TileType.Grass);
-            }
-        }
-
-        private void AddDef(TileType tileType, int count = 1)
-        {
-            for (int i = 1; i <= count; i++)
-            {
-                if (_list.Count == _totalTiles)
-                    return;
-
-                UpdateCoinsOnMap(tileType);
-
-                var def = new TileParams { Type = tileType };
-                _list.Add(def);
-            }
-        }
+        /// <summary>
+        /// Клетки которые попали в игру
+        /// </summary>
+        public List<TileParams> List { get; }
         
-        private void AddArrowDef(int arrowsCode, int count)
+        public ClassicTilesPack(Random rand, int mapSize)
         {
-            for (int i = 1; i <= count; i++)
+            CoinsOnMap = 0;
+            
+            var landSize = mapSize - 2;
+            var totalTiles = landSize * landSize - 4;
+            List = new List<TileParams>(totalTiles);
+            
+            // выбираем клетки которые будем играть
+            for (var i = 0; i < totalTiles; i++)
             {
-                if (_list.Count == _totalTiles)
-                    return;
+                // без рэндома выбираем обязательный сундук с 1 монетой
+                var index = i != 0 
+                    ? rand.Next(0, _wholeSetOfTiles.Length - i) 
+                    : 0;
+                
+                List.Add(_wholeSetOfTiles[index]);
+                UpdateCoinsOnMap(_wholeSetOfTiles[index].Type);
 
-                var def = new TileParams { Type = TileType.Arrow, ArrowsCode = arrowsCode };
-                _list.Add(def);
-            }
-        }
-
-        private void AddSpinningDef(int spinningCount, int count)
-        {
-            for (int i = 1; i <= count; i++)
-            {
-                if (_list.Count == _totalTiles)
-                    return;
-
-                var def = new TileParams { Type = TileType.Spinning, SpinningCount = spinningCount };
-                _list.Add(def);
+                _wholeSetOfTiles[index] = _wholeSetOfTiles[_wholeSetOfTiles.Length - 1 - i];
             }
         }
 

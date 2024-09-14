@@ -6,15 +6,54 @@ namespace Jackal.Core
 {
     public static class ArrowsCodesHelper
     {
-        public static readonly int[] ArrowsTypes =
+        /// <summary>
+        /// Одна стрелка перпендикулярно вверх
+        /// </summary>
+        public static int OneArrowUp => GetCodeFromString("10000000");
+
+        /// <summary>
+        /// Одна стрелка по диагонали правый верхний угол
+        /// </summary>
+        public static int OneArrowDiagonal => GetCodeFromString("01000000");
+        
+        /// <summary>
+        /// Две стрелки по диагонали правый верхний - левый нижний угол
+        /// </summary>
+        public static int TwoArrowsDiagonal => GetCodeFromString("01000100");
+        
+        /// <summary>
+        /// Две стрелки горизонтально на левую и правую стороны
+        /// </summary>
+        public static int TwoArrowsLeftRight => GetCodeFromString("00100010");
+
+        /// <summary>
+        /// Три стрелки одна по диагонали левый верхний угол, две перпендикулярно право и низ
+        /// </summary>
+        public static int ThreeArrows => GetCodeFromString("00101001");
+        
+        /// <summary>
+        /// Четыре стрелки перпендикулярно на все стороны
+        /// </summary>
+        public static int FourArrowsPerpendicular => GetCodeFromString("10101010");
+        
+        /// <summary>
+        /// Четыре стрелки по диагонали на все углы
+        /// </summary>
+        public static int FourArrowsDiagonal => GetCodeFromString("01010101");
+
+        /// <summary>
+        /// Последовательность типов стрелок не менять,
+        /// используется для выбора номера картинки
+        /// </summary>
+        private static readonly int[] ArrowsTypes =
         [
-            GetCodeFromString("10000000"), // одна стрелка перпендикулярно вверх
-            GetCodeFromString("01000100"), // две стрелки по диагонали правый верхний - левый нижний угол
-            GetCodeFromString("01000000"), // одна стрелка по диагонали правый верхний угол
-            GetCodeFromString("01010101"), // четыре стрелки по диагонали на все углы
-            GetCodeFromString("10101010"), // четыре стрелки перпендикулярно на все стороны
-            GetCodeFromString("00101001"), // три стрелки одна по диагонали левый верхний угол, две перпендикулярно право и низ
-            GetCodeFromString("00100010") // две стрелки перпендикулярно на правую и левую стороны
+            OneArrowUp,
+            TwoArrowsDiagonal,
+            OneArrowDiagonal,
+            FourArrowsDiagonal,
+            FourArrowsPerpendicular,
+            ThreeArrows,
+            TwoArrowsLeftRight
         ];
 
         public class ArrowSearchResult

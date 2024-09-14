@@ -17,6 +17,12 @@
             Type = type;
         }
         
+        public TileParams(TileType type, int arrowsCode)
+        {
+            Type = type;
+            ArrowsCode = arrowsCode;
+        }
+        
         public TileParams Clone()
         {
             return (TileParams)MemberwiseClone();
