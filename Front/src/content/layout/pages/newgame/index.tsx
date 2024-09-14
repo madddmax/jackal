@@ -16,6 +16,12 @@ import { ReduxState, StorageState } from '/redux/types';
 const convertGroups = (initial: string[]) => initial.map((gr) => Constants.groups.findIndex((it) => it.id == gr) || 0);
 const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.groups[num].id);
 
+const getPlayers = (gamers: string[], count: number): string[] => {
+    if (count == 1) return [gamers[0]];
+    else if (count == 2) return [gamers[0], gamers[2]];
+    else return gamers;
+};
+
 const convertMapId = (val: string | number | undefined) => {
     if (val === undefined) return undefined;
     let clone = new Int32Array(1);
@@ -29,8 +35,8 @@ function Newgame() {
 
     const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
 
-    const [playersCount, setplayersCount] = useState(4);
-    const [players, setPlayers] = useState(['human', 'robot2', 'robot', 'robot2']);
+    const [playersCount, setplayersCount] = useState(userSettings.playersCount || 4);
+    const [players, setPlayers] = useState(userSettings.players || ['human', 'robot2', 'robot', 'robot2']);
     const [groups, setGroups] = useState(convertGroups(userSettings.groups));
     const [isStoredMap, setIsStoredMap] = useState(userSettings.mapId != undefined);
 
@@ -68,6 +74,8 @@ function Newgame() {
             initMySettings({
                 groups: deconvertGroups(groups),
                 mapSize,
+                players,
+                playersCount,
                 mapId: isStoredMap ? randNumber[0] : undefined,
             }),
         );
@@ -84,18 +92,14 @@ function Newgame() {
         });
     };
 
-    const getPlayers = (gamers: string[], count: number): string[] => {
-        if (count == 1) return [gamers[0]];
-        else if (count == 2) return [gamers[0], gamers[2]];
-        else return gamers;
-    };
-
     const storeMapId = (event: any) => {
         setIsStoredMap(event.target.checked);
         dispatch(
             initMySettings({
                 groups: deconvertGroups(groups),
                 mapSize,
+                players,
+                playersCount,
                 mapId: event.target.checked ? randNumber[0] : undefined,
             }),
         );
