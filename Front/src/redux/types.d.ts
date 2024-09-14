@@ -22,8 +22,6 @@ export interface GameState {
 
 export interface StorageState {
     groups: string[];
-    players?: string[];
-    playersCount?: number;
     mapSize: number;
     mapId?: number;
 }
