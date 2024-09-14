@@ -30,6 +30,8 @@ export const gameSlice = createSlice({
                 Constants.groupIds.skulls,
             ],
             mapSize: 11,
+            players: ['human'],
+            playersCount: 1,
         },
         teams: [],
         currentHumanTeam: {
@@ -78,7 +80,8 @@ export const gameSlice = createSlice({
             state.gameName = action.payload.gameName;
             state.mapId = action.payload.mapId;
             state.mapSize = action.payload.map.width;
-            state.teams = action.payload.stat.teams.map((it, idx) => {
+            state.teams = action.payload.stat.teams.map((it, idx, arr) => {
+                let grId = arr.length == 2 && idx == 1 ? 2 : idx;
                 return {
                     id: it.id,
                     activePirate: '',
@@ -86,7 +89,7 @@ export const gameSlice = createSlice({
                     isHumanPlayer: it.name.includes('Human'),
                     backColor: it.backcolor,
                     group:
-                        Constants.groups.find((gr) => gr.id == state.userSettings.groups[idx]) || Constants.groups[0],
+                        Constants.groups.find((gr) => gr.id == state.userSettings.groups[grId]) || Constants.groups[0],
                 };
             });
             state.pirates = action.payload.pirates;
