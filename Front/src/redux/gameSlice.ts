@@ -30,6 +30,8 @@ export const gameSlice = createSlice({
                 Constants.groupIds.skulls,
             ],
             mapSize: 11,
+            players: ['human', 'robot2', 'robot', 'robot2'],
+            playersCount: 4,
         },
         teams: [],
         currentHumanTeam: {
@@ -78,7 +80,8 @@ export const gameSlice = createSlice({
             state.gameName = action.payload.gameName;
             state.mapId = action.payload.mapId;
             state.mapSize = action.payload.map.width;
-            state.teams = action.payload.stat.teams.map((it, idx) => {
+            state.teams = action.payload.stat.teams.map((it, idx, arr) => {
+                let grId = arr.length == 2 && idx == 1 ? 2 : idx;
                 return {
                     id: it.id,
                     activePirate: '',
@@ -86,7 +89,7 @@ export const gameSlice = createSlice({
                     isHumanPlayer: it.name.includes('Human'),
                     backColor: it.backcolor,
                     group:
-                        Constants.groups.find((gr) => gr.id == state.userSettings.groups[idx]) || Constants.groups[0],
+                        Constants.groups.find((gr) => gr.id == state.userSettings.groups[grId]) || Constants.groups[0],
                 };
             });
             state.pirates = action.payload.pirates;
@@ -223,16 +226,32 @@ export const gameSlice = createSlice({
                     let nm;
                     let pname;
                     if (it.type == Constants.pirateTypes.Gann && team.group.gannMaxId) {
-                        pname = 'gann';
+                        pname = `${team.group.id}/gann`;
                         nm = getAnotherRandomValue(
                             1,
                             team.group.gannMaxId,
                             state.pirates
-                                ?.filter((pr) => pr.teamId == it.teamId && it.type == Constants.pirateTypes.Gann)
+                                ?.filter((pr) => pr.teamId == it.teamId && pr.type == Constants.pirateTypes.Gann)
                                 .map((pr) => pr.photoId ?? 0) ?? [],
                         );
+                    } else if (it.type == Constants.pirateTypes.Gann && !team.group.gannMaxId) {
+                        pname = 'commonganns/gann';
+                        nm = getAnotherRandomValue(
+                            1,
+                            Constants.commonGannMaxId,
+                            state.pirates
+                                ?.filter(
+                                    (pr) =>
+                                        pr.type == Constants.pirateTypes.Gann &&
+                                        !Constants.groups.find((gr) => gr.id == pr.id)?.gannMaxId,
+                                )
+                                .map((pr) => pr.photoId ?? 0) ?? [],
+                        );
+                    } else if (it.type == Constants.pirateTypes.Friday) {
+                        pname = 'commonfridays/friday';
+                        nm = getAnotherRandomValue(1, Constants.commonFridayMaxId, []);
                     } else {
-                        pname = 'pirate';
+                        pname = `${team.group.id}/pirate`;
                         nm = getAnotherRandomValue(
                             1,
                             team.group.photoMaxId,
@@ -245,14 +264,14 @@ export const gameSlice = createSlice({
                         teamId: it.teamId,
                         position: it.position,
                         groupId: team.group.id,
-                        photo: `${team.group.id}/${pname}_${nm}${team.group.extension || '.png'}`,
+                        photo: `${pname}_${nm}${team.group.extension || '.png'}`,
                         photoId: nm,
-                        type: team.group.gannMaxId ? it.type : Constants.pirateTypes.Base,
+                        type: it.type,
                     });
                     const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
                     const drawPirate: CellPirate = {
                         id: it.id,
-                        photo: `${team.group.id}/${pname}_${nm}${team.group.extension || '.png'}`,
+                        photo: `${pname}_${nm}${team.group.extension || '.png'}`,
                         photoId: nm + 100 * it.type,
                         backgroundColor: team.backColor,
                     };
