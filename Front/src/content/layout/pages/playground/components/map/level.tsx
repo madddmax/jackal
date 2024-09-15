@@ -11,7 +11,7 @@ interface LevelProps {
 
 const Level = ({ cellSize, pirateSize, field, data }: LevelProps) => {
     const mul_x_times = cellSize / 50;
-    const addSize = (mul_x_times - 1) * 10;
+    const addSize = (mul_x_times - 1) * 5;
     const unitSize = cellSize - pirateSize / 2;
 
     const getMarginTop = (field: FieldState, level: number) => {
