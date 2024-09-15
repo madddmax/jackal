@@ -15,7 +15,7 @@ namespace Jackal.Core
         private readonly TileParams[] _wholeSetOfTiles =
         [
             // 90 значимых клеток
-            new TileParams(TileType.Chest1), // 1 монета
+            new TileParams(TileType.Chest1), // 1 монета - первый сундук берем всегда
             new TileParams(TileType.Chest1), // 2
             new TileParams(TileType.Chest1), // 3
             new TileParams(TileType.Chest1), // 4
@@ -33,8 +33,10 @@ namespace Jackal.Core
             new TileParams(TileType.Fort),
             new TileParams(TileType.Fort),
             new TileParams(TileType.Fort),
+            new TileParams(TileType.RespawnFort), // порядок RespawnFort и Cannibal важен для баланса
+            new TileParams(TileType.Cannibal), // берем воскрешающий форт вместе с людоедом
             new TileParams(TileType.RespawnFort),
-            new TileParams(TileType.RespawnFort),
+            new TileParams(TileType.Cannibal),
             new TileParams(TileType.RumBarrel),
             new TileParams(TileType.RumBarrel),
             new TileParams(TileType.RumBarrel),
@@ -85,8 +87,6 @@ namespace Jackal.Core
             new TileParams(TileType.Trap),
             new TileParams(TileType.Trap),
             new TileParams(TileType.Trap),
-            new TileParams(TileType.Cannibal),
-            new TileParams(TileType.Cannibal),
             new TileParams(TileType.Lighthouse),
             new TileParams(TileType.Lighthouse),
             new TileParams(TileType.BenGunn),
@@ -144,7 +144,7 @@ namespace Jackal.Core
         public int CoinsOnMap { get; private set; }
         
         /// <summary>
-        /// Клетки которые попали в игру
+        /// Клетки которые будем играть
         /// </summary>
         public List<TileParams> List { get; }
         
@@ -155,18 +155,38 @@ namespace Jackal.Core
             var landSize = mapSize - 2;
             var totalTiles = landSize * landSize - 4;
             List = new List<TileParams>(totalTiles);
+
+            // выбираем обязательный сундук с 1 монетой
+            bool random = false;
+            int selectedIndex = 0;
             
-            // выбираем клетки которые будем играть
             for (var i = 0; i < totalTiles; i++)
             {
-                // без рэндома выбираем обязательный сундук с 1 монетой
-                var index = i != 0 
+                var index = random 
                     ? rand.Next(0, _wholeSetOfTiles.Length - i) 
-                    : 0;
+                    : selectedIndex;
                 
                 List.Add(_wholeSetOfTiles[index]);
                 UpdateCoinsOnMap(_wholeSetOfTiles[index].Type);
 
+                switch (_wholeSetOfTiles[index].Type)
+                {
+                    case TileType.Cannibal:
+                        // выбираем воскрешающий форт к людоеду
+                        random = false;
+                        selectedIndex = index - 1;
+                        break;
+                    case TileType.RespawnFort:
+                        // выбираем людоеда к воскрешающему форту
+                        random = false;
+                        selectedIndex = index + 1;
+                        break;
+                    default:
+                        random = true;
+                        break;
+                }
+
+                // сдвигаем оставшиеся клетки в наборе, последнюю ставим на место выбранной
                 _wholeSetOfTiles[index] = _wholeSetOfTiles[_wholeSetOfTiles.Length - 1 - i];
             }
         }
