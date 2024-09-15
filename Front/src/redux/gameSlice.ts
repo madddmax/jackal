@@ -115,7 +115,7 @@ export const gameSlice = createSlice({
             const mSize = width > height ? height : width;
             if (mSize > 560) {
                 state.cellSize = Math.floor(mSize / state.mapSize / 10) * 10;
-                state.pirateSize = state.cellSize * 0.5;
+                state.pirateSize = state.cellSize * 0.55;
             }
         },
         setCurrentHumanTeam: (state, action: PayloadAction<number>) => {
