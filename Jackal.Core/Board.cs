@@ -277,21 +277,6 @@ namespace Jackal.Core
 					case TileType.Cannon:
                         goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source, airplaneFlying));
                         break;
-                    case TileType.Airplane:
-                        if (newPositionTile.Used == false)
-                        {
-                            goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source, true));
-                        }
-                        else {
-                            goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
-                            if (Map[task.Source].Coins > 0
-                                && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
-                                goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
-                                {
-                                    MoveType = MoveType.WithCoin
-                                });
-                        }
-                        break;
                     default:
                         goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
                         if (Map[task.Source].Coins > 0
@@ -349,7 +334,8 @@ namespace Jackal.Core
                     if (sourceTile.Used == false)
                     {
                         rez = AllTiles(x =>
-                                x.Type != TileType.Water || x.Position == ourShip.Position
+                                x.Type != TileType.Ice &&
+                                (x.Type != TileType.Water || x.Position == ourShip.Position)
                             )
                             .Select(x => IncomeTilePosition(x.Position));
                     }
@@ -358,7 +344,8 @@ namespace Jackal.Core
                     if (airplaneFlying)
                     {
                         rez = AllTiles(x =>
-                                x.Type != TileType.Water || x.Position == ourShip.Position
+                                x.Type != TileType.Ice &&
+                                (x.Type != TileType.Water || x.Position == ourShip.Position)
                             )
                             .Select(x => IncomeTilePosition(x.Position));
                         break;
@@ -370,7 +357,8 @@ namespace Jackal.Core
                     if (airplaneFlying)
                     {
                         rez = AllTiles(x =>
-                                x.Type != TileType.Water || x.Position == ourShip.Position
+                                x.Type != TileType.Ice &&
+                                (x.Type != TileType.Water || x.Position == ourShip.Position)
                             )
                             .Select(x => IncomeTilePosition(x.Position));
                         break;
