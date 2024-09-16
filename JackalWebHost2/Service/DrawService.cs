@@ -291,7 +291,7 @@ namespace JackalWebHost.Service
                     filename = "croc";
                     break;
                 case TileType.Airplane:
-                    filename = "airplane";
+                    filename = tile.Used ? "used_airplane" : "airplane";
                     break;
                 case TileType.Balloon:
                     filename = "balloon";
