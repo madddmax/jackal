@@ -10,7 +10,8 @@ function Pirates() {
     const pirates = useSelector<ReduxState, GamePirate[] | undefined>((state) => state.game.pirates);
     const team = useSelector<ReduxState, TeamState>((state) => state.game.currentHumanTeam);
 
-    const onClick = (girl: GamePirate) => () => dispatch(chooseHumanPirate({ pirate: girl.id }));
+    const onClick = (girl: GamePirate, withCoinAction: boolean) => () =>
+        dispatch(chooseHumanPirate({ pirate: girl.id, withCoinAction }));
 
     return (
         <>
@@ -23,7 +24,8 @@ function Pirates() {
                             photo={girl.photo || ''}
                             isActive={team.activePirate === girl.id}
                             withCoin={girl.withCoin}
-                            onClick={onClick(girl)}
+                            onClick={onClick(girl, false)}
+                            onCoinClick={onClick(girl, true)}
                         />
                     ))}
         </>

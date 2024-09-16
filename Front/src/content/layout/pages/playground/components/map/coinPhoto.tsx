@@ -18,7 +18,7 @@ const CoinPhoto = ({ coinCount, pirate, pirateSize }: CoinPhotoProps) => {
 
     const onClick = (girl: CellPirate | undefined) => {
         if (girl?.withCoin === false) {
-            dispatch(chooseHumanPirate({ pirate: girl.id }));
+            dispatch(chooseHumanPirate({ pirate: girl.id, withCoinAction: true }));
         }
     };
 

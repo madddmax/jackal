@@ -91,7 +91,7 @@ describe('redux logic tests', () => {
     });
 
     test('Выбираем активного пирата', () => {
-        expect(reducer(previousState, chooseHumanPirate({ pirate: '200' }))).toEqual(
+        expect(reducer(previousState, chooseHumanPirate({ pirate: '200', withCoinAction: true }))).toEqual(
             expect.objectContaining({
                 currentHumanTeam: {
                     activePirate: '200',

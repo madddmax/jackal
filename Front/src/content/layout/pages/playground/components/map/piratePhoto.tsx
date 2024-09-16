@@ -14,7 +14,7 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
     const dispatch = useDispatch();
 
     const onClick = (girl: CellPirate) => {
-        dispatch(chooseHumanPirate({ pirate: girl.id }));
+        dispatch(chooseHumanPirate({ pirate: girl.id, withCoinAction: true }));
     };
 
     const coinSize = pirateSize * 0.3 > 15 ? pirateSize * 0.3 : 15;

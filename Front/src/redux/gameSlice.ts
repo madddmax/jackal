@@ -126,30 +126,29 @@ export const gameSlice = createSlice({
         },
         chooseHumanPirate: (state, action: PayloadAction<PirateChoose>) => {
             let pirate = state.pirates!.find((it) => it.id === action.payload.pirate)!;
-            let withCoin =
-                pirate.withCoin === undefined || state.currentHumanTeam.activePirate !== pirate.id
-                    ? pirate.withCoin
-                    : !pirate.withCoin;
+            let hasPirateChanging = state.currentHumanTeam.activePirate !== pirate.id;
+            if (hasPirateChanging) {
+                state.currentHumanTeam.activePirate = pirate.id;
+                state.currentHumanTeam.lastPirate = pirate.id;
+                state.teams
+                    .filter((it) => it.id === state.currentHumanTeam.id)
+                    .forEach((it) => {
+                        it.activePirate = pirate.id;
+                        it.lastPirate = pirate.id;
+                    });
+            }
 
-            state.currentHumanTeam.activePirate = action.payload.pirate;
-            state.currentHumanTeam.lastPirate = action.payload.pirate;
-            state.teams
-                .filter((it) => it.id === state.currentHumanTeam.id)
-                .forEach((it) => {
-                    it.activePirate = action.payload.pirate;
-                    it.lastPirate = action.payload.pirate;
-                });
-
-            debugLog('setCurrentHumanTeam', current(state.currentHumanTeam));
-            debugLog('withCoin', withCoin);
-
-            if (withCoin !== undefined) {
-                pirate.withCoin = withCoin;
+            let hasCoinChanging = action.payload.withCoinAction && !hasPirateChanging && pirate.withCoin !== undefined;
+            if (hasCoinChanging) {
+                pirate.withCoin = !pirate.withCoin;
                 const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
                 const cellPirate = level.pirates?.find((it) => it.id == pirate.id);
-                if (cellPirate) cellPirate.withCoin = withCoin;
+                if (cellPirate) cellPirate.withCoin = pirate.withCoin;
             }
-            gameSlice.caseReducers.highlightHumanMoves(state, highlightHumanMoves({}));
+
+            if (hasPirateChanging || hasCoinChanging) {
+                gameSlice.caseReducers.highlightHumanMoves(state, highlightHumanMoves({}));
+            }
         },
         highlightHumanMoves: (state, action: PayloadAction<PirateMoves>) => {
             console.log('highlightMoves');
