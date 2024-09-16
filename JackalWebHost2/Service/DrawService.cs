@@ -248,68 +248,68 @@ namespace JackalWebHost.Service
             {
                 case TileType.Unknown:
                     tileChange.IsUnknown = true;
-                    filename = @"back";
+                    filename = "back";
                     break;
                 case TileType.Water:
-                    filename = @"water";
+                    filename = "water";
                     break;
                 case TileType.Grass:
-                    filename = @"empty1";
+                    filename = "empty1";
                     break;
                 case TileType.Chest1:
-                    filename = @"empty1";
+                    filename = "empty1";
                     break;
                 case TileType.Chest2:
-                    filename = @"empty2";
+                    filename = "empty2";
                     break;
                 case TileType.Chest3:
-                    filename = @"empty3";
+                    filename = "empty3";
                     break;
                 case TileType.Chest4:
-                    filename = @"empty4";
+                    filename = "empty4";
                     break;
                 case TileType.Chest5:
-                    filename = @"empty4";
+                    filename = "empty4";
                     break;
                 case TileType.Fort:
-                    filename = @"fort";
+                    filename = "fort";
                     break;
                 case TileType.RespawnFort:
-                    filename = @"respawn";
+                    filename = "respawn";
                     break;
                 case TileType.RumBarrel:
-                    filename = @"rumbar";
+                    filename = "rumbar";
                     break;
                 case TileType.Horse:
-                    filename = @"horse";
+                    filename = "horse";
                     break;
                 case TileType.Cannon:
-                    filename = @"cannon";
+                    filename = "cannon";
                     rotateCount = tile.CannonDirection;
                     break;
                 case TileType.Crocodile:
-                    filename = @"croc";
+                    filename = "croc";
                     break;
                 case TileType.Airplane:
-                    filename = @"airplane";
+                    filename = "airplane";
                     break;
                 case TileType.Balloon:
-                    filename = @"balloon";
+                    filename = "balloon";
                     break;
                 case TileType.Ice:
-                    filename = @"ice";
+                    filename = "ice";
                     break;
                 case TileType.Trap:
-                    filename = @"trap";
+                    filename = "trap";
                     break;
                 case TileType.Cannibal:
-                    filename = @"canibal";
+                    filename = "canibal";
                     break;
                 case TileType.Lighthouse:
-                    filename = @"pharos";
+                    filename = "pharos";
                     break;
                 case TileType.BenGunn:
-                    filename = @"bengunn";
+                    filename = "bengunn";
                     break;
                 case TileType.Spinning:
                     switch (tile.SpinningCount)
