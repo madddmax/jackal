@@ -5,18 +5,34 @@ namespace Jackal.Core
 {
     public class Tile
     {
+	    /// <summary>
+	    /// Позиция
+	    /// </summary>
         [JsonProperty]
         public readonly Position Position;
 
+        /// <summary>
+        /// Тип клетки
+        /// </summary>
         [JsonProperty]
         public readonly TileType Type;
         
+        /// <summary>
+        /// Код клетки, используется для стрелок и пустых клеток.
+        /// По коду вычисляем номер картинки для клетки.
+        /// </summary>
         [JsonProperty]
         public readonly int ArrowsCode;
 
+        /// <summary>
+        /// Направление клетки с пушкой
+        /// </summary>
         [JsonProperty]
 		public readonly int CannonDirection;
 		
+		/// <summary>
+		/// Количество ходов на клетке-вертушке
+		/// </summary>
 		[JsonProperty]
         public readonly int SpinningCount;
 

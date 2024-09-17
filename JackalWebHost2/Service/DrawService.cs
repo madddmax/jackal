@@ -254,7 +254,7 @@ namespace JackalWebHost.Service
                     filename = "water";
                     break;
                 case TileType.Grass:
-                    filename = "empty1";
+                    filename = $"empty{tile.ArrowsCode + 1}";
                     break;
                 case TileType.Chest1:
                 case TileType.Chest2:
@@ -325,16 +325,13 @@ namespace JackalWebHost.Service
                 case TileType.Arrow:
                     var search = ArrowsCodesHelper.Search(tile.ArrowsCode);
                     rotateCount = search.RotateCount;
-                    int fileNumber = (search.ArrowType + 1);
-                    filename = @"arrow" + fileNumber;
+                    filename = $"arrow{search.ArrowType + 1}";
                     break;
                 default:
                     throw new NotSupportedException();
             }
 
-            string relativePath = $@"/fields/{filename}.png";
-
-            tileChange.BackgroundImageSrc = relativePath;
+            tileChange.BackgroundImageSrc = $"/fields/{filename}.png";
             tileChange.Rotate = rotateCount;
         }
 

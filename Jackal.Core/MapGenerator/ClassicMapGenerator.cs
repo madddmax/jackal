@@ -31,12 +31,16 @@ namespace Jackal.Core
             foreach (var info in pack.Zip(positions, (def, position) => new {Def = def, Position = position}))
             {
                 var tempDef = info.Def.Clone();
-                int rotatesCount = _rand.Next(4);
-                for (int j = 1; j <= rotatesCount; j++)
+                if (tempDef.Type is TileType.Cannon or TileType.Arrow)
                 {
-	                tempDef.CanonDirection = rotatesCount;
-                    tempDef.ArrowsCode = ArrowsCodesHelper.DoRotate(tempDef.ArrowsCode);
+                    int rotatesCount = _rand.Next(4);
+                    for (int j = 1; j <= rotatesCount; j++)
+                    {
+                        tempDef.CanonDirection = rotatesCount;
+                        tempDef.ArrowsCode = ArrowsCodesHelper.DoRotate(tempDef.ArrowsCode);
+                    }
                 }
+
                 tempDef.Position = info.Position;
 
                 //создаем клетку
