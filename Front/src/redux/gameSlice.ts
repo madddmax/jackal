@@ -3,6 +3,7 @@ import {
     CellPirate,
     FieldState,
     GameCell,
+    GameLevel,
     GameMap,
     GameStartResponse,
     GameStat,
@@ -140,10 +141,14 @@ export const gameSlice = createSlice({
 
             let hasCoinChanging = action.payload.withCoinAction && !hasPirateChanging && pirate.withCoin !== undefined;
             if (hasCoinChanging) {
-                pirate.withCoin = !pirate.withCoin;
                 const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
-                const cellPirate = level.pirates?.find((it) => it.id == pirate.id);
-                if (cellPirate) cellPirate.withCoin = pirate.withCoin;
+                const cellPirate = level.pirates?.find((it) => it.id == pirate.id)!;
+                if (
+                    level.pirates!.filter((pr) => pr.id != pirate.id && pr.withCoin).length < Number(level.coin?.text)
+                ) {
+                    pirate.withCoin = !pirate.withCoin;
+                    cellPirate.withCoin = pirate.withCoin;
+                }
             }
 
             if (hasPirateChanging || hasCoinChanging) {
@@ -200,6 +205,19 @@ export const gameSlice = createSlice({
                 });
         },
         applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {
+            let cached = {} as { [id: number]: GameLevel };
+
+            action.payload.changes
+                .filter((it) => it.isAlive === undefined)
+                .forEach((it) => {
+                    let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
+                    const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
+                    cached[pirate.position.y * 1000 + pirate.position.x * 10 + pirate.position.level] = prevLevel;
+                    if (prevLevel.pirates != undefined) {
+                        prevLevel.pirates = prevLevel.pirates.filter((it) => it.id != pirate.id);
+                        if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
+                    }
+                });
             action.payload.changes.forEach((it) => {
                 let team = state.teams.find((tm) => tm.id == it.teamId)!;
                 if (it.isAlive === false) {
@@ -280,13 +298,12 @@ export const gameSlice = createSlice({
                     let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
                     debugLog('moved pirate', current(pirate));
 
-                    const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
-                    debugLog(
-                        'prevLevel.pirates',
-                        current(pirate).position.x,
-                        current(pirate).position.y,
-                        current(prevLevel).pirates,
-                    );
+                    let cachedId = pirate.position.y * 1000 + pirate.position.x * 10 + pirate.position.level;
+                    if (!cached.hasOwnProperty(cachedId)) {
+                        cached[cachedId] =
+                            state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
+                    }
+                    const prevLevel = cached[cachedId];
                     if (prevLevel.pirates != undefined) {
                         prevLevel.pirates = prevLevel.pirates.filter((it) => it.id != pirate.id);
                         if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
@@ -316,14 +333,22 @@ export const gameSlice = createSlice({
                     });
                 let girlIds = new Set(girls);
                 state.pirates?.forEach((it) => {
-                    let changeCoin = girlIds.has(it.id)
-                        ? true //(it.withCoin ?? true)
-                        : undefined;
+                    let changeCoin = girlIds.has(it.id) ? true : undefined;
                     if (changeCoin != it.withCoin) {
+                        let cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
+                        if (!cached.hasOwnProperty(cachedId)) {
+                            cached[cachedId] = state.fields[it.position.y][it.position.x].levels[it.position.level];
+                        }
+
+                        const level = cached[cachedId];
+                        if (changeCoin !== undefined) {
+                            changeCoin =
+                                level.pirates!.filter((pr) => pr.id != it.id && pr.withCoin).length <
+                                Number(level.coin?.text);
+                        }
                         it.withCoin = changeCoin;
-                        const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
-                        const pr = level.pirates?.find((pr) => pr.id == it.id)!;
-                        pr.withCoin = changeCoin;
+                        const prt = level.pirates?.find((pr) => pr.id == it.id)!;
+                        prt.withCoin = changeCoin;
                     }
                 });
             }
