@@ -8,9 +8,10 @@ interface PirateProps {
     isActive: boolean;
     withCoin: boolean | undefined;
     onClick: () => void;
+    onCoinClick: () => void;
 }
 
-const Pirate = ({ photo, isActive, withCoin, onClick }: PirateProps) => {
+const Pirate = ({ photo, isActive, withCoin, onClick, onCoinClick }: PirateProps) => {
     return (
         <div className="photo-position float-end">
             <Image
@@ -19,13 +20,18 @@ const Pirate = ({ photo, isActive, withCoin, onClick }: PirateProps) => {
                 className={cn('photo', {
                     'photo-active': isActive,
                 })}
-                onClick={() => onClick()}
+                onClick={onClick}
             />
             {withCoin !== undefined && (
                 <>
-                    <Image src="/pictures/ruble.png" roundedCircle className={cn('moneta')} />
+                    <Image src="/pictures/ruble.png" roundedCircle className={cn('moneta')} onClick={onCoinClick} />
                     {!withCoin && (
-                        <Image src="/pictures/cross-linear-icon.png" roundedCircle className={cn('moneta')} />
+                        <Image
+                            src="/pictures/cross-linear-icon.png"
+                            roundedCircle
+                            className={cn('moneta')}
+                            onClick={onCoinClick}
+                        />
                     )}
                 </>
             )}

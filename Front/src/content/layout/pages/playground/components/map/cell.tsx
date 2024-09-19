@@ -4,7 +4,8 @@ import { sagaActions } from '/redux/saga';
 import { FieldState, ReduxState } from '/redux/types';
 import cn from 'classnames';
 import './cell.less';
-import Level from '/content/layout/pages/playground/components/map/level';
+import Level from './level';
+import LevelZero from './levelZero';
 
 interface CellProps {
     row: number;
@@ -51,6 +52,17 @@ function Cell({ row, col }: CellProps) {
                 }
             ></div>
             {field.levels &&
+                field.levels.length === 1 &&
+                ((field.levels[0].pirates && field.levels[0].pirates.length > 0) || field.levels[0].coin) && (
+                    <LevelZero
+                        key={`cell-level-0`}
+                        cellSize={cellSize}
+                        pirateSize={pirateSize}
+                        data={field.levels[0]}
+                    />
+                )}
+            {field.levels &&
+                field.levels.length > 1 &&
                 field.levels
                     .filter((it) => (it.pirates && it.pirates.length > 0) || it.coin)
                     .map((it, idx) => (

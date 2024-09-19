@@ -142,6 +142,7 @@ export interface PirateMoves {
 
 export interface PirateChoose {
     pirate: string;
+    withCoinAction: bool;
 }
 
 export interface PirateChanges {
