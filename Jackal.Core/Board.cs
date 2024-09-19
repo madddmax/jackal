@@ -120,7 +120,7 @@ namespace Jackal.Core
             }
         }
 
-        void SetWater(int x, int y)
+        private void SetWater(int x, int y)
         {
             var tile = new Tile(new TileParams {Type = TileType.Water, Position = new Position(x, y)});
             Map[x, y] = tile;
@@ -160,44 +160,40 @@ namespace Jackal.Core
             Team ourTeam = Teams[ourTeamId];
             Ship ourShip = ourTeam.Ship;
 
-            List<AvailableMove> goodTargets = new List<AvailableMove>();
-
-            if (sourceTile.Type.RequireImmediateMove()) //для клеток с редиректами запоминаем, что в текущую клетку уже не надо возвращаться
+            if (sourceTile.Type is TileType.Arrow or TileType.Horse or TileType.Ice or TileType.Crocodile)
             {
-                Position? prevMoveDelta = null;
-                if (sourceTile.Type == TileType.Ice)
-                    prevMoveDelta = Position.GetDelta(prev.Position, source.Position);
-                
-                task.AlreadyCheckedList.Add(new CheckedPosition(source, prevMoveDelta)); //запоминаем, что эту клетку просматривать уже не надо
+                var prevMoveDelta = sourceTile.Type == TileType.Ice
+                    ? Position.GetDelta(prev.Position, source.Position)
+                    : null;
+
+                // запоминаем, что в текущую клетку уже не надо возвращаться
+                task.AlreadyCheckedList.Add(new CheckedPosition(source, prevMoveDelta));
             }
 
-            //места всех возможных ходов
+            var goodTargets = new List<AvailableMove>();
+            
+            // места всех возможных ходов
             IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(source, prev, ourTeam, airplaneFlying);
 
             foreach (TilePosition newPosition in positionsForCheck)
             {
-                var moving = new Moving(task.Source, newPosition, source);
-                var movingWithCoin = new Moving(task.Source, newPosition, source, true);
-                
-                //проверяем, что на этой клетке
-                var newPositionTile = Map[newPosition.Position];
-
                 if (task.AlreadyCheckedList.Count > 0)
                 {
                     Position incomeDelta = Position.GetDelta(source.Position, newPosition.Position);
                     CheckedPosition currentCheck = new CheckedPosition(newPosition, incomeDelta);
 
-                    if (WasCheckedBefore(task.AlreadyCheckedList, currentCheck)) //мы попали по рекурсии в ранее просмотренную клетку
+                    if (WasCheckedBefore(task.AlreadyCheckedList, currentCheck))
                     {
-                        if (newPositionTile is { Type: TileType.Airplane, Used: false }) 
-                        { 
-                            // даем возможность не использовать самолет сразу!
-                            goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
-                        }
-                        
+                        // попали по рекурсии в ранее просмотренную клетку
                         continue;
                     }
                 }
+                
+                var moving = new Moving(task.Source, newPosition, source);
+                var movingWithCoin = new Moving(task.Source, newPosition, source, true);
+                
+                // проверяем, что на этой клетке
+                var newPositionTile = Map[newPosition.Position];
 
                 switch (newPositionTile.Type)
                 {
@@ -210,10 +206,11 @@ namespace Jackal.Core
                         };
                         goodTargets.Add(availableMove);
                         break;
-                    
+
                     case TileType.Water:
-                        if (ourShip.Position == newPosition.Position) //заходим на свой корабль
+                        if (ourShip.Position == newPosition.Position)
                         {
+                            // заходим на свой корабль
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
                             if (Map[task.Source].Coins > 0)
                                 goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
@@ -221,38 +218,39 @@ namespace Jackal.Core
                                     MoveType = MoveType.WithCoin
                                 });
                         }
-                        else if (sourceTile.Type == TileType.Water) //из воды в воду 
+                        else if (sourceTile.Type == TileType.Water)
                         {
-                            if (source.Position != ourShip.Position && 
+                            // из воды в воду
+                            if (source.Position != ourShip.Position &&
                                 GetPossibleSwimming(task.Source.Position).Contains(newPosition.Position))
                             {
-                                //пират плавает
+                                // пират плавает
                                 var move = new AvailableMove(task.Source, newPosition, moving);
                                 goodTargets.Add(move);
                             }
-                            if (source.Position == ourShip.Position && 
+
+                            if (source.Position == ourShip.Position &&
                                 GetPossibleShipMoves(task.Source.Position, MapSize).Contains(newPosition.Position))
                             {
-                                //корабль плавает
+                                // корабль плавает
                                 var move = new AvailableMove(task.Source, newPosition, moving);
                                 goodTargets.Add(move);
                             }
                         }
-                        else //с земли в воду мы можем попасть только если ранее попали на клетку, требующую действия
+                        else if (sourceTile.Type is TileType.Arrow or TileType.Cannon or TileType.Ice)
                         {
-                            if (sourceTile.Type.RequireImmediateMove())
-                            {
-                                goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
-                                
-                                if (Map[task.Source].Coins > 0)
-                                    goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
-                                    {
-                                        MoveType = MoveType.WithCoin
-                                    });
-                            }
+                            // с земли в воду мы можем попасть только если ранее попали на клетку, требующую хода
+                            goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
+
+                            if (Map[task.Source].Coins > 0)
+                                goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
+                                {
+                                    MoveType = MoveType.WithCoin
+                                });
                         }
+
                         break;
-                    
+
                     case TileType.RespawnFort:
                         if (task.Source == newPosition)
                         {
@@ -262,32 +260,49 @@ namespace Jackal.Core
                                     MoveType = MoveType.WithRespawn
                                 });
                         }
-                        else if (newPositionTile.OccupationTeamId.HasValue == false || newPositionTile.OccupationTeamId == ourTeamId) //только если форт не занят
+                        else if (newPositionTile.OccupationTeamId.HasValue == false ||
+                                 newPositionTile.OccupationTeamId == ourTeamId)
+                        {
+                            // форт не занят противником
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
+                        }
+
                         break;
+
                     case TileType.Fort:
-                        if (newPositionTile.OccupationTeamId.HasValue == false || newPositionTile.OccupationTeamId == ourTeamId) //только если форт не занят
+                        if (newPositionTile.OccupationTeamId.HasValue == false ||
+                            newPositionTile.OccupationTeamId == ourTeamId)
+                        {
+                            // форт не занят противником
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
+                        }
+
                         break;
                     
-                    case TileType.Horse:
                     case TileType.Arrow:
+                    case TileType.Horse:
                     case TileType.Ice:
                     case TileType.Crocodile:
-					case TileType.Cannon:
+                    case TileType.Cannon:
                         goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source, airplaneFlying));
                         break;
                     default:
                         goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
+
                         if (Map[task.Source].Coins > 0
-                            && (newPositionTile.OccupationTeamId == null || newPositionTile.OccupationTeamId == ourTeamId))
+                            && (newPositionTile.OccupationTeamId == null ||
+                                newPositionTile.OccupationTeamId == ourTeamId))
+                        {
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
                             {
                                 MoveType = MoveType.WithCoin
                             });
-                        break;         
+                        }
+
+                        break;
                 }
             }
+            
             return goodTargets;
         }
 

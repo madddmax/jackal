@@ -190,4 +190,75 @@ public class AirplaneTests
         Assert.Single(game.Board.DeadPirates);
         Assert.Equal(1, game.TurnNo);
     }
+    
+    [Fact]
+    public void OneAirplaneWait_GetAvailableMoves_ReturnWholeMapAndOwnShip()
+    {
+        // Arrange
+        var airplaneOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Airplane));
+        var game = new TestGame(airplaneOnlyMap);
+        
+        // Act - высадка с корабля на самолет
+        game.Turn();
+
+        // пропускаем ход самолета
+        game.SetMoveAndTurn(2, 1);
+        
+        // на следующий ход вновь доступен ход самолета
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - все поле 5 клеток + свой корабль
+        Assert.Equal(6, moves.Count);
+        Assert.Equal(new TilePosition(2, 1), moves.First().From);
+        Assert.Equivalent(new List<TilePosition>
+            {
+                new(1, 2), 
+                new(2, 0), // свой корабль
+                new(2, 1), // клетка с самолетом
+                new(2, 2),
+                new(2, 3),
+                new(3, 2)
+            },
+            moves.Select(m => m.To)
+        );
+        Assert.Equal(1, game.TurnNo);
+    }
+    
+    [Fact]
+    public void OneAirplaneWaitThenSameAirplaneMoveByNextPirate_GetAvailableMoves_ReturnWholeMapAndOwnShip()
+    {
+        // Arrange
+        var airplaneOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Airplane));
+        var game = new TestGame(airplaneOnlyMap, 5, 2);
+        
+        // Act - высадка с корабля на самолет
+        game.Turn();
+
+        // пропускаем ход самолета
+        game.SetMoveAndTurn(2, 1);
+
+        // ходим вторым пиратом с корабля на самолет
+        var from = new TilePosition(2, 0);
+        var to = new TilePosition(2, 1);
+        game.SetMoveAndTurn(from, to);
+        
+        // на текущий ход второго пирата доступен ход самолета
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - все поле 5 клеток + свой корабль
+        Assert.Equal(6, moves.Count);
+        Assert.Equal(new TilePosition(2, 1), moves.First().From);
+        Assert.Equivalent(new List<TilePosition>
+            {
+                new(1, 2), 
+                new(2, 0), // свой корабль
+                new(2, 1), // клетка с самолетом
+                new(2, 2),
+                new(2, 3),
+                new(3, 2)
+            },
+            moves.Select(m => m.To)
+        );
+        Assert.Equal(1, game.TurnNo);
+    }
 }
