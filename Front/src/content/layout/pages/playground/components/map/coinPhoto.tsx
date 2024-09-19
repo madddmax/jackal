@@ -15,7 +15,7 @@ const CoinPhoto = ({ coinCount, pirates, pirateSize }: CoinPhotoProps) => {
     if (piratesWithCoins === coinCount) return <div />;
 
     let text = coinCount - piratesWithCoins;
-    const coinSize = pirateSize * 0.6 > 20 ? pirateSize * 0.6 : 20;
+    const coinSize = pirateSize * 0.6;
 
     const onClick = (girl: CellPirate) => {
         if (girl.withCoin === false) {
