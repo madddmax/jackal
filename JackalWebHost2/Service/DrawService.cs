@@ -255,6 +255,7 @@ namespace JackalWebHost.Service
                     break;
                 case TileType.Grass:
                     filename = $"empty{tile.ArrowsCode + 1}";
+                    rotateCount = tile.Direction;
                     break;
                 case TileType.Chest1:
                 case TileType.Chest2:
@@ -277,7 +278,7 @@ namespace JackalWebHost.Service
                     break;
                 case TileType.Cannon:
                     filename = "cannon";
-                    rotateCount = tile.CannonDirection;
+                    rotateCount = tile.Direction;
                     break;
                 case TileType.Crocodile:
                     filename = "croc";
@@ -324,8 +325,8 @@ namespace JackalWebHost.Service
                     break;
                 case TileType.Arrow:
                     var search = ArrowsCodesHelper.Search(tile.ArrowsCode);
-                    rotateCount = search.RotateCount;
                     filename = $"arrow{search.ArrowType + 1}";
+                    rotateCount = tile.Direction;
                     break;
                 default:
                     throw new NotSupportedException();

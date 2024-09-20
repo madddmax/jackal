@@ -113,8 +113,14 @@ namespace Jackal.Core.Actions
                 pirate.Position = to;
                 targetTileLevel.Pirates.Add(pirate);
             }
+
+            if (targetTile is { Used: false, Type: TileType.Airplane or TileType.Lighthouse })
+            {
+                game.NeedSubTurnPirate = pirate;
+                game.PrevSubTurnPosition = prev;
+            }
             
-            if (newTile && targetTile.Type.RequireImmediateMove())
+            if (newTile && targetTile.Type is TileType.Arrow or TileType.Horse or TileType.Cannon or TileType.Ice or TileType.Crocodile)
             {
                 var airplaneFlying = targetTile.Type is TileType.Ice or TileType.Crocodile &&
                                      (prevTile is { Type: TileType.Airplane, Used: false } ||
@@ -128,8 +134,7 @@ namespace Jackal.Core.Actions
                     game.KillPirate(pirate);
                     return GameActionResult.Die;
                 }
-
-                //мы попали в клетку, где должны сделать ещё свой выбор
+                
                 game.NeedSubTurnPirate = pirate;
                 game.PrevSubTurnPosition = prev;
                 game.SubTurnAirplaneFlying = airplaneFlying;

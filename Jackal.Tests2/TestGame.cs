@@ -11,11 +11,6 @@ namespace Jackal.Tests2;
 public class TestGame
 {
     /// <summary>
-    /// Один пират на команду
-    /// </summary>
-    private const int PiratesPerPlayer = 1;
-
-    /// <summary>
     /// Тестовая игра
     /// </summary>
     private readonly Game _testGame;
@@ -40,10 +35,11 @@ public class TestGame
     /// </summary>
     /// <param name="generator">Генератор карты</param>
     /// <param name="mapSize">Размер карты вместе с морем, по умолчанию минимальный 5x5 (поле из 5 клеток)</param>
-    public TestGame (IMapGenerator generator, int mapSize = 5)
+    /// <param name="piratesPerPlayer">Пиратов в команде, по умолчанию 1</param>
+    public TestGame (IMapGenerator generator, int mapSize = 5, int piratesPerPlayer = 1)
     {
         IPlayer[] players = [new WebHumanPlayer()];
-        var board = new Board(players, generator, mapSize, PiratesPerPlayer);
+        var board = new Board(players, generator, mapSize, piratesPerPlayer);
         _testGame = new Game(players, board);
     }
 
@@ -63,6 +59,15 @@ public class TestGame
         var position = new TilePosition(x, y);
         var moves = _testGame.GetAvailableMoves();
         var moveNum = moves.FindIndex(a => a.To == position);
+        
+        _testGame.CurrentPlayer.SetHumanMove(moveNum, null);
+        _testGame.Turn();
+    }
+    
+    public void SetMoveAndTurn(TilePosition from, TilePosition to)
+    {
+        var moves = _testGame.GetAvailableMoves();
+        var moveNum = moves.FindIndex(a => a.From == from && a.To == to);
         
         _testGame.CurrentPlayer.SetHumanMove(moveNum, null);
         _testGame.Turn();

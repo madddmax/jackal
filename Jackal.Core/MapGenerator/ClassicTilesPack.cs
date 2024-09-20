@@ -167,7 +167,7 @@ namespace Jackal.Core
                     : selectedIndex;
                 
                 List.Add(_wholeSetOfTiles[index]);
-                UpdateCoinsOnMap(_wholeSetOfTiles[index].Type);
+                CoinsOnMap += _wholeSetOfTiles[index].Type.CoinsCount();
 
                 switch (_wholeSetOfTiles[index].Type)
                 {
@@ -190,16 +190,5 @@ namespace Jackal.Core
                 _wholeSetOfTiles[index] = _wholeSetOfTiles[_wholeSetOfTiles.Length - 1 - i];
             }
         }
-
-        private void UpdateCoinsOnMap(TileType tileType) =>
-            CoinsOnMap += tileType switch
-            {
-                TileType.Chest1 => 1,
-                TileType.Chest2 => 2,
-                TileType.Chest3 => 3,
-                TileType.Chest4 => 4,
-                TileType.Chest5 => 5,
-                _ => 0
-            };
     }
 }

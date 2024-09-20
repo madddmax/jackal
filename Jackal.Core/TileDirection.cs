@@ -7,6 +7,7 @@ namespace Jackal.Core
     {
         [JsonProperty] 
         public readonly TilePosition From;
+        
         [JsonProperty] 
         public readonly TilePosition To;
 

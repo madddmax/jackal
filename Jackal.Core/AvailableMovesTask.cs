@@ -10,6 +10,9 @@ namespace Jackal.Core
     /// <param name="Prev">Предыдущая позиция</param>
     public record AvailableMovesTask(int TeamId, TilePosition Source, TilePosition Prev)
     {
+        /// <summary>
+        /// Просмотренные позиции
+        /// </summary>
         public readonly List<CheckedPosition> AlreadyCheckedList = [];
     }
 }

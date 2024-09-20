@@ -25,10 +25,11 @@ namespace Jackal.Core
         public readonly int ArrowsCode;
 
         /// <summary>
-        /// Направление клетки с пушкой
+        /// Направление клетки (или количество поворотов):
+        /// 0 - вверх, 1 - вправо, 2 - вниз, 3 - влево
         /// </summary>
         [JsonProperty]
-		public readonly int CannonDirection;
+		public readonly int Direction;
 		
 		/// <summary>
 		/// Количество ходов на клетке-вертушке
@@ -78,7 +79,7 @@ namespace Jackal.Core
             }
             ArrowsCode = tileParams.ArrowsCode;
             SpinningCount = tileParams.SpinningCount;
-	        CannonDirection = tileParams.CanonDirection;
+	        Direction = tileParams.Direction;
 		}
 	}
 }
