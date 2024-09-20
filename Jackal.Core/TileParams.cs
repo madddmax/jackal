@@ -19,9 +19,10 @@
         public int ArrowsCode;
         
         /// <summary>
-        /// Направление клетки с пушкой
+        /// Направление клетки (или количество поворотов):
+        /// 0 - вверх, 1 - вправо, 2 - вниз, 3 - влево
         /// </summary>
-		public int CanonDirection;
+		public int Direction;
         
         /// <summary>
         /// Количество ходов на клетке-вертушке

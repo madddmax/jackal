@@ -69,7 +69,7 @@ namespace Jackal.Core
                 int arrowsCode = ArrowsTypes[arrowType];
                 for (int rotateCount = 0; rotateCount <= 3; rotateCount++)
                 {
-                    if (arrowsCode == code) return new ArrowSearchResult() {ArrowType = arrowType, RotateCount = rotateCount};
+                    if (arrowsCode == code) return new ArrowSearchResult {ArrowType = arrowType, RotateCount = rotateCount};
                     arrowsCode = DoRotate(arrowsCode);
                 }
             }

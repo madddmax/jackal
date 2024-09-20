@@ -31,24 +31,24 @@ namespace Jackal.Core
             foreach (var info in pack.Zip(positions, (def, position) => new {Def = def, Position = position}))
             {
                 var tempDef = info.Def.Clone();
-                if (tempDef.Type is TileType.Cannon or TileType.Arrow)
+                if (tempDef.Type is TileType.Arrow or TileType.Cannon or TileType.Grass)
                 {
-                    int rotatesCount = _rand.Next(4);
-                    for (int j = 1; j <= rotatesCount; j++)
+                    tempDef.Direction = _rand.Next(4);
+                }
+                
+                if (tempDef.Type is TileType.Arrow)
+                {
+                    for (var j = 1; j <= tempDef.Direction; j++)
                     {
-                        tempDef.CanonDirection = rotatesCount;
                         tempDef.ArrowsCode = ArrowsCodesHelper.DoRotate(tempDef.ArrowsCode);
                     }
                 }
 
                 tempDef.Position = info.Position;
-
-                //создаем клетку
+                
                 var tile = new Tile(tempDef);
-
-                //добавляем золото
                 tile.Levels[0].Coins = tile.Type.CoinsCount();
-
+                
                 _tiles.Add(info.Position, tile);
             }
         }

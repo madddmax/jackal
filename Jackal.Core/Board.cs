@@ -332,7 +332,7 @@ namespace Jackal.Core
                         .Select(IncomeTilePosition);
                     break;
 				case TileType.Cannon:
-                    rez = new[] { IncomeTilePosition(GetCannonFly(sourceTile.CannonDirection, source.Position)) };
+                    rez = new[] { IncomeTilePosition(GetCannonFly(sourceTile.Direction, source.Position)) };
 					break;
                 case TileType.Arrow:
                     rez = GetArrowsDeltas(sourceTile.ArrowsCode, source.Position)
@@ -490,8 +490,8 @@ namespace Jackal.Core
             throw new Exception("wrong ship position");
         }
 
-        private Position GetCannonFly(int arrowsCode, Position pos) =>
-            arrowsCode switch
+        private Position GetCannonFly(int direction, Position pos) =>
+            direction switch
             {
                 // вверх
                 0 => new Position(pos.X, MapSize - 1),
