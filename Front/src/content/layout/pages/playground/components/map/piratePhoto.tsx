@@ -18,6 +18,8 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
     };
 
     const coinSize = pirateSize * 0.3 > 15 ? pirateSize * 0.3 : 15;
+    const addSize = (pirateSize - coinSize - 20) / 10;
+    const coinPos = pirateSize - coinSize - addSize;
 
     return (
         <>
@@ -41,8 +43,8 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
                     roundedCircle
                     className={cn('cell-moneta')}
                     style={{
-                        top: pirateSize * 0.6,
-                        left: pirateSize * 0.6,
+                        top: coinPos,
+                        left: coinPos,
                         width: coinSize,
                         height: coinSize,
                     }}
