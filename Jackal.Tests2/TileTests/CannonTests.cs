@@ -43,7 +43,7 @@ public class CannonTests
         var game = new TestGame(cannonOnlyMap);
         
         // добавляем пирата противника на корабль противника в место куда прилетает наш пират на пушке
-        game.AddEnemyTeamAndSetPirate(new TilePosition(2, 4));
+        game.AddEnemyTeamAndPirate(new TilePosition(2, 4));
         
         // Act - высадка с корабля на пушку
         game.Turn();
@@ -90,8 +90,8 @@ public class CannonTests
         var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) {Direction = DirectionType.Right});
         var game = new TestGame(cannonOnlyMap);
         
-        // добавляем пирата противника в место куда прилетает наш пират на пушке
-        game.AddEnemyTeamAndSetPirate(new TilePosition(4, 1));
+        // добавляем пирата противника в воду в место куда прилетает наш пират на пушке
+        game.AddEnemyTeamAndPirate(new TilePosition(4, 1));
         
         // Act - высадка с корабля на пушку
         game.Turn();

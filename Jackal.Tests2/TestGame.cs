@@ -46,15 +46,27 @@ public class TestGame
     /// <summary>
     /// Добавить вражескую команду и пирата в игру
     /// </summary>
-    /// <param name="enemyPiratePosition">Позиция пирата противника</param>
-    public void AddEnemyTeamAndSetPirate(TilePosition enemyPiratePosition)
+    /// <param name="piratePosition">Позиция пирата противника</param>
+    public void AddEnemyTeamAndPirate(TilePosition piratePosition)
     {
         const int enemyTeamId = 1;
         
         // помещаем корабль противника сверху на противоположный берег
         var enemyShip = new Ship(enemyTeamId, new Position((Board.MapSize - 1) / 2, Board.MapSize - 1));
         Board.Teams = [Board.Teams[0], new Team(enemyTeamId, "Test enemy team", enemyShip, []) { Enemies = [0] }];
-        _testGame.AddPirate(enemyTeamId, enemyPiratePosition, PirateType.Usual);
+        _testGame.AddPirate(enemyTeamId, piratePosition, PirateType.Usual);
+    }
+
+    /// <summary>
+    /// Добавить своего пирата в игру
+    /// </summary>
+    /// <param name="piratePosition">Позиция своего пирата</param>
+    /// <param name="type">Тип пирата</param>
+    public void AddOwnTeamPirate(TilePosition piratePosition, PirateType type)
+    {
+        const int ownTeamId = 0;
+        
+        _testGame.AddPirate(ownTeamId, piratePosition, type);
     }
     
     /// <summary>

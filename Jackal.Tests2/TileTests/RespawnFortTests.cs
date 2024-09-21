@@ -110,4 +110,66 @@ public class RespawnFortTests
         );
         Assert.Equal(3, game.TurnNo);
     }
+    
+    [Fact]
+    public void OneRespawnFortWithBenGunn_GetAvailableMoves_ReturnNearestMovesAndNoMoveWithRespawn()
+    {
+        // Arrange
+        const int piratesPerPlayer = 0;
+        var respawnFortOnlyMap = new OneTileMapGenerator(new TileParams(TileType.RespawnFort));
+        var game = new TestGame(respawnFortOnlyMap, 5, piratesPerPlayer);
+        
+        // добавляем Бена Ганна на свой корабль
+        game.AddOwnTeamPirate(new TilePosition(2, 0), PirateType.BenGunn);
+        
+        // Act - высадка с корабля на воскрешающий форт
+        game.Turn();
+        
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - 3 поля рядом + свой корабль
+        Assert.Equal(4, moves.Count);
+        Assert.Equal(new TilePosition(2, 1), moves.First().From);
+        Assert.Equivalent(new List<TilePosition>
+            {
+                new(1, 2),
+                new(2, 0), // свой корабль
+                new(2, 2),
+                new(3, 2)
+            },
+            moves.Select(m => m.To)
+        );
+        Assert.Equal(1, game.TurnNo);
+    }
+    
+    [Fact]
+    public void OneRespawnFortWithBenGunnAndUsualPirate_DoubleMoveWithRespawn_ReturnFourOwnPirates()
+    {
+        // Arrange
+        var respawnFortOnlyMap = new OneTileMapGenerator(new TileParams(TileType.RespawnFort));
+        var game = new TestGame(respawnFortOnlyMap);
+        
+        // добавляем Бена Ганна на свой корабль
+        game.AddOwnTeamPirate(new TilePosition(2, 0), PirateType.BenGunn);
+        
+        // Act - высадка с корабля на воскрешающий форт
+        game.Turn();
+        
+        // воскрешающий ход или высадка с корабля Бена/Пирата
+        game.SetMoveAndTurn(2, 1);
+        
+        // воскрешающий ход или высадка с корабля Бена
+        game.SetMoveAndTurn(2, 1);
+        
+        // воскрешающий ход или высадка с корабля Бена
+        game.SetMoveAndTurn(2, 1);
+        
+        // Assert - появилось 3 наших пирата и Бен Ганн
+        Assert.Equal(4, game.Board.AllPirates.Count);
+        Assert.Equal(0, game.Board.AllPirates[0].TeamId);
+        Assert.Equal(0, game.Board.AllPirates[1].TeamId);
+        Assert.Equal(0, game.Board.AllPirates[2].TeamId);
+        Assert.Equal(0, game.Board.AllPirates[3].TeamId);
+        Assert.Equal(4, game.TurnNo);
+    }
 }
