@@ -23,7 +23,7 @@ namespace Jackal.Core.Actions
             Ship ourShip = ourTeam.Ship;
             
             Tile targetTile = map[to.Position];
-            Tile fromTile = map[from.Position];
+            Tile sourceTile = map[from.Position];
             Tile prevTile = map[prev.Position];
             
             // открываем закрытую клетку
@@ -44,21 +44,21 @@ namespace Jackal.Core.Actions
                 game.SubTurnLighthouseViewCount += remainedTilesViewCount < 4 ? remainedTilesViewCount : 4;
                 
                 // отмечаем что использовали маяк если нашли его маяком
-                if (fromTile is { Type: TileType.Lighthouse, Used: false })
+                if (sourceTile is { Type: TileType.Lighthouse, Used: false })
                 {
                     targetTile.Used = true;
                 }
             }
             
             // просматриваем карту с маяка
-            if (fromTile is { Type: TileType.Lighthouse, Used: false } && game.SubTurnLighthouseViewCount > 0)
+            if (sourceTile is { Type: TileType.Lighthouse, Used: false } && game.SubTurnLighthouseViewCount > 0)
             {
                 game.SubTurnLighthouseViewCount--;
                 
                 // отмечаем что использовали маяк
                 if (game.SubTurnLighthouseViewCount == 0)
                 {
-                    fromTile.Used = true;
+                    sourceTile.Used = true;
                 }
                 else
                 {
@@ -110,7 +110,7 @@ namespace Jackal.Core.Actions
                     targetTileLevel.Pirates.Add(pirateOnShip);
                 }
                 ourShip.Position = to.Position;
-                fromTile.Pirates.Clear();
+                sourceTile.Pirates.Clear();
             }
             else
             {
@@ -154,8 +154,8 @@ namespace Jackal.Core.Actions
             // отмечаем, что мы использовали самолет
             if (from != to)
             {
-                if(fromTile is { Type: TileType.Airplane, Used: false })
-                    fromTile.Used = true;
+                if(sourceTile is { Type: TileType.Airplane, Used: false })
+                    sourceTile.Used = true;
                 
                 if(prevTile is { Type: TileType.Airplane, Used: false })
                     prevTile.Used = true;
