@@ -23,7 +23,7 @@ namespace Jackal.Core.Actions
             Ship ourShip = ourTeam.Ship;
             
             Tile targetTile = map[to.Position];
-            Tile sourceTile = map[from.Position];
+            Tile fromTile = map[from.Position];
             Tile prevTile = map[prev.Position];
             
             // открываем закрытую клетку
@@ -44,21 +44,21 @@ namespace Jackal.Core.Actions
                 game.SubTurnLighthouseViewCount += remainedTilesViewCount < 4 ? remainedTilesViewCount : 4;
                 
                 // отмечаем что использовали маяк если нашли его маяком
-                if (sourceTile is { Type: TileType.Lighthouse, Used: false })
+                if (fromTile is { Type: TileType.Lighthouse, Used: false })
                 {
                     targetTile.Used = true;
                 }
             }
             
             // просматриваем карту с маяка
-            if (sourceTile is { Type: TileType.Lighthouse, Used: false } && game.SubTurnLighthouseViewCount > 0)
+            if (fromTile is { Type: TileType.Lighthouse, Used: false } && game.SubTurnLighthouseViewCount > 0)
             {
                 game.SubTurnLighthouseViewCount--;
                 
                 // отмечаем что использовали маяк
                 if (game.SubTurnLighthouseViewCount == 0)
                 {
-                    sourceTile.Used = true;
+                    fromTile.Used = true;
                 }
                 else
                 {
@@ -94,14 +94,15 @@ namespace Jackal.Core.Actions
                 to = new TilePosition(to.Position, targetTile.SpinningCount - 1);
             }
             
-            TileLevel fromTileLevel = map[from];
+            targetTile = map[to.Position];
             TileLevel targetTileLevel = map[to];
+            TileLevel fromTileLevel = map[from];
             
             if (from.Position == ourShip.Position && 
                 targetTile.Type == TileType.Water &&
                 Board.GetPossibleShipMoves(ourShip.Position, game.Board.MapSize).Contains(to.Position)) 
             {
-                //двигаем свой корабль
+                // двигаем свой корабль
                 var pirateOnShips = map[ourShip.Position].Pirates;
                 foreach (var pirateOnShip in pirateOnShips)
                 {
@@ -109,11 +110,11 @@ namespace Jackal.Core.Actions
                     targetTileLevel.Pirates.Add(pirateOnShip);
                 }
                 ourShip.Position = to.Position;
-                sourceTile.Pirates.Clear();
+                fromTile.Pirates.Clear();
             }
             else
             {
-                //двигаем своего пирата
+                // двигаем своего пирата
                 fromTileLevel.Pirates.Remove(pirate);
 
                 pirate.Position = to;
@@ -153,8 +154,8 @@ namespace Jackal.Core.Actions
             //отмечаем, что мы использовали самолет
             if (from != to)
             {
-                if(sourceTile is { Type: TileType.Airplane, Used: false })
-                    sourceTile.Used = true;
+                if(fromTile is { Type: TileType.Airplane, Used: false })
+                    fromTile.Used = true;
                 
                 if(prevTile is { Type: TileType.Airplane, Used: false })
                     prevTile.Used = true;

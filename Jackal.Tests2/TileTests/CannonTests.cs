@@ -8,10 +8,10 @@ namespace Jackal.Tests2.TileTests;
 public class CannonTests
 {
     [Fact]
-    public void OneCannonUpDirection_GetAvailableMoves_ReturnOnlyWaterMoves()
+    public void OneCannonUp_GetAvailableMoves_ReturnOnlyWaterMoves()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) {Direction = 0});
+        var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) { Direction = DirectionType.Up });
         var game = new TestGame(cannonOnlyMap);
         
         // Act - высадка с корабля на пушку
@@ -36,10 +36,30 @@ public class CannonTests
     }
     
     [Fact]
-    public void OneCannonRightDirection_GetAvailableMoves_ReturnOnlyWaterMoves()
+    public void OneCannonUp_MoveOnEnemyShipByCannon_ReturnDeadOwnPirate()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) {Direction = 1});
+        var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) { Direction = DirectionType.Up });
+        var game = new TestGame(cannonOnlyMap);
+        
+        // добавляем пирата противника на корабль противника в место куда прилетает наш пират на пушке
+        game.AddEnemyTeamAndSetPirate(new TilePosition(2, 4));
+        
+        // Act - высадка с корабля на пушку
+        game.Turn();
+        
+        // Assert - наш пират помер
+        Assert.NotNull(game.Board.DeadPirates);
+        Assert.Single(game.Board.DeadPirates);
+        Assert.Equal(0, game.Board.DeadPirates.Single().TeamId);
+        Assert.Equal(1, game.TurnNo);
+    }
+    
+    [Fact]
+    public void OneCannonRight_GetAvailableMoves_ReturnOnlyWaterMoves()
+    {
+        // Arrange
+        var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) {Direction = DirectionType.Right});
         var game = new TestGame(cannonOnlyMap);
         
         // Act - высадка с корабля на пушку
@@ -64,10 +84,30 @@ public class CannonTests
     }
     
     [Fact]
-    public void OneCannonDownDirection_GetAvailableMoves_ReturnSingleMoveFromShip()
+    public void OneCannonRight_MoveOnEnemyPirateByCannon_ReturnDeadEnemyPirate()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) {Direction = 2});
+        var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) {Direction = DirectionType.Right});
+        var game = new TestGame(cannonOnlyMap);
+        
+        // добавляем пирата противника в место куда прилетает наш пират на пушке
+        game.AddEnemyTeamAndSetPirate(new TilePosition(4, 1));
+        
+        // Act - высадка с корабля на пушку
+        game.Turn();
+        
+        // Assert - пират противника помер
+        Assert.NotNull(game.Board.DeadPirates);
+        Assert.Single(game.Board.DeadPirates);
+        Assert.Equal(1, game.Board.DeadPirates.Single().TeamId);
+        Assert.Equal(1, game.TurnNo);
+    }
+    
+    [Fact]
+    public void OneCannonDown_GetAvailableMoves_ReturnSingleMoveFromShip()
+    {
+        // Arrange
+        var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) { Direction = DirectionType.Down });
         var game = new TestGame(cannonOnlyMap);
         
         // Act - высадка с корабля на пушку
@@ -82,12 +122,36 @@ public class CannonTests
         Assert.Equal(new TilePosition(2, 1), moves.Single().To);
         Assert.Equal(1, game.TurnNo);
     }
-    
+ 
     [Fact]
-    public void OneCannonLeftDirection_GetAvailableMoves_ReturnOnlyWaterMoves()
+    public void OneCannonDownRepeatMove_GetAvailableMoves_ReturnSingleMoveFromShip()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) {Direction = 3});
+        var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) { Direction = DirectionType.Down });
+        var game = new TestGame(cannonOnlyMap);
+        
+        // Act - высадка с корабля на пушку
+        game.Turn();
+        
+        // высадка с корабля на открытую пушку
+        game.Turn();
+        
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - следующий ход, оказываемся на своем корабле
+        // доступнен один ход - высадка на открытую пушку
+        Assert.Single(moves);
+        Assert.Equal(new TilePosition(2, 0), moves.Single().From);
+        Assert.Equal(new TilePosition(2, 1), moves.Single().To);
+        Assert.Equal(2, game.TurnNo);
+    }
+    
+    [Fact]
+    public void OneCannonLeft_GetAvailableMoves_ReturnOnlyWaterMoves()
+    {
+        // Arrange
+        var cannonOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Cannon) { Direction = DirectionType.Left });
+        
         var game = new TestGame(cannonOnlyMap);
         
         // Act - высадка с корабля на пушку
