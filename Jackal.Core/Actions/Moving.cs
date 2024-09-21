@@ -50,7 +50,7 @@ namespace Jackal.Core.Actions
                 }
             }
             
-            // просматриваем какрту с маяка
+            // просматриваем карту с маяка
             if (sourceTile is { Type: TileType.Lighthouse, Used: false } && game.SubTurnLighthouseViewCount > 0)
             {
                 game.SubTurnLighthouseViewCount--;
@@ -80,6 +80,12 @@ namespace Jackal.Core.Actions
             if (targetTile.Type == TileType.Balloon)
             {
                 to = new TilePosition(ourShip.Position);
+            }
+            
+            // пушка выстреливает сразу в воду
+            if (targetTile.Type == TileType.Cannon)
+            {
+                to = GetCannonFly(targetTile.Direction, to.Position, board.MapSize);
             }
             
             // ходим по клетке вертушке
@@ -120,7 +126,7 @@ namespace Jackal.Core.Actions
                 game.PrevSubTurnPosition = prev;
             }
             
-            if (newTile && targetTile.Type is TileType.Arrow or TileType.Horse or TileType.Cannon or TileType.Ice or TileType.Crocodile)
+            if (newTile && targetTile.Type is TileType.Arrow or TileType.Horse or TileType.Ice or TileType.Crocodile)
             {
                 var airplaneFlying = targetTile.Type is TileType.Ice or TileType.Crocodile &&
                                      (prevTile is { Type: TileType.Airplane, Used: false } ||
@@ -243,5 +249,18 @@ namespace Jackal.Core.Actions
 
             return GameActionResult.Live;
         }
+        
+        private static TilePosition GetCannonFly(int direction, Position pos, int mapSize) =>
+            direction switch
+            {
+                // вверх
+                0 => new TilePosition(pos.X, mapSize - 1),
+                // вправо
+                1 => new TilePosition(mapSize - 1, pos.Y),
+                // вниз
+                2 => new TilePosition(pos.X, 0),
+                // влево
+                _ => new TilePosition(0, pos.Y)
+            };
     }
 }

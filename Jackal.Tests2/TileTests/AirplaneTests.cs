@@ -204,10 +204,10 @@ public class AirplaneTests
         // пропускаем ход самолета
         game.SetMoveAndTurn(2, 1);
         
-        // на следующий ход вновь доступен ход самолета
         var moves = game.GetAvailableMoves();
         
-        // Assert - все поле 5 клеток + свой корабль
+        // Assert - следующий ход, доступен ход самолета
+        // все поле 5 клеток + свой корабль
         Assert.Equal(6, moves.Count);
         Assert.Equal(new TilePosition(2, 1), moves.First().From);
         Assert.Equivalent(new List<TilePosition>
@@ -242,10 +242,10 @@ public class AirplaneTests
         var to = new TilePosition(2, 1);
         game.SetMoveAndTurn(from, to);
         
-        // на текущий ход второго пирата доступен ход самолета
         var moves = game.GetAvailableMoves();
         
-        // Assert - все поле 5 клеток + свой корабль
+        // Assert - продолжается ход второго пирата, доступен ход самолета
+        // все поле 5 клеток + свой корабль
         Assert.Equal(6, moves.Count);
         Assert.Equal(new TilePosition(2, 1), moves.First().From);
         Assert.Equivalent(new List<TilePosition>
