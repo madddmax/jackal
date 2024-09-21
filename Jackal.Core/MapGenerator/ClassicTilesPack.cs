@@ -14,7 +14,7 @@ namespace Jackal.Core
         /// </summary>
         private readonly TileParams[] _wholeSetOfTiles =
         [
-            // 90 значимых клеток
+            // 92 значимых клеток
             new TileParams(TileType.Chest1), // 1 монета - первый сундук берем всегда
             new TileParams(TileType.Chest1), // 2
             new TileParams(TileType.Chest1), // 3
@@ -105,7 +105,9 @@ namespace Jackal.Core
             new TileParams(TileType.Spinning) { SpinningCount = 4 },
             new TileParams(TileType.Spinning) { SpinningCount = 5 },
             new TileParams(TileType.Spinning) { SpinningCount = 5 },
-            // 30 пустых клеток
+            new TileParams(TileType.Caramba),
+            new TileParams(TileType.Caramba),
+            // 28 пустых клеток
             new TileParams(TileType.Grass, 0),
             new TileParams(TileType.Grass, 0),
             new TileParams(TileType.Grass, 0),
@@ -113,8 +115,6 @@ namespace Jackal.Core
             new TileParams(TileType.Grass, 0),
             new TileParams(TileType.Grass, 0),
             new TileParams(TileType.Grass, 0),
-            new TileParams(TileType.Grass, 0),
-            new TileParams(TileType.Grass, 1),
             new TileParams(TileType.Grass, 1),
             new TileParams(TileType.Grass, 1),
             new TileParams(TileType.Grass, 1),

@@ -304,6 +304,9 @@ namespace JackalWebHost.Service
                 case TileType.BenGunn:
                     filename = tile.Used ? "used_bengunn" : "bengunn";
                     break;
+                case TileType.Caramba:
+                    filename = "caramba";
+                    break;
                 case TileType.Spinning:
                     switch (tile.SpinningCount)
                     {

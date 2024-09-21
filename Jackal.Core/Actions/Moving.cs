@@ -12,7 +12,6 @@ namespace Jackal.Core.Actions
             if (from == to)
             {
                 // придерживаем самолет
-                // воскрешаемся на форте
                 return GameActionResult.Live;
             }
             
@@ -74,6 +73,26 @@ namespace Jackal.Core.Actions
             {
                 game.AddPirate(pirate.TeamId, to, PirateType.BenGunn);
                 targetTile.Used = true;
+            }
+            
+            // нашли Карамбу
+            if (targetTile is { Type: TileType.Caramba, Used: false })
+            {
+                // проходим по всем командам и собираем пиратов на кораблях
+                foreach (var team in board.Teams)
+                {
+                    foreach (var pirateOnMap in team.Pirates)
+                    {
+                        if (pirateOnMap.Position.Position == team.Ship.Position)
+                            continue;
+
+                        // возвращаем пирата на его корабль
+                        game.MovePirateToTheShip(pirateOnMap);
+                    }
+                }
+                
+                targetTile.Used = true;
+                return GameActionResult.Live;
             }
             
             // воздушный шар переносит сразу на наш корабль
@@ -172,26 +191,21 @@ namespace Jackal.Core.Actions
                 return GameActionResult.Die;
             }
 
-            //убиваем чужих пиратов
-            List<Pirate> enemyPirates = targetTileLevel.Pirates
+            // убиваем чужих пиратов
+            var enemyPirates = targetTileLevel.Pirates
                 .Where(x => x.TeamId != pirate.TeamId)
                 .ToList();
             
             foreach (var enemyPirate in enemyPirates)
             {
-                Team enemyTeam = board.Teams[enemyPirate.TeamId];
-
-                if (targetTile.Type != TileType.Water) //возвращаем врага на его корабль
+                if (targetTile.Type != TileType.Water)
                 {
-                    enemyPirate.Position = new TilePosition(enemyTeam.Ship.Position);
-                    board.Map[enemyTeam.Ship.Position].Pirates.Add(enemyPirate);
-                    targetTileLevel.Pirates.Remove(enemyPirate);
-                    enemyPirate.IsInTrap = false;
-                    enemyPirate.IsDrunk = false;
-                    enemyPirate.DrunkSinceTurnNo = null;
+                    // возвращаем врага на его корабль
+                    game.MovePirateToTheShip(enemyPirate);
                 }
-                else //убиваем совсем
+                else
                 {
+                    // убиваем совсем
                     game.KillPirate(enemyPirate);
                 }
             }
@@ -203,8 +217,9 @@ namespace Jackal.Core.Actions
 
                 fromTileLevel.Coins--;
 
-                if (ourTeam.Ship.Position == to.Position)  //перенос монеты на корабль
+                if (ourTeam.Ship.Position == to.Position)
                 {
+                    // перенос монеты на корабль
                     ourShip.Coins++;
 
                     game.Scores[pirate.TeamId]++;
@@ -212,8 +227,9 @@ namespace Jackal.Core.Actions
 
                     game.LastActionTurnNo = game.TurnNo;
                 }
-                else if (targetTile.Type == TileType.Water) // если монета попала в воду, то она тонет
+                else if (targetTile.Type == TileType.Water)
                 {
+                    // если монета попала в воду, то она тонет
                     game.CoinsLeft--;
                     game.LastActionTurnNo = game.TurnNo;
                 }
@@ -222,11 +238,11 @@ namespace Jackal.Core.Actions
                     targetTileLevel.Coins++;
                 }
             }
-
-            //проводим пьянку для пирата
+            
             switch (targetTile.Type)
             {
                 case TileType.RumBarrel:
+                    // проводим пьянку для пирата
                     pirate.DrunkSinceTurnNo = game.TurnNo;
                     pirate.IsDrunk = true;
                     break;
