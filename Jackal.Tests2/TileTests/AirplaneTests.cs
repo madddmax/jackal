@@ -228,8 +228,9 @@ public class AirplaneTests
     public void OneAirplaneWaitThenSameAirplaneMoveByNextPirate_GetAvailableMoves_ReturnWholeMapAndOwnShip()
     {
         // Arrange
+        const int piratesPerPlayer = 2;
         var airplaneOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Airplane));
-        var game = new TestGame(airplaneOnlyMap, 5, 2);
+        var game = new TestGame(airplaneOnlyMap, 5, piratesPerPlayer);
         
         // Act - высадка с корабля на самолет
         game.Turn();

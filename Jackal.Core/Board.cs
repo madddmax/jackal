@@ -252,16 +252,20 @@ namespace Jackal.Core
                         break;
 
                     case TileType.RespawnFort:
-                        if (task.Source == newPosition)
+                        if (task.Source == newPosition && 
+                            newPositionTile.Pirates.Any(p => p.Type == PirateType.Usual) &&
+                            ourTeam.Pirates.Count(p => p.Type == PirateType.Usual) < 3)
                         {
-                            if (ourTeam.Pirates.Length < 3)
-                                goodTargets.Add(new AvailableMove(task.Source, newPosition, moving, new Respawn())
-                                {
-                                    MoveType = MoveType.WithRespawn
-                                });
+                            // доступно воскрешение
+                            goodTargets.Add(new AvailableMove(task.Source, newPosition, new Respawn())
+                            {
+                                MoveType = MoveType.WithRespawn
+                            });
                         }
-                        else if (newPositionTile.OccupationTeamId.HasValue == false ||
-                                 newPositionTile.OccupationTeamId == ourTeamId)
+                        
+                        if (task.Source != newPosition && 
+                            (newPositionTile.OccupationTeamId.HasValue == false ||
+                            newPositionTile.OccupationTeamId == ourTeamId))
                         {
                             // форт не занят противником
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));

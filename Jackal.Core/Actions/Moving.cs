@@ -94,14 +94,15 @@ namespace Jackal.Core.Actions
                 to = new TilePosition(to.Position, targetTile.SpinningCount - 1);
             }
             
-            TileLevel fromTileLevel = map[from];
+            targetTile = map[to.Position];
             TileLevel targetTileLevel = map[to];
+            TileLevel fromTileLevel = map[from];
             
             if (from.Position == ourShip.Position && 
                 targetTile.Type == TileType.Water &&
                 Board.GetPossibleShipMoves(ourShip.Position, game.Board.MapSize).Contains(to.Position)) 
             {
-                //двигаем свой корабль
+                // двигаем свой корабль
                 var pirateOnShips = map[ourShip.Position].Pirates;
                 foreach (var pirateOnShip in pirateOnShips)
                 {
@@ -113,7 +114,7 @@ namespace Jackal.Core.Actions
             }
             else
             {
-                //двигаем своего пирата
+                // двигаем своего пирата
                 fromTileLevel.Pirates.Remove(pirate);
 
                 pirate.Position = to;
@@ -150,7 +151,7 @@ namespace Jackal.Core.Actions
                 game.SubTurnAirplaneFlying = false;
             }
             
-            //отмечаем, что мы использовали самолет
+            // отмечаем, что мы использовали самолет
             if (from != to)
             {
                 if(sourceTile is { Type: TileType.Airplane, Used: false })
@@ -160,7 +161,7 @@ namespace Jackal.Core.Actions
                     prevTile.Used = true;
             }
 
-            //проверяем, не попадаем ли мы на чужой корабль - тогда мы погибли
+            // проверяем, не попадаем ли мы на чужой корабль - тогда мы погибли
             IEnumerable<Position> enemyShips = game.Board.Teams
                 .Where(x => x != ourTeam)
                 .Select(x => x.Ship.Position);

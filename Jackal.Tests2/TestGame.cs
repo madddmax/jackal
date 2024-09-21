@@ -43,17 +43,56 @@ public class TestGame
         _testGame = new Game(players, board);
     }
 
+    /// <summary>
+    /// Добавить вражескую команду и пирата в игру
+    /// </summary>
+    /// <param name="piratePosition">Позиция пирата противника</param>
+    public void AddEnemyTeamAndPirate(TilePosition piratePosition)
+    {
+        const int enemyTeamId = 1;
+        
+        // помещаем корабль противника сверху на противоположный берег
+        var enemyShip = new Ship(enemyTeamId, new Position((Board.MapSize - 1) / 2, Board.MapSize - 1));
+        Board.Teams = [Board.Teams[0], new Team(enemyTeamId, "Test enemy team", enemyShip, []) { Enemies = [0] }];
+        _testGame.AddPirate(enemyTeamId, piratePosition, PirateType.Usual);
+    }
+
+    /// <summary>
+    /// Добавить своего пирата в игру
+    /// </summary>
+    /// <param name="piratePosition">Позиция своего пирата</param>
+    /// <param name="type">Тип пирата</param>
+    public void AddOwnTeamPirate(TilePosition piratePosition, PirateType type)
+    {
+        const int ownTeamId = 0;
+        
+        _testGame.AddPirate(ownTeamId, piratePosition, type);
+    }
+    
+    /// <summary>
+    /// Получить возможные ходы
+    /// </summary>
     public List<Move> GetAvailableMoves()
     {
         return _testGame.GetAvailableMoves();
     }
     
+    /// <summary>
+    /// Сделать ход по умолчанию,
+    /// выбирает первый доступный ход,
+    /// если ход всего один то сделает его
+    /// </summary>
     public void Turn()
     {
         _testGame.CurrentPlayer.SetHumanMove(0, null);
         _testGame.Turn();
     }
     
+    /// <summary>
+    /// Сделать ход по координатам целевой клетки
+    /// </summary>
+    /// <param name="x">X координата куда делаем ход</param>
+    /// <param name="y">Y координата куда делаем ход</param>
     public void SetMoveAndTurn(int x, int y)
     {
         var position = new TilePosition(x, y);
@@ -64,6 +103,13 @@ public class TestGame
         _testGame.Turn();
     }
     
+    /// <summary>
+    /// Сделать ход по позициям клеток,
+    /// используется если несколько пиратов
+    /// и надо выбрать с какой клетки делать ход
+    /// </summary>
+    /// <param name="from">Позиция откуда делаем ход</param>
+    /// <param name="to">Позиция куда делаем ход</param>
     public void SetMoveAndTurn(TilePosition from, TilePosition to)
     {
         var moves = _testGame.GetAvailableMoves();
