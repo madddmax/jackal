@@ -151,7 +151,7 @@ namespace Jackal.Core.Actions
                 game.SubTurnAirplaneFlying = false;
             }
             
-            //отмечаем, что мы использовали самолет
+            // отмечаем, что мы использовали самолет
             if (from != to)
             {
                 if(fromTile is { Type: TileType.Airplane, Used: false })
@@ -161,7 +161,7 @@ namespace Jackal.Core.Actions
                     prevTile.Used = true;
             }
 
-            //проверяем, не попадаем ли мы на чужой корабль - тогда мы погибли
+            // проверяем, не попадаем ли мы на чужой корабль - тогда мы погибли
             IEnumerable<Position> enemyShips = game.Board.Teams
                 .Where(x => x != ourTeam)
                 .Select(x => x.Ship.Position);
