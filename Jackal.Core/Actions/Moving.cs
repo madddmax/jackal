@@ -35,7 +35,27 @@ namespace Jackal.Core.Actions
                 newTile = true;
             }
             
-            // нашли маяк
+            // нашли карамбу (срабатывает при открытии маяком)
+            if (targetTile is { Type: TileType.Caramba, Used: false })
+            {
+                // проходим по всем командам и собираем пиратов на кораблях
+                foreach (var team in board.Teams)
+                {
+                    foreach (var pirateOnMap in team.Pirates)
+                    {
+                        if (pirateOnMap.Position.Position == team.Ship.Position)
+                            continue;
+
+                        // возвращаем пирата на его корабль
+                        game.MovePirateToTheShip(pirateOnMap);
+                    }
+                }
+                
+                to = new TilePosition(ourShip.Position);
+                targetTile.Used = true;
+            }
+            
+            // нашли маяк (срабатывает при открытии маяком)
             if (targetTile is { Type: TileType.Lighthouse, Used: false })
             {
                 var unknownTilesCount = game.Board.AllTiles(x => x.Type == TileType.Unknown).Count();
@@ -49,7 +69,7 @@ namespace Jackal.Core.Actions
                 }
             }
             
-            // просматриваем карту с маяка
+            // просматриваем карту с маяка (все что после не срабатывает при открытии маяком)
             if (sourceTile is { Type: TileType.Lighthouse, Used: false } && game.SubTurnLighthouseViewCount > 0)
             {
                 game.SubTurnLighthouseViewCount--;
@@ -73,26 +93,6 @@ namespace Jackal.Core.Actions
             {
                 game.AddPirate(pirate.TeamId, to, PirateType.BenGunn);
                 targetTile.Used = true;
-            }
-            
-            // нашли Карамбу
-            if (targetTile is { Type: TileType.Caramba, Used: false })
-            {
-                // проходим по всем командам и собираем пиратов на кораблях
-                foreach (var team in board.Teams)
-                {
-                    foreach (var pirateOnMap in team.Pirates)
-                    {
-                        if (pirateOnMap.Position.Position == team.Ship.Position)
-                            continue;
-
-                        // возвращаем пирата на его корабль
-                        game.MovePirateToTheShip(pirateOnMap);
-                    }
-                }
-                
-                targetTile.Used = true;
-                return GameActionResult.Live;
             }
             
             // воздушный шар переносит сразу на наш корабль
