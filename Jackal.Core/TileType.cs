@@ -24,6 +24,7 @@
         Cannibal,
 		Cannon,
         Lighthouse,
-        BenGunn
+        BenGunn,
+        Caramba
     }
 }

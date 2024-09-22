@@ -180,6 +180,9 @@ namespace Jackal.Core
         /// </summary>
         public IPlayer CurrentPlayer => _players[CurrentTeamId];
 
+        /// <summary>
+        /// Убрать пирата с карты
+        /// </summary>
         public void KillPirate(Pirate pirate)
         {
             int teamId = pirate.TeamId;
@@ -191,6 +194,9 @@ namespace Jackal.Core
             Board.DeadPirates.Add(pirate);
         }
 
+        /// <summary>
+        /// Добавить нового пирата на карту
+        /// </summary>
         public void AddPirate(int teamId, TilePosition position, PirateType type)
         {
             var newPirate = new Pirate(teamId, position, type);
@@ -198,6 +204,23 @@ namespace Jackal.Core
             
             var tile = Board.Map[position];
             tile.Pirates.Add(newPirate);
+        }
+
+        /// <summary>
+        /// Переместить пирата на его корабль
+        /// </summary>
+        public void MovePirateToTheShip(Pirate pirate)
+        {
+            var team = Board.Teams[pirate.TeamId];
+            var pirateTileLevel = Board.Map[pirate.Position];
+            
+            pirate.Position = new TilePosition(team.Ship.Position);
+            Board.Map[team.Ship.Position].Pirates.Add(pirate);
+            pirateTileLevel.Pirates.Remove(pirate);
+            
+            pirate.IsInTrap = false;
+            pirate.IsDrunk = false;
+            pirate.DrunkSinceTurnNo = null;
         }
     }
 }
