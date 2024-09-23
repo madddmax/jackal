@@ -246,4 +246,72 @@ public class SpinningTests
         
         Assert.Equal(1, game.TurnNo);
     }
+    
+    [Fact]
+    public void SpinningThenGrassWithCoinThenSpinningAgainWithEnemyOnFirstPosition_GetAvailableMoves_ReturnAllMoveWithoutCoin()
+    {
+        const int coinsOnMap = 1;
+        
+        // Arrange
+        var spinningGrassLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.Spinning) { SpinningCount = 2 },
+            new TileParams(TileType.Grass),
+            coinsOnMap
+        );
+        var game = new TestGame(spinningGrassLineMap);
+        
+        // Act - высадка с корабля на джунгли-вертушку
+        game.Turn(); // 1 ход
+        game.Turn(); // 2 ход
+        
+        // выбираем ход - вперед на пустую клетку
+        game.SetMoveAndTurn(2,2);
+        
+        // добавляем монету - на текущую позицию нашего пирата
+        game.AddCoin(new TilePosition(2, 2));
+        
+        // добавляем пирата противника - в месте высадки нашего пирата на первую позицию джунгли-вертушки
+        game.AddEnemyTeamAndPirate(new TilePosition(2, 1, 1));
+        
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - доступно 4 хода без монеты на соседние клетки из цента карты
+        Assert.Equal(4, moves.Count);
+        Assert.True(moves.All(m => !m.WithCoins));
+        Assert.Equal(3, game.TurnNo);
+    }
+    
+    [Fact]
+    public void SpinningThenGrassWithCoinThenSpinningAgainWithEnemyOnLastPosition_GetAvailableMoves_ReturnSingleMoveWithCoin()
+    {
+        const int coinsOnMap = 1;
+        
+        // Arrange
+        var spinningGrassLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.Spinning) { SpinningCount = 2 },
+            new TileParams(TileType.Grass),
+            coinsOnMap
+        );
+        var game = new TestGame(spinningGrassLineMap);
+        
+        // Act - высадка с корабля на джунгли-вертушку
+        game.Turn(); // 1 ход
+        game.Turn(); // 2 ход
+        
+        // выбираем ход - вперед на пустую клетку
+        game.SetMoveAndTurn(2,2);
+        
+        // добавляем монету - на текущую позицию нашего пирата
+        game.AddCoin(new TilePosition(2, 2));
+        
+        // добавляем пирата противника - в месте высадки нашего пирата на последнюю позицию джунгли-вертушки
+        game.AddEnemyTeamAndPirate(new TilePosition(2, 1, 0));
+        
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - доступно 4 хода без монеты на соседние клетки из цента карты и 1 ход с монетой на джунгли-вертушку
+        Assert.Equal(5, moves.Count);
+        Assert.Single(moves, m => m.WithCoins);
+        Assert.Equal(3, game.TurnNo);
+    }
 }

@@ -292,13 +292,16 @@ namespace Jackal.Core
                         goodTargets.AddRange(GetAllAvailableMoves(
                             task, newPosition, source, airplaneFlying, subTurnLighthouseViewCount)
                         );
+                        
                         break;
+
                     default:
                         goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
 
+                        var newPositionTileLevel = Map[newPosition];
                         if (Map[task.Source].Coins > 0
-                            && (newPositionTile.OccupationTeamId == null ||
-                                newPositionTile.OccupationTeamId == ourTeamId))
+                            && (newPositionTileLevel.OccupationTeamId == null ||
+                                newPositionTileLevel.OccupationTeamId == ourTeamId))
                         {
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
                             {
