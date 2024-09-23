@@ -53,7 +53,7 @@ namespace Jackal.Core
 
             if (_availableMoves.Count > 0)
             {
-                //есть возможные ходы
+                // есть возможные ходы
                 var gameState = new GameState
                 {
                     AvailableMoves = _availableMoves.ToArray(),
@@ -134,7 +134,9 @@ namespace Jackal.Core
             {
                 TilePosition prev = PrevSubTurnPosition ?? pirate.Position;
                 AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, prev);
-                List<AvailableMove> moves = Board.GetAllAvailableMoves(task, task.Source, task.Prev, SubTurnAirplaneFlying);
+                List<AvailableMove> moves = Board.GetAllAvailableMoves(
+                    task, task.Source, task.Prev, SubTurnAirplaneFlying, SubTurnLighthouseViewCount
+                );
                 targets.AddRange(moves);
             }
 

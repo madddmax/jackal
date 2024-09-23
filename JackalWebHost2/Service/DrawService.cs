@@ -299,7 +299,7 @@ namespace JackalWebHost.Service
                     filename = "canibal";
                     break;
                 case TileType.Lighthouse:
-                    filename = "pharos";
+                    filename = "lighthouse";
                     break;
                 case TileType.BenGunn:
                     filename = tile.Used ? "used_bengunn" : "bengunn";

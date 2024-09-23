@@ -65,4 +65,38 @@ public class CarambaTests
         );
         Assert.Equal(2, game.TurnNo);
     }
+    
+    [Fact]
+    public void LighthouseThenSearchCaramba_Turn_ReturnAllPiratesOnTheShips()
+    {
+        // Arrange
+        var lighthouseCarambaLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.Lighthouse), new TileParams(TileType.Caramba)
+        );
+        var game = new TestGame(lighthouseCarambaLineMap);
+        
+        // добавляем пирата противника в воду, место выбрано случайно
+        game.AddEnemyTeamAndPirate(new TilePosition(4, 1));
+        
+        // Act - высадка с корабля на маяк
+        game.Turn();
+        
+        // открытие маяком карамбы
+        game.Turn();
+        
+        // Assert - все пираты на своих кораблях
+        Assert.Equal(2, game.Board.Teams.Length);
+        Assert.Single(game.Board.Teams[0].Pirates);
+        Assert.Single(game.Board.Teams[1].Pirates);
+
+        var ownPirate = game.Board.Teams[0].Pirates[0];
+        Assert.Equal(game.Board.Teams[0].Ship.Position, ownPirate.Position.Position);
+        Assert.Equal(new Position(2, 0), ownPirate.Position.Position);
+        
+        var enemyPirate = game.Board.Teams[1].Pirates[0];
+        Assert.Equal(game.Board.Teams[1].Ship.Position, enemyPirate.Position.Position);
+        Assert.Equal(new Position(2, 4), enemyPirate.Position.Position);
+
+        Assert.Equal(0, game.TurnNo);
+    }
 }

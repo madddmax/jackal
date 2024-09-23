@@ -152,7 +152,7 @@ namespace Jackal.Core
         /// Возвращаем список всех полей, в которые можно попасть из исходного поля
         /// </summary>
         public List<AvailableMove> GetAllAvailableMoves(
-            AvailableMovesTask task, TilePosition source, TilePosition prev, bool airplaneFlying)
+            AvailableMovesTask task, TilePosition source, TilePosition prev, bool airplaneFlying, int subTurnLighthouseViewCount)
         {
             Tile sourceTile = Map[source.Position];
 
@@ -173,7 +173,9 @@ namespace Jackal.Core
             var goodTargets = new List<AvailableMove>();
             
             // места всех возможных ходов
-            IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(source, prev, ourTeam, airplaneFlying);
+            IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(
+                source, prev, ourTeam, airplaneFlying, subTurnLighthouseViewCount
+            );
 
             foreach (TilePosition newPosition in positionsForCheck)
             {
@@ -200,7 +202,7 @@ namespace Jackal.Core
                     case TileType.Unknown:
                         var availableMove = new AvailableMove(task.Source, newPosition, moving)
                         {
-                            MoveType = sourceTile is { Type: TileType.Lighthouse, Used: false }
+                            MoveType = subTurnLighthouseViewCount > 0
                                 ? MoveType.WithLighthouse
                                 : MoveType.Usual
                         };
@@ -287,7 +289,9 @@ namespace Jackal.Core
                     case TileType.Horse:
                     case TileType.Ice:
                     case TileType.Crocodile:
-                        goodTargets.AddRange(GetAllAvailableMoves(task, newPosition, source, airplaneFlying));
+                        goodTargets.AddRange(GetAllAvailableMoves(
+                            task, newPosition, source, airplaneFlying, subTurnLighthouseViewCount)
+                        );
                         break;
                     default:
                         goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
@@ -314,7 +318,7 @@ namespace Jackal.Core
         /// (не проверяется, допустим ли такой ход)
         /// </summary>
         private List<TilePosition> GetAllTargetsForSubTurn(
-            TilePosition source, TilePosition prev, Team ourTeam, bool airplaneFlying)
+            TilePosition source, TilePosition prev, Team ourTeam, bool airplaneFlying, int subTurnLighthouseViewCount)
         {
             var sourceTile = Map[source.Position];
             var ourShip = ourTeam.Ship;
@@ -337,13 +341,6 @@ namespace Jackal.Core
                 case TileType.Arrow:
                     rez = GetArrowsDeltas(sourceTile.ArrowsCode, source.Position)
                         .Select(IncomeTilePosition);
-                    break;
-                case TileType.Lighthouse:
-                    if (sourceTile.Used == false)
-                    {
-                        rez = AllTiles(x => x.Type == TileType.Unknown)
-                            .Select(x => IncomeTilePosition(x.Position));
-                    }
                     break;
                 case TileType.Airplane:
                     if (sourceTile.Used == false)
@@ -407,6 +404,12 @@ namespace Jackal.Core
                             .Select(IncomeTilePosition);
                     }
                     break;
+            }
+
+            if (subTurnLighthouseViewCount > 0)
+            {
+                rez = AllTiles(x => x.Type == TileType.Unknown)
+                    .Select(x => IncomeTilePosition(x.Position));
             }
             
             return rez.Where(x => IsValidMapPosition(x.Position)).ToList();

@@ -35,47 +35,7 @@ namespace Jackal.Core.Actions
                 newTile = true;
             }
             
-            // нашли маяк
-            if (targetTile is { Type: TileType.Lighthouse, Used: false })
-            {
-                var unknownTilesCount = game.Board.AllTiles(x => x.Type == TileType.Unknown).Count();
-                var remainedTilesViewCount = unknownTilesCount - game.SubTurnLighthouseViewCount + 1;
-                game.SubTurnLighthouseViewCount += remainedTilesViewCount < 4 ? remainedTilesViewCount : 4;
-                
-                // отмечаем что использовали маяк если нашли его маяком
-                if (sourceTile is { Type: TileType.Lighthouse, Used: false })
-                {
-                    targetTile.Used = true;
-                }
-            }
-            
-            // просматриваем карту с маяка
-            if (sourceTile is { Type: TileType.Lighthouse, Used: false } && game.SubTurnLighthouseViewCount > 0)
-            {
-                game.SubTurnLighthouseViewCount--;
-                
-                // отмечаем что использовали маяк
-                if (game.SubTurnLighthouseViewCount == 0)
-                {
-                    sourceTile.Used = true;
-                }
-                else
-                {
-                    game.NeedSubTurnPirate = pirate;
-                    game.PrevSubTurnPosition = prev;
-                }
-                
-                return GameActionResult.Live;
-            }
-            
-            // нашли Бен Ганна
-            if (targetTile is { Type: TileType.BenGunn, Used: false })
-            {
-                game.AddPirate(pirate.TeamId, to, PirateType.BenGunn);
-                targetTile.Used = true;
-            }
-            
-            // нашли Карамбу
+            // нашли карамбу
             if (targetTile is { Type: TileType.Caramba, Used: false })
             {
                 // проходим по всем командам и собираем пиратов на кораблях
@@ -91,8 +51,32 @@ namespace Jackal.Core.Actions
                     }
                 }
                 
+                to = new TilePosition(ourShip.Position);
                 targetTile.Used = true;
-                return GameActionResult.Live;
+            }
+            
+            // нашли Бен Ганна не маяком
+            if (targetTile is { Type: TileType.BenGunn, Used: false } && game.SubTurnLighthouseViewCount == 0)
+            {
+                game.AddPirate(pirate.TeamId, to, PirateType.BenGunn);
+                targetTile.Used = true;
+            }
+            
+            // просматриваем карту с маяка
+            if (game.SubTurnLighthouseViewCount > 0)
+            {
+                game.SubTurnLighthouseViewCount--;
+                to = pirate.Position;
+            }
+            
+            // нашли маяк
+            if (targetTile is { Type: TileType.Lighthouse, Used: false })
+            {
+                var unknownTilesCount = game.Board.AllTiles(x => x.Type == TileType.Unknown).Count();
+                var remainedTilesViewCount = unknownTilesCount - game.SubTurnLighthouseViewCount;
+                game.SubTurnLighthouseViewCount += remainedTilesViewCount < 4 ? remainedTilesViewCount : 4;
+                
+                targetTile.Used = true;
             }
             
             // воздушный шар переносит сразу на наш корабль
@@ -140,7 +124,8 @@ namespace Jackal.Core.Actions
                 targetTileLevel.Pirates.Add(pirate);
             }
 
-            if (targetTile is { Used: false, Type: TileType.Airplane or TileType.Lighthouse })
+            if (game.SubTurnLighthouseViewCount > 0 || 
+                targetTile is { Used: false, Type: TileType.Airplane })
             {
                 game.NeedSubTurnPirate = pirate;
                 game.PrevSubTurnPosition = prev;
@@ -153,7 +138,7 @@ namespace Jackal.Core.Actions
                                       game.SubTurnAirplaneFlying);
 
                 AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, prev);
-                List<AvailableMove> moves = game.Board.GetAllAvailableMoves(task, task.Source, task.Prev, airplaneFlying);
+                List<AvailableMove> moves = game.Board.GetAllAvailableMoves(task, task.Source, task.Prev, airplaneFlying, 0);
 
                 if (moves.Count == 0)
                 {
