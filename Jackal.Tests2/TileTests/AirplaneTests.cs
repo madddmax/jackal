@@ -16,6 +16,7 @@ public class AirplaneTests
         
         // Act - высадка с корабля на самолет
         game.Turn();
+        
         var moves = game.GetAvailableMoves();
         
         // Assert - все поле 5 клеток + свой корабль

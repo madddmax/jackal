@@ -472,7 +472,7 @@ namespace Jackal.Core
             }
             else
             {
-                throw new Exception("wrong ship position");
+                throw new Exception("Wrong ship position");
             }
         }
 
@@ -490,7 +490,7 @@ namespace Jackal.Core
             if (pos.Y == MapSize - 1)
                 return new Position(pos.X, MapSize - 2);
 
-            throw new Exception("wrong ship position");
+            throw new Exception("Wrong ship position");
         }
 
         private static IEnumerable<Position> GetArrowsDeltas(int arrowsCode, Position source)

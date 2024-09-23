@@ -197,10 +197,15 @@ namespace Jackal.Core
         }
 
         /// <summary>
-        /// Добавить нового пирата на карту
+        /// Добавить нового пирата на карту на открытую клетку
         /// </summary>
         public void AddPirate(int teamId, TilePosition position, PirateType type)
         {
+            if (Board.Map[position.Position].Type == TileType.Unknown)
+            {
+                throw new Exception("Tile must not be Unknown");
+            }
+            
             var newPirate = new Pirate(teamId, position, type);
             Board.Teams[teamId].Pirates = Board.Teams[teamId].Pirates.Concat(new[] { newPirate }).ToArray();
             

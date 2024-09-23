@@ -24,7 +24,7 @@ namespace Jackal.Core
             var positions = GetAllEarth(mapSize).ToList();
 
             if (pack.Count != positions.Count)
-                throw new Exception("wrong tiles pack count");
+                throw new Exception("Wrong tiles pack count");
 
             _tiles = new Dictionary<Position, Tile>();
 
