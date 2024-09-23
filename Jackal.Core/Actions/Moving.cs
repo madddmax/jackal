@@ -35,6 +35,24 @@ namespace Jackal.Core.Actions
                 newTile = true;
             }
             
+            // воздушный шар переносит сразу на наш корабль
+            if (targetTile.Type == TileType.Balloon)
+            {
+                to = new TilePosition(ourShip.Position);
+            }
+            
+            // пушка выстреливает сразу в воду
+            if (targetTile.Type == TileType.Cannon)
+            {
+                to = GetCannonFly(targetTile.Direction, to.Position, board.MapSize);
+            }
+            
+            // ходим по клетке вертушке
+            if (newTile && targetTile.Type == TileType.Spinning)
+            {
+                to = new TilePosition(to.Position, targetTile.SpinningCount - 1);
+            }
+            
             // нашли карамбу
             if (targetTile is { Type: TileType.Caramba, Used: false })
             {
@@ -62,7 +80,9 @@ namespace Jackal.Core.Actions
                 targetTile.Used = true;
             }
             
-            // просматриваем карту с маяка
+            // просматриваем карту с маяка,
+            // перезатираем просматриваемую клетку текущей позицией пирата,
+            // важно вызвать после всех установок поля to
             if (game.SubTurnLighthouseViewCount > 0)
             {
                 game.SubTurnLighthouseViewCount--;
@@ -77,24 +97,6 @@ namespace Jackal.Core.Actions
                 game.SubTurnLighthouseViewCount += remainedTilesViewCount < 4 ? remainedTilesViewCount : 4;
                 
                 targetTile.Used = true;
-            }
-            
-            // воздушный шар переносит сразу на наш корабль
-            if (targetTile.Type == TileType.Balloon)
-            {
-                to = new TilePosition(ourShip.Position);
-            }
-            
-            // пушка выстреливает сразу в воду
-            if (targetTile.Type == TileType.Cannon)
-            {
-                to = GetCannonFly(targetTile.Direction, to.Position, board.MapSize);
-            }
-            
-            // ходим по клетке вертушке
-            if (newTile && targetTile.Type == TileType.Spinning)
-            {
-                to = new TilePosition(to.Position, targetTile.SpinningCount - 1);
             }
             
             targetTile = map[to.Position];
