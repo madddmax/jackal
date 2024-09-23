@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Jackal.Core;
 using Jackal.Core.Players;
@@ -44,6 +45,20 @@ public class TestGame
     }
 
     /// <summary>
+    /// Добавить монету в игру
+    /// </summary>
+    /// <param name="coinPosition">Позиция монеты</param>
+    public void AddCoin(TilePosition coinPosition)
+    {
+        if (Board.Map[coinPosition.Position].Type == TileType.Unknown)
+        {
+            throw new Exception("Tile must not be Unknown");
+        }
+        
+        Board.Map[coinPosition].Coins++;
+    }
+    
+    /// <summary>
     /// Добавить вражескую команду и пирата в игру
     /// </summary>
     /// <param name="piratePosition">Позиция пирата противника</param>
@@ -53,7 +68,7 @@ public class TestGame
         
         // помещаем корабль противника сверху на противоположный берег
         var enemyShip = new Ship(enemyTeamId, new Position((Board.MapSize - 1) / 2, Board.MapSize - 1));
-        Board.Teams = [Board.Teams[0], new Team(enemyTeamId, "Test enemy team", enemyShip, []) { Enemies = [0] }];
+        Board.Teams = [Board.Teams[0], new Team(enemyTeamId, "Test enemy team", enemyShip, [])];
         _testGame.AddPirate(enemyTeamId, piratePosition, PirateType.Usual);
     }
 

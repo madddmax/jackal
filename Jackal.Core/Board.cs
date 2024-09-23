@@ -292,13 +292,16 @@ namespace Jackal.Core
                         goodTargets.AddRange(GetAllAvailableMoves(
                             task, newPosition, source, airplaneFlying, subTurnLighthouseViewCount)
                         );
+                        
                         break;
+
                     default:
                         goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
 
+                        var newPositionTileLevel = Map[newPosition];
                         if (Map[task.Source].Coins > 0
-                            && (newPositionTile.OccupationTeamId == null ||
-                                newPositionTile.OccupationTeamId == ourTeamId))
+                            && (newPositionTileLevel.OccupationTeamId == null ||
+                                newPositionTileLevel.OccupationTeamId == ourTeamId))
                         {
                             goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
                             {
@@ -472,7 +475,7 @@ namespace Jackal.Core
             }
             else
             {
-                throw new Exception("wrong ship position");
+                throw new Exception("Wrong ship position");
             }
         }
 
@@ -490,7 +493,7 @@ namespace Jackal.Core
             if (pos.Y == MapSize - 1)
                 return new Position(pos.X, MapSize - 2);
 
-            throw new Exception("wrong ship position");
+            throw new Exception("Wrong ship position");
         }
 
         private static IEnumerable<Position> GetArrowsDeltas(int arrowsCode, Position source)
