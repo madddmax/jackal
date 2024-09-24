@@ -31,7 +31,7 @@ namespace Jackal.Core
             foreach (var info in pack.Zip(positions, (def, position) => new {Def = def, Position = position}))
             {
                 var tempDef = info.Def.Clone();
-                if (tempDef.Type is TileType.Arrow or TileType.Cannon or TileType.Grass)
+                if (tempDef.Type is TileType.Arrow or TileType.Cannon or TileType.Grass or TileType.Jungle)
                 {
                     tempDef.Direction = _rand.Next(4);
                 }

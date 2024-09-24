@@ -294,6 +294,10 @@ namespace Jackal.Core
                         );
                         
                         break;
+                    
+                    case TileType.Jungle:
+                        goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
+                        break;
 
                     default:
                         goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
