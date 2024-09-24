@@ -182,19 +182,16 @@ namespace Jackal.Core.Actions
             var enemyPirates = targetTileLevel.Pirates
                 .Where(x => x.TeamId != pirate.TeamId)
                 .ToList();
-            
+
             foreach (var enemyPirate in enemyPirates)
             {
-                if (targetTile.Type != TileType.Water)
-                {
-                    // возвращаем врага на его корабль
-                    game.MovePirateToTheShip(enemyPirate);
-                }
-                else
-                {
-                    // убиваем совсем
+                if (targetTile.Type == TileType.Jungle)
+                    continue;
+
+                if (targetTile.Type == TileType.Water)
                     game.KillPirate(enemyPirate);
-                }
+
+                game.MovePirateToTheShip(enemyPirate);
             }
 
             if (withCoin)

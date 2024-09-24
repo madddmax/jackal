@@ -25,6 +25,7 @@
 		Cannon,
         Lighthouse,
         BenGunn,
-        Caramba
+        Caramba,
+        Jungle
     }
 }

@@ -241,8 +241,6 @@ namespace JackalWebHost.Service
                 return;
             }
 
-            int rotateCount = 0;
-
             string filename;
             switch (type)
             {
@@ -255,7 +253,6 @@ namespace JackalWebHost.Service
                     break;
                 case TileType.Grass:
                     filename = $"empty{tile.ArrowsCode + 1}";
-                    rotateCount = tile.Direction;
                     break;
                 case TileType.Chest1:
                 case TileType.Chest2:
@@ -278,7 +275,6 @@ namespace JackalWebHost.Service
                     break;
                 case TileType.Cannon:
                     filename = "cannon";
-                    rotateCount = tile.Direction;
                     break;
                 case TileType.Crocodile:
                     filename = "croc";
@@ -307,6 +303,9 @@ namespace JackalWebHost.Service
                 case TileType.Caramba:
                     filename = "caramba";
                     break;
+                case TileType.Jungle:
+                    filename = "jungle";
+                    break;
                 case TileType.Spinning:
                     switch (tile.SpinningCount)
                     {
@@ -329,14 +328,13 @@ namespace JackalWebHost.Service
                 case TileType.Arrow:
                     var search = ArrowsCodesHelper.Search(tile.ArrowsCode);
                     filename = $"arrow{search.ArrowType + 1}";
-                    rotateCount = tile.Direction;
                     break;
                 default:
                     throw new NotSupportedException();
             }
 
             tileChange.BackgroundImageSrc = $"/fields/{filename}.png";
-            tileChange.Rotate = rotateCount;
+            tileChange.Rotate = tile.Direction;
         }
 
         private static string GetTeamColor(int teamId) =>
