@@ -1,18 +1,22 @@
 import { useDispatch, useSelector } from 'react-redux';
 
 import { sagaActions } from '/redux/saga';
-import { FieldState, ReduxState } from '/redux/types';
+import { FieldState, GameState, ReduxState } from '/redux/types';
+import store from '/app/store';
 import cn from 'classnames';
 import './cell.less';
 import Level from './level';
 import LevelZero from './levelZero';
+import { TooltipRefProps } from 'react-tooltip';
+import { RefObject } from 'react';
 
 interface CellProps {
     row: number;
     col: number;
+    tooltipRef: RefObject<TooltipRefProps>;
 }
 
-function Cell({ row, col }: CellProps) {
+function Cell({ row, col, tooltipRef }: CellProps) {
     const dispatch = useDispatch();
 
     const field = useSelector<ReduxState, FieldState>((state) => state.game.fields[row][col]);
@@ -24,6 +28,7 @@ function Cell({ row, col }: CellProps) {
         <>
             <div
                 key="main_cell"
+                id={`cell_${col}_${row}`}
                 className={cn('cell', {
                     'sell-active': field.highlight && field.highlight === true,
                 })}
@@ -39,14 +44,47 @@ function Cell({ row, col }: CellProps) {
                 onClick={
                     field.availableMove
                         ? () => {
-                              dispatch({
-                                  type: sagaActions.GAME_TURN,
-                                  payload: {
-                                      gameName: gamename,
-                                      turnNum: field.availableMove!.num,
-                                      pirateId: field!.availableMove!.pirate,
-                                  },
-                              });
+                              let gameState = store.getState().game as GameState;
+                              if (
+                                  field.levels.length == 1 &&
+                                  field.levels[0].pirates?.some(
+                                      (it) => it.id == gameState.currentHumanTeam.activePirate,
+                                  )
+                              ) {
+                                  tooltipRef.current?.open({
+                                      anchorSelect: `#cell_${col}_${row}`,
+                                      content: (
+                                          <div
+                                              className="skipmove"
+                                              style={{
+                                                  width: pirateSize,
+                                                  height: pirateSize,
+                                                  cursor: 'pointer',
+                                              }}
+                                              onClick={() => {
+                                                  dispatch({
+                                                      type: sagaActions.GAME_TURN,
+                                                      payload: {
+                                                          gameName: gamename,
+                                                          turnNum: field.availableMove!.num,
+                                                          pirateId: field!.availableMove!.pirate,
+                                                      },
+                                                  });
+                                                  tooltipRef.current?.close();
+                                              }}
+                                          />
+                                      ),
+                                  });
+                              } else {
+                                  dispatch({
+                                      type: sagaActions.GAME_TURN,
+                                      payload: {
+                                          gameName: gamename,
+                                          turnNum: field.availableMove!.num,
+                                          pirateId: field!.availableMove!.pirate,
+                                      },
+                                  });
+                              }
                           }
                         : undefined
                 }
