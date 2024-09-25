@@ -31,8 +31,16 @@ namespace Jackal.Core
             foreach (var info in pack.Zip(positions, (def, position) => new {Def = def, Position = position}))
             {
                 var tempDef = info.Def.Clone();
-                if (tempDef.Type is TileType.Arrow or TileType.Cannon or TileType.Grass or TileType.Jungle)
+                if (tempDef.Type != TileType.Spinning && 
+                    tempDef.Type != TileType.Caramba &&
+                    tempDef.Type != TileType.Chest1 &&
+                    tempDef.Type != TileType.Chest2 &&
+                    tempDef.Type != TileType.Chest3 &&
+                    tempDef.Type != TileType.Chest4 &&
+                    tempDef.Type != TileType.Chest5 &&
+                    tempDef.Type != TileType.Ice)
                 {
+                    // клетки не указанные в условии - вращаем при отображении на карте
                     tempDef.Direction = _rand.Next(4);
                 }
                 
