@@ -55,7 +55,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                                       anchorSelect: `#cell_${col}_${row}`,
                                       content: (
                                           <div
-                                              className="skipmove"
+                                              className={field.availableMove!.isRespawn ? 'respawn' : 'skipmove'}
                                               style={{
                                                   width: pirateSize,
                                                   height: pirateSize,

@@ -15,23 +15,29 @@
     z-index: 3;
 }
 
-.coins {
-    background-image: url('/pictures/ruble_empty.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    float: right;
-    color: black;
-    position: relative;
-    z-index: 5;
-}
 .pirates {
     background-size: cover;
     float: left;
     color: white;
     z-index: 5;
 }
+
+.coins {
+    background-image: url('/pictures/ruble_empty.png');
+    &:extend(.baseicon);
+}
+
+.respawn {
+    background-image: url('/pictures/add-pirate.png');
+    &:extend(.baseicon);
+}
+
 .skipmove {
     background-image: url('/pictures/hourglass.png');
+    &:extend(.baseicon);
+}
+
+.baseicon {
     background-repeat: no-repeat;
     background-size: cover;
     float: right;
