@@ -172,6 +172,17 @@ namespace Jackal.Core
 
             var goodTargets = new List<AvailableMove>();
             
+            // доступно воскрешение
+            if (sourceTile.Type == TileType.RespawnFort && 
+                sourceTile.Pirates.Any(p => p.Type == PirateType.Usual) &&
+                ourTeam.Pirates.Count(p => p.Type == PirateType.Usual) < 3)
+            {
+                goodTargets.Add(new AvailableMove(task.Source, source, new Respawn())
+                {
+                    MoveType = MoveType.WithRespawn
+                });
+            }
+            
             // места всех возможных ходов
             IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(
                 source, prev, ourTeam, airplaneFlying, subTurnLighthouseViewCount
@@ -196,7 +207,7 @@ namespace Jackal.Core
                 
                 // проверяем, что на этой клетке
                 var newPositionTile = Map[newPosition.Position];
-
+                
                 switch (newPositionTile.Type)
                 {
                     case TileType.Unknown:
@@ -254,27 +265,6 @@ namespace Jackal.Core
                         break;
 
                     case TileType.RespawnFort:
-                        if (task.Source == newPosition && 
-                            newPositionTile.Pirates.Any(p => p.Type == PirateType.Usual) &&
-                            ourTeam.Pirates.Count(p => p.Type == PirateType.Usual) < 3)
-                        {
-                            // доступно воскрешение
-                            goodTargets.Add(new AvailableMove(task.Source, newPosition, new Respawn())
-                            {
-                                MoveType = MoveType.WithRespawn
-                            });
-                        }
-                        
-                        if (task.Source != newPosition && 
-                            (newPositionTile.OccupationTeamId.HasValue == false ||
-                            newPositionTile.OccupationTeamId == ourTeamId))
-                        {
-                            // форт не занят противником
-                            goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
-                        }
-
-                        break;
-
                     case TileType.Fort:
                         if (newPositionTile.OccupationTeamId.HasValue == false ||
                             newPositionTile.OccupationTeamId == ourTeamId)
@@ -386,9 +376,6 @@ namespace Jackal.Core
                     var prevDelta = Position.GetDelta(prev.Position, source.Position);
                     var target = Position.AddDelta(source.Position, prevDelta);
                     rez = new[] { IncomeTilePosition(target) };
-                    break;
-                case TileType.RespawnFort:
-                    rez = rez.Concat(new[] {source});
                     break;
                 case TileType.Spinning:
                     if (source.Level > 0)

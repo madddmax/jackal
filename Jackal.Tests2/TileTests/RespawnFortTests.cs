@@ -172,4 +172,39 @@ public class RespawnFortTests
         Assert.Equal(0, game.Board.AllPirates[3].TeamId);
         Assert.Equal(4, game.TurnNo);
     }
+    
+    [Fact]
+    public void ArrowUpOnRespawnFort_GetAvailableMoves_ReturnNearestMovesAndWaitMoveAndMoveWithRespawn()
+    {
+        // Arrange
+        var arrowUpOnRespawnFortLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.OneArrowUp },
+            new TileParams(TileType.RespawnFort)
+        );
+        var game = new TestGame(arrowUpOnRespawnFortLineMap);
+        
+        // Act - высадка с корабля на стрелку вперед
+        game.Turn();
+        
+        // автоматом идем вперед на воскрешающий форт
+        game.Turn();
+        
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - 3 поля рядом + ход на месте через стрелку + воскрешающий ход на месте
+        Assert.Equal(5, moves.Count);
+        Assert.Equal(new TilePosition(2, 2), moves.First().From);
+        Assert.Equivalent(new List<TilePosition>
+            {
+                new(1, 2), // влево
+                new(2, 2), // ход на месте через стрелку
+                new(2, 2), // воскрешающий ход на месте
+                new(2, 3), // вперед
+                new(3, 2) // вправо
+            },
+            moves.Select(m => m.To)
+        );
+        Assert.Single(moves.Where(m => m.WithRespawn));
+        Assert.Equal(1, game.TurnNo);
+    }
 }
