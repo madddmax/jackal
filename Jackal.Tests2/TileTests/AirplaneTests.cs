@@ -139,15 +139,15 @@ public class AirplaneTests
     }
     
     [Fact]
-    public void AirplaneThenArrowOnCrocodile_Turn_ReturnDeadPirate()
+    public void AirplaneThenArrowUpOnCrocodile_Turn_ReturnDeadPirate()
     {
         // Arrange
-        var airplaneArrowOnCrocodileLineMap = new ThreeTileMapGenerator(
+        var airplaneArrowUpOnCrocodileLineMap = new ThreeTileMapGenerator(
             new TileParams(TileType.Airplane),
-            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.GetCodeFromString("10000000") },
+            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.OneArrowUp },
             new TileParams(TileType.Crocodile));
         
-        var game = new TestGame(airplaneArrowOnCrocodileLineMap);
+        var game = new TestGame(airplaneArrowUpOnCrocodileLineMap);
         
         // Act - высадка с корабля на самолет
         game.Turn();
@@ -166,15 +166,15 @@ public class AirplaneTests
     }
     
     [Fact]
-    public void AirplaneThenCrocodileThenArrowOnCrocodile_Turn_ReturnDeadPirate()
+    public void AirplaneThenCrocodileThenArrowUpOnCrocodile_Turn_ReturnDeadPirate()
     {
         // Arrange
-        var airplaneArrowOnCrocodileLineMap = new ThreeTileMapGenerator(
+        var airplaneArrowUpOnCrocodileLineMap = new ThreeTileMapGenerator(
             new TileParams(TileType.Airplane),
-            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.GetCodeFromString("10000000") },
+            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.OneArrowUp },
             new TileParams(TileType.Crocodile));
         
-        var game = new TestGame(airplaneArrowOnCrocodileLineMap);
+        var game = new TestGame(airplaneArrowUpOnCrocodileLineMap);
         
         // Act - высадка с корабля на самолет
         game.Turn();

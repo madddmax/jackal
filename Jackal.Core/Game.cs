@@ -150,7 +150,9 @@ namespace Jackal.Core
 
         private void AddMoveAndActions(Move move, IGameAction action)
         {
-            if (_availableMoves.Exists(x => x == move)) return;
+            if (_availableMoves.Exists(x => x == move))
+                return;
+
             _availableMoves.Add(move);
             _actions.Add(action);
         }

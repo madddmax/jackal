@@ -50,7 +50,7 @@ namespace JackalWebHost.Controllers
             IMapGenerator mapGenerator = new ClassicMapGenerator(gameSettings.MapId.Value, mapSize);
             // mapGenerator = new OneTileMapGenerator(new TileParams(TileType.Trap));
             // mapGenerator = new TwoTileMapGenerator(
-            //     new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.GetCodeFromString("10000000") },
+            //     new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.OneArrowUp },
             //     new TileParams(TileType.Crocodile));
             
             int piratesPerPlayer = 3;
