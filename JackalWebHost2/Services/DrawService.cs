@@ -38,12 +38,14 @@ public class DrawService : IDrawService
             }
             else if (oldPirate.Position != newPirate.Position
                      || oldPirate.IsDrunk != newPirate.IsDrunk
-                     || oldPirate.IsInTrap != newPirate.IsInTrap)
+                     || oldPirate.IsInTrap != newPirate.IsInTrap
+                     || oldPirate.IsInHole != newPirate.IsInHole)
             {
                 pirateChange = new PirateChange(newPirate)
                 {
                     IsDrunk = oldPirate.IsDrunk != newPirate.IsDrunk ? newPirate.IsDrunk : null,
-                    IsInTrap = oldPirate.IsInTrap != newPirate.IsInTrap ? newPirate.IsInTrap : null
+                    IsInTrap = oldPirate.IsInTrap != newPirate.IsInTrap ? newPirate.IsInTrap : null,
+                    IsInHole = oldPirate.IsInHole != newPirate.IsInHole ? newPirate.IsInHole : null
                 };
                 pirateChanges.Add(pirateChange);
                     
@@ -302,6 +304,9 @@ public class DrawService : IDrawService
                 break;
             case TileType.Jungle:
                 filename = "many_forts";
+                break;
+            case TileType.Hole:
+                filename = "hole";
                 break;
             case TileType.Spinning:
                 switch (tile.SpinningCount)

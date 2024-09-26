@@ -33,7 +33,8 @@ public class TestGame
     public bool IsGameOver => _testGame.IsGameOver;
     
     /// <summary>
-    /// Ctor
+    /// Конструктор, всегда тестируем - производим ход только одной командой.
+    /// Пиратов команды противника добавляем отдельно, за них не ходим.
     /// </summary>
     /// <param name="generator">Генератор карты</param>
     /// <param name="mapSize">Размер карты вместе с морем, по умолчанию минимальный 5x5 (поле из 5 клеток)</param>

@@ -34,4 +34,6 @@ public class TileLevel
     {
         Position = position;
     }
+    
+    public bool HasNoEnemy(int ownTeamId) => OccupationTeamId.HasValue == false || OccupationTeamId == ownTeamId;
 }

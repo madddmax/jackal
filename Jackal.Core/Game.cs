@@ -86,6 +86,7 @@ public class Game
 
             TurnNo++;
             SubTurnAirplaneFlying = false;
+            SubTurnFallingInTheHole = false;
         }
     }
 
@@ -112,6 +113,12 @@ public class Game
     /// Количество просмотров карты с маяка
     /// </summary>
     public int SubTurnLighthouseViewCount { get; set; }
+    
+    /// <summary>
+    /// TODO-MAD является результатом действия -
+    /// Падение в дыру
+    /// </summary>
+    public bool SubTurnFallingInTheHole { get; set; }
 
     public List<Move> GetAvailableMoves()
     {
@@ -128,7 +135,7 @@ public class Game
 
         IEnumerable<Pirate> activePirates = NeedSubTurnPirate != null 
             ? new[] {NeedSubTurnPirate} 
-            : team.Pirates.Where(x => x is { IsDrunk: false, IsInTrap: false });
+            : team.Pirates.Where(x => x is { IsDrunk: false, IsInTrap: false, IsInHole: false });
 
         var targets = new List<AvailableMove>();
         foreach (var pirate in activePirates)
@@ -136,7 +143,8 @@ public class Game
             TilePosition prev = PrevSubTurnPosition ?? pirate.Position;
             AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, prev);
             List<AvailableMove> moves = Board.GetAllAvailableMoves(
-                task, task.Source, task.Prev, SubTurnAirplaneFlying, SubTurnLighthouseViewCount
+                task, task.Source, task.Prev, SubTurnAirplaneFlying, 
+                SubTurnLighthouseViewCount, SubTurnFallingInTheHole
             );
             targets.AddRange(moves);
         }
@@ -228,8 +236,17 @@ public class Game
         Board.Map[team.Ship.Position].Pirates.Add(pirate);
         pirateTileLevel.Pirates.Remove(pirate);
             
-        pirate.IsInTrap = false;
-        pirate.IsDrunk = false;
-        pirate.DrunkSinceTurnNo = null;
+        pirate.ResetEffects();
+    }
+    
+    public void MovePirateToPosition(Pirate pirate, Position position)
+    {
+        var pirateTileLevel = Board.Map[pirate.Position];
+            
+        pirate.Position = new TilePosition(position);
+        Board.Map[position].Pirates.Add(pirate);
+        pirateTileLevel.Pirates.Remove(pirate);
+        
+        pirate.ResetEffects();
     }
 }

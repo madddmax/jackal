@@ -154,7 +154,12 @@ public class Board
     /// Возвращаем список всех полей, в которые можно попасть из исходного поля
     /// </summary>
     public List<AvailableMove> GetAllAvailableMoves(
-        AvailableMovesTask task, TilePosition source, TilePosition prev, bool airplaneFlying, int subTurnLighthouseViewCount)
+        AvailableMovesTask task, 
+        TilePosition source, 
+        TilePosition prev, 
+        bool airplaneFlying, 
+        int subTurnLighthouseViewCount, 
+        bool subTurnFallingInTheHole)
     {
         Tile sourceTile = Map[source.Position];
 
@@ -186,10 +191,10 @@ public class Board
                 
             task.AlreadyCheckedList.Add(new CheckedPosition(source));
         }
-            
+        
         // места всех возможных ходов
         IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(
-            source, prev, ourTeam, airplaneFlying, subTurnLighthouseViewCount
+            source, prev, ourTeam, airplaneFlying, subTurnLighthouseViewCount, subTurnFallingInTheHole
         );
 
         foreach (TilePosition newPosition in positionsForCheck)
@@ -265,18 +270,15 @@ public class Board
                                 MoveType = MoveType.WithCoin
                             });
                     }
-
                     break;
 
-                case TileType.RespawnFort:
                 case TileType.Fort:
-                    if (newPositionTile.OccupationTeamId.HasValue == false ||
-                        newPositionTile.OccupationTeamId == ourTeamId)
+                case TileType.RespawnFort:
+                    if (newPositionTile.HasNoEnemy(ourTeamId))
                     {
                         // форт не занят противником
                         goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
                     }
-
                     break;
                     
                 case TileType.Arrow:
@@ -284,29 +286,26 @@ public class Board
                 case TileType.Ice:
                 case TileType.Crocodile:
                     goodTargets.AddRange(GetAllAvailableMoves(
-                        task, newPosition, source, airplaneFlying, subTurnLighthouseViewCount)
+                        task, newPosition, source, airplaneFlying, 
+                        subTurnLighthouseViewCount, subTurnFallingInTheHole)
                     );
-                        
                     break;
                     
                 case TileType.Jungle:
                     goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
                     break;
-
+                
                 default:
                     goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
 
                     var newPositionTileLevel = Map[newPosition];
-                    if (Map[task.Source].Coins > 0
-                        && (newPositionTileLevel.OccupationTeamId == null ||
-                            newPositionTileLevel.OccupationTeamId == ourTeamId))
+                    if (Map[task.Source].Coins > 0 && newPositionTileLevel.HasNoEnemy(ourTeamId))
                     {
                         goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
                         {
                             MoveType = MoveType.WithCoin
                         });
                     }
-
                     break;
             }
         }
@@ -319,7 +318,12 @@ public class Board
     /// (не проверяется, допустим ли такой ход)
     /// </summary>
     private List<TilePosition> GetAllTargetsForSubTurn(
-        TilePosition source, TilePosition prev, Team ourTeam, bool airplaneFlying, int subTurnLighthouseViewCount)
+        TilePosition source, 
+        TilePosition prev, 
+        Team ourTeam, 
+        bool airplaneFlying, 
+        int subTurnLighthouseViewCount, 
+        bool subTurnFallingInTheHole)
     {
         var sourceTile = Map[source.Position];
         var ourShip = ourTeam.Ship;
@@ -331,6 +335,24 @@ public class Board
             
         switch (sourceTile.Type)
         {
+            case TileType.Hole:
+                var holeTiles = AllTiles(x => x.Type == TileType.Hole).ToList();
+                if (holeTiles.Count == 1)
+                {
+                    rez = new List<TilePosition>();
+                }
+                else if (subTurnFallingInTheHole)
+                {
+                    var freeHoleTiles = holeTiles
+                        .Where(x => x.Position != source.Position && x.HasNoEnemy(ourTeam.Id))
+                        .ToList();
+
+                    if (freeHoleTiles.Count > 0)
+                    {
+                        rez = freeHoleTiles.Select(x => IncomeTilePosition(x.Position));
+                    }
+                }
+                break;
             case TileType.Horse:
                 rez = GetHorseDeltas(source.Position)
                     .Where(IsValidMapPosition)

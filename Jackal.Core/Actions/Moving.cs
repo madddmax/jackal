@@ -126,13 +126,41 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
             targetTileLevel.Pirates.Add(pirate);
         }
 
-        if (game.SubTurnLighthouseViewCount > 0 || 
+        if (game.SubTurnLighthouseViewCount > 0 ||
             targetTile is { Used: false, Type: TileType.Airplane })
         {
             game.NeedSubTurnPirate = pirate;
             game.PrevSubTurnPosition = prev;
         }
-            
+        
+        if (targetTile.Type == TileType.Hole && !game.SubTurnFallingInTheHole)
+        {
+            var holeTiles = board.AllTiles(x => x.Type == TileType.Hole).ToList();
+            if(holeTiles.Count == 1)
+            {
+                pirate.IsInHole = true;
+            }
+            else if (holeTiles.Count == 2)
+            {
+                var pirates = new List<Pirate>(holeTiles[1].Pirates);
+                foreach (var movedPirate in holeTiles[0].Pirates)
+                {
+                    game.MovePirateToPosition(movedPirate, holeTiles[1].Position);
+                }
+
+                foreach (var movedPirate in pirates)
+                {
+                    game.MovePirateToPosition(movedPirate, holeTiles[0].Position);
+                }
+            }
+            else if(holeTiles.Count > 2)
+            {
+                game.NeedSubTurnPirate = pirate;
+                game.PrevSubTurnPosition = prev;
+                game.SubTurnFallingInTheHole = true;
+            }
+        }
+
         if (newTile && targetTile.Type is TileType.Arrow or TileType.Horse or TileType.Ice or TileType.Crocodile)
         {
             var airplaneFlying = targetTile.Type is TileType.Ice or TileType.Crocodile &&
@@ -140,7 +168,9 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
                                   game.SubTurnAirplaneFlying);
 
             AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, prev);
-            List<AvailableMove> moves = game.Board.GetAllAvailableMoves(task, task.Source, task.Prev, airplaneFlying, 0);
+            List<AvailableMove> moves = game.Board.GetAllAvailableMoves(
+                task, task.Source, task.Prev, airplaneFlying, 0, false
+            );
 
             if (moves.Count == 0)
             {
@@ -180,14 +210,14 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
 
         // убиваем чужих пиратов
         var enemyPirates = targetTileLevel.Pirates
-            .Where(x => x.TeamId != pirate.TeamId)
+            .Where(x => x.TeamId != pirate.TeamId && !x.IsInHole)
             .ToList();
 
         foreach (var enemyPirate in enemyPirates)
         {
             if (targetTile.Type == TileType.Jungle)
                 continue;
-
+            
             if (targetTile.Type == TileType.Water)
                 game.KillPirate(enemyPirate);
 

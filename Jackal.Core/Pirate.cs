@@ -24,7 +24,18 @@ public class Pirate(int teamId, TilePosition position, PirateType type)
 
     [JsonProperty]
     public bool IsInTrap;
+    
+    [JsonProperty]
+    public bool IsInHole;
         
     // TODO-MAD Оптимизация DrawService - заполнять при изменении позиции и сбрасывать каждый ход
     public bool Changed;
+
+    public void ResetEffects()
+    {
+        IsInTrap = false;
+        IsInHole = false;
+        IsDrunk = false;
+        DrunkSinceTurnNo = null;
+    }
 }
