@@ -51,6 +51,7 @@ export interface FieldState {
     levels: GameLevel[];
     availableMove?: {
         num: number;
+        isRespawn: boolean;
         pirate: string;
     };
     highlight?: boolean;

@@ -200,6 +200,7 @@ export const gameSlice = createSlice({
                     const cell = state.fields[move.to.y][move.to.x];
                     cell.availableMove = {
                         num: move.moveNum,
+                        isRespawn: move.withRespawn,
                         pirate: pirate.id,
                     };
                 });

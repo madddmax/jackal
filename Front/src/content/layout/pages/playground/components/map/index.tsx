@@ -37,6 +37,7 @@ function Map({ mapSize, cellSize }: MapProps) {
             </div>
             <Tooltip
                 ref={actionsTooltip}
+                style={{ backgroundColor: 'white', zIndex: 1000 }}
                 place="right"
                 clickable
                 openEvents={{}}
