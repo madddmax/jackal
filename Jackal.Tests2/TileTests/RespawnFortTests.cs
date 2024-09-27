@@ -174,7 +174,7 @@ public class RespawnFortTests
     }
     
     [Fact]
-    public void ArrowUpOnRespawnFort_GetAvailableMoves_ReturnNearestMovesAndWaitMoveAndMoveWithRespawn()
+    public void ArrowUpOnRespawnFort_GetAvailableMoves_ReturnNearestMovesAndMoveWithRespawn()
     {
         // Arrange
         var arrowUpOnRespawnFortLineMap = new TwoTileMapGenerator(
@@ -191,13 +191,12 @@ public class RespawnFortTests
         
         var moves = game.GetAvailableMoves();
         
-        // Assert - 3 поля рядом + ход на месте через стрелку + воскрешающий ход на месте
-        Assert.Equal(5, moves.Count);
+        // Assert - 3 поля рядом + воскрешающий ход на месте
+        Assert.Equal(4, moves.Count);
         Assert.Equal(new TilePosition(2, 2), moves.First().From);
         Assert.Equivalent(new List<TilePosition>
             {
                 new(1, 2), // влево
-                new(2, 2), // ход на месте через стрелку
                 new(2, 2), // воскрешающий ход на месте
                 new(2, 3), // вперед
                 new(3, 2) // вправо
@@ -205,6 +204,50 @@ public class RespawnFortTests
             moves.Select(m => m.To)
         );
         Assert.Single(moves.Where(m => m.WithRespawn));
+        Assert.Equal(1, game.TurnNo);
+    }
+    
+    [Fact]
+    public void ArrowUpOnRespawnFort_GetAvailableMoves_ReturnNearestMovesAndWaitMove()
+    {
+        // Arrange
+        const int mapSize = 5;
+        const int piratesPerPlayer = 3;
+        
+        var arrowUpOnRespawnFortLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.OneArrowUp },
+            new TileParams(TileType.RespawnFort)
+        );
+        var game = new TestGame(arrowUpOnRespawnFortLineMap, mapSize, piratesPerPlayer);
+        
+        // Act - высадка с корабля на стрелку вперед
+        game.Turn();
+        
+        // автоматом идем вперед на воскрешающий форт
+        game.Turn();
+        
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - 3 поля рядом + ход на месте через стрелку
+        Assert.Equal(5, moves.Count);
+        Assert.Equivalent(new List<TilePosition>
+            {
+                new (2, 0), // пираты на корабле
+                new(2, 2) // пират на форте
+            },
+            moves.Select(m => m.From)
+        );
+        Assert.Equivalent(new List<TilePosition>
+            {
+                new (2, 2), // высадка с корабля
+                new(1, 2), // влево
+                new(2, 2), // ход на месте через стрелку
+                new(2, 3), // вперед
+                new(3, 2) // вправо
+            },
+            moves.Select(m => m.To)
+        );
+        Assert.Empty(moves.Where(m => m.WithRespawn));
         Assert.Equal(1, game.TurnNo);
     }
 }
