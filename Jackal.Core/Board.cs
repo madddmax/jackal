@@ -181,6 +181,8 @@ namespace Jackal.Core
                 {
                     MoveType = MoveType.WithRespawn
                 });
+                
+                task.AlreadyCheckedList.Add(new CheckedPosition(source));
             }
             
             // места всех возможных ходов
