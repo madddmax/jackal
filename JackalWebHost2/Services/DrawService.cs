@@ -2,9 +2,9 @@
 using Jackal.Core.Players;
 using JackalWebHost2.Models;
 
-namespace JackalWebHost2.Service;
+namespace JackalWebHost2.Services;
 
-public class DrawService
+public class DrawService : IDrawService
 {
     public (List<PirateChange> pirateChanges, List<TileChange> tileChanges) Draw(Board board, Board prevBoard)
     {
@@ -76,11 +76,8 @@ public class DrawService
 
         return (pirateChanges, tileChanges);
     }
-        
-    /// <summary>
-    /// Формирование статистики после хода
-    /// </summary>
-    public static GameStatistics GetStatistics(Game game)
+    
+    public GameStatistics GetStatistics(Game game)
     {
         var teams = new List<DrawTeam>();
         foreach (var team in game.Board.Teams)
@@ -104,8 +101,8 @@ public class DrawService
             IsHumanPlayer = game.CurrentPlayer is WebHumanPlayer
         };
     }
-
-    public static List<DrawMove> GetAvailableMoves(Game game)
+    
+    public List<DrawMove> GetAvailableMoves(Game game)
     {
         var result = new List<DrawMove>();
         var pirates = new List<PiratePosition>();
@@ -151,7 +148,7 @@ public class DrawService
         }
         return result;
     }
-
+    
     public DrawMap Map(Board board)
     {
         var changes = new List<TileChange>();
@@ -176,7 +173,7 @@ public class DrawService
         };
     }
 
-    private TileChange Draw(Tile tile, List<Ship> ships)
+    private static TileChange Draw(Tile tile, List<Ship> ships)
     {
         var tileElement = new TileChange();
 

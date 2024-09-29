@@ -1,18 +1,19 @@
-﻿using Jackal.Core;
-using Jackal.Core.MapGenerator;
-using Jackal.Core.Players;
+﻿using JackalWebHost2.Controllers.Requests;
+using JackalWebHost2.Exceptions;
 using JackalWebHost2.Models;
-using JackalWebHost2.Models.Requests;
-using JackalWebHost2.Service;
+using JackalWebHost2.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace JackalWebHost2.Controllers;
 
-public class GameController(IMemoryCache gamesSessionsCache) : Controller
+public class GameController : Controller
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new MemoryCacheEntryOptions()
-        .SetSlidingExpiration(TimeSpan.FromHours(1));
+    private readonly IGameService _gameService;
+
+    public GameController(IGameService gameService)
+    {
+        _gameService = gameService;
+    }
 
     /// <summary>
     /// Главное окно
@@ -26,88 +27,50 @@ public class GameController(IMemoryCache gamesSessionsCache) : Controller
     /// <summary>
     /// Запуск игры
     /// </summary>
-    public JsonResult MakeStart([FromBody] StartGameModel request)
+    public JsonResult MakeStart([FromBody] StartGameRequest request)
     {
-        GameState gameState = new GameState();
-        GameSettings gameSettings = request.Settings;
-
-        IPlayer[] gamePlayers = new IPlayer[gameSettings.Players.Length];
-        int index = 0;
-
-        foreach (var player in gameSettings.Players)
+        var result = _gameService.StartGame(new StartGameModel
         {
-            gamePlayers[index++] = player switch
-            {
-                "robot" => new RandomPlayer(),
-                "human" => new WebHumanPlayer(),
-                _ => new EasyPlayer()
-            };
-        }
+            GameName = request.GameName,
+            Settings = request.Settings
+        });
 
-        gameSettings.MapId ??= new Random().Next();
-
-        // TODO-MIKE для ручной отладки можно использовать закомментированные генераторы карт
-        int mapSize = gameSettings.MapSize ?? 5;
-        IMapGenerator mapGenerator = new ClassicMapGenerator(gameSettings.MapId.Value, mapSize);
-        // mapGenerator = new OneTileMapGenerator(new TileParams(TileType.Trap));
-        // mapGenerator = new TwoTileMapGenerator(
-        //     new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.OneArrowUp },
-        //     new TileParams(TileType.Crocodile));
-            
-        int piratesPerPlayer = 3;
-        gameState.board = new Board(gamePlayers, mapGenerator, mapSize, piratesPerPlayer);
-        gameState.game = new Game(gamePlayers, gameState.board);
-
-        gamesSessionsCache.Set(request.GameName, gameState, _cacheEntryOptions);
-
-        var service = new DrawService();
-        var map = service.Map(gameState.board);
-
-        List<PirateChange> pirateChanges = [];
-        foreach (var pirate in gameState.game.Board.AllPirates)
+        return Json(new
         {
-            pirateChanges.Add(new PirateChange(pirate));
-        }
-            
-        return Json(new {
-            gameName = request.GameName,
-            pirates = pirateChanges,
-            map,
-            mapId = gameSettings.MapId.Value,
-            stat = DrawService.GetStatistics(gameState.game),
-            moves = DrawService.GetAvailableMoves(gameState.game)
+            gameName = result.GameName,
+            pirates = result.Pirates,
+            map = result.Map,
+            mapId = result.MapId,
+            stat = result.Statistics,
+            moves = result.Moves
         });
     }
         
     /// <summary>
     /// Ход игры
     /// </summary>
-    public JsonResult MakeTurn([FromBody] TurnGameModel request)
+    public JsonResult MakeTurn([FromBody] TurnGameRequest request)
     {
-        if (!gamesSessionsCache.TryGetValue(request.GameName, out GameState? gameState) || 
-            gameState == null)
+        try
         {
+            var result = _gameService.MakeGameTurn(new TurnGameModel
+            {
+                GameName = request.GameName,
+                TurnNum = request.TurnNum,
+                PirateId = request.PirateId
+            });
+            
+            return Json(new {
+                pirateChanges = result.PirateChanges,
+                changes = result.Changes,
+                stat = result.Statistics,
+                moves = result.Moves
+            });
+        }
+        catch (GameNotFoundException)
+        {
+            // TODO Сделать получше
             return Json(new { error = true });
         }
-
-        var prevBoardStr = JsonHelper.SerializeWithType(gameState.board);
-            
-        if (gameState.game.CurrentPlayer is WebHumanPlayer && request.TurnNum.HasValue)
-        {
-            gameState.game.CurrentPlayer.SetHumanMove(request.TurnNum.Value, request.PirateId);
-        }
-
-        gameState.game.Turn();
-
-        var prevBoard = JsonHelper.DeserializeWithType<Board>(prevBoardStr);
-
-        var service = new DrawService();
-        (List<PirateChange> pirateChanges, List<TileChange> tileChanges) = service.Draw(gameState.board, prevBoard);
-        return Json(new {
-            pirateChanges,
-            changes = tileChanges,
-            stat = DrawService.GetStatistics(gameState.game),
-            moves = DrawService.GetAvailableMoves(gameState.game)
-        });
     }
 }
