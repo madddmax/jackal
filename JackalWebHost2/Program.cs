@@ -95,5 +95,6 @@ public class Program
             });
 
         services.AddScoped<IGameService, GameService>();
+        services.AddScoped<IDrawService, DrawService>();
     }
 }

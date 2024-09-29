@@ -12,12 +12,15 @@ namespace JackalWebHost2.Services;
 public class GameService : IGameService
 {
     private readonly IMemoryCache _gamesSessionsCache;
+    private readonly IDrawService _drawService;
+
     private readonly MemoryCacheEntryOptions _cacheEntryOptions = new MemoryCacheEntryOptions()
         .SetSlidingExpiration(TimeSpan.FromHours(1));
 
-    public GameService(IMemoryCache gamesSessionsCache)
+    public GameService(IMemoryCache gamesSessionsCache, IDrawService drawService)
     {
         _gamesSessionsCache = gamesSessionsCache;
+        _drawService = drawService;
     }
     
     public StartGameResult StartGame([FromBody] StartGameModel request)
@@ -53,9 +56,8 @@ public class GameService : IGameService
         gameState.game = new Game(gamePlayers, gameState.board);
 
         _gamesSessionsCache.Set(request.GameName, gameState, _cacheEntryOptions);
-
-        var service = new DrawService();
-        var map = service.Map(gameState.board);
+        
+        var map = _drawService.Map(gameState.board);
 
         List<PirateChange> pirateChanges = [];
         foreach (var pirate in gameState.game.Board.AllPirates)
@@ -69,8 +71,8 @@ public class GameService : IGameService
             Pirates = pirateChanges,
             Map = map,
             MapId = gameSettings.MapId.Value,
-            Statistics = DrawService.GetStatistics(gameState.game),
-            Moves = DrawService.GetAvailableMoves(gameState.game)
+            Statistics = _drawService.GetStatistics(gameState.game),
+            Moves = _drawService.GetAvailableMoves(gameState.game)
         };
     }
     
@@ -92,16 +94,15 @@ public class GameService : IGameService
         gameState.game.Turn();
 
         var prevBoard = JsonHelper.DeserializeWithType<Board>(prevBoardStr);
-
-        var service = new DrawService();
-        (List<PirateChange> pirateChanges, List<TileChange> tileChanges) = service.Draw(gameState.board, prevBoard);
+        
+        (List<PirateChange> pirateChanges, List<TileChange> tileChanges) = _drawService.Draw(gameState.board, prevBoard);
         
         return new TurnGameResult
         {
             PirateChanges = pirateChanges,
             Changes = tileChanges,
-            Statistics = DrawService.GetStatistics(gameState.game),
-            Moves = DrawService.GetAvailableMoves(gameState.game)
+            Statistics = _drawService.GetStatistics(gameState.game),
+            Moves = _drawService.GetAvailableMoves(gameState.game)
         };
     }
 }
