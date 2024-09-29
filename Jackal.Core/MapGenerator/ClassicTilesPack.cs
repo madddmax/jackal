@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Jackal.Core;
+namespace Jackal.Core.MapGenerator;
 
 /// <summary>
 /// Классический игровой набор Финам-Шакал

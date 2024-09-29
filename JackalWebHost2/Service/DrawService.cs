@@ -1,8 +1,8 @@
-﻿using JackalWebHost.Models;
-using Jackal.Core;
+﻿using Jackal.Core;
 using Jackal.Core.Players;
+using JackalWebHost2.Models;
 
-namespace JackalWebHost.Service;
+namespace JackalWebHost2.Service;
 
 public class DrawService
 {

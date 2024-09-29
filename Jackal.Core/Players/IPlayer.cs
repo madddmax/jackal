@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Jackal.Core;
+namespace Jackal.Core.Players;
 
 public interface IPlayer
 {

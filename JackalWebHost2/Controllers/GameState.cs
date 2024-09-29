@@ -1,6 +1,6 @@
 using Jackal.Core;
 
-namespace JackalWebHost.Controllers;
+namespace JackalWebHost2.Controllers;
 
 public class GameState
 {

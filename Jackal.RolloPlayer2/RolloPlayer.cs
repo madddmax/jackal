@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Jackal.Core;
+using Jackal.Core.Players;
 
 namespace Jackal.RolloPlayer2;
 

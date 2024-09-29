@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Jackal.Core;
+using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
 
 namespace Jackal.Tests2;

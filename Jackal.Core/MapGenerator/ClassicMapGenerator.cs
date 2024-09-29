@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Jackal.Core;
+namespace Jackal.Core.MapGenerator;
 
 public class ClassicMapGenerator : IMapGenerator
 {

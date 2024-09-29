@@ -1,4 +1,4 @@
-namespace Jackal.Core;
+namespace Jackal.Core.MapGenerator;
 
 /// <summary>
 /// Все клетки oneTileParams

@@ -1,4 +1,6 @@
-﻿namespace Jackal.Core.GameOrganizer;
+﻿using Jackal.Core.Players;
+
+namespace Jackal.Core.GameOrganizer;
 
 public class IdentifiedPlayer
 {

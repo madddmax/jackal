@@ -1,6 +1,6 @@
 using Jackal.Core;
 
-namespace JackalWebHost.Models;
+namespace JackalWebHost2.Models;
 
 public class PirateChange(Pirate pirate)
 {

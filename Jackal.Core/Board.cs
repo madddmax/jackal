@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Jackal.Core.Actions;
+using Jackal.Core.MapGenerator;
+using Jackal.Core.Players;
 using Newtonsoft.Json;
 
 namespace Jackal.Core;

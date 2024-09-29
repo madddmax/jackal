@@ -1,4 +1,5 @@
 using Jackal.Core;
+using Jackal.Core.MapGenerator;
 using Xunit;
 
 namespace Jackal.Tests2.TileTests;

@@ -1,12 +1,13 @@
 ﻿using Jackal.Core;
+using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
-using JackalWebHost.Models;
-using JackalWebHost.Service;
+using JackalWebHost2.Models;
 using JackalWebHost2.Models.Requests;
+using JackalWebHost2.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace JackalWebHost.Controllers;
+namespace JackalWebHost2.Controllers;
 
 public class GameController(IMemoryCache gamesSessionsCache) : Controller
 {

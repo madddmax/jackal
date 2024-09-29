@@ -1,4 +1,4 @@
-﻿namespace JackalWebHost.Models;
+﻿namespace JackalWebHost2.Models;
 
 public class LevelChange
 {
