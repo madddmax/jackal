@@ -1,6 +1,7 @@
 ﻿using Jackal.Core;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
+using JackalWebHost2.Controllers.Requests;
 using JackalWebHost2.Models;
 using JackalWebHost2.Models.Requests;
 using JackalWebHost2.Service;
@@ -26,7 +27,7 @@ public class GameController(IMemoryCache gamesSessionsCache) : Controller
     /// <summary>
     /// Запуск игры
     /// </summary>
-    public JsonResult MakeStart([FromBody] StartGameModel request)
+    public JsonResult MakeStart([FromBody] StartGameRequest request)
     {
         GameState gameState = new GameState();
         GameSettings gameSettings = request.Settings;
@@ -82,7 +83,7 @@ public class GameController(IMemoryCache gamesSessionsCache) : Controller
     /// <summary>
     /// Ход игры
     /// </summary>
-    public JsonResult MakeTurn([FromBody] TurnGameModel request)
+    public JsonResult MakeTurn([FromBody] TurnGameRequest request)
     {
         if (!gamesSessionsCache.TryGetValue(request.GameName, out GameState? gameState) || 
             gameState == null)

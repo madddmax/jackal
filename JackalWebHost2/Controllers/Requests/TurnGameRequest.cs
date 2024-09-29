@@ -1,8 +1,10 @@
-﻿namespace JackalWebHost2.Models.Requests;
+﻿namespace JackalWebHost2.Controllers.Requests;
 
-public class TurnGameModel
+public class TurnGameRequest
 {
     public string GameName { get; set; }
+    
     public int? TurnNum { get; set; }
+    
     public Guid? PirateId { get; set; }
 }
