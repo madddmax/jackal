@@ -1,6 +1,7 @@
 using JackalWebHost2.Data;
 using JackalWebHost2.Infrastructure;
 using JackalWebHost2.Middleware;
+using JackalWebHost2.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -92,5 +93,7 @@ public class Program
                         act.AllowAnyHeader();
                     });
             });
+
+        services.AddScoped<IGameService, GameService>();
     }
 }
