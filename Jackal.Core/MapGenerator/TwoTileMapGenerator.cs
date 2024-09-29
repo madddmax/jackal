@@ -1,4 +1,4 @@
-namespace Jackal.Core;
+namespace Jackal.Core.MapGenerator;
 
 /// <summary>
 /// Нижняя береговая линия firstTile,

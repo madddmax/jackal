@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿namespace JackalWebHost2.Models;
 
-namespace JackalWebHost.Models
+public class TileChange
 {
-    public class TileChange
-    {
-        public string? BackgroundImageSrc;
-        public string BackgroundColor;
-        public int Rotate;
+    public string? BackgroundImageSrc;
+    public string BackgroundColor;
+    public int Rotate;
 
-        public bool IsUnknown;
+    public bool IsUnknown;
 
-        public LevelChange[] Levels;
+    public LevelChange[] Levels;
 
-        public int X;
-        public int Y;
-    }
+    public int X;
+    public int Y;
 }

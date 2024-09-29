@@ -1,14 +1,13 @@
-﻿namespace Jackal.Core
-{
-    public class CheckedPosition
-    {
-        public TilePosition Position;
-        public Position? IncomeDelta;
+﻿namespace Jackal.Core;
 
-        public CheckedPosition(TilePosition position, Position? incomeDelta = null)
-        {
-            Position = position;
-            IncomeDelta = incomeDelta;
-        }
+public class CheckedPosition
+{
+    public TilePosition Position;
+    public Position? IncomeDelta;
+
+    public CheckedPosition(TilePosition position, Position? incomeDelta = null)
+    {
+        Position = position;
+        IncomeDelta = incomeDelta;
     }
 }

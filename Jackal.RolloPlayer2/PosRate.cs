@@ -1,15 +1,14 @@
 ﻿using Jackal.Core;
 
-namespace Jackal.RolloPlayer2
-{
-	public class PosRate
-	{
-		public PosRate(Position pos)
-		{
-			Pos = pos;
-		}
+namespace Jackal.RolloPlayer2;
 
-		public Position Pos;
-		public double Rate = 1;
+public class PosRate
+{
+	public PosRate(Position pos)
+	{
+		Pos = pos;
 	}
+
+	public Position Pos;
+	public double Rate = 1;
 }
