@@ -301,7 +301,7 @@ public class DrawService : IDrawService
                 filename = "caramba";
                 break;
             case TileType.Jungle:
-                filename = "jungle";
+                filename = "many_forts";
                 break;
             case TileType.Spinning:
                 switch (tile.SpinningCount)
