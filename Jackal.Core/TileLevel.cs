@@ -1,38 +1,37 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Jackal.Core
+namespace Jackal.Core;
+
+public class TileLevel
 {
-    public class TileLevel
+    [JsonProperty]
+    public int Coins;
+
+    [JsonProperty]
+    public readonly TilePosition Position;
+
+    [JsonProperty]
+    public readonly HashSet<Pirate> Pirates = new HashSet<Pirate>();
+
+    [JsonIgnore]
+    public int? OccupationTeamId
     {
-        [JsonProperty]
-        public int Coins;
-
-        [JsonProperty]
-        public readonly TilePosition Position;
-
-        [JsonProperty]
-        public readonly HashSet<Pirate> Pirates = new HashSet<Pirate>();
-
-        [JsonIgnore]
-        public int? OccupationTeamId
+        get
         {
-            get
+            if (Pirates != null)
             {
-                if (Pirates != null)
+                foreach (Pirate pirate in Pirates)
                 {
-                    foreach (Pirate pirate in Pirates)
-                    {
-                        return pirate.TeamId;
-                    }
+                    return pirate.TeamId;
                 }
-                return null;
             }
+            return null;
         }
+    }
 
-        public TileLevel(TilePosition position)
-        {
-            Position = position;
-        }
+    public TileLevel(TilePosition position)
+    {
+        Position = position;
     }
 }

@@ -1,24 +1,23 @@
 ﻿using System;
 
-namespace Jackal.Core.Players
+namespace Jackal.Core.Players;
+
+public class RandomPlayer : IPlayer
 {
-    public class RandomPlayer : IPlayer
+    private Random Rnd;
+
+    public void OnNewGame()
     {
-        private Random Rnd;
+        Rnd = new Random(42);
+    }
 
-        public void OnNewGame()
-        {
-            Rnd = new Random(42);
-        }
+    public void SetHumanMove(int moveNum, Guid? pirateId)
+    {
+        throw new NotImplementedException();
+    }
 
-        public void SetHumanMove(int moveNum, Guid? pirateId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public (int moveNum, Guid? pirateId) OnMove(GameState gameState)
-        {
-            return (Rnd.Next(gameState.AvailableMoves.Length), null);
-        }
+    public (int moveNum, Guid? pirateId) OnMove(GameState gameState)
+    {
+        return (Rnd.Next(gameState.AvailableMoves.Length), null);
     }
 }

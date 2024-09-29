@@ -2,129 +2,128 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Jackal.Core.GameOrganizer
+namespace Jackal.Core.GameOrganizer;
+
+public class GameOrganizer
 {
-    public class GameOrganizer
+    public readonly Results Results = new Results();
+
+    private int _permutationId = -1;
+    private int _mapId;
+
+    private readonly int totalPermutationsCount = Utils.Factorial(4);
+    List<IdentifiedPlayer> _players = new List<IdentifiedPlayer>();
+
+    public GameOrganizer(int? mapId, IEnumerable<IdentifiedPlayer> players)
     {
-        public readonly Results Results = new Results();
+        _players.AddRange(players);
+        if (_players.Count != 4)
+            throw new ArgumentException("players");
 
-        private int _permutationId = -1;
-        private int _mapId;
+        if (mapId.HasValue)
+            _mapId = mapId.Value;
+        else
+            _mapId = new Random().Next();
+    }
 
-        private readonly int totalPermutationsCount = Utils.Factorial(4);
-        List<IdentifiedPlayer> _players = new List<IdentifiedPlayer>();
+    List<IEnumerable<string>> _playersSets = new List<IEnumerable<string>>();
 
-        public GameOrganizer(int? mapId, IEnumerable<IdentifiedPlayer> players)
+    bool WasPlayersSet(IList<IdentifiedPlayer> players)
+    {
+        foreach (IEnumerable<string> set in _playersSets)
         {
-            _players.AddRange(players);
-            if (_players.Count != 4)
-                throw new ArgumentException("players");
-
-            if (mapId.HasValue)
-                _mapId = mapId.Value;
-            else
-                _mapId = new Random().Next();
+            if (set.SequenceEqual(players.Select(x => x.Id))) return true;
         }
+        return false;
+    }
 
-        List<IEnumerable<string>> _playersSets = new List<IEnumerable<string>>();
+    void ClearPlayersSet()
+    {
+        _playersSets.Clear();
+    }
 
-        bool WasPlayersSet(IList<IdentifiedPlayer> players)
+    void AddPlayersSet(IList<IdentifiedPlayer> players)
+    {
+        _playersSets.Add(players.Select(x => x.Id));
+    }
+
+    public void PlayNextGame()
+    {
+        _permutationId++;
+
+        IdentifiedPlayer[] currentPlayers;
+        while (true)
         {
-            foreach (IEnumerable<string> set in _playersSets)
-            {
-                if (set.SequenceEqual(players.Select(x => x.Id))) return true;
-            }
-            return false;
-        }
-
-        void ClearPlayersSet()
-        {
-            _playersSets.Clear();
-        }
-
-        void AddPlayersSet(IList<IdentifiedPlayer> players)
-        {
-            _playersSets.Add(players.Select(x => x.Id));
-        }
-
-        public void PlayNextGame()
-        {
+            currentPlayers = Utils.GetPermutation(_permutationId, _players.ToArray()).ToArray();
+            if (WasPlayersSet(currentPlayers) == false) break;
             _permutationId++;
-
-            IdentifiedPlayer[] currentPlayers;
-            while (true)
+            _permutationId %= totalPermutationsCount;
+            if (_permutationId == 0)
             {
-                currentPlayers = Utils.GetPermutation(_permutationId, _players.ToArray()).ToArray();
-                if (WasPlayersSet(currentPlayers) == false) break;
-                _permutationId++;
-                _permutationId %= totalPermutationsCount;
-                if (_permutationId == 0)
-                {
-                    _mapId++;
-                    ClearPlayersSet();
-                }
+                _mapId++;
+                ClearPlayersSet();
             }
+        }
 
-            Results.MapId = _mapId;
-            Results.PermutationId = _permutationId;
-            Results.GamesCount++;
+        Results.MapId = _mapId;
+        Results.PermutationId = _permutationId;
+        Results.GamesCount++;
 
-            var players = currentPlayers.Select(x => x.Player).ToArray();
-            var mapSize = 13;
-            var classicMap = new ClassicMapGenerator(_mapId, mapSize);
-            var _board = new Board(players, classicMap, mapSize, 3);
-            var game = new Game(players, _board);
+        var players = currentPlayers.Select(x => x.Player).ToArray();
+        var mapSize = 13;
+        var classicMap = new ClassicMapGenerator(_mapId, mapSize);
+        var _board = new Board(players, classicMap, mapSize, 3);
+        var game = new Game(players, _board);
 
-            while (game.IsGameOver == false)
+        while (game.IsGameOver == false)
+        {
+            game.Turn();
+        }
+
+        var standing = GetStanding(game);
+
+        for (int playerId = 0; playerId < currentPlayers.Length; playerId++)
+        {
+            var positionsCount = new double[4];
+            for (int position = 1; position <= 4; position++)
             {
-                game.Turn();
-            }
-
-            var standing = GetStanding(game);
-
-            for (int playerId = 0; playerId < currentPlayers.Length; playerId++)
-            {
-                var positionsCount = new double[4];
-                for (int position = 1; position <= 4; position++)
+                if (standing[playerId] == position)
                 {
-                    if (standing[playerId] == position)
+                    int sameStandingCount = standing.Count(x => x == position);
+
+                    for (int i = 1; i <= sameStandingCount; i++)
                     {
-                        int sameStandingCount = standing.Count(x => x == position);
-
-                        for (int i = 1; i <= sameStandingCount; i++)
-                        {
-                            positionsCount[position - 1 + i - 1] = 1.0 / sameStandingCount;
-                        }
+                        positionsCount[position - 1 + i - 1] = 1.0 / sameStandingCount;
                     }
                 }
-                Results.AddGameResult(currentPlayers[playerId].Id, positionsCount,game.Scores[playerId]);
             }
-
-            AddPlayersSet(currentPlayers);
+            Results.AddGameResult(currentPlayers[playerId].Id, positionsCount,game.Scores[playerId]);
         }
 
-        /// <summary>
-        /// Получаем места игроков
-        /// </summary>
-        /// <param name="game"></param>
-        /// <returns></returns>
-        private int[] GetStanding(Game game)
+        AddPlayersSet(currentPlayers);
+    }
+
+    /// <summary>
+    /// Получаем места игроков
+    /// </summary>
+    /// <param name="game"></param>
+    /// <returns></returns>
+    private int[] GetStanding(Game game)
+    {
+        List<int> gold = new List<int>(4);
+        for (int id = 0; id <= 3; id++)
         {
-            List<int> gold = new List<int>(4);
-            for (int id = 0; id <= 3; id++)
-            {
-                gold.Add(game.Scores[id]);
-            }
-
-            //определяем место
-            List<int> list = new List<int>(4);
-            for (int id = 0; id <= 3; id++)
-            {
-                int currentGold = gold[id];
-                list.Add(1 + gold.Count(x => x > currentGold));
-            }
-
-            return list.ToArray();
+            gold.Add(game.Scores[id]);
         }
+
+        //определяем место
+        List<int> list = new List<int>(4);
+        for (int id = 0; id <= 3; id++)
+        {
+            int currentGold = gold[id];
+            list.Add(1 + gold.Count(x => x > currentGold));
+        }
+
+        return list.ToArray();
     }
 }

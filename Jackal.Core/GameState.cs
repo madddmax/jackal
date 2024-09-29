@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Jackal.Core
+namespace Jackal.Core;
+
+public class GameState
 {
-    public class GameState
-    {
-        public Guid GameId;
-        public Board Board;
-        public Move[] AvailableMoves;
-        public int TeamId;
-        public int TurnNumber;
-    }
+    public Guid GameId;
+    public Board Board;
+    public Move[] AvailableMoves;
+    public int TeamId;
+    public int TurnNumber;
 }

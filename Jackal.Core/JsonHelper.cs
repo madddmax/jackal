@@ -1,19 +1,18 @@
 using Newtonsoft.Json;
 
-namespace Jackal.Core
+namespace Jackal.Core;
+
+public static class JsonHelper
 {
-    public static class JsonHelper
+    private static readonly JsonSerializerSettings TypeNameSerializer = new() { TypeNameHandling = TypeNameHandling.Objects };
+
+    public static string SerializeWithType<T>(T obj, Formatting formatting = Formatting.None)
     {
-        private static readonly JsonSerializerSettings TypeNameSerializer = new() { TypeNameHandling = TypeNameHandling.Objects };
+        return JsonConvert.SerializeObject(obj, formatting, TypeNameSerializer);
+    }
 
-        public static string SerializeWithType<T>(T obj, Formatting formatting = Formatting.None)
-        {
-            return JsonConvert.SerializeObject(obj, formatting, TypeNameSerializer);
-        }
-
-        public static T? DeserializeWithType<T>(string str)
-        {
-            return JsonConvert.DeserializeObject<T>(str, TypeNameSerializer);
-        }
+    public static T? DeserializeWithType<T>(string str)
+    {
+        return JsonConvert.DeserializeObject<T>(str, TypeNameSerializer);
     }
 }

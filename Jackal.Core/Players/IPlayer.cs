@@ -1,16 +1,15 @@
 ﻿using System;
 
-namespace Jackal.Core
+namespace Jackal.Core;
+
+public interface IPlayer
 {
-    public interface IPlayer
-    {
-        void OnNewGame();
+    void OnNewGame();
 
-        /// <summary>
-        /// Насильный выбор хода, для HumanPlayer
-        /// </summary>
-        void SetHumanMove(int moveNum, Guid? pirateId);
+    /// <summary>
+    /// Насильный выбор хода, для HumanPlayer
+    /// </summary>
+    void SetHumanMove(int moveNum, Guid? pirateId);
 
-        (int moveNum, Guid? pirateId) OnMove(GameState gameState);
-    }
+    (int moveNum, Guid? pirateId) OnMove(GameState gameState);
 }

@@ -1,7 +1,6 @@
-﻿namespace Jackal.Core
+﻿namespace Jackal.Core;
+
+public interface IClonable<T> where T : class
 {
-    public interface IClonable<T> where T : class
-    {
-        T Clone();
-    }
+    T Clone();
 }

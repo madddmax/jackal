@@ -1,14 +1,13 @@
-﻿namespace Jackal.Core.GameOrganizer
-{
-    public class IdentifiedPlayer
-    {
-        public readonly IPlayer Player;
-        public readonly string Id;
+﻿namespace Jackal.Core.GameOrganizer;
 
-        public IdentifiedPlayer(IPlayer player, string id)
-        {
-            Player = player;
-            Id = id;
-        }
+public class IdentifiedPlayer
+{
+    public readonly IPlayer Player;
+    public readonly string Id;
+
+    public IdentifiedPlayer(IPlayer player, string id)
+    {
+        Player = player;
+        Id = id;
     }
 }

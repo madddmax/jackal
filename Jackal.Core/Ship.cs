@@ -1,23 +1,22 @@
 ﻿using Newtonsoft.Json;
 
-namespace Jackal.Core
+namespace Jackal.Core;
+
+public class Ship
 {
-    public class Ship
+    [JsonProperty]
+    public int TeamId;
+
+    [JsonProperty]
+    public Position Position;
+
+    [JsonProperty]
+    public int Coins;
+
+    public Ship(int teamId, Position position)
     {
-        [JsonProperty]
-        public int TeamId;
-
-        [JsonProperty]
-        public Position Position;
-
-        [JsonProperty]
-        public int Coins;
-
-        public Ship(int teamId, Position position)
-        {
-            TeamId = teamId;
-            Position = position;
-            Coins = 0;
-        }
+        TeamId = teamId;
+        Position = position;
+        Coins = 0;
     }
 }
