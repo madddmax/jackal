@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Diagnostics;
-using Microsoft.Extensions.Logging;
 
 namespace JackalWebHost2.Pages;
 

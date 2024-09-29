@@ -1,72 +1,26 @@
-using System;
 using JackalWebHost2.Data;
+using JackalWebHost2.Infrastructure;
 using JackalWebHost2.Middleware;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 
 namespace JackalWebHost2;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        //var config = builder.Configuration;
-
-        // Add services to the container.
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(connectionString));
-        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-            .AddEntityFrameworkStores<ApplicationDbContext>();
-            
-        // builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-        builder.Services.AddControllers(opt =>
-        {
-            opt.SuppressAsyncSuffixInActionNames = true;
-        }).AddNewtonsoftJson(jsonOpt =>
-        {
-            jsonOpt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-            jsonOpt.SerializerSettings.DateFormatString = "dd.MM.yyyy";
-        });
-
-        //builder.Services.AddAuthentication()
-        //   .AddGoogle(options =>
-        //   {
-        //       IConfigurationSection googleAuthNSection = config.GetSection("Authentication:Google");
-        //       options.ClientId = googleAuthNSection["ClientId"];
-        //       options.ClientSecret = googleAuthNSection["ClientSecret"];
-        //   });
-
-        builder.Services.AddDistributedMemoryCache();
-        builder.Services.AddSession(options =>
-        {
-            options.IdleTimeout = TimeSpan.FromSeconds(10);
-            options.Cookie.HttpOnly = true;
-            options.Cookie.IsEssential = true;
-        });
-
-        var allOrigins = "AllOrigins";
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy(name: allOrigins,
-                act =>
-                {
-                    act.AllowAnyOrigin();
-                    act.AllowAnyMethod();
-                    act.AllowAnyHeader();
-                });
-        });
+        ConfigureServices(builder);
 
         var app = builder.Build();
+        ConfigurePipeline(app);
+        await app.RunAsync();
+    }
 
+    private static void ConfigurePipeline(WebApplication app)
+    {
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -79,7 +33,7 @@ public class Program
             //app.UseHsts();
         }
 
-        app.UseCors(allOrigins);
+        app.UseCors(CorsDefaults.AllOrigins);
         //app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseOptions();
@@ -96,6 +50,47 @@ public class Program
             name: "default",
             pattern: "{controller=Game}/{action=Index}/{id?}"
         );
-        app.Run();
+    }
+
+    private static void ConfigureServices(WebApplicationBuilder builder)
+    {
+        // Add services to the container.
+        var services = builder.Services;
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        services
+            .AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString))
+            .AddDatabaseDeveloperPageExceptionFilter()
+            .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        services
+            .AddControllers(opt =>
+            {
+                opt.SuppressAsyncSuffixInActionNames = true;
+            })
+            .AddNewtonsoftJson(jsonOpt =>
+            {
+                jsonOpt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                jsonOpt.SerializerSettings.DateFormatString = "dd.MM.yyyy";
+            });
+
+        services
+            .AddDistributedMemoryCache()
+            .AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            })
+            .AddCors(options =>
+            {
+                options.AddPolicy(name: CorsDefaults.AllOrigins,
+                    act =>
+                    {
+                        act.AllowAnyOrigin();
+                        act.AllowAnyMethod();
+                        act.AllowAnyHeader();
+                    });
+            });
     }
 }
