@@ -20,6 +20,7 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
     const coinSize = pirateSize * 0.3 > 15 ? pirateSize * 0.3 : 15;
     const addSize = (pirateSize - coinSize - 20) / 10;
     const coinPos = pirateSize - coinSize - addSize;
+    const isDisabled = pirate.isDrunk || pirate.isInTrap;
 
     return (
         <>
@@ -31,22 +32,27 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
                     border: pirate.isTransparent
                         ? 'none'
                         : `${pirateSize >= 50 ? 4 : 3}px ${pirate.backgroundColor || 'transparent'} solid`,
+                    // -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+                    filter: isDisabled ? 'grayscale(100%)' : undefined,
                     width: pirateSize,
                     height: pirateSize,
-                    cursor: 'pointer',
+                    cursor: isDisabled ? 'default' : 'pointer',
                 }}
                 onClick={() => onClick(pirate)}
             />
-            {pirate.withCoin && (
+            {(pirate.withCoin || pirate.isDrunk) && (
                 <Image
-                    src="/pictures/ruble.png"
+                    src={pirate.isDrunk ? '/pictures/rum.png' : '/pictures/ruble.png'}
                     roundedCircle
-                    className={cn('cell-moneta')}
+                    className={cn({
+                        'cell-moneta': !pirate.isDrunk,
+                        'cell-rum': pirate.isDrunk,
+                    })}
                     style={{
-                        top: coinPos,
-                        left: coinPos,
-                        width: coinSize,
-                        height: coinSize,
+                        top: pirate.isDrunk ? coinPos / 4 : coinPos,
+                        left: pirate.isDrunk ? (coinPos * 2) / 3 : coinPos,
+                        width: pirate.isDrunk ? (coinSize * 6) / 3 : coinSize,
+                        height: pirate.isDrunk ? (coinSize * 6) / 3 : coinSize,
                     }}
                 />
             )}
