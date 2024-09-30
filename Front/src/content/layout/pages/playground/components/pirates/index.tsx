@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { chooseHumanPirate } from '/redux/gameSlice';
 import Pirate from './pirate';
-import './pirates.css';
+import './pirates.less';
 import { GamePirate, ReduxState, TeamState } from '/redux/types';
 
 function Pirates() {
@@ -23,6 +23,8 @@ function Pirates() {
                             key={`pirate_${index}`}
                             photo={girl.photo || ''}
                             isActive={team.activePirate === girl.id}
+                            withRum={girl.withRum}
+                            isInTrap={girl.isInTrap}
                             withCoin={girl.withCoin}
                             onClick={onClick(girl, false)}
                             onCoinClick={onClick(girl, true)}

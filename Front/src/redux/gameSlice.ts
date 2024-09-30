@@ -171,9 +171,12 @@ export const gameSlice = createSlice({
                 state.lastMoves.length > 0 &&
                 !state.lastMoves.some((move) => move.from.pirateIds.includes(state.currentHumanTeam.lastPirate));
             debugLog('hasNoMoves', state.currentHumanTeam.lastPirate, hasNoMoves);
-            state.currentHumanTeam.activePirate = hasNoMoves
-                ? state.lastMoves[0].from.pirateIds[0]
-                : state.currentHumanTeam.lastPirate;
+            if (hasNoMoves) {
+                state.currentHumanTeam.activePirate = state.lastMoves[0].from.pirateIds[0];
+            }
+            // state.currentHumanTeam.activePirate = hasNoMoves
+            //     ? state.lastMoves[0].from.pirateIds[0]
+            //     : state.currentHumanTeam.lastPirate;
 
             const pirate = state.pirates?.find((it) => it.id == state.currentHumanTeam.activePirate);
             if (pirate?.position.x != state.highlight_x || pirate?.position.y != state.highlight_y) {
@@ -310,6 +313,8 @@ export const gameSlice = createSlice({
                         if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
                     }
                     pirate.position = it.position;
+                    pirate.withRum = it.isDrunk;
+                    pirate.isInTrap = it.isInTrap;
 
                     const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
                     debugLog('drawPirate', current(pirate).position.x, current(pirate).position.y, current(pirate).id);
@@ -318,6 +323,8 @@ export const gameSlice = createSlice({
                         photo: pirate.photo,
                         photoId: pirate.photoId,
                         withCoin: pirate.withCoin,
+                        isInTrap: it.isInTrap,
+                        isDrunk: it.isDrunk,
                         backgroundColor: team.backColor,
                     };
                     if (level.pirates == undefined) level.pirates = [drawPirate];

@@ -1,17 +1,20 @@
 import cn from 'classnames';
 
 import Image from 'react-bootstrap/Image';
-import './pirates.css';
+import './pirates.less';
 
 interface PirateProps {
     photo: string;
     isActive: boolean;
     withCoin: boolean | undefined;
+    withRum: boolean | undefined;
+    isInTrap: boolean | undefined;
     onClick: () => void;
     onCoinClick: () => void;
 }
 
-const Pirate = ({ photo, isActive, withCoin, onClick, onCoinClick }: PirateProps) => {
+const Pirate = ({ photo, isActive, withCoin, withRum, isInTrap, onClick, onCoinClick }: PirateProps) => {
+    const isDisabled = withRum || isInTrap;
     return (
         <div className="photo-position float-end">
             <Image
@@ -20,12 +23,24 @@ const Pirate = ({ photo, isActive, withCoin, onClick, onCoinClick }: PirateProps
                 className={cn('photo', {
                     'photo-active': isActive,
                 })}
+                style={{
+                    filter: isDisabled ? 'grayscale(100%)' : undefined,
+                    cursor: isDisabled ? 'default' : 'pointer',
+                }}
                 onClick={onClick}
             />
-            {withCoin !== undefined && (
+            {(withCoin !== undefined || withRum) && (
                 <>
-                    <Image src="/pictures/ruble.png" roundedCircle className={cn('moneta')} onClick={onCoinClick} />
-                    {!withCoin && (
+                    <Image
+                        src={withRum ? '/pictures/rum.png' : '/pictures/ruble.png'}
+                        roundedCircle
+                        className={cn({
+                            moneta: !withRum,
+                            rum: withRum,
+                        })}
+                        onClick={onCoinClick}
+                    />
+                    {!withCoin && !withRum && (
                         <Image
                             src="/pictures/cross-linear-icon.png"
                             roundedCircle
