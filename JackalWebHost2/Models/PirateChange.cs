@@ -17,4 +17,6 @@ public class PirateChange(Pirate pirate)
     public bool? IsDrunk;
     
     public bool? IsInTrap;
+    
+    public bool? IsInHole;
 }

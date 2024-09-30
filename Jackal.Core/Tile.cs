@@ -81,4 +81,6 @@ public class Tile
 		SpinningCount = tileParams.SpinningCount;
 		Direction = tileParams.Direction;
 	}
+
+	public bool HasNoEnemy(int ownTeamId) => OccupationTeamId.HasValue == false || OccupationTeamId == ownTeamId;
 }

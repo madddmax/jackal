@@ -26,5 +26,6 @@ public enum TileType
     Lighthouse,
     BenGunn,
     Caramba,
-    Jungle
+    Jungle,
+    Hole
 }

@@ -32,7 +32,6 @@ public class ClassicTilesPack
         new TileParams(TileType.Chest5), // 34
         new TileParams(TileType.Fort),
         new TileParams(TileType.Fort),
-        new TileParams(TileType.Fort),
         new TileParams(TileType.RespawnFort), // порядок RespawnFort и Cannibal важен для баланса
         new TileParams(TileType.Cannibal), // берем воскрешающий форт вместе с людоедом
         new TileParams(TileType.RespawnFort),
@@ -44,8 +43,6 @@ public class ClassicTilesPack
         new TileParams(TileType.Horse),
         new TileParams(TileType.Horse),
         new TileParams(TileType.Horse),
-        new TileParams(TileType.Horse),
-        new TileParams(TileType.Balloon),
         new TileParams(TileType.Balloon),
         new TileParams(TileType.Balloon),
         new TileParams(TileType.Airplane),
@@ -60,7 +57,6 @@ public class ClassicTilesPack
         new TileParams(TileType.Ice),
         new TileParams(TileType.Ice),
         new TileParams(TileType.Ice),
-        new TileParams(TileType.Cannon),
         new TileParams(TileType.Cannon),
         new TileParams(TileType.Cannon),
         new TileParams(TileType.Arrow, ArrowsCodesHelper.OneArrowUp),
@@ -106,9 +102,13 @@ public class ClassicTilesPack
         new TileParams(TileType.Spinning) { SpinningCount = 5 },
         new TileParams(TileType.Spinning) { SpinningCount = 5 },
         new TileParams(TileType.Caramba),
-        new TileParams(TileType.Caramba),
         new TileParams(TileType.Jungle),
         new TileParams(TileType.Jungle),
+        new TileParams(TileType.Hole),
+        new TileParams(TileType.Hole),
+        new TileParams(TileType.Hole),
+        new TileParams(TileType.Hole),
+        new TileParams(TileType.Hole),
         // 26 пустых клеток
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
