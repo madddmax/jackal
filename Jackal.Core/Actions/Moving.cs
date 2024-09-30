@@ -140,7 +140,7 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
             {
                 pirate.IsInHole = true;
             }
-            else if (holeTiles.Count == 2)
+            else if (newTile && holeTiles.Count == 2)
             {
                 var pirates = new List<Pirate>(holeTiles[1].Pirates);
                 foreach (var movedPirate in holeTiles[0].Pirates)
@@ -153,7 +153,7 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
                     game.MovePirateToPosition(movedPirate, holeTiles[0].Position);
                 }
             }
-            else if(holeTiles.Count > 2)
+            else
             {
                 game.NeedSubTurnPirate = pirate;
                 game.PrevSubTurnPosition = prev;
