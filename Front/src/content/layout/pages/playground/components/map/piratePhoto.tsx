@@ -20,7 +20,7 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
     const coinSize = pirateSize * 0.3 > 15 ? pirateSize * 0.3 : 15;
     const addSize = (pirateSize - coinSize - 20) / 10;
     const coinPos = pirateSize - coinSize - addSize;
-    const isDisabled = pirate.isDrunk || pirate.isInTrap;
+    const isDisabled = pirate.isDrunk || pirate.isInTrap || pirate.isInHole;
 
     return (
         <>

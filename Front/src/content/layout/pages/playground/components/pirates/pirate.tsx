@@ -9,12 +9,13 @@ interface PirateProps {
     withCoin: boolean | undefined;
     withRum: boolean | undefined;
     isInTrap: boolean | undefined;
+    isInHole: boolean | undefined;
     onClick: () => void;
     onCoinClick: () => void;
 }
 
-const Pirate = ({ photo, isActive, withCoin, withRum, isInTrap, onClick, onCoinClick }: PirateProps) => {
-    const isDisabled = withRum || isInTrap;
+const Pirate = ({ photo, isActive, withCoin, withRum, isInTrap, isInHole, onClick, onCoinClick }: PirateProps) => {
+    const isDisabled = withRum || isInTrap || isInHole;
     return (
         <div className="photo-position float-end">
             <Image

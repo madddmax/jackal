@@ -315,6 +315,7 @@ export const gameSlice = createSlice({
                     pirate.position = it.position;
                     pirate.withRum = it.isDrunk;
                     pirate.isInTrap = it.isInTrap;
+                    pirate.isInHole = it.isInHole;
 
                     const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
                     debugLog('drawPirate', current(pirate).position.x, current(pirate).position.y, current(pirate).id);
@@ -324,6 +325,7 @@ export const gameSlice = createSlice({
                         photoId: pirate.photoId,
                         withCoin: pirate.withCoin,
                         isInTrap: it.isInTrap,
+                        isInHole: it.isInHole,
                         isDrunk: it.isDrunk,
                         backgroundColor: team.backColor,
                     };

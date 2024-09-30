@@ -25,6 +25,7 @@ function Pirates() {
                             isActive={team.activePirate === girl.id}
                             withRum={girl.withRum}
                             isInTrap={girl.isInTrap}
+                            isInHole={girl.isInHole}
                             withCoin={girl.withCoin}
                             onClick={onClick(girl, false)}
                             onCoinClick={onClick(girl, true)}

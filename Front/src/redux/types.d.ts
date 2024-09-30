@@ -118,6 +118,7 @@ export interface CellPirate {
     withCoin?: boolean;
     isTransparent?: boolean;
     isInTrap?: boolean;
+    isInHole?: boolean;
     isDrunk?: boolean;
     backgroundColor: string;
     photo: string;
@@ -165,6 +166,7 @@ export interface GamePirate {
     withCoin?: boolean;
     withRum?: boolean;
     isInTrap?: boolean;
+    isInHole?: boolean;
     groupId: string;
     photo: string;
     photoId: number;
@@ -183,4 +185,5 @@ export interface PirateDiff {
     isAlive?: boolean;
     isDrunk?: boolean;
     isInTrap?: boolean;
+    isInHole?: boolean;
 }
