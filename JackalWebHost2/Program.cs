@@ -1,4 +1,6 @@
 using JackalWebHost2.Data;
+using JackalWebHost2.Data.Interfaces;
+using JackalWebHost2.Data.Repositories;
 using JackalWebHost2.Infrastructure;
 using JackalWebHost2.Middleware;
 using JackalWebHost2.Services;
@@ -96,5 +98,7 @@ public class Program
 
         services.AddScoped<IGameService, GameService>();
         services.AddScoped<IDrawService, DrawService>();
+        
+        services.AddScoped<IGameStateRepository, InMemoryGameStateRepository>();
     }
 }

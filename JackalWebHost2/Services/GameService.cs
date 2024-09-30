@@ -1,30 +1,28 @@
 ﻿using Jackal.Core;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
+using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Exceptions;
 using JackalWebHost2.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using GameState = JackalWebHost2.Controllers.GameState;
+using GameState = JackalWebHost2.Models.GameState;
 
 namespace JackalWebHost2.Services;
 
 public class GameService : IGameService
 {
-    private readonly IMemoryCache _gamesSessionsCache;
+    private readonly IGameStateRepository _gameStateRepository;
     private readonly IDrawService _drawService;
-
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new MemoryCacheEntryOptions()
-        .SetSlidingExpiration(TimeSpan.FromHours(1));
-
-    public GameService(IMemoryCache gamesSessionsCache, IDrawService drawService)
+    
+    public GameService(IGameStateRepository gameStateRepository, IDrawService drawService)
     {
-        _gamesSessionsCache = gamesSessionsCache;
+        _gameStateRepository = gameStateRepository;
         _drawService = drawService;
     }
     
-    public StartGameResult StartGame([FromBody] StartGameModel request)
+    public async Task<StartGameResult> StartGame(StartGameModel request)
     {
+        // todo validate game name
+        
         GameState gameState = new GameState();
         GameSettings gameSettings = request.Settings;
 
@@ -55,7 +53,7 @@ public class GameService : IGameService
         gameState.board = new Board(gamePlayers, mapGenerator, mapSize, piratesPerPlayer);
         gameState.game = new Game(gamePlayers, gameState.board);
 
-        _gamesSessionsCache.Set(request.GameName, gameState, _cacheEntryOptions);
+        await _gameStateRepository.CreateGameState(request.GameName, gameState);
         
         var map = _drawService.Map(gameState.board);
 
@@ -76,10 +74,10 @@ public class GameService : IGameService
         };
     }
     
-    public TurnGameResult MakeGameTurn([FromBody] TurnGameModel request)
+    public async Task<TurnGameResult> MakeGameTurn(TurnGameModel request)
     {
-        if (!_gamesSessionsCache.TryGetValue(request.GameName, out GameState? gameState) || 
-            gameState == null)
+        var gameState = await _gameStateRepository.GetGameState(request.GameName);
+        if (gameState == null)
         {
             throw new GameNotFoundException();
         }
@@ -92,7 +90,8 @@ public class GameService : IGameService
         }
 
         gameState.game.Turn();
-
+        await _gameStateRepository.UpdateGameState(request.GameName, gameState);
+        
         var prevBoard = JsonHelper.DeserializeWithType<Board>(prevBoardStr);
         
         (List<PirateChange> pirateChanges, List<TileChange> tileChanges) = _drawService.Draw(gameState.board, prevBoard);
