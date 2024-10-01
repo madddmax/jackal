@@ -26,12 +26,13 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
         <>
             <Image
                 src={`/pictures/${pirate.photo}`}
-                roundedCircle={!pirate.isTransparent}
+                roundedCircle={pirate.backgroundColor != 'transparent'}
                 className={cn('pirates')}
                 style={{
-                    border: pirate.isTransparent
-                        ? 'none'
-                        : `${pirateSize >= 50 ? 4 : 3}px ${pirate.backgroundColor || 'transparent'} solid`,
+                    border:
+                        pirate.backgroundColor == 'transparent'
+                            ? 'none'
+                            : `${pirateSize >= 50 ? 4 : 3}px ${pirate.backgroundColor || 'transparent'} solid`,
                     // -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
                     filter: isDisabled ? 'grayscale(100%)' : undefined,
                     width: pirateSize,

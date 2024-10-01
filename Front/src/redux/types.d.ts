@@ -116,7 +116,6 @@ interface GameLevel {
 export interface CellPirate {
     id: string;
     withCoin?: boolean;
-    isTransparent?: boolean;
     isInTrap?: boolean;
     isInHole?: boolean;
     isDrunk?: boolean;

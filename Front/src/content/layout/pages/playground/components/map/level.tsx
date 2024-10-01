@@ -68,8 +68,8 @@ const Level = ({ cellSize, pirateSize, field, data }: LevelProps) => {
     if (data.pirates) {
         let arr = [...data.pirates];
         arr.sort((a, b) => {
-            if (a?.isTransparent) return 1;
-            if (b?.isTransparent) return -1;
+            if (a?.backgroundColor == 'transparent') return 1;
+            if (b?.backgroundColor == 'transparent') return -1;
             return a.photoId - b.photoId;
         });
         pirate = arr[0];

@@ -239,7 +239,7 @@ export const gameSlice = createSlice({
                         let prevLevelPirate = prevLevel.pirates.find((pr) => pr.id === it.id);
                         if (prevLevelPirate) {
                             prevLevelPirate.photo = prevCell.image?.includes('arrow') ? 'skull.png' : 'skull_light.png';
-                            prevLevelPirate.isTransparent = true;
+                            prevLevelPirate.backgroundColor = 'transparent';
                         }
                     }
                     state.pirates = state.pirates?.filter((pr) => pr.id !== it.id);
