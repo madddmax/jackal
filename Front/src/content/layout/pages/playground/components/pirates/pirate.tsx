@@ -2,23 +2,21 @@ import cn from 'classnames';
 
 import Image from 'react-bootstrap/Image';
 import './pirates.less';
+import { GamePirate } from '/redux/types';
 
 interface PirateProps {
-    photo: string;
+    pirate: GamePirate;
     isActive: boolean;
-    withCoin: boolean | undefined;
-    withRum: boolean | undefined;
-    isInTrap: boolean | undefined;
     onClick: () => void;
     onCoinClick: () => void;
 }
 
-const Pirate = ({ photo, isActive, withCoin, withRum, isInTrap, onClick, onCoinClick }: PirateProps) => {
-    const isDisabled = withRum || isInTrap;
+const Pirate = ({ pirate, isActive, onClick, onCoinClick }: PirateProps) => {
+    const isDisabled = pirate.withRum || pirate.isInTrap || pirate.isInHole;
     return (
         <div className="photo-position float-end">
             <Image
-                src={`/pictures/${photo}`}
+                src={`/pictures/${pirate.photo}`}
                 roundedCircle
                 className={cn('photo', {
                     'photo-active': isActive,
@@ -29,18 +27,18 @@ const Pirate = ({ photo, isActive, withCoin, withRum, isInTrap, onClick, onCoinC
                 }}
                 onClick={onClick}
             />
-            {(withCoin !== undefined || withRum) && (
+            {(pirate.withCoin !== undefined || pirate.withRum) && (
                 <>
                     <Image
-                        src={withRum ? '/pictures/rum.png' : '/pictures/ruble.png'}
+                        src={pirate.withRum ? '/pictures/rum.png' : '/pictures/ruble.png'}
                         roundedCircle
                         className={cn({
-                            moneta: !withRum,
-                            rum: withRum,
+                            moneta: !pirate.withRum,
+                            rum: pirate.withRum,
                         })}
                         onClick={onCoinClick}
                     />
-                    {!withCoin && !withRum && (
+                    {!pirate.withCoin && !pirate.withRum && (
                         <Image
                             src="/pictures/cross-linear-icon.png"
                             roundedCircle

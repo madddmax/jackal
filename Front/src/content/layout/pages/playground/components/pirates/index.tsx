@@ -21,11 +21,8 @@ function Pirates() {
                     .map((girl, index) => (
                         <Pirate
                             key={`pirate_${index}`}
-                            photo={girl.photo || ''}
+                            pirate={girl}
                             isActive={team.activePirate === girl.id}
-                            withRum={girl.withRum}
-                            isInTrap={girl.isInTrap}
-                            withCoin={girl.withCoin}
                             onClick={onClick(girl, false)}
                             onCoinClick={onClick(girl, true)}
                         />
