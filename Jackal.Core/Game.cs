@@ -66,9 +66,12 @@ public class Game
             var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
                 
             var from = _availableMoves[moveNum].From;
-            var currentTeamPirates = Board.Teams[CurrentTeamId].Pirates;
-            var pirate = 
-                currentTeamPirates.FirstOrDefault(x => x.Id == pirateId && x.Position == from) 
+            var currentTeamPirates = Board.Teams[CurrentTeamId].Pirates
+                .Where(x => x is { IsDrunk: false, IsInTrap: false, IsInHole: false })
+                .ToList();
+            
+            var pirate =
+                currentTeamPirates.FirstOrDefault(x => x.Id == pirateId && x.Position == from)
                 ?? currentTeamPirates.First(x => x.Position == from);
                 
             IGameAction action = _actions[moveNum];
