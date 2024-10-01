@@ -210,7 +210,7 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
 
         // убиваем чужих пиратов
         var enemyPirates = targetTileLevel.Pirates
-            .Where(x => x.TeamId != pirate.TeamId && !x.IsInHole)
+            .Where(x => x.TeamId != pirate.TeamId)
             .ToList();
 
         foreach (var enemyPirate in enemyPirates)

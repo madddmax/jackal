@@ -303,7 +303,7 @@ public class DrawService : IDrawService
                 filename = "caramba";
                 break;
             case TileType.Jungle:
-                filename = "many_forts";
+                filename = "jungle";
                 break;
             case TileType.Hole:
                 filename = "hole";

@@ -38,7 +38,8 @@ public class ClassicMapGenerator : IMapGenerator
                 tempDef.Type != TileType.Chest3 &&
                 tempDef.Type != TileType.Chest4 &&
                 tempDef.Type != TileType.Chest5 &&
-                tempDef.Type != TileType.Ice)
+                tempDef.Type != TileType.Ice &&
+                tempDef.Type != TileType.Hole)
             {
                 // клетки не указанные в условии - вращаем при отображении на карте
                 tempDef.Direction = _rand.Next(4);
