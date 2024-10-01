@@ -8,10 +8,10 @@ public interface IGameService
     /// <summary>
     /// Запуск игры
     /// </summary>
-    StartGameResult StartGame([FromBody] StartGameModel request);
+    Task<StartGameResult> StartGame([FromBody] StartGameModel request);
 
     /// <summary>
     /// Ход игры
     /// </summary>
-    TurnGameResult MakeGameTurn([FromBody] TurnGameModel request);
+    Task<TurnGameResult> MakeGameTurn([FromBody] TurnGameModel request);
 }

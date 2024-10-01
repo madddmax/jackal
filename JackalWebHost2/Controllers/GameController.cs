@@ -27,9 +27,9 @@ public class GameController : Controller
     /// <summary>
     /// Запуск игры
     /// </summary>
-    public JsonResult MakeStart([FromBody] StartGameRequest request)
+    public async Task<JsonResult> MakeStart([FromBody] StartGameRequest request)
     {
-        var result = _gameService.StartGame(new StartGameModel
+        var result = await _gameService.StartGame(new StartGameModel
         {
             GameName = request.GameName,
             Settings = request.Settings
@@ -49,11 +49,11 @@ public class GameController : Controller
     /// <summary>
     /// Ход игры
     /// </summary>
-    public JsonResult MakeTurn([FromBody] TurnGameRequest request)
+    public async Task<JsonResult> MakeTurn([FromBody] TurnGameRequest request)
     {
         try
         {
-            var result = _gameService.MakeGameTurn(new TurnGameModel
+            var result = await _gameService.MakeGameTurn(new TurnGameModel
             {
                 GameName = request.GameName,
                 TurnNum = request.TurnNum,
