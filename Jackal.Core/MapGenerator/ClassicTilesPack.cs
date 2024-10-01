@@ -104,11 +104,11 @@ public class ClassicTilesPack
         new TileParams(TileType.Caramba),
         new TileParams(TileType.Jungle),
         new TileParams(TileType.Jungle),
-        new TileParams(TileType.Hole),
-        new TileParams(TileType.Hole),
-        new TileParams(TileType.Hole),
-        new TileParams(TileType.Hole),
-        new TileParams(TileType.Hole),
+        new TileParams(TileType.Hole) { Direction = 3 },
+        new TileParams(TileType.Hole) { Direction = 3 },
+        new TileParams(TileType.Hole) { Direction = 3 },
+        new TileParams(TileType.Hole) { Direction = 3 },
+        new TileParams(TileType.Hole) { Direction = 3 },
         // 26 пустых клеток
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
@@ -136,7 +136,7 @@ public class ClassicTilesPack
         new TileParams(TileType.Grass, 3),
         new TileParams(TileType.Grass, 3),
         new TileParams(TileType.Grass, 3)
-    ];    
+    ];
 
     /// <summary>
     /// Количество монет на карте
