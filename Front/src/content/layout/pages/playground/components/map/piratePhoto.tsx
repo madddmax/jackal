@@ -26,7 +26,7 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
         <>
             <Image
                 src={`/pictures/${pirate.photo}`}
-                roundedCircle={pirate.backgroundColor != 'transparent'}
+                roundedCircle={!pirate.isActive && pirate.backgroundColor != 'transparent'}
                 className={cn('pirates')}
                 style={{
                     border:

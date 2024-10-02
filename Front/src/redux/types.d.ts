@@ -118,6 +118,7 @@ export interface CellPirate {
     isInTrap?: boolean;
     isInHole?: boolean;
     isDrunk?: boolean;
+    isActive: boolean;
     backgroundColor: string;
     photo: string;
     photoId: number;

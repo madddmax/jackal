@@ -8,8 +8,32 @@ describe('redux logic tests', () => {
         pirateSize: 15,
         fields: [
             [{ levels: [{ level: 0, hasCoins: false }] }],
-            [{ levels: [{ level: 0, hasCoins: false }] }],
-            [{ levels: [{ level: 0, hasCoins: false }] }],
+            [
+                {
+                    levels: [
+                        {
+                            level: 0,
+                            hasCoins: false,
+                            pirates: [
+                                { id: '100', isActive: false, backgroundColor: 'red', photo: 'test', photoId: 1 },
+                            ],
+                        },
+                    ],
+                },
+            ],
+            [
+                {
+                    levels: [
+                        {
+                            level: 0,
+                            hasCoins: false,
+                            pirates: [
+                                { id: '200', isActive: false, backgroundColor: 'red', photo: 'test', photoId: 1 },
+                            ],
+                        },
+                    ],
+                },
+            ],
         ],
         lastMoves: [],
         pirates: [
