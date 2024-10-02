@@ -67,7 +67,7 @@ public class Game
                 
             var from = _availableMoves[moveNum].From;
             var currentTeamPirates = Board.Teams[CurrentTeamId].Pirates
-                .Where(x => x is { IsDrunk: false, IsInTrap: false, IsInHole: false })
+                .Where(x => x.IsActive)
                 .ToList();
             
             var pirate =
@@ -136,9 +136,9 @@ public class Game
             
         Team team = Board.Teams[teamId];
 
-        IEnumerable<Pirate> activePirates = NeedSubTurnPirate != null 
-            ? new[] {NeedSubTurnPirate} 
-            : team.Pirates.Where(x => x is { IsDrunk: false, IsInTrap: false, IsInHole: false });
+        IEnumerable<Pirate> activePirates = NeedSubTurnPirate != null
+            ? new[] { NeedSubTurnPirate }
+            : team.Pirates.Where(x => x.IsActive);
 
         var targets = new List<AvailableMove>();
         foreach (var pirate in activePirates)

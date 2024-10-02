@@ -24,6 +24,13 @@ public class RumBarrelTests
         
         // Assert - не доступно ни одного хода, т.к. напились на бочке с ромом
         Assert.Empty(moves);
+        Assert.Single(game.Board.Teams);
+        Assert.Single(game.Board.Teams[0].Pirates);
+        
+        var ownPirate = game.Board.Teams[0].Pirates[0];
+        Assert.False(ownPirate.IsActive);
+        Assert.True(ownPirate.IsDrunk);
+        
         Assert.Equal(1, game.TurnNo);
     }
     
