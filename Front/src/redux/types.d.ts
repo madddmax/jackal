@@ -15,7 +15,7 @@ export interface GameState {
     pirates?: GamePirate[];
     lastMoves: GameMove[];
     teams: TeamState[];
-    currentHumanTeam: TeamState;
+    currentHumanTeamId: number;
     highlight_x: number;
     highlight_y: number;
 }
@@ -31,7 +31,6 @@ export interface StorageState {
 export interface TeamState {
     id: number;
     activePirate: string;
-    lastPirate: string;
     isHumanPlayer: boolean;
     backColor: string;
     group: TeamGroup;
