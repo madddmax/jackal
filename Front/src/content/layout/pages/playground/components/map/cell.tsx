@@ -45,11 +45,10 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                     field.availableMove
                         ? () => {
                               let gameState = store.getState().game as GameState;
+                              let team = gameState.teams.find((it) => it.id == gameState.currentHumanTeamId);
                               if (
                                   field.levels.length == 1 &&
-                                  field.levels[0].pirates?.some(
-                                      (it) => it.id == gameState.currentHumanTeam.activePirate,
-                                  )
+                                  field.levels[0].pirates?.some((it) => it.id == team?.activePirate)
                               ) {
                                   tooltipRef.current?.open({
                                       anchorSelect: `#cell_${col}_${row}`,
