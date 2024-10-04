@@ -1,6 +1,6 @@
 ﻿using JackalWebHost2.Models;
 
-namespace JackalWebHost2.Controllers.Requests;
+namespace JackalWebHost2.Controllers.Models;
 
 public class StartGameRequest
 {

@@ -1,5 +1,4 @@
-﻿using JackalWebHost2.Controllers.Requests;
-using JackalWebHost2.Exceptions;
+﻿using JackalWebHost2.Controllers.Models;
 using JackalWebHost2.Models;
 using JackalWebHost2.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -45,32 +44,26 @@ public class GameController : Controller
             moves = result.Moves
         });
     }
-        
+
     /// <summary>
     /// Ход игры
     /// </summary>
     public async Task<JsonResult> MakeTurn([FromBody] TurnGameRequest request)
     {
-        try
+        var result = await _gameService.MakeGameTurn(new TurnGameModel
         {
-            var result = await _gameService.MakeGameTurn(new TurnGameModel
-            {
-                GameName = request.GameName,
-                TurnNum = request.TurnNum,
-                PirateId = request.PirateId
-            });
-            
-            return Json(new {
-                pirateChanges = result.PirateChanges,
-                changes = result.Changes,
-                stat = result.Statistics,
-                moves = result.Moves
-            });
-        }
-        catch (GameNotFoundException)
+            GameName = request.GameName,
+            TurnNum = request.TurnNum,
+            PirateId = request.PirateId
+        });
+
+        return Json(new
         {
-            // TODO Сделать получше
-            return Json(new { error = true });
-        }
+            pirateChanges = result.PirateChanges,
+            changes = result.Changes,
+            stat = result.Statistics,
+            moves = result.Moves
+        });
+
     }
 }
