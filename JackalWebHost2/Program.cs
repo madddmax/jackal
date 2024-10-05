@@ -70,6 +70,7 @@ public class Program
             .AddControllers(opt =>
             {
                 opt.SuppressAsyncSuffixInActionNames = true;
+                opt.Filters.Add<BusinessExceptionFilter>();
             })
             .AddNewtonsoftJson(jsonOpt =>
             {

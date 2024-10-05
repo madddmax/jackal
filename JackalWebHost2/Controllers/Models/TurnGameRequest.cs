@@ -1,4 +1,4 @@
-﻿namespace JackalWebHost2.Controllers.Requests;
+﻿namespace JackalWebHost2.Controllers.Models;
 
 public class TurnGameRequest
 {
