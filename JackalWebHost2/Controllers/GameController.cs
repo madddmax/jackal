@@ -8,9 +8,11 @@ namespace JackalWebHost2.Controllers;
 public class GameController : Controller
 {
     private readonly IGameService _gameService;
+    private readonly IWebHostEnvironment _hostingEnv;
 
-    public GameController(IGameService gameService)
+    public GameController(IWebHostEnvironment hostingEnv, IGameService gameService)
     {
+        _hostingEnv = hostingEnv;
         _gameService = gameService;
     }
 
@@ -19,7 +21,8 @@ public class GameController : Controller
     /// </summary>
     public ActionResult Index()
     {
-        var html = System.IO.File.ReadAllText(@"./wwwroot/dist/index.html");
+        var frontFolder = _hostingEnv.IsDevelopment() ? "dev" : "dist";
+        var html = System.IO.File.ReadAllText($"./wwwroot/{frontFolder}/index.html");
         return base.Content(html, "text/html");
     }
 
