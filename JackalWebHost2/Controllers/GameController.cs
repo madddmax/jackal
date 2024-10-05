@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JackalWebHost2.Controllers;
 
+[Route("/api/[controller]/[action]")]
 public class GameController : Controller
 {
     private readonly IGameService _gameService;
