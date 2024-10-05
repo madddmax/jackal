@@ -8,6 +8,7 @@ import './header.css';
 import { Link } from 'react-router-dom';
 import { uuidGen } from '/app/global';
 import { ReduxState, StorageState } from '/redux/types';
+import config from '/app/config';
 
 function Header() {
     const dispatch = useDispatch();
@@ -46,6 +47,19 @@ function Header() {
                         </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
+                {process.env.NODE_ENV && process.env.NODE_ENV === 'development' && (
+                    <Navbar.Collapse id="basic-navbar-nav" className="d-flex">
+                        <Nav className="me-auto">
+                            <Nav.Link
+                                as={Link}
+                                to={`${config.BaseApi.substring(0, config.BaseApi.length - 4)}swagger`}
+                                target="_blank"
+                            >
+                                Swagger
+                            </Nav.Link>
+                        </Nav>
+                    </Navbar.Collapse>
+                )}
             </Container>
         </Navbar>
     );
