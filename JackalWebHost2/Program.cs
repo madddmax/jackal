@@ -5,7 +5,9 @@ using JackalWebHost2.Infrastructure;
 using JackalWebHost2.Middleware;
 using JackalWebHost2.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace JackalWebHost2;
@@ -28,6 +30,8 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseMigrationsEndPoint();
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
         else
         {
@@ -48,10 +52,9 @@ public class Program
 
         app.UseSession();
 
-        app.MapRazorPages();
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Game}/{action=Index}/{id?}"
+            pattern: "{controller}/{action}"
         );
     }
 
@@ -77,6 +80,8 @@ public class Program
                 jsonOpt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 jsonOpt.SerializerSettings.DateFormatString = "dd.MM.yyyy";
             });
+
+        builder.Services.AddSwaggerGen();
 
         services
             .AddDistributedMemoryCache()

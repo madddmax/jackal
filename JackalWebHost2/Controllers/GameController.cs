@@ -5,31 +5,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JackalWebHost2.Controllers;
 
+[ApiController]
 [Route("/api/[controller]/[action]")]
 public class GameController : Controller
 {
     private readonly IGameService _gameService;
-    private readonly IWebHostEnvironment _hostingEnv;
 
-    public GameController(IWebHostEnvironment hostingEnv, IGameService gameService)
+    public GameController(IGameService gameService)
     {
-        _hostingEnv = hostingEnv;
         _gameService = gameService;
     }
 
-    /// <summary>
-    /// Главное окно
-    /// </summary>
-    public ActionResult Index()
-    {
-        var frontFolder = _hostingEnv.IsDevelopment() ? "dev" : "dist";
-        var html = System.IO.File.ReadAllText($"./wwwroot/{frontFolder}/index.html");
-        return base.Content(html, "text/html");
-    }
 
     /// <summary>
     /// Запуск игры
     /// </summary>
+    [HttpPost]
     public async Task<JsonResult> MakeStart([FromBody] StartGameRequest request)
     {
         var result = await _gameService.StartGame(new StartGameModel
@@ -52,6 +43,7 @@ public class GameController : Controller
     /// <summary>
     /// Ход игры
     /// </summary>
+    [HttpPost]
     public async Task<JsonResult> MakeTurn([FromBody] TurnGameRequest request)
     {
         var result = await _gameService.MakeGameTurn(new TurnGameModel

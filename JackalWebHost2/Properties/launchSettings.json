@@ -3,6 +3,7 @@
     "JackalWebHost2": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "http://localhost:5130/index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
