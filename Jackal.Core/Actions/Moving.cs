@@ -158,11 +158,11 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
                     game.MovePirateToPosition(movedPirate, holeTiles[0].Position);
                 }
             }
-            else if (freeHoleTiles.Count == 1)
+            else if (freeHoleTiles.Count == 1 && targetTile.Coins == 0)
             {
                 game.MovePirateToPosition(pirate, freeHoleTiles[0].Position);
             }
-            else if (freeHoleTiles.Count > 1)
+            else if (freeHoleTiles.Count >= 1)
             {
                 game.NeedSubTurnPirate = pirate;
                 game.PrevSubTurnPosition = prev;
