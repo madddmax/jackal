@@ -158,7 +158,7 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
                     game.MovePirateToPosition(movedPirate, holeTiles[0].Position);
                 }
             }
-            else if (freeHoleTiles.Count == 1 && targetTile.Coins == 0)
+            else if (freeHoleTiles.Count == 1 && targetTile.Coins == 0 && !withCoin)
             {
                 game.MovePirateToPosition(pirate, freeHoleTiles[0].Position);
             }
