@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Jackal.Core.MapGenerator;
 
@@ -188,6 +189,13 @@ public class FinamTilesPack
 
             // сдвигаем оставшиеся клетки в наборе, последнюю ставим на место выбранной
             _wholeSetOfTiles[index] = _wholeSetOfTiles[_wholeSetOfTiles.Length - 1 - i];
+        }
+
+        // если сгенерилась одна дыра на карту - то заменяем её на пустую клетку
+        var holeTiles = List.Where(x => x.Type == TileType.Hole).ToList();
+        if (holeTiles.Count == 1)
+        {
+            holeTiles[0].Type = TileType.Grass;
         }
     }
 }
