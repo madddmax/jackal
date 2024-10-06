@@ -17,7 +17,7 @@ public class ClassicMapGenerator : IMapGenerator
         MapId = mapId;
         _rand = new Random(MapId + 5000000);
 
-        var tilesPack = new ClassicTilesPack(_rand, mapSize);
+        var tilesPack = new FinamTilesPack(_rand, mapSize);
         CoinsOnMap = tilesPack.CoinsOnMap;
             
         var pack = Shuffle(tilesPack.List);
