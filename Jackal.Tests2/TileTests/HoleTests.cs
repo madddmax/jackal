@@ -86,4 +86,48 @@ public class HoleTests
         Assert.True(moves.Count > 0);
         Assert.Equal(4, game.TurnNo);
     }
+    
+    [Fact]
+    public void GrassThenHoleWhenEnemyPirateInOtherHole_GetAvailableMoves_ReturnAvailableMoves()
+    {
+        // Arrange
+        var grassHoleLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.Grass),
+            new TileParams(TileType.Hole)
+        );
+        const int mapSize = 5;
+        const int piratesPerPlayer = 2;
+        var game = new TestGame(grassHoleLineMap, mapSize, piratesPerPlayer);
+        
+        // Act - высадка с корабля на пустое поле
+        game.Turn();
+        
+        // выбираем ход - вперед на дыру
+        game.SetMoveAndTurn(2, 2);
+        
+        // высадка с корабля вторым пиратом на пустое поле
+        game.Turn();
+        
+        // выбираем ход - вперед и вправо на другую дыру
+        game.SetMoveAndTurn(3, 2);
+        
+        // убираем одного своего пирата
+        var ownPirate = game.Board.Teams[0].Pirates[0];
+        game.KillPirate(ownPirate);
+        
+        // выбираем ход - назад на пустое поле
+        game.SetMoveAndTurn(2, 1);
+        
+        // добавляем пирата противника вперед и вправо на дыру
+        game.AddEnemyTeamAndPirate(new TilePosition(3, 2));
+        
+        // выбираем ход - вперед на дыру
+        game.SetMoveAndTurn(2, 2);
+        
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - доступны новые ходы
+        Assert.True(moves.Count > 0);
+        Assert.Equal(6, game.TurnNo);
+    }
 }

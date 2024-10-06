@@ -136,6 +136,11 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
         if (targetTile.Type == TileType.Hole && !game.SubTurnFallingInTheHole)
         {
             var holeTiles = board.AllTiles(x => x.Type == TileType.Hole).ToList();
+            
+            var freeHoleTiles = holeTiles
+                .Where(x => x.Position != targetTile.Position && x.HasNoEnemy(ourTeam.Id))
+                .ToList();
+            
             if(holeTiles.Count == 1)
             {
                 pirate.IsInHole = true;
@@ -153,7 +158,11 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
                     game.MovePirateToPosition(movedPirate, holeTiles[0].Position);
                 }
             }
-            else
+            else if (freeHoleTiles.Count == 1)
+            {
+                game.MovePirateToPosition(pirate, freeHoleTiles[0].Position);
+            }
+            else if (freeHoleTiles.Count > 1)
             {
                 game.NeedSubTurnPirate = pirate;
                 game.PrevSubTurnPosition = prev;

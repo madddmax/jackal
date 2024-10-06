@@ -85,6 +85,12 @@ public class TestGame
         
         _testGame.AddPirate(ownTeamId, piratePosition, type);
     }
+
+    /// <summary>
+    /// Убрать пирата из игры
+    /// </summary>
+    /// <param name="pirate">Пират</param>
+    public void KillPirate(Pirate pirate) => _testGame.KillPirate(pirate);
     
     /// <summary>
     /// Получить возможные ходы
