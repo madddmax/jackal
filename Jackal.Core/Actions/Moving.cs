@@ -155,16 +155,16 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
                     game.MovePirateToPosition(movedPirate, holeTiles[0].Position);
                 }
             }
-            else if (freeHoleTiles.Count == 1 && targetTile.Coins == 0)
+            else if (freeHoleTiles.Count == 1 && targetTile.Coins == 0 && !withCoin)
             {
                 // автоход - доступна одна свободная дыра
                 game.MovePirateToPosition(pirate, freeHoleTiles[0].Position);
-                targetTileLevel = map[new TilePosition(freeHoleTiles[0].Position)];
             }
             else if (freeHoleTiles.Count >= 1)
             {
-                // доступная одна свободная дыра, но на ней монета - даем выбор взять монету или нет
-                // или доступно несколько свободных дыр - даем выбор куда идти
+                // даем выбор куда идти, брать монету или нет:
+                // доступная одна свободная дыра, но на ней монета или идем с монетой
+                // доступно несколько свободных дыр
                 game.NeedSubTurnPirate = pirate;
                 game.PrevSubTurnPosition = prev;
                 game.SubTurnFallingInTheHole = true;
