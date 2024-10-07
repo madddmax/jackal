@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Jackal.Core;
 using Jackal.Core.MapGenerator;
 using Xunit;
@@ -88,7 +90,7 @@ public class HoleTests
     }
     
     [Fact]
-    public void GrassThenHoleWhenEnemyPirateInOtherHole_GetAvailableMoves_ReturnAvailableMoves()
+    public void MoveOnHoleWhenEnemyPirateInOtherHole_GetAvailableMoves_ReturnNearestMoves()
     {
         // Arrange
         var grassHoleLineMap = new TwoTileMapGenerator(
@@ -126,8 +128,58 @@ public class HoleTests
         
         var moves = game.GetAvailableMoves();
         
-        // Assert - доступны новые ходы
-        Assert.True(moves.Count > 0);
+        // Assert - в дыру не провалились, доступны ходы на ближайшие клетки
+        Assert.Equal(4, moves.Count);
+        Assert.Equal(new TilePosition(2, 2), moves.First().From);
+        Assert.Equivalent(new List<TilePosition>
+            {
+                new(1, 2), // влево
+                new(2, 1), // назад - пустая клетка
+                new(2, 3), // вперед
+                new(3, 2) // вправо
+            },
+            moves.Select(m => m.To)
+        );
         Assert.Equal(6, game.TurnNo);
+    }
+    
+    [Fact]
+    public void WaitMoveOnHole_Turn_ReturnAvailableMovesFromOtherHole()
+    {
+        // Arrange
+        var arrowHoleLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.FourArrowsDiagonal },
+            new TileParams(TileType.Hole)
+        );
+        const int mapSize = 5;
+        const int piratesPerPlayer = 2;
+        var game = new TestGame(arrowHoleLineMap, mapSize, piratesPerPlayer);
+        
+        // Act - высадка с корабля на пустое стрелку
+        game.Turn();
+        
+        // выбираем ход - вперед и влево на дыру
+        game.SetMoveAndTurn(1, 2);
+        
+        // высадка с корабля вторым пиратом на стрелку
+        game.Turn();
+        
+        // выбираем ход - вперед и вправо на другую дыру
+        game.SetMoveAndTurn(3, 2);
+        
+        // убираем одного своего пирата
+        var ownPirate = game.Board.Teams[0].Pirates[0];
+        game.KillPirate(ownPirate);
+        
+        // ходим на ту же дыру где стоим
+        var moves = game.GetAvailableMoves();
+        var waitMove = moves.Single(x => x.From == x.To);
+        game.SetMoveAndTurn(waitMove.From, waitMove.To);
+        
+        moves = game.GetAvailableMoves();
+        
+        // Assert - оказываемся на другой дыре
+        Assert.NotEqual(waitMove.From, moves.First().From);
+        Assert.Equal(4, game.TurnNo);
     }
 }

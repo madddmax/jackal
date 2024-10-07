@@ -8,13 +8,6 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
 {
     public GameActionResult Act(Game game, Pirate pirate)
     {
-        // нет движения
-        if (from == to)
-        {
-            // придерживаем самолет
-            return GameActionResult.Live;
-        }
-            
         Board board = game.Board;
         Map map = game.Board.Map;
 
@@ -127,12 +120,14 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
         }
 
         if (game.SubTurnLighthouseViewCount > 0 ||
-            targetTile is { Used: false, Type: TileType.Airplane })
+            (targetTile is { Used: false, Type: TileType.Airplane } && 
+             from != to))
         {
             game.NeedSubTurnPirate = pirate;
             game.PrevSubTurnPosition = prev;
         }
         
+        // заход в дыру (не из дыры))
         if (targetTile.Type == TileType.Hole && !game.SubTurnFallingInTheHole)
         {
             var holeTiles = board.AllTiles(x => x.Type == TileType.Hole).ToList();
@@ -143,10 +138,12 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
             
             if(holeTiles.Count == 1)
             {
+                // пират застрял в единственной дыре
                 pirate.IsInHole = true;
             }
             else if (newTile && holeTiles.Count == 2)
             {
+                // открыли вторую дыру - пираты меняются местами
                 var pirates = new List<Pirate>(holeTiles[1].Pirates);
                 foreach (var movedPirate in holeTiles[0].Pirates)
                 {
@@ -158,12 +155,16 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
                     game.MovePirateToPosition(movedPirate, holeTiles[0].Position);
                 }
             }
-            else if (freeHoleTiles.Count == 1 && targetTile.Coins == 0 && !withCoin)
+            else if (freeHoleTiles.Count == 1 && targetTile.Coins == 0)
             {
+                // автоход - доступна одна свободная дыра
                 game.MovePirateToPosition(pirate, freeHoleTiles[0].Position);
+                targetTileLevel = map[new TilePosition(freeHoleTiles[0].Position)];
             }
             else if (freeHoleTiles.Count >= 1)
             {
+                // доступная одна свободная дыра, но на ней монета - даем выбор взять монету или нет
+                // или доступно несколько свободных дыр - даем выбор куда идти
                 game.NeedSubTurnPirate = pirate;
                 game.PrevSubTurnPosition = prev;
                 game.SubTurnFallingInTheHole = true;
