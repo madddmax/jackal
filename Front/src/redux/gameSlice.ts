@@ -73,7 +73,7 @@ export const gameSlice = createSlice({
             state.gameName = action.payload.gameName;
             state.mapId = action.payload.mapId;
             state.mapSize = action.payload.map.width;
-            state.teams = action.payload.stat.teams.map((it, idx, arr) => {
+            state.teams = action.payload.stats.teams.map((it, idx, arr) => {
                 let grId = arr.length == 2 && idx == 1 ? 2 : idx;
                 return {
                     id: it.id,

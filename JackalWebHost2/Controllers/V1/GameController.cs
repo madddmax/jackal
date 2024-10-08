@@ -3,10 +3,9 @@ using JackalWebHost2.Models;
 using JackalWebHost2.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JackalWebHost2.Controllers;
+namespace JackalWebHost2.Controllers.V1;
 
-[Obsolete]
-[Route("/api/[controller]/[action]")]
+[Route("/api/v1/game")]
 public class GameController : Controller
 {
     private readonly IGameService _gameService;
@@ -17,10 +16,10 @@ public class GameController : Controller
     }
 
     /// <summary>
-    /// Запуск игры
+    /// Старт новой игры
     /// </summary>
-    [HttpPost]
-    public async Task<JsonResult> MakeStart([FromBody] StartGameRequest request)
+    [HttpPost("start")]
+    public async Task<StartGameResponse> Start([FromBody] StartGameRequest request)
     {
         var result = await _gameService.StartGame(new StartGameModel
         {
@@ -28,22 +27,22 @@ public class GameController : Controller
             Settings = request.Settings
         });
 
-        return Json(new
+        return new StartGameResponse
         {
-            gameName = result.GameName,
-            pirates = result.Pirates,
-            map = result.Map,
-            mapId = result.MapId,
-            stat = result.Statistics,
-            moves = result.Moves
-        });
+            GameName = result.GameName,
+            Pirates = result.Pirates,
+            Map = result.Map,
+            MapId = result.MapId,
+            Stats = result.Statistics,
+            Moves = result.Moves
+        };
     }
 
     /// <summary>
     /// Ход игры
     /// </summary>
-    [HttpPost]
-    public async Task<JsonResult> MakeTurn([FromBody] TurnGameRequest request)
+    [HttpPost("move")]
+    public async Task<TurnGameResponse> Move([FromBody] TurnGameRequest request)
     {
         var result = await _gameService.MakeGameTurn(new TurnGameModel
         {
@@ -52,12 +51,12 @@ public class GameController : Controller
             PirateId = request.PirateId
         });
 
-        return Json(new
+        return new TurnGameResponse
         {
-            pirateChanges = result.PirateChanges,
-            changes = result.Changes,
-            stat = result.Statistics,
-            moves = result.Moves
-        });
+            PirateChanges = result.PirateChanges,
+            Changes = result.Changes,
+            Stats = result.Statistics,
+            Moves = result.Moves
+        };
     }
 }
