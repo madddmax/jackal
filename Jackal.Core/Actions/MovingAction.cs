@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace Jackal.Core.Actions;
 
-internal class Moving(TilePosition from, TilePosition to, TilePosition prev, bool withCoin = false) : IGameAction
+internal class MovingAction(TilePosition from, TilePosition to, TilePosition prev, bool withCoin = false) : IGameAction
 {
     public GameActionResult Act(Game game, Pirate pirate)
     {
         Board board = game.Board;
-        Map map = game.Board.Map;
+        Map map = board.Map;
 
         Team ourTeam = board.Teams[pirate.TeamId];
         Ship ourShip = ourTeam.Ship;
@@ -66,8 +66,18 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
             targetTile.Used = true;
         }
         
+        // нашли разлом
+        if (targetTile is { Type: TileType.Quake, Used: false })
+        {
+            game.SubTurnQuakePhase = 2;
+            game.NeedSubTurnPirate = pirate;
+            game.PrevSubTurnPosition = prev;
+            targetTile.Used = true;
+        }
+        
         // нашли Бен Ганна не маяком
-        if (targetTile is { Type: TileType.BenGunn, Used: false } && game.SubTurnLighthouseViewCount == 0)
+        if (targetTile is { Type: TileType.BenGunn, Used: false } && 
+            game.SubTurnLighthouseViewCount == 0)
         {
             game.AddPirate(pirate.TeamId, to, PirateType.BenGunn);
             targetTile.Used = true;
@@ -98,7 +108,6 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
             var unknownTilesCount = game.Board.AllTiles(x => x.Type == TileType.Unknown).Count();
             var remainedTilesViewCount = unknownTilesCount - game.SubTurnLighthouseViewCount;
             game.SubTurnLighthouseViewCount += remainedTilesViewCount < 4 ? remainedTilesViewCount : 4;
-                
             targetTile.Used = true;
         }
             
@@ -175,7 +184,13 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
 
             AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, prev);
             List<AvailableMove> moves = game.Board.GetAllAvailableMoves(
-                task, task.Source, task.Prev, airplaneFlying, 0, false
+                task,
+                task.Source,
+                task.Prev,
+                airplaneFlying,
+                0,
+                false,
+                0
             );
 
             if (moves.Count == 0)

@@ -23,5 +23,10 @@ public enum MoveType
     /// <summary>
     /// Открытие неизвестной клетки с маяка
     /// </summary>
-    WithLighthouse = 3
+    WithLighthouse = 3,
+    
+    /// <summary>
+    /// Выбор карты для разлома
+    /// </summary>
+    WithQuake = 4
 };

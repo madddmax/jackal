@@ -15,7 +15,7 @@ public class FinamTilesPack
     /// </summary>
     private readonly TileParams[] _wholeSetOfTiles =
     [
-        // 94 значимых клетки
+        // 96 значимых клеток
         new TileParams(TileType.Chest1), // 1 монета - первый сундук берем всегда
         new TileParams(TileType.Chest1), // 2
         new TileParams(TileType.Chest1), // 3
@@ -110,15 +110,15 @@ public class FinamTilesPack
         new TileParams(TileType.Hole) { Direction = DirectionType.Left },
         new TileParams(TileType.Hole) { Direction = DirectionType.Left },
         new TileParams(TileType.Hole) { Direction = DirectionType.Left },
-        // 26 пустых клеток
+        new TileParams(TileType.Quake),
+        new TileParams(TileType.Quake),
+        // 24 пустых клеток
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
-        new TileParams(TileType.Grass, 0),
-        new TileParams(TileType.Grass, 1),
         new TileParams(TileType.Grass, 1),
         new TileParams(TileType.Grass, 1),
         new TileParams(TileType.Grass, 1),

@@ -126,6 +126,15 @@ public class Game
     /// </summary>
     public bool SubTurnFallingInTheHole { get; set; }
 
+    /// <summary>
+    /// TODO-MAD является результатом действия -
+    /// Фаза разлома:
+    /// 2 - выбираем первую клетку для обмена,
+    /// 1 - выбираем вторую клетку
+    /// 0 - конец
+    /// </summary>
+    public int SubTurnQuakePhase { get; set; }
+    
     public List<Move> GetAvailableMoves()
     {
         GetAvailableMoves(CurrentTeamId);
@@ -149,8 +158,13 @@ public class Game
             TilePosition prev = PrevSubTurnPosition ?? pirate.Position;
             AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, prev);
             List<AvailableMove> moves = Board.GetAllAvailableMoves(
-                task, task.Source, task.Prev, SubTurnAirplaneFlying, 
-                SubTurnLighthouseViewCount, SubTurnFallingInTheHole
+                task,
+                task.Source,
+                task.Prev,
+                SubTurnAirplaneFlying,
+                SubTurnLighthouseViewCount,
+                SubTurnFallingInTheHole,
+                SubTurnQuakePhase
             );
             targets.AddRange(moves);
         }
