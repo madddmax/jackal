@@ -1,6 +1,6 @@
 ﻿namespace Jackal.Core.Actions;
 
-internal class Respawn : IGameAction
+internal class RespawnAction : IGameAction
 {
     public GameActionResult Act(Game game, Pirate pirate)
     {

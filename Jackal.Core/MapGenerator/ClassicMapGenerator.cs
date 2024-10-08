@@ -6,10 +6,17 @@ namespace Jackal.Core.MapGenerator;
 
 public class ClassicMapGenerator : IMapGenerator
 {
-    public int MapId { get; }
     private readonly Random _rand;
     private readonly Dictionary<Position,Tile> _tiles;
-        
+    
+    /// <summary>
+    /// Идентификатор карты
+    /// </summary>
+    public int MapId { get; }
+
+    /// <summary>
+    /// Монет на карте, нужно сразу рассчитать т.к. используется при инициализации Game
+    /// </summary> 
     public int CoinsOnMap { get; }
 
     public ClassicMapGenerator(int mapId, int mapSize)
@@ -86,8 +93,12 @@ public class ClassicMapGenerator : IMapGenerator
         }
     }
         
-    public Tile GetNext(Position position)
+    public Tile GetNext(Position position) => _tiles[position];
+
+    public void Swap(Position from, Position to)
     {
-        return _tiles[position];
+        var fromTile = _tiles[from];
+        _tiles[from] = new Tile(from, _tiles[to]);
+        _tiles[to] = new Tile(to, fromTile);
     }
 }

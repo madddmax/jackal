@@ -159,7 +159,8 @@ public class Board
         TilePosition prev, 
         bool airplaneFlying, 
         int subTurnLighthouseViewCount, 
-        bool subTurnFallingInTheHole)
+        bool subTurnFallingInTheHole,
+        int subTurnQuakePhase)
     {
         Tile sourceTile = Map[source.Position];
 
@@ -184,7 +185,7 @@ public class Board
             sourceTile.Pirates.Any(p => p.Type == PirateType.Usual) &&
             ourTeam.Pirates.Count(p => p.Type == PirateType.Usual) < 3)
         {
-            goodTargets.Add(new AvailableMove(task.Source, source, new Respawn())
+            goodTargets.Add(new AvailableMove(task.Source, source, new RespawnAction())
             {
                 MoveType = MoveType.WithRespawn
             });
@@ -194,7 +195,7 @@ public class Board
         
         // места всех возможных ходов
         IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(
-            source, prev, ourTeam, airplaneFlying, subTurnLighthouseViewCount, subTurnFallingInTheHole
+            source, prev, ourTeam, airplaneFlying, subTurnLighthouseViewCount, subTurnFallingInTheHole, subTurnQuakePhase
         );
 
         foreach (TilePosition newPosition in positionsForCheck)
@@ -210,9 +211,21 @@ public class Board
                     continue;
                 }
             }
-                
-            var moving = new Moving(task.Source, newPosition, source);
-            var movingWithCoin = new Moving(task.Source, newPosition, source, true);
+
+            // Разлом
+            if (subTurnQuakePhase > 0)
+            {
+                var quakeAction = new QuakeAction(prev, newPosition);
+                var availableMove = new AvailableMove(task.Source, newPosition, quakeAction)
+                {
+                    MoveType = MoveType.WithQuake
+                };
+                goodTargets.Add(availableMove);
+                continue;
+            }
+            
+            var moving = new MovingAction(task.Source, newPosition, source);
+            var movingWithCoin = new MovingAction(task.Source, newPosition, source, true);
                 
             // проверяем, что на этой клетке
             var newPositionTile = Map[newPosition.Position];
@@ -285,9 +298,16 @@ public class Board
                 case TileType.Horse:
                 case TileType.Ice:
                 case TileType.Crocodile:
-                    goodTargets.AddRange(GetAllAvailableMoves(
-                        task, newPosition, source, airplaneFlying, 
-                        subTurnLighthouseViewCount, subTurnFallingInTheHole)
+                    goodTargets.AddRange(
+                        GetAllAvailableMoves(
+                            task,
+                            newPosition,
+                            source,
+                            airplaneFlying,
+                            subTurnLighthouseViewCount,
+                            subTurnFallingInTheHole,
+                            subTurnQuakePhase
+                        )
                     );
                     break;
                     
@@ -323,7 +343,8 @@ public class Board
         Team ourTeam, 
         bool airplaneFlying, 
         int subTurnLighthouseViewCount, 
-        bool subTurnFallingInTheHole)
+        bool subTurnFallingInTheHole,
+        int subTurnQuakePhase)
     {
         var sourceTile = Map[source.Position];
         var ourShip = ourTeam.Ship;
@@ -428,7 +449,20 @@ public class Board
 
         if (subTurnLighthouseViewCount > 0)
         {
+            // просмотр карты с маяка
             rez = AllTiles(x => x.Type == TileType.Unknown)
+                .Select(x => IncomeTilePosition(x.Position));
+        }
+
+        if (subTurnQuakePhase > 0)
+        {
+            // перемещение клеток землетрясением
+            rez = AllTiles(x =>
+                    x.Coins == 0 &&
+                    x.Type != TileType.Water &&
+                    !x.Levels.SelectMany(l => l.Pirates).Any() &&
+                    (x.Position != prev.Position || subTurnQuakePhase == 2)
+                )
                 .Select(x => IncomeTilePosition(x.Position));
         }
             

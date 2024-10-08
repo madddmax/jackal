@@ -161,9 +161,6 @@ public class HoleTests
         // выбираем ход - вперед и влево на дыру
         game.SetMoveAndTurn(1, 2);
         
-        // высадка с корабля вторым пиратом на стрелку
-        game.Turn();
-        
         // выбираем ход - вперед и вправо на другую дыру
         game.SetMoveAndTurn(3, 2);
         
@@ -176,10 +173,13 @@ public class HoleTests
         var waitMove = moves.Single(x => x.From == x.To);
         game.SetMoveAndTurn(waitMove.From, waitMove.To);
         
+        // выбираем единственный выход на другой дыре
+        game.Turn();
+        
         moves = game.GetAvailableMoves();
         
         // Assert - оказываемся на другой дыре
         Assert.NotEqual(waitMove.From, moves.First().From);
-        Assert.Equal(4, game.TurnNo);
+        Assert.Equal(3, game.TurnNo);
     }
 }

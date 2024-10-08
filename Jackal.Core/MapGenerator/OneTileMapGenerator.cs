@@ -19,4 +19,6 @@ public class OneTileMapGenerator(TileParams oneTileParams, int coinsOnMap = 0) :
     public int CoinsOnMap => coinsOnMap;
 
     public Tile GetNext(Position position) => _mapGenerator.GetNext(position);
+    
+    public void Swap(Position from, Position to) => _mapGenerator.Swap(from, to);
 }

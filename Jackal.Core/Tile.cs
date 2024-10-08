@@ -67,6 +67,17 @@ public class Tile
 	{
 	}
 
+	public Tile(Position position, Tile tile) : this(
+		new TileParams(tile.Type)
+		{
+			Position = position,
+			ArrowsCode = tile.ArrowsCode,
+			Direction = tile.Direction,
+			SpinningCount = tile.SpinningCount
+		})
+	{
+	}
+
 	public Tile(TileParams tileParams)
 	{
 		Position = tileParams.Position;

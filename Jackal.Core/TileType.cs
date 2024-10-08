@@ -27,5 +27,6 @@ public enum TileType
     BenGunn,
     Caramba,
     Jungle,
-    Hole
+    Hole,
+    Quake
 }

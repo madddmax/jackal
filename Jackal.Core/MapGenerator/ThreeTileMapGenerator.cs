@@ -46,4 +46,16 @@ public class ThreeTileMapGenerator(
         
         return _tiles[position];
     }
+
+    public void Swap(Position from, Position to)
+    {
+        // инициализируем клетки, если их нет
+        GetNext(from);
+        GetNext(to);
+        
+        // меняем клетки местами
+        var fromTile = _tiles[from];
+        _tiles[from] = new Tile(from, _tiles[to]);
+        _tiles[to] = new Tile(to, fromTile);
+    }
 }

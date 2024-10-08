@@ -308,6 +308,9 @@ public class DrawService : IDrawService
             case TileType.Hole:
                 filename = "hole";
                 break;
+            case TileType.Quake:
+                filename = "quake";
+                break;
             case TileType.Spinning:
                 switch (tile.SpinningCount)
                 {
