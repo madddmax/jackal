@@ -64,17 +64,6 @@ const Level = ({ cellSize, pirateSize, field, data }: LevelProps) => {
         return undefined;
     };
 
-    let pirate = undefined;
-    if (data.pirates) {
-        let arr = [...data.pirates];
-        arr.sort((a, b) => {
-            if (a?.backgroundColor == 'transparent') return 1;
-            if (b?.backgroundColor == 'transparent') return -1;
-            return a.photoId - b.photoId;
-        });
-        pirate = arr[0];
-    }
-
     return (
         <div
             key={`cell_level_${data.level}`}
@@ -88,7 +77,13 @@ const Level = ({ cellSize, pirateSize, field, data }: LevelProps) => {
             {data.coin && (
                 <CoinPhoto coinCount={Number(data.coin.text)} pirates={data.pirates} pirateSize={pirateSize} />
             )}
-            {pirate && <PiratePhoto pirate={pirate} pirateSize={pirateSize} />}
+            {data.pirates && data.pirates.length > 0 && (
+                <PiratePhoto
+                    pirates={data.pirates}
+                    pirateSize={pirateSize}
+                    coins={(data.coin && Number(data.coin.text)) || 0}
+                />
+            )}
         </div>
     );
 };

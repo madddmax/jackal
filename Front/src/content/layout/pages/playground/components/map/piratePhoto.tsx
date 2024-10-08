@@ -4,17 +4,43 @@ import cn from 'classnames';
 import './cell.less';
 import { useDispatch } from 'react-redux';
 import { chooseHumanPirate } from '/redux/gameSlice';
+import { useRef } from 'react';
 
 interface PiratePhotoProps {
-    pirate: CellPirate;
+    pirates: CellPirate[];
     pirateSize: number;
+    coins: number;
 }
 
-const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
+const PiratePhoto = ({ pirates, pirateSize, coins }: PiratePhotoProps) => {
     const dispatch = useDispatch();
+    const topGirl = useRef<number>(0);
 
-    const onClick = (girl: CellPirate) => {
-        dispatch(chooseHumanPirate({ pirate: girl.id, withCoinAction: true }));
+    let sorted = [...pirates];
+    let allowChoosingPirate =
+        pirates.reduce((sum, it) => sum - (it.withCoin ? 1 : 0), coins) === 0 && pirates.length > coins;
+    sorted.sort((a, b) => {
+        if (a.backgroundColor == 'transparent') return 1;
+        if (b.backgroundColor == 'transparent') return -1;
+        if (a.isActive) return -1;
+        if (b.isActive) return 1;
+        if (a.photoId > topGirl.current && b.photoId <= topGirl.current) return -1;
+        if (a.photoId <= topGirl.current && b.photoId > topGirl.current) return 1;
+        return a.photoId - b.photoId;
+    });
+    let pirate = sorted[0];
+
+    const onClick = (girls: CellPirate[], allowChoosing: boolean) => {
+        let willChangePirate = girls.length > 1 && girls[0].isActive && allowChoosing;
+        if (willChangePirate) {
+            topGirl.current = girls[0].photoId;
+        }
+        dispatch(
+            chooseHumanPirate({
+                pirate: willChangePirate ? girls[1].id : girls[0].id,
+                withCoinAction: true,
+            }),
+        );
     };
 
     const coinSize = pirateSize * 0.3 > 15 ? pirateSize * 0.3 : 15;
@@ -39,7 +65,7 @@ const PiratePhoto = ({ pirate, pirateSize }: PiratePhotoProps) => {
                     height: pirateSize,
                     cursor: isDisabled ? 'default' : 'pointer',
                 }}
-                onClick={() => onClick(pirate)}
+                onClick={() => onClick(sorted, allowChoosingPirate)}
             />
             {(pirate.withCoin || pirate.isDrunk) && (
                 <Image

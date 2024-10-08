@@ -50,7 +50,11 @@ const LevelZero = ({ cellSize, pirateSize, data }: LevelZeroProps) => {
                         marginLeft: getMarginLeft(idx),
                     }}
                 >
-                    <PiratePhoto pirate={pirate} pirateSize={pirateSize} />
+                    <PiratePhoto
+                        pirates={[pirate]}
+                        pirateSize={pirateSize}
+                        coins={(data.coin && Number(data.coin.text)) || 0}
+                    />
                 </div>
             ))}
         </>
