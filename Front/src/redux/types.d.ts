@@ -143,10 +143,22 @@ interface GameCell {
 interface GameLevel {
     level: number;
     pirates?: CellPirate[];
+    features?: LevelFeature[];
     hasCoins: boolean;
     coin?: {
         text: string;
     };
+}
+
+export interface LevelFeature {
+    backgroundColor: string;
+    photo: string;
+}
+
+export interface GamePlace {
+    cell: FieldState;
+    level: GameLevel;
+    pirate: CellPirate | undefined;
 }
 
 export interface CellPirate {

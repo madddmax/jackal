@@ -1,5 +1,6 @@
 import CoinPhoto from './coinPhoto';
 import PiratePhoto from './piratePhoto';
+import FeaturePhoto from './featurePhoto';
 import { GameLevel } from '/redux/types';
 
 interface LevelZeroProps {
@@ -55,6 +56,18 @@ const LevelZero = ({ cellSize, pirateSize, data }: LevelZeroProps) => {
                         pirateSize={pirateSize}
                         coins={(data.coin && Number(data.coin.text)) || 0}
                     />
+                </div>
+            ))}
+            {data.features?.map((feature, idx) => (
+                <div
+                    key={`cell_level_${data.level}_feature_${idx}`}
+                    className="feature"
+                    style={{
+                        marginTop: getMarginTop(idx),
+                        marginLeft: getMarginLeft(idx),
+                    }}
+                >
+                    <FeaturePhoto feature={feature} featureSize={pirateSize} />
                 </div>
             ))}
         </>

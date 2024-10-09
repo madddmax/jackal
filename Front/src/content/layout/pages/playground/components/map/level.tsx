@@ -1,5 +1,6 @@
 import CoinPhoto from './coinPhoto';
 import PiratePhoto from './piratePhoto';
+import FeaturePhoto from './featurePhoto';
 import { FieldState, GameLevel } from '/redux/types';
 
 interface LevelProps {
@@ -83,6 +84,9 @@ const Level = ({ cellSize, pirateSize, field, data }: LevelProps) => {
                     pirateSize={pirateSize}
                     coins={(data.coin && Number(data.coin.text)) || 0}
                 />
+            )}
+            {data.features && data.features.length > 0 && (
+                <FeaturePhoto feature={data.features[0]} featureSize={pirateSize} />
             )}
         </div>
     );
