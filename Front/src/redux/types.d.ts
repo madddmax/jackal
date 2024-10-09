@@ -61,7 +61,7 @@ export interface GameStartResponse {
     mapId: number;
     map: GameMap;
     pirates: GamePirate[];
-    stat: GameStat;
+    stats: GameStat;
     moves: GameMove[];
 }
 
@@ -69,7 +69,7 @@ export interface GameTurnResponse {
     pirates: GamePirate[];
     pirateChanges: PirateDiff[];
     changes: GameCell[];
-    stat: GameStat;
+    stats: GameStat;
     moves: GameMove[];
 }
 

@@ -39,7 +39,7 @@ export function* gameStart(action: any) {
         let result: { data: GameStartResponse } = yield call(
             async () =>
                 await axios({
-                    url: `${config.BaseApi}Game/MakeStart`,
+                    url: `${config.BaseApi}v1/game/start`,
                     method: 'post',
                     data: action.payload,
                 }),
@@ -51,15 +51,15 @@ export function* gameStart(action: any) {
             applyPirateChanges({
                 moves: result.data.moves,
                 changes: result.data.pirates,
-                isHumanPlayer: result.data.stat.isHumanPlayer,
+                isHumanPlayer: result.data.stats.isHumanPlayer,
             }),
         );
-        if (result.data.stat.isHumanPlayer) {
-            yield put(setCurrentHumanTeam(result.data.stat.currentTeamId));
+        if (result.data.stats.isHumanPlayer) {
+            yield put(setCurrentHumanTeam(result.data.stats.currentTeamId));
             yield put(highlightHumanMoves({ moves: result.data.moves }));
         }
-        yield put(applyStat(result.data.stat));
-        if (!result.data.stat.isHumanPlayer || result.data.moves?.length == 0) {
+        yield put(applyStat(result.data.stats));
+        if (!result.data.stats.isHumanPlayer || result.data.moves?.length == 0) {
             yield call(gameTurn, {
                 type: sagaActions.GAME_TURN,
                 payload: { gameName: result.data.gameName },
@@ -82,13 +82,13 @@ export function* oneTurn(action: any) {
         let result: { data: GameTurnResponse } = yield call(
             async () =>
                 await axios({
-                    url: `${config.BaseApi}Game/MakeTurn`,
+                    url: `${config.BaseApi}v1/game/move`,
                     method: 'post',
                     data: action.payload,
                 }),
         );
-        if (result.data.stat.isGameOver) {
-            yield put(applyStat(result.data.stat));
+        if (result.data.stats.isGameOver) {
+            yield put(applyStat(result.data.stats));
             return false;
         }
         console.log('gameTurn');
@@ -97,16 +97,16 @@ export function* oneTurn(action: any) {
             applyPirateChanges({
                 moves: result.data.moves,
                 changes: result.data.pirateChanges,
-                isHumanPlayer: result.data.stat.isHumanPlayer,
+                isHumanPlayer: result.data.stats.isHumanPlayer,
             }),
         );
-        if (result.data.stat.isHumanPlayer) {
-            yield put(setCurrentHumanTeam(result.data.stat.currentTeamId));
+        if (result.data.stats.isHumanPlayer) {
+            yield put(setCurrentHumanTeam(result.data.stats.currentTeamId));
             yield put(highlightHumanMoves({ moves: result.data.moves }));
         }
-        yield put(applyStat(result.data.stat));
+        yield put(applyStat(result.data.stats));
 
-        return !result.data.stat.isHumanPlayer || result.data.moves?.length == 0;
+        return !result.data.stats.isHumanPlayer || result.data.moves?.length == 0;
     } catch (e) {
         yield put({ type: 'TODO_FETCH_FAILED' });
     }
