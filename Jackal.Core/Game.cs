@@ -252,4 +252,18 @@ public class Game
         
         pirate.ResetEffects();
     }
+
+    public void SwapPiratePosition(Tile firstTile, Tile secondTile)
+    {
+        var pirates = new List<Pirate>(secondTile.Pirates);
+        foreach (var movedPirate in firstTile.Pirates)
+        {
+            MovePirateToPosition(movedPirate, secondTile.Position);
+        }
+
+        foreach (var movedPirate in pirates)
+        {
+            MovePirateToPosition(movedPirate, firstTile.Position);
+        }
+    }
 }

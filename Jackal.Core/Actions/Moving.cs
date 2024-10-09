@@ -65,7 +65,7 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
             to = new TilePosition(ourShip.Position);
             targetTile.Used = true;
         }
-            
+        
         // нашли Бен Ганна не маяком
         if (targetTile is { Type: TileType.BenGunn, Used: false } && game.SubTurnLighthouseViewCount == 0)
         {
@@ -80,6 +80,16 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
         {
             game.SubTurnLighthouseViewCount--;
             to = pirate.Position;
+
+            if (targetTile.Type == TileType.Hole)
+            {
+                var holeTiles = board.AllTiles(x => x.Type == TileType.Hole).ToList();
+                if (holeTiles.Count == 2)
+                {
+                    // открыли вторую дыру - пираты меняются местами
+                    game.SwapPiratePosition(holeTiles[0], holeTiles[1]);
+                }
+            }
         }
             
         // нашли маяк
@@ -144,18 +154,12 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
             else if (newTile && holeTiles.Count == 2)
             {
                 // открыли вторую дыру - пираты меняются местами
-                var pirates = new List<Pirate>(holeTiles[1].Pirates);
-                foreach (var movedPirate in holeTiles[0].Pirates)
-                {
-                    game.MovePirateToPosition(movedPirate, holeTiles[1].Position);
-                }
-
-                foreach (var movedPirate in pirates)
-                {
-                    game.MovePirateToPosition(movedPirate, holeTiles[0].Position);
-                }
+                game.SwapPiratePosition(holeTiles[0], holeTiles[1]);
             }
-            else if (freeHoleTiles.Count == 1 && targetTile.Coins == 0 && !withCoin)
+            else if (freeHoleTiles.Count == 1 && 
+                     targetTile.Coins == 0 &&
+                     withCoin == false && 
+                     targetTile.Pirates.All(x => x.TeamId == pirate.TeamId))
             {
                 // автоход - доступна одна свободная дыра
                 game.MovePirateToPosition(pirate, freeHoleTiles[0].Position);
@@ -217,21 +221,24 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
             game.KillPirate(pirate);
             return GameActionResult.Die;
         }
-
-        // убиваем чужих пиратов
-        var enemyPirates = targetTileLevel.Pirates
-            .Where(x => x.TeamId != pirate.TeamId)
-            .ToList();
-
-        foreach (var enemyPirate in enemyPirates)
+        
+        if (targetTileLevel.Pirates.Any(x => x.TeamId == pirate.TeamId))
         {
-            if (targetTile.Type == TileType.Jungle)
-                continue;
-            
-            if (targetTile.Type == TileType.Water)
-                game.KillPirate(enemyPirate);
+            // убиваем чужих пиратов
+            var enemyPirates = targetTileLevel.Pirates
+                .Where(x => x.TeamId != pirate.TeamId)
+                .ToList();
 
-            game.MovePirateToTheShip(enemyPirate);
+            foreach (var enemyPirate in enemyPirates)
+            {
+                if (targetTile.Type == TileType.Jungle)
+                    continue;
+
+                if (targetTile.Type == TileType.Water)
+                    game.KillPirate(enemyPirate);
+
+                game.MovePirateToTheShip(enemyPirate);
+            }
         }
 
         if (withCoin)
