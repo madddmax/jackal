@@ -6,9 +6,10 @@ import './cell.less';
 interface FeaturePhotoProps {
     feature: LevelFeature;
     featureSize: number;
+    hasClick?: boolean;
 }
 
-const FeaturePhoto = ({ feature, featureSize }: FeaturePhotoProps) => {
+const FeaturePhoto = ({ feature, featureSize, hasClick }: FeaturePhotoProps) => {
     return (
         <>
             <Image
@@ -17,7 +18,7 @@ const FeaturePhoto = ({ feature, featureSize }: FeaturePhotoProps) => {
                 style={{
                     width: featureSize,
                     height: featureSize,
-                    cursor: 'default',
+                    cursor: hasClick ? 'pointer' : 'default',
                 }}
             />
         </>
