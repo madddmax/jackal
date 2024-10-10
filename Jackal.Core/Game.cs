@@ -12,7 +12,10 @@ public class Game
 
     public readonly Board Board;
 
-    public Dictionary<int, int> Scores; // TeamId->Total couns
+    /// <summary>
+    /// Key = TeamId, Value = TeamCoins
+    /// </summary>
+    public readonly Dictionary<int, int> Scores;
         
     /// <summary>
     /// Нерастасканное золотишко
@@ -172,9 +175,50 @@ public class Game
     /// <summary>
     /// Конец игры
     /// </summary>
-    public bool IsGameOver => (CoinsLeft == 0 && !Board.AllTiles(x => x.Type == TileType.Unknown).Any())
-                              || TurnNo - 50 * _players.Length > LastActionTurnNo;
-        
+    public bool IsGameOver
+    {
+        get
+        {
+            var allTilesOpen = !Board.AllTiles(x => x.Type == TileType.Unknown).Any();
+            if (allTilesOpen)
+            {
+                // все клетки открыты
+                var orderedTeamCoins = Scores
+                    .OrderByDescending(s => s.Value)
+                    .Select(s => s.Value)
+                    .ToList();
+
+                int firstTeamCoins = orderedTeamCoins[0];
+                int secondTeamCoins = orderedTeamCoins.Count > 1 ? orderedTeamCoins[1] + CoinsLeft : 0;
+                if (firstTeamCoins > secondTeamCoins)
+                {
+                    // игрок выйграл с большим перевесом
+                    return true;
+                }
+
+                if (CoinsLeft == 0)
+                {
+                    // закончилось золото
+                    return true;
+                }
+            }
+
+            if (!Board.AllPirates.Any(p => p.IsActive))
+            {
+                // закончились пираты
+                return true;
+            }
+            
+            if (TurnNo - 50 * _players.Length > LastActionTurnNo)
+            {
+                // защита от яичинга (ходов без открытия клеток или переноса монет)
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     /// <summary>
     /// Текущий ход - определяет какая команда ходит
     /// </summary>
