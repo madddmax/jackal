@@ -156,14 +156,6 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
                 // открыли вторую дыру - пираты меняются местами
                 game.SwapPiratePosition(holeTiles[0], holeTiles[1]);
             }
-            else if (freeHoleTiles.Count == 1 && 
-                     targetTile.Coins == 0 &&
-                     withCoin == false && 
-                     targetTile.Pirates.All(x => x.TeamId == pirate.TeamId))
-            {
-                // автоход - доступна одна свободная дыра
-                game.MovePirateToPosition(pirate, freeHoleTiles[0].Position);
-            }
             else if (freeHoleTiles.Count >= 1)
             {
                 // даем выбор куда идти, брать монету или нет:
