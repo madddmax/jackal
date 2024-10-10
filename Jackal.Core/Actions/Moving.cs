@@ -252,7 +252,13 @@ internal class Moving(TilePosition from, TilePosition to, TilePosition prev, boo
             }
             else if (targetTile.Type == TileType.Water)
             {
-                // если монета попала в воду, то она тонет
+                // монета в воде - тонет
+                game.CoinsLeft--;
+                game.LastActionTurnNo = game.TurnNo;
+            }
+            else if (targetTile.Type == TileType.Cannibal)
+            {
+                // монета на людоеде - пропадает т.к. Пятница не реализован
                 game.CoinsLeft--;
                 game.LastActionTurnNo = game.TurnNo;
             }
