@@ -1,10 +1,12 @@
 ﻿using JackalWebHost2.Controllers.Models;
 using JackalWebHost2.Models;
 using JackalWebHost2.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JackalWebHost2.Controllers.V1;
 
+[AllowAnonymous]
 [Route("/api/v1/game")]
 public class GameController : Controller
 {

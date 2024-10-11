@@ -5,7 +5,7 @@ using JackalWebHost2.Models.Lobby;
 
 namespace JackalWebHost2.Services;
 
-public class LobbyService
+public class LobbyService : ILobbyService
 {
     private readonly ILogger<LobbyService> _logger;
     private readonly ILobbyRepository _lobbyRepository;

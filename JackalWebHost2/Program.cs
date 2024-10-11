@@ -52,10 +52,7 @@ public class Program
 
         app.UseSession();
 
-        app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller}/{action}"
-        );
+        app.MapControllers();
     }
 
     private static void ConfigureServices(WebApplicationBuilder builder)
@@ -104,7 +101,9 @@ public class Program
 
         services.AddScoped<IGameService, GameService>();
         services.AddScoped<IDrawService, DrawService>();
+        services.AddScoped<ILobbyService, LobbyService>();
         
         services.AddScoped<IGameStateRepository, InMemoryGameStateRepository>();
+        services.AddScoped<ILobbyRepository, InMemoryLobbyRepository>();
     }
 }
