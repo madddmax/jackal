@@ -17,20 +17,22 @@ public class InMemoryGameStateRepository : IGameStateRepository
     
     public async Task<GameState?> GetGameState(string gameName)
     {
-        return _memoryCache.TryGetValue(gameName, out GameState? gameState) && gameState != null 
+        return _memoryCache.TryGetValue(GetKey(gameName), out GameState? gameState) && gameState != null 
             ? gameState
             : null;
     }
 
     public Task CreateGameState(string gameName, GameState gameState)
     {
-        _memoryCache.Set(gameName, gameState, _cacheEntryOptions);
+        _memoryCache.Set(GetKey(gameName), gameState, _cacheEntryOptions);
         return Task.CompletedTask;
     }
 
     public Task UpdateGameState(string gameName, GameState gameState)
     {
-        _memoryCache.Set(gameName, gameState, _cacheEntryOptions);
+        _memoryCache.Set(GetKey(gameName), gameState, _cacheEntryOptions);
         return Task.CompletedTask;
     }
+
+    private static string GetKey(string str) => "game-state:" + str;
 }
