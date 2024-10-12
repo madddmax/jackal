@@ -43,7 +43,7 @@ public class TileParams : IClonable<TileParams>
         Type = type;
         ArrowsCode = arrowsCode;
     }
-        
+    
     public TileParams Clone()
     {
         return (TileParams)MemberwiseClone();
