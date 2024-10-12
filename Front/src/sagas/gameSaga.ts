@@ -9,14 +9,9 @@ import {
     applyChanges,
     applyStat,
     initGame,
-} from './gameSlice';
-import { GameStartResponse, GameTurnResponse } from './types';
-
-export const sagaActions = {
-    GAME_RESET: 'GAME_RESET',
-    GAME_START: 'GAME_START',
-    GAME_TURN: 'GAME_TURN',
-};
+} from '../redux/gameSlice';
+import { GameStartResponse, GameTurnResponse } from '../redux/types';
+import { sagaActions } from './constants';
 
 export function* gameReset() {
     try {

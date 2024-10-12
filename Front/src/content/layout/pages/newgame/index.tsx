@@ -5,13 +5,14 @@ import Row from 'react-bootstrap/Row';
 import classes from './newgame.module.less';
 import { useDispatch, useSelector } from 'react-redux';
 import { initMySettings } from '/redux/gameSlice';
-import { sagaActions } from '/redux/saga';
+import { sagaActions } from '/sagas/constants';
 import { useNavigate } from 'react-router-dom';
 import { uuidGen } from '/app/global';
 import cn from 'classnames';
 import { Constants } from '/app/constants';
 import Player from './player';
 import { ReduxState, StorageState } from '/redux/types';
+import Lobbies from './lobbies';
 
 const convertGroups = (initial: string[]) => initial.map((gr) => Constants.groups.findIndex((it) => it.id == gr) || 0);
 const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.groups[num].id);
@@ -67,8 +68,7 @@ function Newgame() {
         setGroups(clone);
     };
 
-    const newStart = (event: React.FormEvent) => {
-        event.preventDefault();
+    const newStart = () => {
         navigate('/');
         dispatch(
             initMySettings({
@@ -83,6 +83,29 @@ function Newgame() {
             type: sagaActions.GAME_START,
             payload: {
                 gameName: uuidGen(),
+                settings: {
+                    players: getPlayers(players, playersCount),
+                    mapId: randNumber[0],
+                    mapSize,
+                },
+            },
+        });
+    };
+
+    const createLobby = () => {
+        // navigate('/');
+        dispatch(
+            initMySettings({
+                groups: deconvertGroups(groups),
+                mapSize,
+                players,
+                playersCount,
+                mapId: isStoredMap ? randNumber[0] : undefined,
+            }),
+        );
+        dispatch({
+            type: sagaActions.LOBBY_CREATE,
+            payload: {
                 settings: {
                     players: getPlayers(players, playersCount),
                     mapId: randNumber[0],
@@ -108,7 +131,7 @@ function Newgame() {
     return (
         <Container>
             <Row className="justify-content-center">
-                <Form className={classes.newgame} onSubmit={(event) => newStart(event)}>
+                <Form className={classes.newgame} onSubmit={(event) => event.preventDefault()}>
                     {/* <h3>Новая игра</h3> */}
                     <div className={cn(classes.settings, 'mx-auto')}>
                         {players &&
@@ -188,10 +211,14 @@ function Newgame() {
                             onChange={storeMapId}
                         />
                     </Form.Group>
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" onClick={newStart}>
                         Начать
                     </Button>
+                    <Button className="float-end" variant="outline-primary" type="submit" onClick={createLobby}>
+                        Создать лобби
+                    </Button>
                 </Form>
+                <Lobbies />
             </Row>
         </Container>
     );
