@@ -1,0 +1,8 @@
+export const sagaActions = {
+    GAME_RESET: 'GAME_RESET',
+    GAME_START: 'GAME_START',
+    GAME_TURN: 'GAME_TURN',
+
+    LOBBY_CREATE: 'LOBBY_CREATE',
+    LOBBY_JOIN: 'LOBBY_JOIN',
+};

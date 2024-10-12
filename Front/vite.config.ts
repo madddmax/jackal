@@ -15,12 +15,9 @@ export default defineConfig(({ mode }) => {
         resolve: {
             alias: {
                 '/app': fileURLToPath(new URL('./src/app', import.meta.url)),
-                '/content': fileURLToPath(
-                    new URL('./src/content', import.meta.url),
-                ),
-                '/redux': fileURLToPath(
-                    new URL('./src/redux', import.meta.url),
-                ),
+                '/content': fileURLToPath(new URL('./src/content', import.meta.url)),
+                '/redux': fileURLToPath(new URL('./src/redux', import.meta.url)),
+                '/sagas': fileURLToPath(new URL('./src/sagas', import.meta.url)),
             },
         },
     };

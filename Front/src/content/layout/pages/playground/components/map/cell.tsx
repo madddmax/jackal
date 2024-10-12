@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 
-import { sagaActions } from '/redux/saga';
+import { sagaActions } from '/sagas/constants';
 import { FieldState, GameState, ReduxState } from '/redux/types';
 import store from '/app/store';
 import cn from 'classnames';

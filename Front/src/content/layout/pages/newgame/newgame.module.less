@@ -1,5 +1,13 @@
 @import '/content/layout/layout.module.less';
 
+.lobbyList {
+    &:extend(.ui-panel all);
+    &:after {
+        content: 'Список лобби';
+    }
+    max-width: 500px !important;
+}
+
 .newgame {
     &:extend(.ui-panel all);
     &:after {

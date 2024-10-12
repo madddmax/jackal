@@ -1,5 +1,6 @@
 export interface ReduxState {
     game: GameState;
+    lobby: LobbyState;
 }
 
 export interface GameState {
@@ -26,6 +27,10 @@ export interface StorageState {
     playersCount?: number;
     mapSize: number;
     mapId?: number;
+}
+
+export interface LobbyState {
+    lobbies: LobbyInfo[];
 }
 
 export interface TeamState {
@@ -71,6 +76,30 @@ export interface GameTurnResponse {
     changes: GameCell[];
     stats: GameStat;
     moves: GameMove[];
+}
+
+export interface LobbyCreateResponse {
+    lobby: LobbyInfo;
+}
+
+export interface LobbyInfo {
+    id: string;
+    ownerId: long;
+    LobbyMembers: Record<number, LobbyMember>;
+    gameSettings: GameSettings;
+    gameId?: string;
+}
+
+export interface GameSettings {
+    players?: string[];
+    mapId?: number;
+    mapSize: number;
+}
+
+export interface LobbyMember {
+    userId?: number;
+    userName: string;
+    teamId?: number;
 }
 
 export interface GameStat {
