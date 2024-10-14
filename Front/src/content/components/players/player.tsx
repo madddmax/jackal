@@ -1,5 +1,5 @@
 import { Constants } from '/app/constants';
-import classes from './newgame.module.less';
+import classes from './players.module.less';
 import Image from 'react-bootstrap/Image';
 
 interface PlayerProps {

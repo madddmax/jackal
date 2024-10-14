@@ -82,10 +82,18 @@ export interface LobbyCreateResponse {
     lobby: LobbyInfo;
 }
 
+export interface LobbyJoinRequest {
+    lobbyId: string;
+}
+
+export interface LobbyJoinResponse {
+    lobby: LobbyInfo;
+}
+
 export interface LobbyInfo {
     id: string;
     ownerId: long;
-    LobbyMembers: Record<number, LobbyMember>;
+    lobbyMembers: Record<number, LobbyMember>;
     gameSettings: GameSettings;
     gameId?: string;
 }

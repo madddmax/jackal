@@ -8,14 +8,10 @@ import { initMySettings } from '/redux/gameSlice';
 import { sagaActions } from '/sagas/constants';
 import { useNavigate } from 'react-router-dom';
 import { uuidGen } from '/app/global';
-import cn from 'classnames';
-import { Constants } from '/app/constants';
-import Player from './player';
 import { ReduxState, StorageState } from '/redux/types';
 import Lobbies from './lobbies';
-
-const convertGroups = (initial: string[]) => initial.map((gr) => Constants.groups.findIndex((it) => it.id == gr) || 0);
-const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.groups[num].id);
+import Players from '/content/components/players';
+import { PlayersInfo } from '/content/components/types';
 
 const getPlayers = (gamers: string[], count: number): string[] => {
     if (count == 1) return [gamers[0]];
@@ -36,9 +32,12 @@ function Newgame() {
 
     const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
 
-    const [playersCount, setPlayersCount] = useState(userSettings.playersCount || 4);
-    const [players, setPlayers] = useState(userSettings.players || ['human', 'robot2', 'robot', 'robot2']);
-    const [groups, setGroups] = useState(convertGroups(userSettings.groups));
+    const [players, setPlayers] = useState<PlayersInfo>({
+        count: userSettings.playersCount || 4,
+        members: userSettings.players || ['human', 'robot2', 'robot', 'robot2'],
+        groups: userSettings.groups,
+    });
+
     const [isStoredMap, setIsStoredMap] = useState(userSettings.mapId != undefined);
 
     const [randNumber, setRandNumber] = useState(
@@ -46,36 +45,14 @@ function Newgame() {
     );
     const [mapSize, setMapSize] = useState(userSettings.mapSize || 11);
 
-    const changePlayer = (pos: number) => {
-        const clone = [...players];
-        if (clone[pos] === 'human') clone[pos] = 'robot';
-        else if (clone[pos] === 'robot') clone[pos] = 'robot2';
-        else clone[pos] = 'human';
-        setPlayers(clone);
-    };
-
-    const changeGroup = (pos: number) => {
-        const clone = [...groups];
-        let current = clone[pos];
-        while (clone.includes(current)) {
-            if (current + 1 >= Constants.groups.length) {
-                current = 0;
-            } else {
-                current += 1;
-            }
-        }
-        clone[pos] = current;
-        setGroups(clone);
-    };
-
     const newStart = () => {
         navigate('/');
         dispatch(
             initMySettings({
-                groups: deconvertGroups(groups),
+                groups: players.groups,
                 mapSize,
-                players,
-                playersCount,
+                players: players.members,
+                playersCount: players.count,
                 mapId: isStoredMap ? randNumber[0] : undefined,
             }),
         );
@@ -84,7 +61,7 @@ function Newgame() {
             payload: {
                 gameName: uuidGen(),
                 settings: {
-                    players: getPlayers(players, playersCount),
+                    players: getPlayers(players.members, players.count),
                     mapId: randNumber[0],
                     mapSize,
                 },
@@ -96,10 +73,10 @@ function Newgame() {
         // navigate('/');
         dispatch(
             initMySettings({
-                groups: deconvertGroups(groups),
+                groups: players.groups,
                 mapSize,
-                players,
-                playersCount,
+                players: players.members,
+                playersCount: players.count,
                 mapId: isStoredMap ? randNumber[0] : undefined,
             }),
         );
@@ -107,7 +84,7 @@ function Newgame() {
             type: sagaActions.LOBBY_CREATE,
             payload: {
                 settings: {
-                    players: getPlayers(players, playersCount),
+                    players: getPlayers(players.members, players.count),
                     mapId: randNumber[0],
                     mapSize,
                 },
@@ -119,10 +96,10 @@ function Newgame() {
         setIsStoredMap(event.target.checked);
         dispatch(
             initMySettings({
-                groups: deconvertGroups(groups),
+                groups: players.groups,
                 mapSize,
-                players,
-                playersCount,
+                players: players.members,
+                playersCount: players.count,
                 mapId: event.target.checked ? randNumber[0] : undefined,
             }),
         );
@@ -133,50 +110,7 @@ function Newgame() {
             <Row className="justify-content-center">
                 <Form className={classes.newgame} onSubmit={(event) => event.preventDefault()}>
                     {/* <h3>Новая игра</h3> */}
-                    <div className={cn(classes.settings, 'mx-auto')}>
-                        {players &&
-                            players.map((_, index) => {
-                                if (playersCount < 4 && (index == 1 || index == 3)) {
-                                    return null;
-                                }
-                                if (playersCount < 2 && index == 2) {
-                                    return null;
-                                }
-
-                                return (
-                                    <Player
-                                        key={`player-pos-${index}`}
-                                        position={index}
-                                        type={players[index]}
-                                        group={groups[index]}
-                                        changePlayer={() => changePlayer(index)}
-                                        changeGroup={() => changeGroup(index)}
-                                    />
-                                );
-                            })}
-                        <div
-                            className={classes.player}
-                            onClick={() =>
-                                setPlayersCount((prev) => {
-                                    if (prev == 4) return 1;
-                                    else if (prev == 1) return 2;
-                                    return 4;
-                                })
-                            }
-                            style={{
-                                cursor: 'pointer',
-                                top: '110px',
-                                left: '130px',
-                                fontSize: '48px',
-                                lineHeight: '48px',
-                                textAlign: 'center',
-                            }}
-                        >
-                            {playersCount}
-                        </div>
-                    </div>
-                    <Form.Control type="hidden" name="players" value={players} />
-                    <Form.Control type="hidden" name="playersCount" value={playersCount} />
+                    <Players players={players} setPlayers={setPlayers} />
                     <div className="mt-3">
                         <div>
                             <Form.Label>Размер карты: {mapSize}</Form.Label>

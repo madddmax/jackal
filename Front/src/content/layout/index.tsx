@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { StorageState } from '/redux/types';
 import { initMySettings } from '/redux/gameSlice';
+import LobbyCard from './pages/lobbyCard';
 
 const Layout = () => {
     const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const Layout = () => {
     return (
         <Routes>
             <Route path="/newgame" element={<Newgame />}></Route>
+            <Route path="/lobby/:id" element={<LobbyCard />}></Route>
             <Route path="/" element={<Playground />}></Route>
         </Routes>
     );

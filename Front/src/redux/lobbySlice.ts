@@ -10,9 +10,15 @@ export const lobbySlice = createSlice({
         addLobby: (state, action: PayloadAction<LobbyInfo>) => {
             state.lobbies.push(action.payload);
         },
+        updateLobby: (state, action: PayloadAction<LobbyInfo>) => {
+            let lobby = state.lobbies.find((it) => it.id === action.payload.id);
+            if (lobby !== undefined) {
+                Object.assign(lobby, action.payload);
+            }
+        },
     },
 });
 
-export const { addLobby } = lobbySlice.actions;
+export const { addLobby, updateLobby } = lobbySlice.actions;
 
 export default lobbySlice.reducer;
