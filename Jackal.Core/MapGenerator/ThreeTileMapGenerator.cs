@@ -53,9 +53,14 @@ public class ThreeTileMapGenerator(
         GetNext(from);
         GetNext(to);
         
-        // меняем клетки местами
+        // меняем сгенеренные клетки местами
         var fromTile = _tiles[from];
-        _tiles[from] = new Tile(from, _tiles[to]);
+        var toTile = _tiles[to];
+        
+        _tiles[from] = new Tile(from, toTile);
+        _tiles[from].Levels[0].Coins = toTile.Coins;
+        
         _tiles[to] = new Tile(to, fromTile);
+        _tiles[to].Levels[0].Coins = fromTile.Coins;
     }
 }

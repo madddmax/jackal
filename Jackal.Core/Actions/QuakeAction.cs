@@ -14,8 +14,24 @@ public class QuakeAction(TilePosition from, TilePosition to) : IGameAction
             
             // меняем клетки местами
             var fromTile = map[from.Position];
-            map[from.Position] = new Tile(from.Position, map[to.Position]);
-            map[to.Position] = new Tile(to.Position, fromTile);
+            var toTile = map[to.Position];
+            
+            map[from.Position] = new Tile(from.Position, toTile)
+            {
+                Used = toTile.Used
+            };
+            
+            map[to.Position] = new Tile(to.Position, fromTile)
+            {
+                Used = fromTile.Used
+            };
+            
+            // даем доиграть маяк, если разлом был открыт с маяка
+            if (game.SubTurnLighthouseViewCount > 0)
+            {
+                game.NeedSubTurnPirate = pirate;
+                game.PrevSubTurnPosition = pirate.Position;
+            }
         }
         
         // выбираем первую клетку для разлома
