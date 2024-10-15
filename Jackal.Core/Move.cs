@@ -22,6 +22,11 @@ public class Move : TileDirection
     /// </summary>
     public bool WithLighthouse => Type == MoveType.WithLighthouse;
 
+    /// <summary>
+    /// Замена клеток разломом
+    /// </summary>
+    public bool WithQuake => Type == MoveType.WithQuake;
+
     public bool Equals(Move other)
     {
         return base.Equals(other) && Type.Equals(other.Type);

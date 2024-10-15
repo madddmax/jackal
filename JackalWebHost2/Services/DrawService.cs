@@ -139,6 +139,7 @@ public class DrawService : IDrawService
                 WithCoin = move.WithCoins,
                 WithRespawn = move.WithRespawn,
                 WithLighthouse = move.WithLighthouse,
+                WithQuake = move.WithQuake,
                 From = pirate,
                 To = new PiratePosition
                 {

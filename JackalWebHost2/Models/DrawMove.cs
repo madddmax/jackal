@@ -8,4 +8,5 @@ public class DrawMove
     public bool WithCoin;
     public bool WithRespawn;
     public bool WithLighthouse;
+    public bool WithQuake;
 }
