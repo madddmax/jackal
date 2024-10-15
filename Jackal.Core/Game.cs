@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Jackal.Core.Actions;
+using Jackal.Core.Domain;
 using Jackal.Core.Players;
 
 namespace Jackal.Core;

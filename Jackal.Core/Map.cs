@@ -1,3 +1,4 @@
+using Jackal.Core.Domain;
 using Newtonsoft.Json;
 
 namespace Jackal.Core;

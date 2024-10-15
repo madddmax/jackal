@@ -1,3 +1,5 @@
+using Jackal.Core.Domain;
+
 namespace Jackal.Core.Actions;
 
 public class QuakeAction(TilePosition from, TilePosition to) : IGameAction

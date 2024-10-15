@@ -1,4 +1,5 @@
 ﻿using System;
+using Jackal.Core.Domain;
 
 namespace Jackal.Core;
 

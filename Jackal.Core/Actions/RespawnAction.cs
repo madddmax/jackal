@@ -1,4 +1,6 @@
-﻿namespace Jackal.Core.Actions;
+﻿using Jackal.Core.Domain;
+
+namespace Jackal.Core.Actions;
 
 internal class RespawnAction : IGameAction
 {

@@ -1,4 +1,4 @@
-﻿namespace Jackal.Core;
+﻿namespace Jackal.Core.Domain;
 
 public class TileParams : IClonable<TileParams>
 {

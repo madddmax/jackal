@@ -1,3 +1,5 @@
+using Jackal.Core.Domain;
+
 namespace Jackal.Core.MapGenerator;
 
 /// <summary>
