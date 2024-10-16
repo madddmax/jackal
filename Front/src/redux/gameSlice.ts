@@ -6,9 +6,11 @@ import {
     GameLevel,
     GameMap,
     GamePirate,
+    GamePlace,
     GameStartResponse,
     GameStat,
     GameState,
+    LevelFeature,
     PirateChanges,
     PirateChoose,
     PirateMoves,
@@ -222,22 +224,16 @@ export const gameSlice = createSlice({
             action.payload.changes.forEach((it) => {
                 let team = state.teams.find((tm) => tm.id == it.teamId)!;
                 if (it.isAlive === false) {
-                    let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
-                    debugLog('dead pirate', current(pirate));
-                    const prevCell = state.fields[pirate.position.y][pirate.position.x];
-                    const prevLevel = prevCell.levels[pirate.position.level];
-                    debugLog(
-                        'prevLevel.pirates',
-                        current(pirate).position.x,
-                        current(pirate).position.y,
-                        current(prevLevel).pirates,
-                    );
-                    if (prevLevel.pirates != undefined) {
-                        let prevLevelPirate = prevLevel.pirates.find((pr) => pr.id === it.id);
-                        if (prevLevelPirate) {
-                            prevLevelPirate.photo = prevCell.image?.includes('arrow') ? 'skull.png' : 'skull_light.png';
-                            prevLevelPirate.backgroundColor = 'transparent';
-                        }
+                    const place = gameSlice.selectors.getPirateCell({ game: state }, it.id);
+                    if (place?.pirate != undefined) {
+                        debugLog('dead pirate', current(place?.pirate));
+                        const skull: LevelFeature = {
+                            photo: place.cell.image?.includes('arrow') ? 'skull.png' : 'skull_light.png',
+                            backgroundColor: 'transparent',
+                        };
+                        if (place.level.features === undefined) place.level.features = [skull];
+                        else place.level.features.push(skull);
+                        place.level.pirates = place.level.pirates?.filter((pr) => pr.id !== it.id);
                     }
                     state.pirates = state.pirates?.filter((pr) => pr.id !== it.id);
                 } else if (it.isAlive === true) {
@@ -289,6 +285,7 @@ export const gameSlice = createSlice({
                     const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
                     const drawPirate: CellPirate = {
                         id: it.id,
+                        teamId: it.teamId,
                         photo: `${pname}_${nm}${team.group.extension || '.png'}`,
                         photoId: nm + 100 * it.type,
                         backgroundColor: team.backColor,
@@ -319,6 +316,7 @@ export const gameSlice = createSlice({
                     debugLog('drawPirate', current(pirate).position.x, current(pirate).position.y, current(pirate).id);
                     const drawPirate: CellPirate = {
                         id: pirate.id,
+                        teamId: it.teamId,
                         photo: pirate.photo,
                         photoId: pirate.photoId,
                         withCoin: pirate.withCoin,
@@ -374,6 +372,7 @@ export const gameSlice = createSlice({
                     ...lev,
                     pirate: undefined,
                     pirates: cell?.levels && cell?.levels[lev.level]?.pirates,
+                    features: cell?.levels && cell?.levels[lev.level]?.features,
                 }));
             });
         },
@@ -391,6 +390,17 @@ export const gameSlice = createSlice({
             if (!gamePirate) return undefined;
             let level = state.fields[gamePirate.position.y][gamePirate.position.x].levels[gamePirate.position.level];
             return level.pirates?.find((it) => it.id == gamePirate?.id);
+        },
+        getPirateCell: (state, pirateId: string): GamePlace | undefined => {
+            let gamePirate = gameSlice.selectors.getPirateById({ game: state }, pirateId);
+            if (!gamePirate) return undefined;
+            let cell = state.fields[gamePirate.position.y][gamePirate.position.x];
+            let level = cell.levels[gamePirate.position.level];
+            return {
+                cell,
+                level,
+                pirate: level.pirates?.find((it) => it.id == gamePirate?.id),
+            };
         },
     },
 });

@@ -1,5 +1,6 @@
 import CoinPhoto from './coinPhoto';
 import PiratePhoto from './piratePhoto';
+import FeaturePhoto from './featurePhoto';
 import { FieldState, GameLevel } from '/redux/types';
 
 interface LevelProps {
@@ -7,9 +8,11 @@ interface LevelProps {
     pirateSize: number;
     field: FieldState;
     data: GameLevel;
+    hasFeaturesOnly?: boolean;
+    onClick?: () => void;
 }
 
-const Level = ({ cellSize, pirateSize, field, data }: LevelProps) => {
+const Level = ({ cellSize, pirateSize, field, data, hasFeaturesOnly, onClick }: LevelProps) => {
     const mul_x_times = cellSize / 50;
     const addSize = (mul_x_times - 1) * 5;
     const unitSize = cellSize - pirateSize / 2;
@@ -64,15 +67,35 @@ const Level = ({ cellSize, pirateSize, field, data }: LevelProps) => {
         return undefined;
     };
 
+    if (hasFeaturesOnly) {
+        return (
+            <div
+                key={`cell-level-${data.level}-features`}
+                className="feature"
+                style={{
+                    marginTop: getMarginTop(field, data.level),
+                    marginLeft: getMarginLeft(field, data.level),
+                    width: getWidth(field),
+                }}
+                onClick={onClick}
+            >
+                {data.features && data.features.length > 0 && (
+                    <FeaturePhoto feature={data.features[0]} featureSize={pirateSize} hasClick={!!onClick} />
+                )}
+            </div>
+        );
+    }
+
     return (
         <div
-            key={`cell_level_${data.level}`}
+            key={`cell-level-${data.level}-pirates`}
             className="level"
             style={{
                 marginTop: getMarginTop(field, data.level),
                 marginLeft: getMarginLeft(field, data.level),
                 width: getWidth(field),
             }}
+            onClick={onClick}
         >
             {data.coin && (
                 <CoinPhoto coinCount={Number(data.coin.text)} pirates={data.pirates} pirateSize={pirateSize} />

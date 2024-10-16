@@ -1,14 +1,16 @@
 import CoinPhoto from './coinPhoto';
 import PiratePhoto from './piratePhoto';
+import FeaturePhoto from './featurePhoto';
 import { GameLevel } from '/redux/types';
 
 interface LevelZeroProps {
     cellSize: number;
     pirateSize: number;
     data: GameLevel;
+    onClick?: () => void;
 }
 
-const LevelZero = ({ cellSize, pirateSize, data }: LevelZeroProps) => {
+const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
     const addSize = data.pirates && data.pirates.length > 3 ? cellSize / 10 : 0;
     const unitSize = cellSize - pirateSize;
 
@@ -33,10 +35,13 @@ const LevelZero = ({ cellSize, pirateSize, data }: LevelZeroProps) => {
             {data.coin && (
                 <div
                     key={`cell_level_${data.level}_coin`}
-                    className="level"
                     style={{
+                        position: 'absolute',
+                        zIndex: 0,
                         width: cellSize,
+                        cursor: onClick ? 'pointer' : 'default',
                     }}
+                    onClick={onClick}
                 >
                     <CoinPhoto coinCount={Number(data.coin.text)} pirates={data.pirates} pirateSize={pirateSize} />
                 </div>
@@ -49,12 +54,26 @@ const LevelZero = ({ cellSize, pirateSize, data }: LevelZeroProps) => {
                         marginTop: getMarginTop(idx),
                         marginLeft: getMarginLeft(idx),
                     }}
+                    onClick={onClick}
                 >
                     <PiratePhoto
                         pirates={[pirate]}
                         pirateSize={pirateSize}
                         coins={(data.coin && Number(data.coin.text)) || 0}
                     />
+                </div>
+            ))}
+            {data.features?.map((feature, idx) => (
+                <div
+                    key={`cell_level_${data.level}_feature_${idx}`}
+                    className="feature"
+                    style={{
+                        marginTop: getMarginTop(idx),
+                        marginLeft: getMarginLeft(idx),
+                    }}
+                    onClick={onClick}
+                >
+                    <FeaturePhoto feature={feature} featureSize={pirateSize} hasClick={!!onClick} />
                 </div>
             ))}
         </>
