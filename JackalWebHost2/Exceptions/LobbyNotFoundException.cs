@@ -2,7 +2,7 @@
 
 public class LobbyNotFoundException : BusinessException
 {
-    public override string ErrorMessage => "Комната не найдена";
+    public override string ErrorMessage => "Лобби не найдено";
 
     public override string ErrorCode => ErrorCodes.LobbyNotFound;
 }
