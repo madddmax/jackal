@@ -285,6 +285,7 @@ export const gameSlice = createSlice({
                     const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
                     const drawPirate: CellPirate = {
                         id: it.id,
+                        teamId: it.teamId,
                         photo: `${pname}_${nm}${team.group.extension || '.png'}`,
                         photoId: nm + 100 * it.type,
                         backgroundColor: team.backColor,
@@ -315,6 +316,7 @@ export const gameSlice = createSlice({
                     debugLog('drawPirate', current(pirate).position.x, current(pirate).position.y, current(pirate).id);
                     const drawPirate: CellPirate = {
                         id: pirate.id,
+                        teamId: it.teamId,
                         photo: pirate.photo,
                         photoId: pirate.photoId,
                         withCoin: pirate.withCoin,

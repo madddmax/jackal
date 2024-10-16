@@ -1,10 +1,11 @@
-import { CellPirate } from '/redux/types';
+import { CellPirate, GameState } from '/redux/types';
 import Image from 'react-bootstrap/Image';
 import cn from 'classnames';
 import './cell.less';
 import { useDispatch } from 'react-redux';
 import { chooseHumanPirate } from '/redux/gameSlice';
 import { useRef } from 'react';
+import store from '/app/store';
 
 interface PiratePhotoProps {
     pirates: CellPirate[];
@@ -30,7 +31,13 @@ const PiratePhoto = ({ pirates, pirateSize, coins }: PiratePhotoProps) => {
     });
     let pirate = sorted[0];
 
-    const onClick = (girls: CellPirate[], allowChoosing: boolean) => {
+    const isCurrentTeam = (girls: CellPirate[]): boolean => {
+        let gameState = store.getState().game as GameState;
+        let team = gameState.teams.find((it) => it.id == gameState.currentHumanTeamId);
+        return girls[0].teamId === team?.id;
+    };
+
+    const onTeamPirateClick = (girls: CellPirate[], allowChoosing: boolean) => {
         let willChangePirate = girls.length > 1 && girls[0].isActive && allowChoosing;
         if (willChangePirate) {
             topGirl.current = girls[0].photoId;
@@ -65,7 +72,12 @@ const PiratePhoto = ({ pirates, pirateSize, coins }: PiratePhotoProps) => {
                     height: pirateSize,
                     cursor: isDisabled ? 'default' : 'pointer',
                 }}
-                onClick={() => onClick(sorted, allowChoosingPirate)}
+                onClick={(event) => {
+                    if (isCurrentTeam(sorted)) {
+                        event.stopPropagation();
+                        onTeamPirateClick(sorted, allowChoosingPirate);
+                    }
+                }}
             />
             {(pirate.withCoin || pirate.isDrunk) && (
                 <Image

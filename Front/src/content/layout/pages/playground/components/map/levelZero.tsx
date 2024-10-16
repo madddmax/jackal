@@ -54,6 +54,7 @@ const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
                         marginTop: getMarginTop(idx),
                         marginLeft: getMarginLeft(idx),
                     }}
+                    onClick={onClick}
                 >
                     <PiratePhoto
                         pirates={[pirate]}

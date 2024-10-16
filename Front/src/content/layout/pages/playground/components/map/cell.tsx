@@ -122,6 +122,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                             pirateSize={pirateSize}
                             field={field}
                             data={it}
+                            onClick={field.availableMove ? onClick : undefined}
                         />
                     ))}
         </>

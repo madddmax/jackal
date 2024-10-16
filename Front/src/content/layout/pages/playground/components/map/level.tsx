@@ -88,13 +88,14 @@ const Level = ({ cellSize, pirateSize, field, data, hasFeaturesOnly, onClick }: 
 
     return (
         <div
-            key={`cell-level-${data.level}-pirate`}
+            key={`cell-level-${data.level}-pirates`}
             className="level"
             style={{
                 marginTop: getMarginTop(field, data.level),
                 marginLeft: getMarginLeft(field, data.level),
                 width: getWidth(field),
             }}
+            onClick={onClick}
         >
             {data.coin && (
                 <CoinPhoto coinCount={Number(data.coin.text)} pirates={data.pirates} pirateSize={pirateSize} />

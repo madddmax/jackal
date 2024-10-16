@@ -163,6 +163,7 @@ export interface GamePlace {
 
 export interface CellPirate {
     id: string;
+    teamId: number;
     withCoin?: boolean;
     isInTrap?: boolean;
     isInHole?: boolean;
