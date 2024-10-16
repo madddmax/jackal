@@ -1,4 +1,5 @@
 ﻿using Jackal.Core;
+using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
 using Newtonsoft.Json;

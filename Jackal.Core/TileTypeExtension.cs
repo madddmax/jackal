@@ -1,4 +1,6 @@
-﻿namespace Jackal.Core;
+﻿using Jackal.Core.Domain;
+
+namespace Jackal.Core;
 
 public static class TileTypeExtension
 {

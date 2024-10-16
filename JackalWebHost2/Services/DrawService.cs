@@ -1,4 +1,5 @@
 ﻿using Jackal.Core;
+using Jackal.Core.Domain;
 using Jackal.Core.Players;
 using JackalWebHost2.Models;
 
@@ -139,6 +140,7 @@ public class DrawService : IDrawService
                 WithCoin = move.WithCoins,
                 WithRespawn = move.WithRespawn,
                 WithLighthouse = move.WithLighthouse,
+                WithQuake = move.WithQuake,
                 From = pirate,
                 To = new PiratePosition
                 {

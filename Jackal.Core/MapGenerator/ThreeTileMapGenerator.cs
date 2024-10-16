@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Jackal.Core.Domain;
 
 namespace Jackal.Core.MapGenerator;
 
