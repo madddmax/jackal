@@ -35,7 +35,6 @@ export function* gameStart(action: any) {
             }),
     );
     yield put(initMap(result.data.map));
-    console.log('gameStart');
     yield put(initGame(result.data));
     yield put(
         applyPirateChanges({
@@ -77,7 +76,6 @@ export function* oneTurn(action: any) {
         yield put(applyStat(result.data.stats));
         return false;
     }
-    console.log('gameTurn');
     yield put(applyChanges(result.data.changes));
     yield put(
         applyPirateChanges({
