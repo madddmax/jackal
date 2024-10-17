@@ -2,7 +2,7 @@
 
 public class LobbyIsFullException : BusinessException
 {
-    public override string ErrorMessage => "Комната заполнена";
+    public override string ErrorMessage => "Лобби заполнено";
 
     public override string ErrorCode => ErrorCodes.LobbyIsFull;
 }

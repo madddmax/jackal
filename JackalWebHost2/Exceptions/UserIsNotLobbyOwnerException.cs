@@ -2,7 +2,7 @@
 
 public class UserIsNotLobbyOwnerException : BusinessException
 {
-    public override string ErrorMessage => "Пользователь должен быть владельцем комнаты";
+    public override string ErrorMessage => "Пользователь должен быть владельцем лобби";
 
-    public override string ErrorCode => ErrorCodes.LobbyNotFound;
+    public override string ErrorCode => ErrorCodes.UserIsNotLobbyOwner;
 }

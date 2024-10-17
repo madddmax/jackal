@@ -15,6 +15,7 @@ public class BusinessExceptionFilter : IExceptionFilter
         }
 
         context.Result = new JsonResult(new ErrorModel(businessException));
+        context.HttpContext.Response.StatusCode = 400;
         context.ExceptionHandled = true;
     }
 }
