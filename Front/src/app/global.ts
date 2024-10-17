@@ -1,3 +1,4 @@
+import { NavigateFunction } from 'react-router-dom';
 import config from './config';
 
 export const uuidGen = () => {
@@ -32,3 +33,9 @@ export const getAnotherRandomValue = (min: number, max: number, except: number[]
 export const debugLog = (message?: any, ...optionalParams: any[]) => {
     if (config.HasDebug) console.log(message, optionalParams);
 };
+
+interface History {
+    navigate?: NavigateFunction;
+}
+
+export const history: History = {};

@@ -13,9 +13,7 @@ const LobbyCard = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const lobby = useSelector<ReduxState, LobbyInfo | undefined>((state) =>
-        state.lobby.lobbies.find((it) => it.id === id),
-    );
+    const lobby = useSelector<ReduxState, LobbyInfo | undefined>((state) => state.lobby.lobby);
 
     const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
 

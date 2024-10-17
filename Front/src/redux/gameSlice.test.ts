@@ -15,7 +15,14 @@ describe('redux logic tests', () => {
                             level: 0,
                             hasCoins: false,
                             pirates: [
-                                // { id: '100', isActive: false, backgroundColor: 'red', photo: 'test', photoId: 1 },
+                                {
+                                    id: '100',
+                                    teamId: 2,
+                                    isActive: false,
+                                    backgroundColor: 'red',
+                                    photo: 'test',
+                                    photoId: 1,
+                                },
                             ],
                         },
                     ],
@@ -28,7 +35,14 @@ describe('redux logic tests', () => {
                             level: 0,
                             hasCoins: false,
                             pirates: [
-                                // { id: '200', isActive: false, backgroundColor: 'red', photo: 'test', photoId: 1 },
+                                {
+                                    id: '200',
+                                    teamId: 2,
+                                    isActive: false,
+                                    backgroundColor: 'red',
+                                    photo: 'test',
+                                    photoId: 1,
+                                },
                             ],
                         },
                     ],

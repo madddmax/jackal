@@ -1,4 +1,6 @@
+import { CommonState } from './commonSlice.d';
 export interface ReduxState {
+    common: CommonState;
     game: GameState;
     lobby: LobbyState;
 }
@@ -30,7 +32,7 @@ export interface StorageState {
 }
 
 export interface LobbyState {
-    lobbies: LobbyInfo[];
+    lobby?: LobbyInfo;
 }
 
 export interface TeamState {

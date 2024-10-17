@@ -45,6 +45,9 @@ function Header() {
                         <Nav.Link as={Link} to="/newgame">
                             Новая игра
                         </Nav.Link>
+                        <Nav.Link as={Link} to="/joinlobby">
+                            Лобби
+                        </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
                 {process.env.NODE_ENV && process.env.NODE_ENV === 'development' && (

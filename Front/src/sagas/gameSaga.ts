@@ -11,7 +11,7 @@ import {
     initGame,
 } from '../redux/gameSlice';
 import { GameStartResponse, GameTurnResponse } from '../redux/types';
-import { sagaActions } from './constants';
+import { errorsWrapper, sagaActions } from './constants';
 
 export function* gameReset() {
     try {
@@ -108,7 +108,7 @@ export function* oneTurn(action: any) {
 }
 
 export default function* rootSaga() {
-    yield takeEvery(sagaActions.GAME_RESET, gameReset);
-    yield takeEvery(sagaActions.GAME_START, gameStart);
-    yield takeEvery(sagaActions.GAME_TURN, gameTurn);
+    yield takeEvery(sagaActions.GAME_RESET, errorsWrapper(gameReset));
+    yield takeEvery(sagaActions.GAME_START, errorsWrapper(gameStart));
+    yield takeEvery(sagaActions.GAME_TURN, errorsWrapper(gameTurn));
 }
