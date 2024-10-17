@@ -9,7 +9,6 @@ import { sagaActions } from '/sagas/constants';
 import { useNavigate } from 'react-router-dom';
 import { uuidGen } from '/app/global';
 import { ReduxState, StorageState } from '/redux/types';
-import Lobbies from './lobbies';
 import Players from '/content/components/players';
 import { PlayersInfo } from '/content/components/types';
 
@@ -71,15 +70,15 @@ function Newgame() {
 
     const createLobby = () => {
         // navigate('/');
-        dispatch(
-            initMySettings({
-                groups: players.groups,
-                mapSize,
-                players: players.members,
-                playersCount: players.count,
-                mapId: isStoredMap ? randNumber[0] : undefined,
-            }),
-        );
+        // dispatch(
+        //     initMySettings({
+        //         groups: players.groups,
+        //         mapSize,
+        //         players: players.members,
+        //         playersCount: players.count,
+        //         mapId: isStoredMap ? randNumber[0] : undefined,
+        //     }),
+        // );
         dispatch({
             type: sagaActions.LOBBY_CREATE,
             payload: {
@@ -152,7 +151,6 @@ function Newgame() {
                         Создать лобби
                     </Button>
                 </Form>
-                <Lobbies />
             </Row>
         </Container>
     );

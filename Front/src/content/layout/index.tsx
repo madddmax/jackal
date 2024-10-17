@@ -6,6 +6,8 @@ import { useDispatch } from 'react-redux';
 import { StorageState } from '/redux/types';
 import { initMySettings } from '/redux/gameSlice';
 import LobbyCard from './pages/lobbyCard';
+import LobbyJoin from './pages/lobbyJoin';
+import ErrorsMessenger from './errorsMessenger';
 
 const Layout = () => {
     const dispatch = useDispatch();
@@ -21,11 +23,15 @@ const Layout = () => {
     }, []);
 
     return (
-        <Routes>
-            <Route path="/newgame" element={<Newgame />}></Route>
-            <Route path="/lobby/:id" element={<LobbyCard />}></Route>
-            <Route path="/" element={<Playground />}></Route>
-        </Routes>
+        <>
+            <Routes>
+                <Route path="/newgame" element={<Newgame />}></Route>
+                <Route path="/joinlobby" element={<LobbyJoin />}></Route>
+                <Route path="/lobby/:id" element={<LobbyCard />}></Route>
+                <Route path="/" element={<Playground />}></Route>
+            </Routes>
+            <ErrorsMessenger />
+        </>
     );
 };
 
