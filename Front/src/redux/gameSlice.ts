@@ -86,6 +86,7 @@ export const gameSlice = createSlice({
                         Constants.groups.find((gr) => gr.id == state.userSettings.groups[grId]) || Constants.groups[0],
                 };
             });
+            state.lastMoves = [];
             state.pirates = action.payload.pirates;
             debugLog('state.teams', state.teams);
             state.teams.forEach((team) => {
@@ -111,6 +112,8 @@ export const gameSlice = createSlice({
                 state.cellSize = Math.floor(mSize / state.mapSize / 10) * 10;
             }
             state.pirateSize = state.cellSize * 0.55;
+            state.highlight_x = 0;
+            state.highlight_y = 0;
         },
         setCurrentHumanTeam: (state, action: PayloadAction<number>) => {
             if (action.payload !== undefined && action.payload !== state.currentHumanTeamId) {
