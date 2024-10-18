@@ -2,7 +2,7 @@
 
 namespace Jackal.Core.Domain;
 
-public class Position
+public record Position
 {
     [JsonProperty] 
     public readonly int X;
@@ -20,39 +20,10 @@ public class Position
         Y = y;
     }
 
-    public Position(Position position):this(position.X,position.Y)
+    public Position(Position position)
     {
-    }
-
-    public bool Equals(Position other)
-    {
-        return X == other.X && Y == other.Y;
-    }
-
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals((Position)obj);
-    }
-
-    public static bool operator ==(Position left, Position right)
-    {
-        return Equals(left, right);
-    }
-
-    public static bool operator !=(Position left, Position right)
-    {
-        return !Equals(left, right);
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (X*397) ^ Y;
-        }
+        X = position.X;
+        Y = position.Y;
     }
 
     public static Position GetDelta(Position from, Position to)
@@ -63,10 +34,5 @@ public class Position
     public static Position AddDelta(Position pos, Position delta)
     {
         return new Position(pos.X + delta.X, pos.Y + delta.Y);
-    }
-
-    public override string ToString()
-    {
-        return string.Format("({0},{1})", X, Y);
     }
 }

@@ -7,6 +7,7 @@ public class AvailableMove
 {
     public TilePosition Source;
     public TilePosition Target;
+    public Position? Prev;
     public MoveType MoveType = MoveType.Usual;
     public GameActionList ActionList;
 

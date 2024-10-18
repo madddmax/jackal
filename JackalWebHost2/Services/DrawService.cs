@@ -147,7 +147,8 @@ public class DrawService : IDrawService
                     X = move.To.X,
                     Y = move.To.Y,
                     Level = move.To.Level
-                }
+                },
+                Prev = move.Prev != null ? new DrawPosition(move.Prev) : null
             });
         }
         return result;
