@@ -12,6 +12,7 @@ export interface GameState {
     mapSize?: number;
     cellSize: number;
     pirateSize: number;
+    hasPirateAutoChange: boolean;
 
     userSettings: StorageState;
     fields: FieldState[][];
@@ -61,6 +62,12 @@ export interface FieldState {
         pirate: string;
     };
     highlight?: boolean;
+}
+
+export interface AvailableMove {
+    num: number;
+    isRespawn: boolean;
+    pirateId: string;
 }
 
 export interface GameStartResponse {

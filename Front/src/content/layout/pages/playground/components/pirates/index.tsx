@@ -1,17 +1,21 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { chooseHumanPirate, getCurrentTeam } from '/redux/gameSlice';
+import { chooseHumanPirate, getCurrentTeam, setPirateAutoChange } from '/redux/gameSlice';
 import Pirate from './pirate';
 import './pirates.less';
 import { GamePirate, ReduxState } from '/redux/types';
+import { Form } from 'react-bootstrap';
 
 function Pirates() {
     const dispatch = useDispatch();
 
     const pirates = useSelector<ReduxState, GamePirate[] | undefined>((state) => state.game.pirates);
+    const hasPirateAutoChange = useSelector<ReduxState, boolean>((state) => state.game.hasPirateAutoChange);
     const team = useSelector(getCurrentTeam);
 
     const onClick = (girl: GamePirate, withCoinAction: boolean) => () =>
         dispatch(chooseHumanPirate({ pirate: girl.id, withCoinAction }));
+
+    const pirateAutoChangeToggle = (event: any) => dispatch(setPirateAutoChange(event.target.checked));
 
     return (
         <>
@@ -27,6 +31,17 @@ function Pirates() {
                             onCoinClick={onClick(girl, true)}
                         />
                     ))}
+
+            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                <Form.Check
+                    className="photo-position float-end"
+                    style={{ marginLeft: 0 }}
+                    type="switch"
+                    label="Автовыбор пиратки"
+                    checked={hasPirateAutoChange}
+                    onChange={pirateAutoChangeToggle}
+                />
+            </Form.Group>
         </>
     );
 }
