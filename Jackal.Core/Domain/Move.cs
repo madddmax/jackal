@@ -4,13 +4,16 @@ using Newtonsoft.Json;
 namespace Jackal.Core.Domain;
 
 [method: JsonConstructor]
-public record Move(TilePosition From, TilePosition To, MoveType Type = MoveType.Usual)
+public record Move(TilePosition From, TilePosition To, Position? Prev, MoveType Type = MoveType.Usual)
 {
     [JsonProperty] 
     public readonly TilePosition From = From ?? throw new ArgumentException(nameof(From));
         
     [JsonProperty] 
     public readonly TilePosition To = To ?? throw new ArgumentException(nameof(To));
+
+    [JsonProperty]
+    public readonly Position? Prev = Prev;
     
     [JsonProperty]
     public readonly MoveType Type = Type;
@@ -35,8 +38,8 @@ public record Move(TilePosition From, TilePosition To, MoveType Type = MoveType.
     /// </summary>
     public bool WithQuake => Type == MoveType.WithQuake;
 
-    public Move(Position from, Position to, MoveType type = MoveType.Usual)
-        : this(new TilePosition(from), new TilePosition(to), type)
+    public Move(Position from, Position to, Position? prev, MoveType type = MoveType.Usual)
+        : this(new TilePosition(from), new TilePosition(to), prev, type)
     {
     }
 }

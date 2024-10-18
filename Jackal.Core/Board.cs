@@ -236,6 +236,7 @@ public class Board
                 case TileType.Unknown:
                     var availableMove = new AvailableMove(task.Source, newPosition, moving)
                     {
+                        Prev = source.Position,
                         MoveType = subTurnLighthouseViewCount > 0
                             ? MoveType.WithLighthouse
                             : MoveType.Usual

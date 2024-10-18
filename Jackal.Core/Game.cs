@@ -174,7 +174,7 @@ public class Game
 
         foreach (AvailableMove availableMove in targets)
         {
-            Move move = new Move(availableMove.Source, availableMove.Target, availableMove.MoveType);
+            Move move = new Move(availableMove.Source, availableMove.Target, availableMove.Prev, availableMove.MoveType);
             GameActionList actionList = availableMove.ActionList;
             AddMoveAndActions(move, actionList);
         }
