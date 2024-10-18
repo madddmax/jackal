@@ -42,6 +42,7 @@ export const gameSlice = createSlice({
         currentHumanTeamId: 0,
         highlight_x: 0,
         highlight_y: 0,
+        hasPirateAutoChange: true,
     } satisfies GameState as GameState,
     reducers: {
         initMySettings: (state, action: PayloadAction<StorageState>) => {
@@ -120,6 +121,9 @@ export const gameSlice = createSlice({
                 state.currentHumanTeamId = action.payload;
             }
         },
+        setPirateAutoChange: (state, action: PayloadAction<boolean>) => {
+            state.hasPirateAutoChange = action.payload;
+        },
         chooseHumanPirate: (state, action: PayloadAction<PirateChoose>) => {
             let pirate = gameSlice.selectors.getPirateById({ game: state }, action.payload.pirate)!;
             let currentTeam = gameSlice.selectors.getCurrentTeam({ game: state })!;
@@ -167,6 +171,7 @@ export const gameSlice = createSlice({
             }
 
             if (
+                state.hasPirateAutoChange &&
                 state.lastMoves.length > 0 &&
                 !state.lastMoves.some((move) => move.from.pirateIds.includes(currentTeam.activePirate))
             ) {
@@ -412,6 +417,7 @@ export const {
     initMySettings,
     initMap,
     setCurrentHumanTeam,
+    setPirateAutoChange,
     chooseHumanPirate,
     highlightHumanMoves,
     applyPirateChanges,
