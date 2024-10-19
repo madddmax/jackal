@@ -57,11 +57,6 @@ export interface FieldState {
     rotate?: number;
     levels: GameLevel[];
     availableMoves: AvailableMove[];
-    availableMove?: {
-        num: number;
-        isRespawn: boolean;
-        pirate: string;
-    };
     highlight?: boolean;
 }
 

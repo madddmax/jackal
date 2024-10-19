@@ -165,7 +165,6 @@ export const gameSlice = createSlice({
             // undraw previous moves
             state.lastMoves.forEach((move) => {
                 const cell = state.fields[move.to.y][move.to.x];
-                cell.availableMove = undefined;
                 cell.availableMoves = [];
             });
 
@@ -217,11 +216,6 @@ export const gameSlice = createSlice({
                         pirateId: pirate.id,
                         prev: move.prev,
                     });
-                    cell.availableMove = {
-                        num: move.moveNum,
-                        isRespawn: move.withRespawn,
-                        pirate: pirate.id,
-                    };
                 });
         },
         applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {

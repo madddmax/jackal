@@ -28,16 +28,18 @@ function Cell({ row, col, tooltipRef }: CellProps) {
     const cellSize = useSelector<ReduxState, number>((state) => state.game.cellSize);
     const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
     const gamename = useSelector<ReduxState, string | undefined>((state) => state.game.gameName);
+    const hasMove = field.availableMoves.length > 0;
 
     const onClick = useCallback(() => {
         let gameState = store.getState().game as GameState;
         let team = gameState.teams.find((it) => it.id == gameState.currentHumanTeamId);
         if (field.levels.length == 1 && field.levels[0].pirates?.some((it) => it.id == team?.activePirate)) {
+            let move = field.availableMoves[0];
             tooltipRef.current?.open({
                 anchorSelect: `#cell_${col}_${row}`,
                 content: (
                     <div
-                        className={field.availableMove!.isRespawn ? 'respawn' : 'skipmove'}
+                        className={move.isRespawn ? 'respawn' : 'skipmove'}
                         style={{
                             width: pirateSize,
                             height: pirateSize,
@@ -48,8 +50,8 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                                 type: sagaActions.GAME_TURN,
                                 payload: {
                                     gameName: gamename,
-                                    turnNum: field.availableMove!.num,
-                                    pirateId: field!.availableMove!.pirate,
+                                    turnNum: move.num,
+                                    pirateId: move.pirateId,
                                 },
                             });
                             tooltipRef.current?.close();
@@ -99,12 +101,13 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                 ),
             });
         } else {
+            let move = field.availableMoves[0];
             dispatch({
                 type: sagaActions.GAME_TURN,
                 payload: {
                     gameName: gamename,
-                    turnNum: field.availableMove!.num,
-                    pirateId: field!.availableMove!.pirate,
+                    turnNum: move.num,
+                    pirateId: move.pirateId,
                 },
             });
         }
@@ -124,10 +127,10 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                     backgroundImage: field.image ? `url(${field.image})` : '',
                     backgroundColor: field.backColor || 'transparent',
                     transform: field.rotate && field.rotate > 0 ? `rotate(${field.rotate * 90}deg)` : 'none',
-                    opacity: field.availableMove?.num !== undefined ? '0.5' : '1',
-                    cursor: field.availableMove?.num !== undefined ? 'pointer' : 'default',
+                    opacity: hasMove ? '0.5' : '1',
+                    cursor: hasMove ? 'pointer' : 'default',
                 }}
-                onClick={field.availableMove ? onClick : undefined}
+                onClick={hasMove ? onClick : undefined}
             ></div>
             {field.levels &&
                 field.levels.length === 1 &&
@@ -139,7 +142,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                         cellSize={cellSize}
                         pirateSize={pirateSize}
                         data={field.levels[0]}
-                        onClick={field.availableMove ? onClick : undefined}
+                        onClick={hasMove ? onClick : undefined}
                     />
                 )}
             {field.levels &&
@@ -154,7 +157,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                             field={field}
                             data={it}
                             hasFeaturesOnly
-                            onClick={field.availableMove ? onClick : undefined}
+                            onClick={hasMove ? onClick : undefined}
                         />
                     ))}
             {field.levels &&
@@ -168,7 +171,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                             pirateSize={pirateSize}
                             field={field}
                             data={it}
-                            onClick={field.availableMove ? onClick : undefined}
+                            onClick={hasMove ? onClick : undefined}
                         />
                     ))}
         </>
