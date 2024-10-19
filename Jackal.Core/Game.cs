@@ -149,7 +149,7 @@ public class Game
         {
             var move = availableMove.ToMove;
             if (_availableMoves.Exists(x => x == move))
-                return;
+                continue;
 
             _availableMoves.Add(move);
             _actions.Add(availableMove.ActionList);
