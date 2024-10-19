@@ -62,7 +62,7 @@ public class Rater
 	#region rate actions
 	protected void AboardToShipWithGold(MoveRate moveRate)
 	{
-		if (moveRate.Move.WithCoins && TargetIsShip(moveRate.Move))
+		if (moveRate.Move.WithCoin && TargetIsShip(moveRate.Move))
 			moveRate.AddRate("AboardToShipWithGold", Coef.AboardToShipWithGold);
 	}
 
@@ -97,7 +97,7 @@ public class Rater
 	/// <param name="moveRate"></param>
 	protected virtual void MoveToShipWithGold(MoveRate moveRate)
 	{
-		if (!moveRate.Move.WithCoins)
+		if (!moveRate.Move.WithCoin)
 			return;
 
 		var currentDistance = Distance(moveRate.Move.From.Position, MyShip.Position);
@@ -202,7 +202,7 @@ public class Rater
 		    AllEnemies.All(e => Distance(e.Position.Position, moveRate.Move.To.Position) != 1))
 		{
 			moveRate.AddRate("MoveFromAtack", Coef.MoveFromAtack 
-			                                  * (moveRate.Move.WithCoins ? 1.3 : 1) 
+			                                  * (moveRate.Move.WithCoin ? 1.3 : 1) 
 			                                  * (GoldOnPosition(moveRate.Move.To.Position) > 0 ? 1.2 : 1)
 			                                  * (Distance(moveRate.Move.From.Position, MyShip.Position) > Distance(moveRate.Move.To.Position, MyShip.Position) ? 1.1 : 1)
 			                                  * (Distance(moveRate.Move.From.Position, MyShip.Position) < Distance(moveRate.Move.To.Position, MyShip.Position) ? 0.9 : 1)

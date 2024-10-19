@@ -92,10 +92,7 @@ public class Game
             }
 
             TurnNo++;
-            SubTurnAirplaneFlying = false;
-            SubTurnLighthouseViewCount = 0;
-            SubTurnFallingInTheHole = false;
-            SubTurnQuakePhase = 0;
+            SubTurn.Clear();
         }
     }
 
@@ -113,30 +110,9 @@ public class Game
 
     /// <summary>
     /// TODO-MAD является результатом действия -
-    /// Полет на самолете
+    /// Состояние дополнительного хода
     /// </summary>
-    public bool SubTurnAirplaneFlying { get; set; }
-        
-    /// <summary>
-    /// TODO-MAD является результатом действия -
-    /// Количество просмотров карты с маяка
-    /// </summary>
-    public int SubTurnLighthouseViewCount { get; set; }
-    
-    /// <summary>
-    /// TODO-MAD является результатом действия -
-    /// Падение в дыру
-    /// </summary>
-    public bool SubTurnFallingInTheHole { get; set; }
-
-    /// <summary>
-    /// TODO-MAD является результатом действия -
-    /// Фаза разлома:
-    /// 2 - выбираем первую клетку для обмена,
-    /// 1 - выбираем вторую клетку
-    /// 0 - конец
-    /// </summary>
-    public int SubTurnQuakePhase { get; set; }
+    public SubTurnState SubTurn { get; } = new();
     
     public List<Move> GetAvailableMoves()
     {
@@ -164,29 +140,20 @@ public class Game
                 task,
                 task.Source,
                 task.Prev,
-                SubTurnAirplaneFlying,
-                SubTurnLighthouseViewCount,
-                SubTurnFallingInTheHole,
-                SubTurnQuakePhase
+                SubTurn
             );
             targets.AddRange(moves);
         }
 
-        foreach (AvailableMove availableMove in targets)
+        foreach (var availableMove in targets)
         {
-            Move move = new Move(availableMove.Source, availableMove.Target, availableMove.Prev, availableMove.MoveType);
-            GameActionList actionList = availableMove.ActionList;
-            AddMoveAndActions(move, actionList);
+            var move = availableMove.ToMove;
+            if (_availableMoves.Exists(x => x == move))
+                continue;
+
+            _availableMoves.Add(move);
+            _actions.Add(availableMove.ActionList);
         }
-    }
-
-    private void AddMoveAndActions(Move move, IGameAction action)
-    {
-        if (_availableMoves.Exists(x => x == move))
-            return;
-
-        _availableMoves.Add(move);
-        _actions.Add(action);
     }
 
     /// <summary>

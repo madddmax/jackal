@@ -158,10 +158,7 @@ public class Board
         AvailableMovesTask task, 
         TilePosition source, 
         TilePosition prev, 
-        bool airplaneFlying, 
-        int subTurnLighthouseViewCount, 
-        bool subTurnFallingInTheHole,
-        int subTurnQuakePhase)
+        SubTurnState subTurn)
     {
         Tile sourceTile = Map[source.Position];
 
@@ -196,7 +193,7 @@ public class Board
         
         // места всех возможных ходов
         IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(
-            source, prev, ourTeam, airplaneFlying, subTurnLighthouseViewCount, subTurnFallingInTheHole, subTurnQuakePhase
+            source, prev, ourTeam, subTurn
         );
 
         foreach (TilePosition newPosition in positionsForCheck)
@@ -214,7 +211,7 @@ public class Board
             }
 
             // Разлом
-            if (subTurnQuakePhase > 0)
+            if (subTurn.QuakePhase > 0)
             {
                 var quakeAction = new QuakeAction(prev, newPosition);
                 var availableMove = new AvailableMove(task.Source, newPosition, quakeAction)
@@ -237,7 +234,7 @@ public class Board
                     var availableMove = new AvailableMove(task.Source, newPosition, moving)
                     {
                         Prev = source.Position,
-                        MoveType = subTurnLighthouseViewCount > 0
+                        MoveType = subTurn.LighthouseViewCount > 0
                             ? MoveType.WithLighthouse
                             : MoveType.Usual
                     };
@@ -305,10 +302,7 @@ public class Board
                             task,
                             newPosition,
                             source,
-                            airplaneFlying,
-                            subTurnLighthouseViewCount,
-                            subTurnFallingInTheHole,
-                            subTurnQuakePhase
+                            subTurn
                         )
                     );
                     break;
@@ -343,10 +337,7 @@ public class Board
         TilePosition source, 
         TilePosition prev, 
         Team ourTeam, 
-        bool airplaneFlying, 
-        int subTurnLighthouseViewCount, 
-        bool subTurnFallingInTheHole,
-        int subTurnQuakePhase)
+        SubTurnState subTurn)
     {
         var sourceTile = Map[source.Position];
         var ourShip = ourTeam.Ship;
@@ -364,7 +355,7 @@ public class Board
                 {
                     rez = new List<TilePosition>();
                 }
-                else if (subTurnFallingInTheHole)
+                else if (subTurn.FallingInTheHole)
                 {
                     var freeHoleTiles = holeTiles
                         .Where(x => x.Position != source.Position && x.HasNoEnemy(ourTeam.Id))
@@ -399,7 +390,7 @@ public class Board
                 }
                 break;
             case TileType.Crocodile:
-                if (airplaneFlying)
+                if (subTurn.AirplaneFlying)
                 {
                     rez = AllTiles(x =>
                             x.Type != TileType.Ice &&
@@ -412,7 +403,7 @@ public class Board
                 rez = new[] { IncomeTilePosition(prev.Position) };
                 break;
             case TileType.Ice:
-                if (airplaneFlying)
+                if (subTurn.AirplaneFlying)
                 {
                     rez = AllTiles(x =>
                             x.Type != TileType.Ice &&
@@ -449,21 +440,21 @@ public class Board
                 break;
         }
 
-        if (subTurnLighthouseViewCount > 0)
+        if (subTurn.LighthouseViewCount > 0)
         {
             // просмотр карты с маяка
             rez = AllTiles(x => x.Type == TileType.Unknown)
                 .Select(x => IncomeTilePosition(x.Position));
         }
 
-        if (subTurnQuakePhase > 0)
+        if (subTurn.QuakePhase > 0)
         {
             // перемещение клеток землетрясением
             rez = AllTiles(x =>
                     x.Coins == 0 &&
                     x.Type != TileType.Water &&
                     !x.Levels.SelectMany(l => l.Pirates).Any() &&
-                    (x.Position != prev.Position || subTurnQuakePhase == 2)
+                    (x.Position != prev.Position || subTurn.QuakePhase == 2)
                 )
                 .Select(x => IncomeTilePosition(x.Position));
         }

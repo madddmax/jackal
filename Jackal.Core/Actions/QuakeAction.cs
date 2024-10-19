@@ -9,9 +9,9 @@ public class QuakeAction(TilePosition from, TilePosition to) : IGameAction
         var map = game.Board.Map;
         
         // выбираем вторую клетку для разлома
-        if (game.SubTurnQuakePhase == 1)
+        if (game.SubTurn.QuakePhase == 1)
         {
-            game.SubTurnQuakePhase = 0;
+            game.SubTurn.QuakePhase = 0;
             game.Board.Generator.Swap(from.Position, to.Position);
             
             // меняем клетки местами
@@ -29,7 +29,7 @@ public class QuakeAction(TilePosition from, TilePosition to) : IGameAction
             };
             
             // даем доиграть маяк, если разлом был открыт с маяка
-            if (game.SubTurnLighthouseViewCount > 0)
+            if (game.SubTurn.LighthouseViewCount > 0)
             {
                 game.NeedSubTurnPirate = pirate;
                 game.PrevSubTurnPosition = pirate.Position;
@@ -37,9 +37,9 @@ public class QuakeAction(TilePosition from, TilePosition to) : IGameAction
         }
         
         // выбираем первую клетку для разлома
-        if (game.SubTurnQuakePhase == 2)
+        if (game.SubTurn.QuakePhase == 2)
         {
-            game.SubTurnQuakePhase = 1;
+            game.SubTurn.QuakePhase = 1;
             game.NeedSubTurnPirate = pirate;
             game.PrevSubTurnPosition = to;
         }
