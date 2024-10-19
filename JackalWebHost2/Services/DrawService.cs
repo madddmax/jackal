@@ -7,12 +7,9 @@ namespace JackalWebHost2.Services;
 
 public class DrawService : IDrawService
 {
-    public (List<PirateChange> pirateChanges, List<TileChange> tileChanges) Draw(Board board, Board prevBoard)
+    public List<PirateChange> GetPirateChanges(Board board, Board prevBoard)
     {
-        var ships = board.Teams.Select(item => item.Ship).ToList();
-            
         var pirateChanges = new List<PirateChange>();
-        var diffPositions = new HashSet<Position>();
 
         var idList = board.AllPirates.Union(prevBoard.AllPirates).Select(x => x.Id).Distinct();
         foreach (var guid in idList)
@@ -27,15 +24,11 @@ public class DrawService : IDrawService
                     
                 pirateChange = new PirateChange(deadPirate) { IsAlive = false };
                 pirateChanges.Add(pirateChange);
-                    
-                diffPositions.Add(oldPirate.Position.Position);
             }
             else if (oldPirate == null)
             {
                 pirateChange = new PirateChange(newPirate) { IsAlive = true };
                 pirateChanges.Add(pirateChange);
-                    
-                diffPositions.Add(newPirate.Position.Position);
             }
             else if (oldPirate.Position != newPirate.Position
                      || oldPirate.IsDrunk != newPirate.IsDrunk
@@ -49,35 +42,34 @@ public class DrawService : IDrawService
                     IsInHole = oldPirate.IsInHole != newPirate.IsInHole ? newPirate.IsInHole : null
                 };
                 pirateChanges.Add(pirateChange);
-                    
-                diffPositions.Add(oldPirate.Position.Position);
-                diffPositions.Add(newPirate.Position.Position);
             }
         }
-
-        //координаты клеток, где поменялось расположение пиратов
+        
+        return pirateChanges;
+    }
+    
+    public List<TileChange> GetTileChanges(Board board, Board prevBoard)
+    {
         var tileChanges = new List<TileChange>();
+        var ships = board.Teams.Select(item => item.Ship).ToList();
+        
         for (int y = 0; y < board.MapSize; y++)
         {
             for (int x = 0; x < board.MapSize; x++)
             {
                 var tile = board.Map[x, y];
                 var prevTile = prevBoard.Map[x, y];
-                bool isDiffPosition = diffPositions.Any(item => item == tile.Position || item == prevTile.Position);
-
-                if (isDiffPosition
-                    || tile.Type != prevTile.Type
-                    || tile.Coins != prevTile.Coins)
-                {
-                    var chg = Draw(tile, ships);
-                    chg.X = x;
-                    chg.Y = y;
-                    tileChanges.Add(chg);
-                }
+                if (tile == prevTile) 
+                    continue;
+                
+                var tileChange = Draw(tile, ships);
+                tileChange.X = x;
+                tileChange.Y = y;
+                tileChanges.Add(tileChange);
             }
         }
 
-        return (pirateChanges, tileChanges);
+        return tileChanges;
     }
     
     public GameStatistics GetStatistics(Game game)
@@ -164,10 +156,10 @@ public class DrawService : IDrawService
             for (int x = 0; x < board.MapSize; x++)
             {
                 var tile = board.Map[x, y];
-                var chg = Draw(tile, ships);
-                chg.X = x;
-                chg.Y = y;
-                changes.Add(chg);
+                var tileChange = Draw(tile, ships);
+                tileChange.X = x;
+                tileChange.Y = y;
+                changes.Add(tileChange);
             }
         }
 

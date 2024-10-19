@@ -1,4 +1,5 @@
 ﻿using Jackal.Core;
+using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
 using JackalWebHost2.Data.Interfaces;
@@ -45,10 +46,12 @@ public class GameService : IGameService
         int mapSize = gameSettings.MapSize ?? 5;
         IMapGenerator mapGenerator = new ClassicMapGenerator(gameSettings.MapId.Value, mapSize);
         // mapGenerator = new OneTileMapGenerator(new TileParams(TileType.Trap));
-        // mapGenerator = new TwoTileMapGenerator(
-        //     new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.OneArrowUp },
-        //     new TileParams(TileType.Crocodile));
-            
+        // mapGenerator = new ThreeTileMapGenerator(
+        //     new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.ThreeArrows },
+        //     new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.FourArrowsDiagonal },
+        //     new TileParams(TileType.Quake)
+        // );
+        
         int piratesPerPlayer = 3;
         gameState.board = new Board(gamePlayers, mapGenerator, mapSize, piratesPerPlayer);
         gameState.game = new Game(gamePlayers, gameState.board);
@@ -94,12 +97,10 @@ public class GameService : IGameService
         
         var prevBoard = JsonHelper.DeserializeWithType<Board>(prevBoardStr);
         
-        (List<PirateChange> pirateChanges, List<TileChange> tileChanges) = _drawService.Draw(gameState.board, prevBoard);
-        
         return new TurnGameResult
         {
-            PirateChanges = pirateChanges,
-            Changes = tileChanges,
+            PirateChanges = _drawService.GetPirateChanges(gameState.board, prevBoard),
+            Changes = _drawService.GetTileChanges(gameState.board, prevBoard),
             Statistics = _drawService.GetStatistics(gameState.game),
             Moves = _drawService.GetAvailableMoves(gameState.game)
         };

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Jackal.Core.Domain;
 
-public class Tile
+public record Tile
 {
 	/// <summary>
 	/// Позиция
