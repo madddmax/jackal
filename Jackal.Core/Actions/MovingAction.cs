@@ -70,7 +70,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         // нашли разлом
         if (targetTile is { Type: TileType.Quake, Used: false })
         {
-            game.SubTurnQuakePhase = 2;
+            game.SubTurn.QuakePhase = 2;
             game.NeedSubTurnPirate = pirate;
             game.PrevSubTurnPosition = prev;
             targetTile.Used = true;
@@ -78,7 +78,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         
         // нашли Бен Ганна не маяком
         if (targetTile is { Type: TileType.BenGunn, Used: false } && 
-            game.SubTurnLighthouseViewCount == 0)
+            game.SubTurn.LighthouseViewCount == 0)
         {
             game.AddPirate(pirate.TeamId, to, PirateType.BenGunn);
             targetTile.Used = true;
@@ -87,9 +87,9 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         // просматриваем карту с маяка,
         // перезатираем просматриваемую клетку текущей позицией пирата,
         // важно вызвать после всех установок поля to
-        if (game.SubTurnLighthouseViewCount > 0)
+        if (game.SubTurn.LighthouseViewCount > 0)
         {
-            game.SubTurnLighthouseViewCount--;
+            game.SubTurn.LighthouseViewCount--;
             to = pirate.Position;
 
             if (targetTile.Type == TileType.Hole)
@@ -107,8 +107,8 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         if (targetTile is { Type: TileType.Lighthouse, Used: false })
         {
             var unknownTilesCount = game.Board.AllTiles(x => x.Type == TileType.Unknown).Count();
-            var remainedTilesViewCount = unknownTilesCount - game.SubTurnLighthouseViewCount;
-            game.SubTurnLighthouseViewCount += remainedTilesViewCount < 4 ? remainedTilesViewCount : 4;
+            var remainedTilesViewCount = unknownTilesCount - game.SubTurn.LighthouseViewCount;
+            game.SubTurn.LighthouseViewCount += remainedTilesViewCount < 4 ? remainedTilesViewCount : 4;
             targetTile.Used = true;
         }
             
@@ -139,7 +139,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             targetTileLevel.Pirates.Add(pirate);
         }
 
-        if (game.SubTurnLighthouseViewCount > 0 ||
+        if (game.SubTurn.LighthouseViewCount > 0 ||
             (targetTile is { Used: false, Type: TileType.Airplane } && 
              from != to))
         {
@@ -148,7 +148,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         }
         
         // заход в дыру (не из дыры))
-        if (targetTile.Type == TileType.Hole && !game.SubTurnFallingInTheHole)
+        if (targetTile.Type == TileType.Hole && !game.SubTurn.FallingInTheHole)
         {
             var holeTiles = board.AllTiles(x => x.Type == TileType.Hole).ToList();
             
@@ -173,7 +173,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 // доступно несколько свободных дыр
                 game.NeedSubTurnPirate = pirate;
                 game.PrevSubTurnPosition = prev;
-                game.SubTurnFallingInTheHole = true;
+                game.SubTurn.FallingInTheHole = true;
             }
         }
 
@@ -181,17 +181,14 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         {
             var airplaneFlying = targetTile.Type is TileType.Ice or TileType.Crocodile &&
                                  (prevTile is { Type: TileType.Airplane, Used: false } ||
-                                  game.SubTurnAirplaneFlying);
+                                  game.SubTurn.AirplaneFlying);
 
             AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, prev);
             List<AvailableMove> moves = game.Board.GetAllAvailableMoves(
                 task,
                 task.Source,
                 task.Prev,
-                airplaneFlying,
-                0,
-                false,
-                0
+                new SubTurnState() // todo? airplaneFlying 
             );
 
             if (moves.Count == 0)
@@ -202,11 +199,11 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 
             game.NeedSubTurnPirate = pirate;
             game.PrevSubTurnPosition = prev;
-            game.SubTurnAirplaneFlying = airplaneFlying;
+            game.SubTurn.AirplaneFlying = airplaneFlying;
         }
         else
         {
-            game.SubTurnAirplaneFlying = false;
+            game.SubTurn.AirplaneFlying = false;
         }
             
         // отмечаем, что мы использовали самолет

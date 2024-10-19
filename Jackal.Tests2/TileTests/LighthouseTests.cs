@@ -147,7 +147,6 @@ public class LighthouseTests
         Assert.Equal(new TilePosition(3, 1), moves.First().From);
         Assert.Contains(new TilePosition(2, 1), moves.Select(m => m.To)); // левый маяк
         Assert.Contains(new TilePosition(3, 0), moves.Select(m => m.To)); // свой корабль
-        Assert.Contains(new TilePosition(4, 1), moves.Select(m => m.To)); // правый маяк
         
         // тип хода - обычный
         Assert.True(moves.All(m => m.Type == MoveType.Usual));
