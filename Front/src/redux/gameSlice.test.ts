@@ -8,9 +8,10 @@ describe('redux logic tests', () => {
         cellSize: 50,
         pirateSize: 15,
         fields: [
-            [{ levels: [{ level: 0, hasCoins: false }] }],
+            [{ availableMoves: [], levels: [{ level: 0, hasCoins: false }] }],
             [
                 {
+                    availableMoves: [],
                     levels: [
                         {
                             level: 0,
@@ -31,6 +32,7 @@ describe('redux logic tests', () => {
             ],
             [
                 {
+                    availableMoves: [],
                     levels: [
                         {
                             level: 0,

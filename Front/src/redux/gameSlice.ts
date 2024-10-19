@@ -60,11 +60,13 @@ export const gameSlice = createSlice({
                         row.push({
                             backColor: change.backgroundColor,
                             levels: change.levels,
+                            availableMoves: [],
                         });
                     } else
                         row.push({
                             image: change.backgroundImageSrc,
                             levels: change.levels,
+                            availableMoves: [],
                         });
                     j++;
                 }
@@ -163,7 +165,7 @@ export const gameSlice = createSlice({
             // undraw previous moves
             state.lastMoves.forEach((move) => {
                 const cell = state.fields[move.to.y][move.to.x];
-                cell.availableMove = undefined;
+                cell.availableMoves = [];
             });
 
             if (action.payload.moves) {
@@ -208,11 +210,12 @@ export const gameSlice = createSlice({
                 )
                 .forEach((move) => {
                     const cell = state.fields[move.to.y][move.to.x];
-                    cell.availableMove = {
+                    cell.availableMoves.push({
                         num: move.moveNum,
                         isRespawn: move.withRespawn,
-                        pirate: pirate.id,
-                    };
+                        pirateId: pirate.id,
+                        prev: move.prev,
+                    });
                 });
         },
         applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {
