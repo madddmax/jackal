@@ -3,18 +3,33 @@ using Newtonsoft.Json;
 
 namespace Jackal.Core.Domain;
 
+/// <summary>
+/// Ход
+/// </summary>
 [method: JsonConstructor]
 public record Move(TilePosition From, TilePosition To, Position? Prev, MoveType Type = MoveType.Usual)
 {
+    /// <summary>
+    /// Откуда идем
+    /// </summary>
     [JsonProperty] 
     public readonly TilePosition From = From ?? throw new ArgumentException(nameof(From));
         
+    /// <summary>
+    /// Куда идем
+    /// </summary>
     [JsonProperty] 
     public readonly TilePosition To = To ?? throw new ArgumentException(nameof(To));
 
+    /// <summary>
+    /// Предыдущая позиция
+    /// </summary>
     [JsonProperty]
     public readonly Position? Prev = Prev;
     
+    /// <summary>
+    /// Тип хода
+    /// </summary>
     [JsonProperty]
     public readonly MoveType Type = Type;
 
@@ -37,9 +52,4 @@ public record Move(TilePosition From, TilePosition To, Position? Prev, MoveType 
     /// Выбор клетки для разлома
     /// </summary>
     public bool WithQuake => Type == MoveType.WithQuake;
-
-    public Move(Position from, Position to, Position? prev, MoveType type = MoveType.Usual)
-        : this(new TilePosition(from), new TilePosition(to), prev, type)
-    {
-    }
 }

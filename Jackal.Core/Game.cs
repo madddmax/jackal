@@ -172,21 +172,15 @@ public class Game
             targets.AddRange(moves);
         }
 
-        foreach (AvailableMove availableMove in targets)
+        foreach (var availableMove in targets)
         {
-            Move move = new Move(availableMove.Source, availableMove.Target, availableMove.Prev, availableMove.MoveType);
-            GameActionList actionList = availableMove.ActionList;
-            AddMoveAndActions(move, actionList);
+            var move = availableMove.ToMove;
+            if (_availableMoves.Exists(x => x == move))
+                return;
+
+            _availableMoves.Add(move);
+            _actions.Add(availableMove.ActionList);
         }
-    }
-
-    private void AddMoveAndActions(Move move, IGameAction action)
-    {
-        if (_availableMoves.Exists(x => x == move))
-            return;
-
-        _availableMoves.Add(move);
-        _actions.Add(action);
     }
 
     /// <summary>

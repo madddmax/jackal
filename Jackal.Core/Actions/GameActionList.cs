@@ -3,14 +3,9 @@ using Jackal.Core.Domain;
 
 namespace Jackal.Core.Actions;
 
-public class GameActionList : IGameAction
+public class GameActionList(params IGameAction[] actions) : IGameAction
 {
-    private readonly List<IGameAction> _actions;
-
-    public GameActionList(params IGameAction[] actions)
-    {
-        _actions = new List<IGameAction>(actions);
-    }
+    private readonly List<IGameAction> _actions = [..actions];
 
     public GameActionResult Act(Game game,Pirate pirate)
     {
@@ -20,11 +15,7 @@ public class GameActionList : IGameAction
             if (rez == GameActionResult.Die)
                 return GameActionResult.Die;
         }
+        
         return GameActionResult.Live;
-    }
-
-    public static GameActionList Create(params IGameAction[] actions)
-    {
-        return new GameActionList(actions);
     }
 }
