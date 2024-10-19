@@ -56,6 +56,7 @@ export interface FieldState {
     backColor?: string;
     rotate?: number;
     levels: GameLevel[];
+    availableMoves: AvailableMove[];
     availableMove?: {
         num: number;
         isRespawn: boolean;
@@ -68,6 +69,10 @@ export interface AvailableMove {
     num: number;
     isRespawn: boolean;
     pirateId: string;
+    prev?: {
+        x: number;
+        y: number;
+    };
 }
 
 export interface GameStartResponse {
@@ -187,6 +192,10 @@ export interface GameMove {
     moveNum: number;
     from: AcceptableMove;
     to: AcceptableMove;
+    prev?: {
+        x: number;
+        y: number;
+    };
     withCoin: boolean;
     withRespawn: boolean;
 }

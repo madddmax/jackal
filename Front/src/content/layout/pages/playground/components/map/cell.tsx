@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 
 import { sagaActions } from '/sagas/constants';
-import { FieldState, GameState, ReduxState } from '/redux/types';
+import { AvailableMove, FieldState, GameState, ReduxState } from '/redux/types';
 import store from '/app/store';
 import cn from 'classnames';
 import './cell.less';
@@ -9,6 +9,11 @@ import Level from './level';
 import LevelZero from './levelZero';
 import { TooltipRefProps } from 'react-tooltip';
 import { RefObject, useCallback } from 'react';
+
+interface CellAvailableMove extends AvailableMove {
+    img?: string;
+    rotate?: number;
+}
 
 interface CellProps {
     row: number;
@@ -50,6 +55,47 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                             tooltipRef.current?.close();
                         }}
                     />
+                ),
+            });
+        } else if (field.availableMoves.length > 1 && !field.availableMoves.some((it) => !it.prev)) {
+            let moves = [] as CellAvailableMove[];
+            field.availableMoves.forEach((it) => {
+                let cell = gameState.fields[it.prev!.y][it.prev!.x];
+                moves.push({
+                    ...it,
+                    img: cell.image!,
+                    rotate: cell.rotate,
+                });
+            });
+
+            tooltipRef.current?.open({
+                anchorSelect: `#cell_${col}_${row}`,
+                content: (
+                    <>
+                        {moves.map((it) => (
+                            <img
+                                style={{
+                                    transform: it.rotate && it.rotate > 0 ? `rotate(${it.rotate * 90}deg)` : 'none',
+                                    margin: '5px 3px',
+                                    width: pirateSize * 1.6,
+                                    height: pirateSize * 1.6,
+                                    cursor: 'pointer',
+                                }}
+                                src={it.img}
+                                onClick={() => {
+                                    dispatch({
+                                        type: sagaActions.GAME_TURN,
+                                        payload: {
+                                            gameName: gamename,
+                                            turnNum: it.num,
+                                            pirateId: it.pirateId,
+                                        },
+                                    });
+                                    tooltipRef.current?.close();
+                                }}
+                            />
+                        ))}
+                    </>
                 ),
             });
         } else {
