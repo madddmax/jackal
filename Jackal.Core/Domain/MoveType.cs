@@ -26,7 +26,7 @@ public enum MoveType
     WithLighthouse = 3,
     
     /// <summary>
-    /// Выбор карты для разлома
+    /// Выбор клетки для разлома
     /// </summary>
     WithQuake = 4
 };

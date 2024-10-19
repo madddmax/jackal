@@ -206,11 +206,11 @@ public class SpinningTests
         // Assert - доступно 2 хода на следующую клетку джунглей-вертушки с монетой и без монеты
         Assert.Equal(2, moves.Count);
         
-        var withCoin = moves.Single(m => m.WithCoins);
+        var withCoin = moves.Single(m => m.WithCoin);
         Assert.Equal(new TilePosition(2, 1, 1), withCoin.From);
         Assert.Equal(new TilePosition(2, 1, 0), withCoin.To);
         
-        var withoutCoin = moves.Single(m => !m.WithCoins);
+        var withoutCoin = moves.Single(m => !m.WithCoin);
         Assert.Equal(new TilePosition(2, 1, 1), withoutCoin.From);
         Assert.Equal(new TilePosition(2, 1, 0), withoutCoin.To);
         
@@ -242,7 +242,7 @@ public class SpinningTests
         // Assert - доступен единственный ход на следующую клетку джунглей-вертушки без монеты
         Assert.Single(moves);
         
-        var withoutCoin = moves.Single(m => !m.WithCoins);
+        var withoutCoin = moves.Single(m => !m.WithCoin);
         Assert.Equal(new TilePosition(2, 1, 1), withoutCoin.From);
         Assert.Equal(new TilePosition(2, 1, 0), withoutCoin.To);
         
@@ -279,7 +279,7 @@ public class SpinningTests
         
         // Assert - доступно 4 хода без монеты на соседние клетки из цента карты
         Assert.Equal(4, moves.Count);
-        Assert.True(moves.All(m => !m.WithCoins));
+        Assert.True(moves.All(m => !m.WithCoin));
         Assert.Equal(3, game.TurnNo);
     }
     
@@ -313,7 +313,7 @@ public class SpinningTests
         
         // Assert - доступно 4 хода без монеты на соседние клетки из цента карты и 1 ход с монетой на джунгли-вертушку
         Assert.Equal(5, moves.Count);
-        Assert.Single(moves, m => m.WithCoins);
+        Assert.Single(moves, m => m.WithCoin);
         Assert.Equal(3, game.TurnNo);
     }
 }

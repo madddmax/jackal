@@ -84,7 +84,7 @@ public class EasyPlayer : IPlayer
         }
 
         // заносим золото на корабль
-        goodMoves = gameState.AvailableMoves.Where(move => move.WithCoins && TargetIsShip(board, teamId, move)).ToList();
+        goodMoves = gameState.AvailableMoves.Where(move => move.WithCoin && TargetIsShip(board, teamId, move)).ToList();
         if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum))
             return (goodMoveNum, null);
             
@@ -96,7 +96,7 @@ public class EasyPlayer : IPlayer
             .Where(x => !respawnPositions.Contains(x.From.Position))
             .ToArray();
             
-        bool hasMoveWithCoins = safeAvailableMoves.Any(m => m.WithCoins);
+        bool hasMoveWithCoins = safeAvailableMoves.Any(m => m.WithCoin);
         if (hasMoveWithCoins)
         {
             // перемещаем золото ближе к кораблю
@@ -108,7 +108,7 @@ public class EasyPlayer : IPlayer
                 
             List<Tuple<int, Move>> list = [];
             foreach (Move move in safeAvailableMoves
-                         .Where(x => x.WithCoins)
+                         .Where(x => x.WithCoin)
                          .Where(x => !waterPositions.Contains(x.To.Position))
                          .Where(x => IsEnemyNear(x.To.Position, board, teamId) == false))
             {
@@ -150,7 +150,7 @@ public class EasyPlayer : IPlayer
         {
             // идем к самому ближнему золоту
             goodMoves = safeAvailableMoves
-                .Where(x => x.WithCoins == false)
+                .Where(x => x.WithCoin == false)
                 .Where(m => goldPositions.Contains(m.To.Position))
                 .ToList();
                 
@@ -159,7 +159,7 @@ public class EasyPlayer : IPlayer
                 
             List<Tuple<int, Move>> list = [];
             foreach (Move move in safeAvailableMoves
-                         .Where(x => x.WithCoins == false)
+                         .Where(x => x.WithCoin == false)
                          .Where(x => !waterPositions.Contains(x.From.Position))
                          .Where(x => IsEnemyNear(x.To.Position, board, teamId) == false))
             {
@@ -189,7 +189,7 @@ public class EasyPlayer : IPlayer
             // идем к самой ближней неизвестной клетке
             List<Tuple<int, Move>> list = new List<Tuple<int, Move>>();
             foreach (Move move in safeAvailableMoves
-                         .Where(x => x.WithCoins == false)
+                         .Where(x => x.WithCoin == false)
                          .Where(x => !waterPositions.Contains(x.From.Position))
                          .Where(x => IsEnemyNear(x.To.Position, board, teamId) == false))
             {

@@ -21,7 +21,7 @@ public record Move(TilePosition From, TilePosition To, Position? Prev, MoveType 
     /// <summary>
     /// Перенос монеты
     /// </summary>
-    public bool WithCoins => Type == MoveType.WithCoin;
+    public bool WithCoin => Type == MoveType.WithCoin;
 
     /// <summary>
     /// Воскрешение пирата на бабе
@@ -34,7 +34,7 @@ public record Move(TilePosition From, TilePosition To, Position? Prev, MoveType 
     public bool WithLighthouse => Type == MoveType.WithLighthouse;
 
     /// <summary>
-    /// Замена клеток разломом
+    /// Выбор клетки для разлома
     /// </summary>
     public bool WithQuake => Type == MoveType.WithQuake;
 

@@ -415,7 +415,7 @@ public class Rater2: Rater
 	/// <param name="moveRate"></param>
 	protected override void MoveToShipWithGold(MoveRate moveRate)
 	{
-		if (!moveRate.Move.WithCoins)
+		if (!moveRate.Move.WithCoin)
 			return;
 
 		var currentDistance = Distance(moveRate.Move.From.Position, MyShip.Position);

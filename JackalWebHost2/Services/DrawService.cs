@@ -137,7 +137,7 @@ public class DrawService : IDrawService
             result.Add(new DrawMove
             {
                 MoveNum = index++,
-                WithCoin = move.WithCoins,
+                WithCoin = move.WithCoin,
                 WithRespawn = move.WithRespawn,
                 WithLighthouse = move.WithLighthouse,
                 WithQuake = move.WithQuake,

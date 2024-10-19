@@ -64,7 +64,7 @@ public class JungleTests
         
         // Assert - доступно 4 хода без монеты на соседние клетки из цента карты
         Assert.Equal(4, moves.Count);
-        Assert.True(moves.All(m => !m.WithCoins));
+        Assert.True(moves.All(m => !m.WithCoin));
         Assert.Equal(2, game.TurnNo);
     }
     
