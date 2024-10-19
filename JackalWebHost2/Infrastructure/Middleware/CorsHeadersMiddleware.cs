@@ -1,19 +1,15 @@
-﻿namespace JackalWebHost2.Middleware;
+﻿namespace JackalWebHost2.Infrastructure.Middleware;
 
-public class OptionsMiddleware
+public class CorsHeadersMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public OptionsMiddleware(RequestDelegate next)
+    public CorsHeadersMiddleware(RequestDelegate next)
     {
         _next = next;
     }
 
     public Task Invoke(HttpContext context)
-    {
-        return BeginInvoke(context);
-    }
-    private Task BeginInvoke(HttpContext context)
     {
         if (context.Request.Method == "OPTIONS")
         {
@@ -26,13 +22,5 @@ public class OptionsMiddleware
         }
 
         return _next.Invoke(context);
-    }
-}
-
-public static class OptionsMiddlewareExtensions
-{
-    public static IApplicationBuilder UseOptions(this IApplicationBuilder builder)
-    {
-        return builder.UseMiddleware<OptionsMiddleware>();
     }
 }
