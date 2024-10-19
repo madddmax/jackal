@@ -6,9 +6,14 @@ namespace JackalWebHost2.Services;
 public interface IDrawService
 {
     /// <summary>
-    /// Получить изменения
+    /// Получить изменения пиратов
     /// </summary>
-    (List<PirateChange> pirateChanges, List<TileChange> tileChanges) Draw(Board board, Board prevBoard);
+    List<PirateChange> GetPirateChanges(Board board, Board prevBoard);
+
+    /// <summary>
+    /// Получить изменения клеток
+    /// </summary>
+    public List<TileChange> GetTileChanges(Board board, Board prevBoard);
 
     /// <summary>
     /// Формирование статистики после хода
