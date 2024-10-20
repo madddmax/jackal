@@ -6,7 +6,7 @@ echo "$count...";
 sleep 1;
 done
 
-pkill -f 'dotnet'
+pkill -f dotnet
 echo "killed dotnet";
 sleep 1;
 
