@@ -233,7 +233,7 @@ public class Board
                 case TileType.Unknown:
                     var availableMove = new AvailableMove(task.Source, newPosition, moving)
                     {
-                        Prev = source.Position,
+                        Prev = !subTurn.AirplaneFlying ? source.Position : null,
                         MoveType = subTurn.LighthouseViewCount > 0
                             ? MoveType.WithLighthouse
                             : MoveType.Usual
