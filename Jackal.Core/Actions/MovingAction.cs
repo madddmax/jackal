@@ -188,10 +188,11 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 task,
                 task.Source,
                 task.Prev,
-                new SubTurnState() // todo? airplaneFlying 
+                new SubTurnState()
             );
 
-            if (moves.Count == 0)
+            if (moves.Count == 0 && 
+                !airplaneFlying)
             {
                 game.KillPirate(pirate);
                 return GameActionResult.Die;
