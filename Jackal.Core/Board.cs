@@ -382,21 +382,13 @@ public class Board
             case TileType.Airplane:
                 if (sourceTile.Used == false)
                 {
-                    rez = AllTiles(x =>
-                            x.Type != TileType.Ice &&
-                            (x.Type != TileType.Water || x.Position == ourShip.Position)
-                        )
-                        .Select(x => IncomeTilePosition(x.Position));
+                    rez = GetAirplaneMoves(ourShip);
                 }
                 break;
             case TileType.Crocodile:
                 if (subTurn.AirplaneFlying)
                 {
-                    rez = AllTiles(x =>
-                            x.Type != TileType.Ice &&
-                            (x.Type != TileType.Water || x.Position == ourShip.Position)
-                        )
-                        .Select(x => IncomeTilePosition(x.Position));
+                    rez = GetAirplaneMoves(ourShip);
                     break;
                 }
                     
@@ -405,14 +397,10 @@ public class Board
             case TileType.Ice:
                 if (subTurn.AirplaneFlying)
                 {
-                    rez = AllTiles(x =>
-                            x.Type != TileType.Ice &&
-                            (x.Type != TileType.Water || x.Position == ourShip.Position)
-                        )
-                        .Select(x => IncomeTilePosition(x.Position));
+                    rez = GetAirplaneMoves(ourShip);
                     break;
                 }
-
+                
                 var prevDelta = Position.GetDelta(prev.Position, source.Position);
                 var target = Position.AddDelta(source.Position, prevDelta);
                 rez = new[] { IncomeTilePosition(target) };
@@ -461,6 +449,15 @@ public class Board
             
         return rez.Where(x => IsValidMapPosition(x.Position)).ToList();
     }
+
+    private IEnumerable<TilePosition> GetAirplaneMoves(Ship ourShip) =>
+        AllTiles(x =>
+                x.Type != TileType.Ice &&
+                x.Type != TileType.Crocodile &&
+                x.Type != TileType.Horse &&
+                (x.Type != TileType.Water || x.Position == ourShip.Position)
+            )
+            .Select(x => IncomeTilePosition(x.Position));
 
     private TilePosition IncomeTilePosition(Position pos)
     {
