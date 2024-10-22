@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Jackal.Core.Actions;
 using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
@@ -160,11 +159,11 @@ public class Board
         TilePosition prev, 
         SubTurnState subTurn)
     {
-        Tile sourceTile = Map[source.Position];
+        var sourceTile = Map[source.Position];
 
-        int ourTeamId = task.TeamId;
-        Team ourTeam = Teams[ourTeamId];
-        Ship ourShip = ourTeam.Ship;
+        var ourTeamId = task.TeamId;
+        var ourTeam = Teams[ourTeamId];
+        var ourShip = ourTeam.Ship;
 
         if (sourceTile.Type is TileType.Arrow or TileType.Horse or TileType.Ice or TileType.Crocodile)
         {
@@ -183,11 +182,8 @@ public class Board
             sourceTile.Pirates.Any(p => p.Type == PirateType.Usual) &&
             ourTeam.Pirates.Count(p => p.Type == PirateType.Usual) < 3)
         {
-            goodTargets.Add(new AvailableMove(task.Source, source, new RespawnAction())
-            {
-                MoveType = MoveType.WithRespawn
-            });
-                
+            var respawnMove = AvailableMoveFactory.RespawnMove(task.Source, source);
+            goodTargets.Add(respawnMove);
             task.AlreadyCheckedList.Add(new CheckedPosition(source));
         }
         
@@ -196,12 +192,12 @@ public class Board
             source, prev, ourTeam, subTurn
         );
 
-        foreach (TilePosition newPosition in positionsForCheck)
+        foreach (var newPosition in positionsForCheck)
         {
             if (task.AlreadyCheckedList.Count > 0)
             {
-                Position incomeDelta = Position.GetDelta(source.Position, newPosition.Position);
-                CheckedPosition currentCheck = new CheckedPosition(newPosition, incomeDelta);
+                var incomeDelta = Position.GetDelta(source.Position, newPosition.Position);
+                var currentCheck = new CheckedPosition(newPosition, incomeDelta);
 
                 if (WasCheckedBefore(task.AlreadyCheckedList, currentCheck))
                 {
@@ -209,21 +205,17 @@ public class Board
                     continue;
                 }
             }
-
-            // Разлом
+            
             if (subTurn.QuakePhase > 0)
             {
-                var quakeAction = new QuakeAction(prev, newPosition);
-                var availableMove = new AvailableMove(task.Source, newPosition, quakeAction)
-                {
-                    MoveType = MoveType.WithQuake
-                };
-                goodTargets.Add(availableMove);
+                // разыгрываем ход разлома
+                var quakeMove = AvailableMoveFactory.QuakeMove(task.Source, newPosition, prev);
+                goodTargets.Add(quakeMove);
                 continue;
             }
             
-            var moving = new MovingAction(task.Source, newPosition, source);
-            var movingWithCoin = new MovingAction(task.Source, newPosition, source, true);
+            var usualMove = AvailableMoveFactory.UsualMove(task.Source, newPosition, source);
+            var coinMove = AvailableMoveFactory.CoinMove(task.Source, newPosition, source);
                 
             // проверяем, что на этой клетке
             var newPositionTile = Map[newPosition.Position];
@@ -231,56 +223,46 @@ public class Board
             switch (newPositionTile.Type)
             {
                 case TileType.Unknown:
-                    var availableMove = new AvailableMove(task.Source, newPosition, moving)
-                    {
-                        Prev = !subTurn.AirplaneFlying ? source.Position : null,
-                        MoveType = subTurn.LighthouseViewCount > 0
-                            ? MoveType.WithLighthouse
-                            : MoveType.Usual
-                    };
-                    goodTargets.Add(availableMove);
+                    usualMove.Prev = !subTurn.AirplaneFlying ? source.Position : null;
+                    usualMove.MoveType = subTurn.LighthouseViewCount > 0
+                        ? MoveType.WithLighthouse
+                        : MoveType.Usual;
+                    
+                    goodTargets.Add(usualMove);
                     break;
 
                 case TileType.Water:
                     if (ourShip.Position == newPosition.Position)
                     {
                         // заходим на свой корабль
-                        goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
+                        goodTargets.Add(usualMove);
+                        
                         if (Map[task.Source].Coins > 0)
-                            goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
-                            {
-                                MoveType = MoveType.WithCoin
-                            });
+                            goodTargets.Add(coinMove);
                     }
                     else if (sourceTile.Type == TileType.Water)
                     {
-                        // из воды в воду
                         if (source.Position != ourShip.Position &&
                             GetPossibleSwimming(task.Source.Position).Contains(newPosition.Position))
                         {
                             // пират плавает
-                            var move = new AvailableMove(task.Source, newPosition, moving);
-                            goodTargets.Add(move);
+                            goodTargets.Add(usualMove);
                         }
 
                         if (source.Position == ourShip.Position &&
                             GetPossibleShipMoves(task.Source.Position, MapSize).Contains(newPosition.Position))
                         {
                             // корабль плавает
-                            var move = new AvailableMove(task.Source, newPosition, moving);
-                            goodTargets.Add(move);
+                            goodTargets.Add(usualMove);
                         }
                     }
                     else if (sourceTile.Type is TileType.Arrow or TileType.Cannon or TileType.Ice)
                     {
-                        // с земли в воду мы можем попасть только если ранее попали на клетку, требующую хода
-                        goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
+                        // ныряем с земли в воду
+                        goodTargets.Add(usualMove);
 
                         if (Map[task.Source].Coins > 0)
-                            goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
-                            {
-                                MoveType = MoveType.WithCoin
-                            });
+                            goodTargets.Add(coinMove);
                     }
                     break;
 
@@ -289,13 +271,13 @@ public class Board
                     if (newPositionTile.HasNoEnemy(ourTeamId))
                     {
                         // форт не занят противником
-                        goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
+                        goodTargets.Add(usualMove);
                     }
                     break;
                     
-                case TileType.Arrow:
-                case TileType.Horse:
                 case TileType.Ice:
+                case TileType.Horse:
+                case TileType.Arrow:
                 case TileType.Crocodile:
                     goodTargets.AddRange(
                         GetAllAvailableMoves(
@@ -308,19 +290,17 @@ public class Board
                     break;
                     
                 case TileType.Jungle:
-                    goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
+                    goodTargets.Add(usualMove);
                     break;
                 
                 default:
-                    goodTargets.Add(new AvailableMove(task.Source, newPosition, moving));
+                    goodTargets.Add(usualMove);
 
                     var newPositionTileLevel = Map[newPosition];
-                    if (Map[task.Source].Coins > 0 && newPositionTileLevel.HasNoEnemy(ourTeamId))
+                    if (Map[task.Source].Coins > 0 && 
+                        newPositionTileLevel.HasNoEnemy(ourTeamId))
                     {
-                        goodTargets.Add(new AvailableMove(task.Source, newPosition, movingWithCoin)
-                        {
-                            MoveType = MoveType.WithCoin
-                        });
+                        goodTargets.Add(coinMove);
                     }
                     break;
             }
