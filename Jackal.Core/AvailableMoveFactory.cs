@@ -31,7 +31,7 @@ public static class AvailableMoveFactory
 
     public static AvailableMove CoinMove(TilePosition from, TilePosition to, TilePosition prev)
     {
-        var movingWithCoin = new MovingAction(from, to, prev, true);
+        var movingWithCoin = new MovingWithCoinAction(from, to, prev);
         return new AvailableMove(from, to, movingWithCoin)
         {
             MoveType = MoveType.WithCoin

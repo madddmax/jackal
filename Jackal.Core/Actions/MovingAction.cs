@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Jackal.Core.Domain;
 
 namespace Jackal.Core.Actions;
 
-internal class MovingAction(TilePosition from, TilePosition to, TilePosition prev, bool withCoin = false) : IGameAction
+internal class MovingAction(TilePosition from, TilePosition to, TilePosition prev) : IGameAction
 {
+    public TilePosition To = to;
+
     public GameActionResult Act(Game game, Pirate pirate)
     {
         Board board = game.Board;
@@ -15,7 +16,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         Team ourTeam = board.Teams[pirate.TeamId];
         Ship ourShip = ourTeam.Ship;
             
-        Tile targetTile = map[to.Position];
+        Tile targetTile = map[To.Position];
         Tile sourceTile = map[from.Position];
         Tile prevTile = map[prev.Position];
             
@@ -23,8 +24,8 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         bool newTile = false;
         if (targetTile.Type == TileType.Unknown)
         {
-            targetTile = board.Generator.GetNext(to.Position);
-            board.Map[to.Position] = targetTile;
+            targetTile = board.Generator.GetNext(To.Position);
+            board.Map[To.Position] = targetTile;
             game.LastActionTurnNo = game.TurnNo;
             newTile = true;
         }
@@ -32,19 +33,19 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         // воздушный шар переносит сразу на наш корабль
         if (targetTile.Type == TileType.Balloon)
         {
-            to = new TilePosition(ourShip.Position);
+            To = new TilePosition(ourShip.Position);
         }
             
         // пушка выстреливает сразу в воду
         if (targetTile.Type == TileType.Cannon)
         {
-            to = GetCannonFly(targetTile.Direction, to.Position, board.MapSize);
+            To = GetCannonFly(targetTile.Direction, To.Position, board.MapSize);
         }
             
         // ходим по клетке вертушке
         if (newTile && targetTile.Type == TileType.Spinning)
         {
-            to = new TilePosition(to.Position, targetTile.SpinningCount - 1);
+            To = new TilePosition(To.Position, targetTile.SpinningCount - 1);
         }
             
         // нашли карамбу
@@ -63,7 +64,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 }
             }
                 
-            to = new TilePosition(ourShip.Position);
+            To = new TilePosition(ourShip.Position);
             targetTile.Used = true;
         }
         
@@ -80,7 +81,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         if (targetTile is { Type: TileType.BenGunn, Used: false } && 
             game.SubTurn.LighthouseViewCount == 0)
         {
-            game.AddPirate(pirate.TeamId, to, PirateType.BenGunn);
+            game.AddPirate(pirate.TeamId, To, PirateType.BenGunn);
             targetTile.Used = true;
         }
             
@@ -90,7 +91,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         if (game.SubTurn.LighthouseViewCount > 0)
         {
             game.SubTurn.LighthouseViewCount--;
-            to = pirate.Position;
+            To = pirate.Position;
 
             if (targetTile.Type == TileType.Hole)
             {
@@ -112,22 +113,22 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             targetTile.Used = true;
         }
             
-        targetTile = map[to.Position];
-        TileLevel targetTileLevel = map[to];
+        targetTile = map[To.Position];
+        TileLevel targetTileLevel = map[To];
         TileLevel fromTileLevel = map[from];
             
         if (from.Position == ourShip.Position && 
             targetTile.Type == TileType.Water &&
-            Board.GetPossibleShipMoves(ourShip.Position, game.Board.MapSize).Contains(to.Position)) 
+            Board.GetPossibleShipMoves(ourShip.Position, game.Board.MapSize).Contains(To.Position)) 
         {
             // двигаем свой корабль
             var pirateOnShips = map[ourShip.Position].Pirates;
             foreach (var pirateOnShip in pirateOnShips)
             {
-                pirateOnShip.Position = to;
+                pirateOnShip.Position = To;
                 targetTileLevel.Pirates.Add(pirateOnShip);
             }
-            ourShip.Position = to.Position;
+            ourShip.Position = To.Position;
             sourceTile.Pirates.Clear();
         }
         else
@@ -135,13 +136,13 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             // двигаем своего пирата
             fromTileLevel.Pirates.Remove(pirate);
 
-            pirate.Position = to;
+            pirate.Position = To;
             targetTileLevel.Pirates.Add(pirate);
         }
 
         if (game.SubTurn.LighthouseViewCount > 0 ||
             (targetTile is { Used: false, Type: TileType.Airplane } && 
-             from != to))
+             from != To))
         {
             game.NeedSubTurnPirate = pirate;
             game.PrevSubTurnPosition = prev;
@@ -183,7 +184,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                                  (prevTile is { Type: TileType.Airplane, Used: false } ||
                                   game.SubTurn.AirplaneFlying);
 
-            AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, to, prev);
+            AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, To, prev);
             List<AvailableMove> moves = game.Board.GetAllAvailableMoves(
                 task,
                 task.Source,
@@ -208,7 +209,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         }
             
         // отмечаем, что мы использовали самолет
-        if (from != to)
+        if (from != To)
         {
             if(sourceTile is { Type: TileType.Airplane, Used: false })
                 sourceTile.Used = true;
@@ -222,7 +223,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             .Where(x => x != ourTeam)
             .Select(x => x.Ship.Position);
             
-        if (enemyShips.Contains(to.Position))
+        if (enemyShips.Contains(To.Position))
         {
             game.KillPirate(pirate);
             return GameActionResult.Die;
@@ -247,41 +248,6 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             }
         }
 
-        if (withCoin)
-        {
-            if (fromTileLevel.Coins == 0) 
-                throw new Exception("No coins");
-
-            fromTileLevel.Coins--;
-
-            if (ourTeam.Ship.Position == to.Position)
-            {
-                // перенос монеты на корабль
-                ourShip.Coins++;
-
-                game.Scores[pirate.TeamId]++;
-                game.CoinsLeft--;
-
-                game.LastActionTurnNo = game.TurnNo;
-            }
-            else if (targetTile.Type == TileType.Water)
-            {
-                // монета в воде - тонет
-                game.CoinsLeft--;
-                game.LastActionTurnNo = game.TurnNo;
-            }
-            else if (targetTile.Type == TileType.Cannibal)
-            {
-                // монета на людоеде - пропадает т.к. Пятница не реализован
-                game.CoinsLeft--;
-                game.LastActionTurnNo = game.TurnNo;
-            }
-            else
-            {
-                targetTileLevel.Coins++;
-            }
-        }
-            
         switch (targetTile.Type)
         {
             case TileType.RumBarrel:
