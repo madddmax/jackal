@@ -1,5 +1,7 @@
-import { CommonState } from './commonSlice.d';
+import { AuthState } from './authSlice.types';
+import { CommonState } from './commonSlice.types';
 export interface ReduxState {
+    auth: AuthState;
     common: CommonState;
     game: GameState;
     lobby: LobbyState;

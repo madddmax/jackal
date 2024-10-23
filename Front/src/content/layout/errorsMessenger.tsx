@@ -1,7 +1,7 @@
 import { Toast, ToastContainer } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReduxState } from '/redux/types';
-import { ErrorInfo } from '/redux/commonSlice.d';
+import { ErrorInfo } from '../../redux/commonSlice.types';
 import { hideError, processError } from '/redux/commonSlice';
 
 const ErrorsMessenger = () => {
