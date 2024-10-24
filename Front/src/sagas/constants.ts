@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { call, put } from 'redux-saga/effects';
-import { ErrorInfo } from '/redux/commonSlice.d';
+import { ErrorInfo } from '../redux/commonSlice.types';
 import { showError } from '/redux/commonSlice';
 import { debugLog } from '/app/global';
 
@@ -11,6 +11,8 @@ export const sagaActions = {
 
     LOBBY_CREATE: 'LOBBY_CREATE',
     LOBBY_JOIN: 'LOBBY_JOIN',
+
+    AUTH_CHECK: 'AUTH_CHECK',
 };
 
 export const errorsWrapper = (saga: (action: any) => void) =>

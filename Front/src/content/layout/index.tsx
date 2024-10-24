@@ -8,6 +8,7 @@ import { initMySettings } from '/redux/gameSlice';
 import LobbyCard from './pages/lobbyCard';
 import LobbyJoin from './pages/lobbyJoin';
 import ErrorsMessenger from './errorsMessenger';
+import { sagaActions } from '/sagas/constants';
 
 const Layout = () => {
     const dispatch = useDispatch();
@@ -20,6 +21,8 @@ const Layout = () => {
                 dispatch(initMySettings(myState));
             }
         }
+
+        dispatch({ type: sagaActions.AUTH_CHECK, payload: {} });
     }, []);
 
     return (
