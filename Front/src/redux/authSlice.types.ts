@@ -8,6 +8,10 @@ export interface CheckResponse {
     isAuthorised: boolean;
 }
 
+export interface AuthResponse {
+    user: UserInfo;
+}
+
 export interface UserInfo {
     id: number;
     userName: string;

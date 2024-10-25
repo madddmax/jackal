@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Newgame from './pages/newgame';
+import Login from './pages/login';
 import Playground from './pages/playground';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -29,6 +30,7 @@ const Layout = () => {
         <>
             <Routes>
                 <Route path="/newgame" element={<Newgame />}></Route>
+                <Route path="/login" element={<Login />}></Route>
                 <Route path="/joinlobby" element={<LobbyJoin />}></Route>
                 <Route path="/lobby/:id" element={<LobbyCard />}></Route>
                 <Route path="/" element={<Playground />}></Route>

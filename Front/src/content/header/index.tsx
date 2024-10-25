@@ -10,6 +10,7 @@ import { uuidGen } from '/app/global';
 import { ReduxState, StorageState } from '/redux/types';
 import config from '/app/config';
 import { AuthState } from '/redux/authSlice.types';
+import { HiLogin, HiLogout } from 'react-icons/hi';
 
 function Header() {
     const dispatch = useDispatch();
@@ -28,6 +29,12 @@ function Header() {
                     mapSize: 11,
                 },
             },
+        });
+
+    const doLogout = () =>
+        dispatch({
+            type: sagaActions.AUTH_LOGOUT,
+            payload: {},
         });
 
     return (
@@ -77,10 +84,24 @@ function Header() {
                 )}
                 <Navbar.Toggle />
                 <Navbar.Collapse className="justify-content-end">
-                    <Navbar.Text>
-                        {!authInfo.isAuthorised && <span style={{ color: 'red' }}>Не авторизован</span>}
-                        {authInfo.isAuthorised && <span style={{ color: 'dark-red' }}>{authInfo.user?.userName}</span>}
-                    </Navbar.Text>
+                    <Nav className="me-auto">
+                        <Navbar.Text>
+                            {authInfo.isAuthorised ? (
+                                <span style={{ color: 'dark-red' }}>{authInfo.user?.userName}</span>
+                            ) : (
+                                <span style={{ color: 'red' }}>Не авторизован</span>
+                            )}
+                        </Navbar.Text>
+                        {authInfo.isAuthorised ? (
+                            <Nav.Link as={Link} to="/" onClick={doLogout}>
+                                <HiLogout />
+                            </Nav.Link>
+                        ) : (
+                            <Nav.Link as={Link} to="/login">
+                                <HiLogin />
+                            </Nav.Link>
+                        )}
+                    </Nav>
                 </Navbar.Collapse>
             </Container>
         </Navbar>
