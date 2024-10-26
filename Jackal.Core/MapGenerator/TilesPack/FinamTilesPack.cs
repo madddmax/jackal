@@ -1,17 +1,15 @@
 ﻿using Jackal.Core.Domain;
 
-namespace Jackal.Core.MapGenerator;
+namespace Jackal.Core.MapGenerator.TilesPack;
 
 /// <summary>
 /// Игровой набор Финам-Шакал
 /// </summary>
-public class FinamTilesPack
+public class FinamTilesPack : ITilesPack
 {
-    /// <summary>
-    /// Общий набор из 120 клеток,
-    /// самая большая карта 13x13 имеет 117 клеток
-    /// </summary>
-    public readonly TileParams[] AllTiles =
+    public string Name => "Finam";
+    
+    public TileParams[] AllTiles { get; } =
     [
         // 96 значимых клеток
         new TileParams(TileType.Chest1), // 1 монета - первый сундук берем всегда

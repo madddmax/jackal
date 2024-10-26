@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Jackal.Core.Domain;
+using Jackal.Core.MapGenerator.TilesPack;
 
 namespace Jackal.Core.MapGenerator;
 
@@ -15,13 +16,13 @@ public class RandomMapGenerator : IMapGenerator
     /// </summary>
     public int MapId { get; }
 
-    public RandomMapGenerator(int mapId, int mapSize)
+    public RandomMapGenerator(int mapId, int mapSize, string? tilesPackName = null)
     {
         MapId = mapId;
         _rand = new Random(MapId + 5000000);
 
-        var tilesPack = new FinamTilesPack();
-        var selectedTiles = PullOut(_rand, mapSize, tilesPack);
+        var pack = TilesPackFactory.Create(tilesPackName);
+        var selectedTiles = PullOut(_rand, mapSize, pack);
         var shuffledTiles = Shuffle(selectedTiles);
         
         var positions = GetAllEarth(mapSize).ToList();
@@ -32,7 +33,7 @@ public class RandomMapGenerator : IMapGenerator
         _tiles = InitTiles(shuffledTiles, positions);
     }
 
-    private static List<TileParams> PullOut(Random rand, int mapSize, FinamTilesPack tilesPack)
+    private static List<TileParams> PullOut(Random rand, int mapSize, ITilesPack pack)
     {
         var landSize = mapSize - 2;
         var totalTiles = landSize * landSize - 4;
@@ -45,12 +46,12 @@ public class RandomMapGenerator : IMapGenerator
         for (var i = 0; i < totalTiles; i++)
         {
             var index = random 
-                ? rand.Next(0, tilesPack.AllTiles.Length - i) 
+                ? rand.Next(0, pack.AllTiles.Length - i) 
                 : selectedIndex;
                 
-            list.Add(tilesPack.AllTiles[index]);
+            list.Add(pack.AllTiles[index]);
 
-            switch (tilesPack.AllTiles[index].Type)
+            switch (pack.AllTiles[index].Type)
             {
                 case TileType.Cannibal:
                     // выбираем воскрешающий форт к людоеду
@@ -68,7 +69,7 @@ public class RandomMapGenerator : IMapGenerator
             }
 
             // сдвигаем оставшиеся клетки в наборе, последнюю ставим на место выбранной
-            tilesPack.AllTiles[index] = tilesPack.AllTiles[tilesPack.AllTiles.Length - 1 - i];
+            pack.AllTiles[index] = pack.AllTiles[pack.AllTiles.Length - 1 - i];
         }
 
         // если сгенерилась одна дыра на карту - то заменяем её на пустую клетку
@@ -79,6 +80,30 @@ public class RandomMapGenerator : IMapGenerator
         }
 
         return list;
+    }
+    
+    private List<TileParams> Shuffle(IEnumerable<TileParams> defs)
+    {
+        return defs
+            .Select(x => new {Def = x, Number = _rand.NextDouble()})
+            .OrderBy(x => x.Number)
+            .Select(x => x.Def)
+            .ToList();
+    }
+    
+    private static IEnumerable<Position> GetAllEarth(int mapSize)
+    {
+        for (int x = 1; x <= mapSize - 2; x++)
+        {
+            for (int y = 1; y <= mapSize - 2; y++)
+            {
+                Position val = new Position(x, y);
+                if (Utils.InCorners(val, 1, mapSize - 2) == false)
+                {
+                    yield return val;
+                }
+            }
+        }
     }
     
     private Dictionary<Position, Tile> InitTiles(List<TileParams> pack, List<Position> positions)
@@ -119,30 +144,6 @@ public class RandomMapGenerator : IMapGenerator
         }
 
         return tiles;
-    }
-    
-    private List<TileParams> Shuffle(IEnumerable<TileParams> defs)
-    {
-        return defs
-            .Select(x => new {Def = x, Number = _rand.NextDouble()})
-            .OrderBy(x => x.Number)
-            .Select(x => x.Def)
-            .ToList();
-    }
-
-    private static IEnumerable<Position> GetAllEarth(int mapSize)
-    {
-        for (int x = 1; x <= mapSize - 2; x++)
-        {
-            for (int y = 1; y <= mapSize - 2; y++)
-            {
-                Position val = new Position(x, y);
-                if (Utils.InCorners(val, 1, mapSize - 2) == false)
-                {
-                    yield return val;
-                }
-            }
-        }
     }
         
     public Tile GetNext(Position position) => _tiles[position];
