@@ -3,6 +3,7 @@ import { call, put } from 'redux-saga/effects';
 import { ErrorInfo } from '../redux/commonSlice.types';
 import { showError } from '/redux/commonSlice';
 import { debugLog } from '/app/global';
+import { setAuth } from '/redux/authSlice';
 
 export const sagaActions = {
     GAME_RESET: 'GAME_RESET',
@@ -13,6 +14,8 @@ export const sagaActions = {
     LOBBY_JOIN: 'LOBBY_JOIN',
 
     AUTH_CHECK: 'AUTH_CHECK',
+    AUTH_LOGIN: 'AUTH_LOGIN',
+    AUTH_LOGOUT: 'AUTH_LOGOUT',
 };
 
 export const errorsWrapper = (saga: (action: any) => void) =>
@@ -22,8 +25,24 @@ export const errorsWrapper = (saga: (action: any) => void) =>
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 let error = err.response?.data as ErrorInfo;
+
+                debugLog(error, err);
+
                 if (error) {
                     yield put(showError(error));
+                } else if (err.response?.status == 401) {
+                    yield put(
+                        setAuth({
+                            isAuthorised: false,
+                        }),
+                    );
+                    yield put(
+                        showError({
+                            error: true,
+                            errorCode: err.response?.statusText,
+                            errorMessage: 'Не авторизован',
+                        }),
+                    );
                 } else {
                     yield put(
                         showError({
