@@ -68,9 +68,15 @@ public class Program
                 options.AddPolicy(name: CorsDefaults.AllOrigins,
                     act =>
                     {
-                        act.AllowAnyOrigin();
+                        act.WithOrigins(
+                            "http://localhost:5130",
+                            "http://localhost:5173",
+                            "http://116.203.101.2",
+                            "http://jackal2.online"
+                        );
                         act.AllowAnyMethod();
                         act.AllowAnyHeader();
+                        act.AllowCredentials();
                     });
             });
 
