@@ -5,7 +5,7 @@ using Jackal.Core.Domain;
 
 namespace Jackal.Core.MapGenerator;
 
-public class ClassicMapGenerator : IMapGenerator
+public class RandomMapGenerator : IMapGenerator
 {
     private readonly Random _rand;
     private readonly Dictionary<Position,Tile> _tiles;
@@ -20,7 +20,7 @@ public class ClassicMapGenerator : IMapGenerator
     /// </summary> 
     public int CoinsOnMap { get; }
 
-    public ClassicMapGenerator(int mapId, int mapSize)
+    public RandomMapGenerator(int mapId, int mapSize)
     {
         MapId = mapId;
         _rand = new Random(MapId + 5000000);

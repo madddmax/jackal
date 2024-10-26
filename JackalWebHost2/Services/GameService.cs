@@ -44,7 +44,7 @@ public class GameService : IGameService
 
         // TODO-MIKE для ручной отладки можно использовать закомментированные генераторы карт
         int mapSize = gameSettings.MapSize ?? 5;
-        IMapGenerator mapGenerator = new ClassicMapGenerator(gameSettings.MapId.Value, mapSize);
+        IMapGenerator mapGenerator = new RandomMapGenerator(gameSettings.MapId.Value, mapSize);
         // mapGenerator = new OneTileMapGenerator(new TileParams(TileType.Trap));
         // mapGenerator = new ThreeTileMapGenerator(
         //     new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.ThreeArrows },
