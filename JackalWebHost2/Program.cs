@@ -71,7 +71,6 @@ public class Program
                         act.AllowAnyOrigin();
                         act.AllowAnyMethod();
                         act.AllowAnyHeader();
-                        act.AllowCredentials();
                     });
             });
 
