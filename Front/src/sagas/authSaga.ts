@@ -1,16 +1,14 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { errorsWrapper, sagaActions } from './constants';
+import { axiosInstance, errorsWrapper, sagaActions } from './constants';
 import { history } from '/app/global';
-import axios from 'axios';
-import config from '/app/config';
 import { AuthResponse, CheckResponse } from '/redux/authSlice.types';
 import { setAuth } from '/redux/authSlice';
 
 export function* authCheck(action: any) {
     let result: { data: CheckResponse } = yield call(
         async () =>
-            await axios({
-                url: `${config.BaseApi}v1/auth/check`,
+            await axiosInstance({
+                url: 'v1/auth/check',
                 method: 'post',
                 data: action.payload,
             }),
@@ -21,8 +19,8 @@ export function* authCheck(action: any) {
 export function* authLogin(action: any) {
     let result: { data: AuthResponse } = yield call(
         async () =>
-            await axios({
-                url: `${config.BaseApi}v1/auth/register`,
+            await axiosInstance({
+                url: 'v1/auth/register',
                 method: 'post',
                 data: action.payload,
             }),
@@ -39,18 +37,17 @@ export function* authLogin(action: any) {
 export function* authLogout(action: any) {
     yield call(
         async () =>
-            await axios({
-                url: `${config.BaseApi}v1/auth/logout`,
+            await axiosInstance({
+                url: 'v1/auth/logout',
                 method: 'post',
                 data: action.payload,
             }),
     );
-    // yield put(
-    //     setAuth({
-    //         user: undefined,
-    //         isAuthorised: false,
-    //     }),
-    // );
+    yield put(
+        setAuth({
+            isAuthorised: false,
+        }),
+    );
 }
 
 export default function* rootSaga() {

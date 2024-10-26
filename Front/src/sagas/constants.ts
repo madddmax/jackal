@@ -4,6 +4,7 @@ import { ErrorInfo } from '../redux/commonSlice.types';
 import { showError } from '/redux/commonSlice';
 import { debugLog } from '/app/global';
 import { setAuth } from '/redux/authSlice';
+import config from '/app/config';
 
 export const sagaActions = {
     GAME_RESET: 'GAME_RESET',
@@ -17,6 +18,11 @@ export const sagaActions = {
     AUTH_LOGIN: 'AUTH_LOGIN',
     AUTH_LOGOUT: 'AUTH_LOGOUT',
 };
+
+export const axiosInstance = axios.create({
+    withCredentials: true,
+    baseURL: config.BaseApi,
+});
 
 export const errorsWrapper = (saga: (action: any) => void) =>
     function* (action: any) {

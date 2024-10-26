@@ -1,16 +1,14 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { errorsWrapper, sagaActions } from './constants';
+import { axiosInstance, errorsWrapper, sagaActions } from './constants';
 import { history } from '/app/global';
-import axios from 'axios';
-import config from '/app/config';
 import { LobbyCreateResponse, LobbyJoinResponse } from '/redux/types';
 import { updateLobby } from '/redux/lobbySlice';
 
 export function* lobbyCreate(action: any) {
     let result: { data: LobbyCreateResponse } = yield call(
         async () =>
-            await axios({
-                url: `${config.BaseApi}v1/lobby/create-lobby`,
+            await axiosInstance({
+                url: 'v1/lobby/create-lobby',
                 method: 'post',
                 data: action.payload,
             }),
@@ -22,8 +20,8 @@ export function* lobbyCreate(action: any) {
 export function* lobbyJoin(action: any) {
     let result: { data: LobbyJoinResponse } = yield call(
         async () =>
-            await axios({
-                url: `${config.BaseApi}v1/lobby/join-lobby`,
+            await axiosInstance({
+                url: 'v1/lobby/join-lobby',
                 method: 'post',
                 data: action.payload,
             }),
