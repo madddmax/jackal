@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Jackal.Core;
 using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Xunit;
@@ -187,11 +186,9 @@ public class SpinningTests
     [Fact]
     public void OneSpinningWithCoin_GetAvailableMoves_ReturnTwoMovesWithAndWithoutCoin()
     {
-        const int coinsOnMap = 1;
-        
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Spinning) { SpinningCount = 2 }, coinsOnMap
+            new TileParams(TileType.Spinning) { SpinningCount = 2 }
         );
         var game = new TestGame(spinningOnlyMap);
         
@@ -220,11 +217,9 @@ public class SpinningTests
     [Fact]
     public void OneSpinningWithCoinAndEnemyOnNextPosition_GetAvailableMoves_ReturnSingleMoveWithoutCoin()
     {
-        const int coinsOnMap = 1;
-        
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Spinning) { SpinningCount = 2 }, coinsOnMap
+            new TileParams(TileType.Spinning) { SpinningCount = 2 }
         );
         var game = new TestGame(spinningOnlyMap);
         
@@ -252,13 +247,10 @@ public class SpinningTests
     [Fact]
     public void SpinningThenGrassWithCoinThenSpinningAgainWithEnemyOnFirstPosition_GetAvailableMoves_ReturnAllMoveWithoutCoin()
     {
-        const int coinsOnMap = 1;
-        
         // Arrange
         var spinningGrassLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Spinning) { SpinningCount = 2 },
-            new TileParams(TileType.Grass),
-            coinsOnMap
+            new TileParams(TileType.Grass)
         );
         var game = new TestGame(spinningGrassLineMap);
         
@@ -286,13 +278,10 @@ public class SpinningTests
     [Fact]
     public void SpinningThenGrassWithCoinThenSpinningAgainWithEnemyOnLastPosition_GetAvailableMoves_ReturnSingleMoveWithCoin()
     {
-        const int coinsOnMap = 1;
-        
         // Arrange
         var spinningGrassLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Spinning) { SpinningCount = 2 },
-            new TileParams(TileType.Grass),
-            coinsOnMap
+            new TileParams(TileType.Grass)
         );
         var game = new TestGame(spinningGrassLineMap);
         

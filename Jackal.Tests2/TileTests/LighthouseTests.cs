@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Jackal.Core;
 using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Xunit;
@@ -66,12 +65,10 @@ public class LighthouseTests
     public void LighthouseThenSearch3LighthouseAndChest_GetAvailableMoves_ReturnNearestMoves()
     {
         // Arrange
-        const int coinsOnMap = 1;
         var lighthouseChestLineMap = new ThreeTileMapGenerator(
             new TileParams(TileType.Lighthouse),
             new TileParams(TileType.Lighthouse),
-            new TileParams(TileType.Chest1),
-            coinsOnMap
+            new TileParams(TileType.Chest1)
         );
         var game = new TestGame(lighthouseChestLineMap);
         

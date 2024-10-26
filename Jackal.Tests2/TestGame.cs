@@ -57,7 +57,8 @@ public class TestGame
         {
             throw new Exception("Tile must not be Unknown");
         }
-        
+
+        _testGame.CoinsOnMap++;
         Board.Map[coinPosition].Coins++;
     }
     

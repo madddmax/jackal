@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Jackal.Core.Domain;
+﻿using Jackal.Core.Domain;
 
 namespace Jackal.Core.MapGenerator;
 
@@ -14,7 +11,7 @@ public class FinamTilesPack
     /// Общий набор из 120 клеток,
     /// самая большая карта 13x13 имеет 117 клеток
     /// </summary>
-    private readonly TileParams[] _wholeSetOfTiles =
+    public readonly TileParams[] AllTiles =
     [
         // 96 значимых клеток
         new TileParams(TileType.Chest1), // 1 монета - первый сундук берем всегда
@@ -139,64 +136,4 @@ public class FinamTilesPack
         new TileParams(TileType.Grass, 3),
         new TileParams(TileType.Grass, 3)
     ];
-
-    /// <summary>
-    /// Количество монет на карте
-    /// </summary>
-    public int CoinsOnMap { get; private set; }
-        
-    /// <summary>
-    /// Клетки которые будем играть
-    /// </summary>
-    public List<TileParams> List { get; }
-        
-    public FinamTilesPack(Random rand, int mapSize)
-    {
-        CoinsOnMap = 0;
-            
-        var landSize = mapSize - 2;
-        var totalTiles = landSize * landSize - 4;
-        List = new List<TileParams>(totalTiles);
-
-        // выбираем обязательный сундук с 1 монетой
-        bool random = false;
-        int selectedIndex = 0;
-            
-        for (var i = 0; i < totalTiles; i++)
-        {
-            var index = random 
-                ? rand.Next(0, _wholeSetOfTiles.Length - i) 
-                : selectedIndex;
-                
-            List.Add(_wholeSetOfTiles[index]);
-            CoinsOnMap += _wholeSetOfTiles[index].Type.CoinsCount();
-
-            switch (_wholeSetOfTiles[index].Type)
-            {
-                case TileType.Cannibal:
-                    // выбираем воскрешающий форт к людоеду
-                    random = false;
-                    selectedIndex = index - 1;
-                    break;
-                case TileType.RespawnFort:
-                    // выбираем людоеда к воскрешающему форту
-                    random = false;
-                    selectedIndex = index + 1;
-                    break;
-                default:
-                    random = true;
-                    break;
-            }
-
-            // сдвигаем оставшиеся клетки в наборе, последнюю ставим на место выбранной
-            _wholeSetOfTiles[index] = _wholeSetOfTiles[_wholeSetOfTiles.Length - 1 - i];
-        }
-
-        // если сгенерилась одна дыра на карту - то заменяем её на пустую клетку
-        var holeTiles = List.Where(x => x.Type == TileType.Hole).ToList();
-        if (holeTiles.Count == 1)
-        {
-            holeTiles[0].Type = TileType.Grass;
-        }
-    }
 }

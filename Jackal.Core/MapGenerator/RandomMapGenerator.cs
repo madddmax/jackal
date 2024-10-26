@@ -15,26 +15,75 @@ public class RandomMapGenerator : IMapGenerator
     /// </summary>
     public int MapId { get; }
 
-    /// <summary>
-    /// Монет на карте, нужно сразу рассчитать т.к. используется при инициализации Game
-    /// </summary> 
-    public int CoinsOnMap { get; }
-
     public RandomMapGenerator(int mapId, int mapSize)
     {
         MapId = mapId;
         _rand = new Random(MapId + 5000000);
 
-        var tilesPack = new FinamTilesPack(_rand, mapSize);
-        CoinsOnMap = tilesPack.CoinsOnMap;
-            
-        var pack = Shuffle(tilesPack.List);
+        var tilesPack = new FinamTilesPack();
+        var selectedTiles = PullOut(_rand, mapSize, tilesPack);
+        var shuffledTiles = Shuffle(selectedTiles);
+        
         var positions = GetAllEarth(mapSize).ToList();
 
-        if (pack.Count != positions.Count)
+        if (shuffledTiles.Count != positions.Count)
             throw new Exception("Wrong tiles pack count");
 
-        _tiles = new Dictionary<Position, Tile>();
+        _tiles = InitTiles(shuffledTiles, positions);
+    }
+
+    private static List<TileParams> PullOut(Random rand, int mapSize, FinamTilesPack tilesPack)
+    {
+        var landSize = mapSize - 2;
+        var totalTiles = landSize * landSize - 4;
+        var list = new List<TileParams>(totalTiles);
+
+        // выбираем обязательный сундук с 1 монетой
+        bool random = false;
+        int selectedIndex = 0;
+            
+        for (var i = 0; i < totalTiles; i++)
+        {
+            var index = random 
+                ? rand.Next(0, tilesPack.AllTiles.Length - i) 
+                : selectedIndex;
+                
+            list.Add(tilesPack.AllTiles[index]);
+
+            switch (tilesPack.AllTiles[index].Type)
+            {
+                case TileType.Cannibal:
+                    // выбираем воскрешающий форт к людоеду
+                    random = false;
+                    selectedIndex = index - 1;
+                    break;
+                case TileType.RespawnFort:
+                    // выбираем людоеда к воскрешающему форту
+                    random = false;
+                    selectedIndex = index + 1;
+                    break;
+                default:
+                    random = true;
+                    break;
+            }
+
+            // сдвигаем оставшиеся клетки в наборе, последнюю ставим на место выбранной
+            tilesPack.AllTiles[index] = tilesPack.AllTiles[tilesPack.AllTiles.Length - 1 - i];
+        }
+
+        // если сгенерилась одна дыра на карту - то заменяем её на пустую клетку
+        var holeTiles = list.Where(x => x.Type == TileType.Hole).ToList();
+        if (holeTiles.Count == 1)
+        {
+            holeTiles[0].Type = TileType.Grass;
+        }
+
+        return list;
+    }
+    
+    private Dictionary<Position, Tile> InitTiles(List<TileParams> pack, List<Position> positions)
+    {
+        var tiles = new Dictionary<Position, Tile>();
 
         foreach (var info in pack.Zip(positions, (def, position) => new {Def = def, Position = position}))
         {
@@ -66,10 +115,12 @@ public class RandomMapGenerator : IMapGenerator
             var tile = new Tile(tempDef);
             tile.Levels[0].Coins = tile.Type.CoinsCount();
                 
-            _tiles.Add(info.Position, tile);
+            tiles.Add(info.Position, tile);
         }
-    }
 
+        return tiles;
+    }
+    
     private List<TileParams> Shuffle(IEnumerable<TileParams> defs)
     {
         return defs

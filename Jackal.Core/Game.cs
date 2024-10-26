@@ -19,9 +19,9 @@ public class Game
     public readonly Dictionary<int, int> Scores;
         
     /// <summary>
-    /// Нерастасканное золотишко
+    /// Золото на карте
     /// </summary>
-    public int CoinsLeft;
+    public int CoinsOnMap;
 
     private readonly List<Move> _availableMoves;
     private readonly List<IGameAction> _actions;
@@ -38,7 +38,6 @@ public class Game
         {
             Scores[team.Id] = 0;
         }
-        CoinsLeft = Board.Generator.CoinsOnMap;
 
         _availableMoves = new List<Move>();
         _actions = new List<IGameAction>();
@@ -173,14 +172,14 @@ public class Game
                     .ToList();
 
                 int firstTeamCoins = orderedTeamCoins[0];
-                int secondTeamCoins = orderedTeamCoins.Count > 1 ? orderedTeamCoins[1] + CoinsLeft : 0;
+                int secondTeamCoins = orderedTeamCoins.Count > 1 ? orderedTeamCoins[1] + CoinsOnMap : 0;
                 if (firstTeamCoins > secondTeamCoins)
                 {
                     // игрок выйграл с большим перевесом
                     return true;
                 }
 
-                if (CoinsLeft == 0)
+                if (CoinsOnMap == 0)
                 {
                     // закончилось золото
                     return true;
