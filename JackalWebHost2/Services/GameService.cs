@@ -1,6 +1,5 @@
 ﻿using Jackal.Core;
 using Jackal.Core.MapGenerator;
-using Jackal.Core.MapGenerator.TilesPack;
 using Jackal.Core.Players;
 using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Exceptions;

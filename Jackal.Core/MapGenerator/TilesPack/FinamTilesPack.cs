@@ -7,8 +7,9 @@ namespace Jackal.Core.MapGenerator.TilesPack;
 /// </summary>
 public class FinamTilesPack : ITilesPack
 {
-    public string Name => "Finam";
-    
+    /// <summary>
+    /// 120 клеток
+    /// </summary>
     public TileParams[] AllTiles { get; } =
     [
         // 96 значимых клеток
