@@ -32,20 +32,20 @@ internal class MovingWithCoinAction(TilePosition from, TilePosition to, TilePosi
             ourShip.Coins++;
 
             game.Scores[pirate.TeamId]++;
-            game.CoinsLeft--;
+            game.CoinsOnMap--;
 
             game.LastActionTurnNo = game.TurnNo;
         }
         else if (targetTile.Type == TileType.Water)
         {
             // монета в воде - тонет
-            game.CoinsLeft--;
+            game.CoinsOnMap--;
             game.LastActionTurnNo = game.TurnNo;
         }
         else if (targetTile.Type == TileType.Cannibal)
         {
             // монета на людоеде - пропадает т.к. Пятница не реализован
-            game.CoinsLeft--;
+            game.CoinsOnMap--;
             game.LastActionTurnNo = game.TurnNo;
         }
         else

@@ -6,7 +6,7 @@ namespace Jackal.Core.MapGenerator;
 /// Нижняя береговая линия firstTile,
 /// остальные все клетки secondTile
 /// </summary>
-public class TwoTileMapGenerator(TileParams firstTileParams, TileParams secondTileParams, int coinsOnMap = 0) : IMapGenerator
+public class TwoTileMapGenerator(TileParams firstTileParams, TileParams secondTileParams) : IMapGenerator
 {
     private readonly ThreeTileMapGenerator _mapGenerator = 
         new(firstTileParams, secondTileParams, secondTileParams);
@@ -15,11 +15,6 @@ public class TwoTileMapGenerator(TileParams firstTileParams, TileParams secondTi
     /// Идентификатор карты
     /// </summary>
     public int MapId => _mapGenerator.MapId;
-
-    /// <summary>
-    /// Монет на карте, нужно сразу рассчитать т.к. используется при инициализации Game
-    /// </summary>
-    public int CoinsOnMap => coinsOnMap;
 
     public Tile GetNext(Position position) => _mapGenerator.GetNext(position);
     

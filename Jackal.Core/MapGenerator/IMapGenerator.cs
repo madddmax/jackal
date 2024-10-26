@@ -8,11 +8,6 @@ public interface IMapGenerator
     /// Идентификатор карты
     /// </summary>
     public int MapId { get; }
-    
-    /// <summary>
-    /// Монет на карте, нужно сразу рассчитать т.к. используется при инициализации Game
-    /// </summary>
-    int CoinsOnMap { get; }
 
     /// <summary>
     /// Открыть закрытую клетку,

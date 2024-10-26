@@ -15,8 +15,8 @@ public class JsonHelperTests
         // Arrange
         const int mapSize = 5;
         IPlayer[] players = [new WebHumanPlayer()];
-        var classicMap = new ClassicMapGenerator(1, mapSize);
-        var board = new Board(players, classicMap, mapSize, 1);
+        var randomMap = new RandomMapGenerator(1, mapSize);
+        var board = new Board(players, randomMap, mapSize, 1);
         
         // Act
         var json = JsonHelper.SerializeWithType(board, Formatting.Indented);

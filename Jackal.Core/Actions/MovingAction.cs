@@ -27,9 +27,10 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             targetTile = board.Generator.GetNext(To.Position);
             board.Map[To.Position] = targetTile;
             game.LastActionTurnNo = game.TurnNo;
+            game.CoinsOnMap += targetTile.Type.CoinsCount();
             newTile = true;
         }
-            
+        
         // воздушный шар переносит сразу на наш корабль
         if (targetTile.Type == TileType.Balloon)
         {

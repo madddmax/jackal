@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Jackal.Core;
 using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Xunit;
@@ -41,13 +40,10 @@ public class JungleTests
     [Fact]
     public void JungleThenGrassWithCoin_GetAvailableMoves_ReturnAllMoveWithoutCoin()
     {
-        const int coinsOnMap = 1;
-        
         // Arrange
         var jungleGrassLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Jungle),
-            new TileParams(TileType.Grass),
-            coinsOnMap
+            new TileParams(TileType.Grass)
         );
         var game = new TestGame(jungleGrassLineMap);
         

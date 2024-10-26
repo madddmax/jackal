@@ -16,4 +16,9 @@ public class GameSettings
     /// Размер стороны карты с учетом воды
     /// </summary>
     public int? MapSize { get; set; }
+    
+    /// <summary>
+    /// Название игрового набора клеток
+    /// </summary>
+    public string? TilesPackName { get; set; }
 }
