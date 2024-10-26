@@ -1,6 +1,4 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
-import axios from 'axios';
-import config from '/app/config';
 import {
     initMap,
     setCurrentHumanTeam,
@@ -11,13 +9,13 @@ import {
     initGame,
 } from '../redux/gameSlice';
 import { GameStartResponse, GameTurnResponse } from '../redux/types';
-import { errorsWrapper, sagaActions } from './constants';
+import { axiosInstance, errorsWrapper, sagaActions } from './constants';
 
 export function* gameReset() {
     let result: GameStartResponse = yield call(
         async () =>
-            await axios({
-                url: `${config.BaseApi}Game/Reset`,
+            await axiosInstance({
+                url: 'Game/Reset',
                 method: 'post',
             }),
     );
@@ -28,8 +26,8 @@ export function* gameReset() {
 export function* gameStart(action: any) {
     let result: { data: GameStartResponse } = yield call(
         async () =>
-            await axios({
-                url: `${config.BaseApi}v1/game/start`,
+            await axiosInstance({
+                url: 'v1/game/start',
                 method: 'post',
                 data: action.payload,
             }),
@@ -66,8 +64,8 @@ export function* gameTurn(action: any) {
 export function* oneTurn(action: any) {
     let result: { data: GameTurnResponse } = yield call(
         async () =>
-            await axios({
-                url: `${config.BaseApi}v1/game/move`,
+            await axiosInstance({
+                url: 'v1/game/move',
                 method: 'post',
                 data: action.payload,
             }),
