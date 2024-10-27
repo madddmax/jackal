@@ -73,7 +73,8 @@ public class Program
                             "http://localhost:5173",
                             "http://116.203.101.2",
                             "http://jackal2.online",
-                            "http://jackal.team"
+                            "http://jackal.team",
+                            "https://jackal.team"
                         );
                         act.AllowAnyMethod();
                         act.AllowAnyHeader();
