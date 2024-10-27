@@ -3,9 +3,9 @@
 namespace Jackal.Core.MapGenerator.TilesPack;
 
 /// <summary>
-/// Игровой набор Финам-Шакал
+/// Расширенный игровой набор
 /// </summary>
-public class FinamTilesPack : ITilesPack
+public class ExtendedTilesPack : ITilesPack
 {
     /// <summary>
     /// 120 клеток
