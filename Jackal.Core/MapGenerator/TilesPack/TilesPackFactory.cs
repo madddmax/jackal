@@ -6,13 +6,19 @@ public static class TilesPackFactory
 {
     private const string Extended = "extended";
     private const string Classic = "classic";
+    private const string Madddmax = "madddmax";
+    private const string AllGold = "all-gold";
+    private const string LotsOfBen = "lots-of-ben";
     
     public static ITilesPack Create(string? name) =>
         name switch
         {
             Classic => new ClassicTilesPack(),
+            Madddmax => new MadddmaxTilesPack(),
+            AllGold => new AllGoldTilesPack(),
+            LotsOfBen => new LotsOfBenTilesPack(),
             _ => new ExtendedTilesPack()
         };
-
-    public static List<string> GetAll() => [Extended, Classic];
+    
+    public static List<string> GetAll() => [Extended, Classic, Madddmax, AllGold, LotsOfBen];
 }
