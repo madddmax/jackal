@@ -19,6 +19,6 @@ public static class TilesPackFactory
             LotsOfBen => new LotsOfBenTilesPack(),
             _ => new ExtendedTilesPack()
         };
-
+    
     public static List<string> GetAll() => [Extended, Classic, Madddmax, AllGold, LotsOfBen];
 }

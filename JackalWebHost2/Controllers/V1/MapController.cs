@@ -1,4 +1,6 @@
+using Jackal.Core.MapGenerator;
 using Jackal.Core.MapGenerator.TilesPack;
+using JackalWebHost2.Controllers.Models.Map;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,5 +18,23 @@ public class MapController : Controller
     public List<string> TilesPackNames()
     {
         return TilesPackFactory.GetAll();
+    }
+    
+    /// <summary>
+    /// Проверить высадку
+    /// </summary>
+    [HttpGet("check-landing")]
+    public List<CheckLandingResponse> CheckLanding([FromQuery] CheckLandingRequest request)
+    {
+        // todo mapSize validator
+        //IMapGenerator mapGenerator = new RandomMapGenerator(request.MapId, request.MapSize, request.TilesPackName);
+        
+        return
+        [
+            new(0, 0), // нижняя высадка, далее по часовой стрелке
+            new(1, 1),
+            new(2, 2),
+            new(3, 3)
+        ];
     }
 }
