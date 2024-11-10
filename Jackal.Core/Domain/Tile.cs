@@ -25,11 +25,10 @@ public record Tile
 	public readonly int ArrowsCode;
 
 	/// <summary>
-	/// Направление клетки (или количество поворотов):
-	/// 0 - вверх, 1 - вправо, 2 - вниз, 3 - влево
+	/// Направление клетки (или количество поворотов)
 	/// </summary>
 	[JsonProperty]
-	public readonly int Direction;
+	public readonly DirectionType Direction;
 		
 	/// <summary>
 	/// Количество ходов на клетке-вертушке

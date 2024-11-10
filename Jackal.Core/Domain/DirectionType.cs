@@ -1,12 +1,12 @@
 namespace Jackal.Core.Domain;
 
-public static class DirectionType
+/// <summary>
+/// Направление
+/// </summary>
+public enum DirectionType
 {
-    public const int Up = 0;
-    
-    public const int Right = 1;
-    
-    public const int Down = 2;
-    
-    public const int Left = 3;
+    Up = 0,
+    Right = 1,
+    Down = 2,
+    Left = 3
 }
