@@ -27,7 +27,7 @@ public class LobbyService : ILobbyService
     public async Task<Lobby> CreateLobby(User user, GameSettings gameSettings, CancellationToken token)
     {
         var userId = user.Id;
-        await LeaveLobby(userId, token);
+        await LeaveLobby(user, token);
         var lobby = new Lobby
         {
             Id = Guid.NewGuid().ToString("D"),
@@ -97,7 +97,7 @@ public class LobbyService : ILobbyService
     {
         var userId = user.Id;
         var lobby = await _lobbyRepository.GetLobbyInfo(lobbyId, false, token);
-        if (lobby == null)
+        if (lobby == null || lobby.ClosedAt != null)
         {
             throw new LobbyNotFoundException();
         }
@@ -119,24 +119,94 @@ public class LobbyService : ILobbyService
             Settings = lobby.GameSettings
         });
 
+        var gameMembers = lobby.LobbyMembers.Values
+            .Where(x => x.TeamId != null)
+            .Select(x => x.UserId)
+            .ToArray();
+
         await _lobbyRepository.RemoveUsersFromLobby(lobbyId, token);
-        await _lobbyRepository.Close(lobbyId, _timeProvider.GetUtcNow(), game.GameName, token);
+        await _lobbyRepository.Close(lobbyId, _timeProvider.GetUtcNow(), game.GameName, gameMembers, token);
         _logger.LogInformation("User {UserId} created game {GameId} from lobby {LobbyId} ", userId, game.GameName, lobbyId);
         return await _lobbyRepository.GetLobbyInfo(lobbyId, true, token) ?? throw new NotSupportedException("Unexpected NRE");
     }
     
     public async Task KickPlayer(string lobbyId, User kickInitiator, long kickTarget, CancellationToken token)
     {
-        throw new NotImplementedException();
+        var userId = kickInitiator.Id;
+        var lobby = await _lobbyRepository.GetLobbyInfo(lobbyId, false, token);
+        if (lobby == null)
+        {
+            throw new LobbyNotFoundException();
+        }
+
+        if (lobby.OwnerId != userId)
+        {
+            throw new UserIsNotLobbyOwnerException();
+        }
+
+        if (!lobby.LobbyMembers.ContainsKey(kickTarget))
+        {
+            throw new UserIsNotFoundException();
+        }
+
+        await _lobbyRepository.RemoveUserFromLobbies(kickTarget, token);
+        _logger.LogInformation("User {UserId} was kicked from lobby {LobbyId} ", kickTarget, lobbyId);
     }
     
-    public async Task AssignTeam(string lobbyId, User user, long assignFor, int teamId, CancellationToken token)
+    public async Task AssignTeam(string lobbyId, User user, long assignFor, long? teamId, CancellationToken token)
     {
-        throw new NotImplementedException();
+        var userId = user.Id;
+        var lobby = await _lobbyRepository.GetLobbyInfo(lobbyId, false, token);
+        if (lobby == null)
+        {
+            throw new LobbyNotFoundException();
+        }
+
+        if (!lobby.LobbyMembers.ContainsKey(userId))
+        { 
+            throw new UserIsNotLobbyMemberException();
+        }
+        
+        if (!lobby.LobbyMembers.TryGetValue(assignFor, out var lobbyMember))
+        {
+            throw new UserIsNotFoundException();
+        }
+
+        if (lobbyMember.TeamId != null && lobby.OwnerId != userId)
+        {
+            throw new UserIsNotLobbyOwnerException();
+        }
+
+        if (teamId == null)
+        {
+            await _lobbyRepository.AssignTeam(lobbyId, assignFor, teamId, token);
+            return;
+        }
+
+        if (teamId < 0 || teamId >= lobby.NumberOfPlayers)
+        {
+            // TODO Пока нет никакой привязки teamId, оставим просто массив игроков
+            // TODO Нужно привязывать игрока к конкретной команде
+            throw new TeamIsNotFoundException();
+        }
+
+        var memberWithTeam = lobby.LobbyMembers.Values.FirstOrDefault(x => x.TeamId == teamId);
+        if (memberWithTeam != null)
+        {
+            if (lobby.OwnerId != userId)
+            {
+                throw new UserIsNotLobbyOwnerException();
+            }
+            
+            await _lobbyRepository.AssignTeam(lobbyId, memberWithTeam.UserId, lobbyMember.TeamId, token);
+        }
+
+        await _lobbyRepository.AssignTeam(lobbyId, assignFor, teamId, token);
     }
 
-    public async Task LeaveLobby(long userId, CancellationToken token)
+    public async Task LeaveLobby(User user, CancellationToken token)
     {
+        var userId = user.Id;
         var userLobby = await _lobbyRepository.GetLobbyByUser(userId, token);
         if (userLobby == null)
         {
@@ -157,12 +227,17 @@ public class LobbyService : ILobbyService
 
         if (!lobby.LobbyMembers.ContainsKey(userId))
         {
+            // Игра еще не началась, юзер не участник лобби
             if (lobby.ClosedAt == null)
             {
                 throw new UserIsNotLobbyMemberException();
             }
 
-            throw new LobbyNotFoundException();
+            // Игра началась, лобби уже пустое и юзер - не участник игры
+            if (!lobby.GameMembers.Contains(userId))
+            {
+                throw new LobbyNotFoundException();
+            }
         }
         
         if (lobby.ClosedAt != null)
@@ -185,7 +260,7 @@ public class LobbyService : ILobbyService
         if (userLobby.OwnerId == userId)
         {
             await _lobbyRepository.RemoveUsersFromLobby(userLobby.Id, token);
-            await _lobbyRepository.Close(userLobby.Id, _timeProvider.GetUtcNow(), null, token);
+            await _lobbyRepository.Close(userLobby.Id, _timeProvider.GetUtcNow(), null, null, token);
             _logger.LogInformation("User {UserId} closed his lobby {LobbyId} ", userId, userLobby.Id);
             return;
         }

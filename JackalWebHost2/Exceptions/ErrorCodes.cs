@@ -11,4 +11,6 @@ public static class ErrorCodes
     public const string UserIsNotLobbyOwner = "UserIsNotLobbyOwner";
     public const string AllLobbyMembersMustHaveTeam = "AllLobbyMembersMustHaveTeam";
     public const string UserIsAlreadyLoggedIn = "UserIsAlreadyLoggedIn";
+    public const string UserIsNotFound = "UserIsNotFound";
+    public const string TeamIsNotFound = "TeamIsNotFound";
 }

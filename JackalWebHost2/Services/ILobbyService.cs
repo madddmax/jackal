@@ -28,12 +28,12 @@ public interface ILobbyService
     /// <summary>
     /// Задать команду игроку
     /// </summary>
-    Task AssignTeam(string lobbyId, User user, long assignFor, int teamId, CancellationToken token);
+    Task AssignTeam(string lobbyId, User user, long assignFor, long? teamId, CancellationToken token);
     
     /// <summary>
     /// Покинуть лобби
     /// </summary>
-    Task LeaveLobby(long userId, CancellationToken token);
+    Task LeaveLobby(User user, CancellationToken token);
     
     /// <summary>
     /// Получить информацию о лобби

@@ -17,4 +17,6 @@ public class Lobby
     public int NumberOfPlayers { get; set; }
     
     public string? GameId { get; set; }
+
+    public long[] GameMembers { get; set; } = [];
 }

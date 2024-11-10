@@ -12,6 +12,11 @@ public class UserAuthProvider : IUserAuthProvider
         return user != null;
     }
 
+    public User GetUser()
+    {
+        return TryGetUser(out var user) ? user! : throw new NotSupportedException("User expected to be logged in");
+    }
+
     public void SetUser(User user)
     {
         _user = user;

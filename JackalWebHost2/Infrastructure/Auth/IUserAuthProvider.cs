@@ -10,6 +10,11 @@ public interface IUserAuthProvider
     bool TryGetUser(out User? user);
     
     /// <summary>
+    /// Получить залогиненного пользователя из запроса или выкинуть исключение
+    /// </summary>
+    User GetUser();
+    
+    /// <summary>
     /// Установить залогиненного пользователя для запроса
     /// </summary>
     void SetUser(User user);
