@@ -1,3 +1,5 @@
+using Jackal.Core;
+using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.MapGenerator.TilesPack;
 using JackalWebHost2.Controllers.Models.Map;
@@ -26,15 +28,34 @@ public class MapController : Controller
     [HttpGet("check-landing")]
     public List<CheckLandingResponse> CheckLanding([FromQuery] CheckLandingRequest request)
     {
-        // todo mapSize validator
-        //IMapGenerator mapGenerator = new RandomMapGenerator(request.MapId, request.MapSize, request.TilesPackName);
+        var mapGenerator = new RandomMapGenerator(request.MapId, request.MapSize, request.TilesPackName);
+        
+        var upLanding = new CheckLandingResponse(DirectionType.Up);
+        var rightLanding = new CheckLandingResponse(DirectionType.Right);
+        var downLanding = new CheckLandingResponse(DirectionType.Down);
+        var leftLanding = new CheckLandingResponse(DirectionType.Left);
+        
+        for (int i = 2; i <= request.MapSize - 3; i++)
+        {
+            var upTile = mapGenerator.GetNext(new Position(i, request.MapSize - 2));
+            upLanding.Wealth += upTile.Type.CoinsCount();
+            
+            var rightTile = mapGenerator.GetNext(new Position(request.MapSize - 2, i));
+            rightLanding.Wealth += rightTile.Type.CoinsCount();
+            
+            var downTile = mapGenerator.GetNext(new Position(i, 1));
+            downLanding.Wealth += downTile.Type.CoinsCount();
+            
+            var leftTile = mapGenerator.GetNext(new Position(1, i));
+            leftLanding.Wealth += leftTile.Type.CoinsCount();
+        }
         
         return
         [
-            new(0, 0), // нижняя высадка, далее по часовой стрелке
-            new(1, 1),
-            new(2, 2),
-            new(3, 3)
+            upLanding,
+            rightLanding,
+            downLanding,
+            leftLanding
         ];
     }
 }
