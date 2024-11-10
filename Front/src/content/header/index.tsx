@@ -27,6 +27,7 @@ function Header() {
                     players: ['human', 'robot2'],
                     mapId: userSettings.mapId,
                     mapSize: 11,
+                    tilesPackName: userSettings.tilesPackName,
                 },
             },
         });

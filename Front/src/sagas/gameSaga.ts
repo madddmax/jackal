@@ -7,6 +7,7 @@ import {
     applyChanges,
     applyStat,
     initGame,
+    setTilesPackNames,
 } from '../redux/gameSlice';
 import { GameStartResponse, GameTurnResponse } from '../redux/types';
 import { axiosInstance, errorsWrapper, sagaActions } from './constants';
@@ -91,8 +92,20 @@ export function* oneTurn(action: any) {
     return !result.data.stats.isHumanPlayer || result.data.moves?.length == 0;
 }
 
+export function* getTilesPackNames() {
+    let result: { data: string[] } = yield call(
+        async () =>
+            await axiosInstance({
+                url: 'v1/map/tiles-pack-names',
+                method: 'get',
+            }),
+    );
+    yield put(setTilesPackNames(result.data));
+}
+
 export default function* rootSaga() {
     yield takeEvery(sagaActions.GAME_RESET, errorsWrapper(gameReset));
     yield takeEvery(sagaActions.GAME_START, errorsWrapper(gameStart));
     yield takeEvery(sagaActions.GAME_TURN, errorsWrapper(gameTurn));
+    yield takeEvery(sagaActions.GET_TILES_PACK_NAMES, errorsWrapper(getTilesPackNames));
 }

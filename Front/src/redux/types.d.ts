@@ -15,6 +15,7 @@ export interface GameState {
     cellSize: number;
     pirateSize: number;
     hasPirateAutoChange: boolean;
+    tilesPackNames: string[];
 
     userSettings: StorageState;
     fields: FieldState[][];
@@ -32,6 +33,7 @@ export interface StorageState {
     playersCount?: number;
     mapSize: number;
     mapId?: number;
+    tilesPackName?: string;
 }
 
 export interface LobbyState {
@@ -113,6 +115,7 @@ export interface GameSettings {
     players?: string[];
     mapId?: number;
     mapSize: number;
+    tilesPackName?: string;
 }
 
 export interface LobbyMember {

@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import classes from './newgame.module.less';
 import { useDispatch, useSelector } from 'react-redux';
-import { initMySettings } from '/redux/gameSlice';
+import { saveMySettings } from '/redux/gameSlice';
 import { sagaActions } from '/sagas/constants';
 import { useNavigate } from 'react-router-dom';
 import { uuidGen } from '/app/global';
@@ -29,6 +29,7 @@ function Newgame() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const tilesPackNames = useSelector<ReduxState, string[]>((state) => state.game.tilesPackNames);
     const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
 
     const [players, setPlayers] = useState<PlayersInfo>({
@@ -43,18 +44,11 @@ function Newgame() {
         convertMapId(userSettings.mapId) || crypto.getRandomValues(new Int32Array(1)),
     );
     const [mapSize, setMapSize] = useState(userSettings.mapSize || 11);
+    const [tilesPackName, setTilesPackName] = useState<string | undefined>(userSettings.tilesPackName); // useState(userSettings.mapSize || 11);
 
     const newStart = () => {
         navigate('/');
-        dispatch(
-            initMySettings({
-                groups: players.groups,
-                mapSize,
-                players: players.members,
-                playersCount: players.count,
-                mapId: isStoredMap ? randNumber[0] : undefined,
-            }),
-        );
+        saveToLocalStorage(isStoredMap);
         dispatch({
             type: sagaActions.GAME_START,
             payload: {
@@ -63,22 +57,13 @@ function Newgame() {
                     players: getPlayers(players.members, players.count),
                     mapId: randNumber[0],
                     mapSize,
+                    tilesPackName,
                 },
             },
         });
     };
 
     const createLobby = () => {
-        // navigate('/');
-        // dispatch(
-        //     initMySettings({
-        //         groups: players.groups,
-        //         mapSize,
-        //         players: players.members,
-        //         playersCount: players.count,
-        //         mapId: isStoredMap ? randNumber[0] : undefined,
-        //     }),
-        // );
         dispatch({
             type: sagaActions.LOBBY_CREATE,
             payload: {
@@ -93,13 +78,18 @@ function Newgame() {
 
     const storeMapId = (event: any) => {
         setIsStoredMap(event.target.checked);
+        saveToLocalStorage(event.target.checked);
+    };
+
+    const saveToLocalStorage = (hasStoredMapCode: boolean) => {
         dispatch(
-            initMySettings({
+            saveMySettings({
                 groups: players.groups,
                 mapSize,
                 players: players.members,
                 playersCount: players.count,
-                mapId: event.target.checked ? randNumber[0] : undefined,
+                mapId: hasStoredMapCode ? randNumber[0] : undefined,
+                tilesPackName,
             }),
         );
     };
@@ -124,6 +114,22 @@ function Newgame() {
                             />
                         </div>
                     </div>
+                    {tilesPackNames && tilesPackNames.length > 0 && (
+                        <Form.Group className="mb-3" controlId="formBasicSelect">
+                            <Form.Label>Игровой набор</Form.Label>
+                            <Form.Select
+                                name="tilesPackName"
+                                value={tilesPackName}
+                                onChange={(event) => {
+                                    setTilesPackName(event.target.value);
+                                }}
+                            >
+                                {tilesPackNames.map((it) => (
+                                    <option value={it}>{it}</option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+                    )}
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Код карты</Form.Label>
                         <Form.Control
