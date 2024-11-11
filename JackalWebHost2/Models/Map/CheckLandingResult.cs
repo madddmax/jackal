@@ -1,11 +1,11 @@
 using Jackal.Core.Domain;
 
-namespace JackalWebHost2.Controllers.Models.Map;
+namespace JackalWebHost2.Models.Map;
 
 /// <summary>
 /// Результат проверки места высадки
 /// </summary>
-public class CheckLandingResponse(DirectionType direction)
+public class CheckLandingResult(DirectionType direction)
 {
     /// <summary>
     /// Направление
@@ -13,12 +13,12 @@ public class CheckLandingResponse(DirectionType direction)
     public DirectionType Direction { get; } = direction;
     
     /// <summary>
-    /// Опасность
+    /// Золото
     /// </summary>
-    public int Danger { get; set; }
-
+    public int Coins { get; set; }
+    
     /// <summary>
-    /// Богатство
+    /// Людоеды
     /// </summary>
-    public int Wealth { get; set; }
+    public int Cannibals { get; set; }
 }

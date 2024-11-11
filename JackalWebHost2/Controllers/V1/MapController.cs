@@ -3,6 +3,8 @@ using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.MapGenerator.TilesPack;
 using JackalWebHost2.Controllers.Models.Map;
+using JackalWebHost2.Models.Map;
+using JackalWebHost2.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,8 +12,10 @@ namespace JackalWebHost2.Controllers.V1;
 
 [AllowAnonymous]
 [Route("/api/v1/map")]
-public class MapController : Controller
+public class MapController(IMapService mapService) : Controller
 {
+    private readonly IMapService _mapService = mapService;
+
     /// <summary>
     /// Список названий игровых наборов,
     /// используется при создании игры
@@ -26,28 +30,28 @@ public class MapController : Controller
     /// Проверить высадку
     /// </summary>
     [HttpGet("check-landing")]
-    public List<CheckLandingResponse> CheckLanding([FromQuery] CheckLandingRequest request)
+    public List<CheckLandingResult> CheckLanding([FromQuery] CheckLandingRequest request)
     {
         var mapGenerator = new RandomMapGenerator(request.MapId, request.MapSize, request.TilesPackName);
         
-        var upLanding = new CheckLandingResponse(DirectionType.Up);
-        var rightLanding = new CheckLandingResponse(DirectionType.Right);
-        var downLanding = new CheckLandingResponse(DirectionType.Down);
-        var leftLanding = new CheckLandingResponse(DirectionType.Left);
+        var upLanding = new CheckLandingResult(DirectionType.Up);
+        var rightLanding = new CheckLandingResult(DirectionType.Right);
+        var downLanding = new CheckLandingResult(DirectionType.Down);
+        var leftLanding = new CheckLandingResult(DirectionType.Left);
         
         for (int i = 2; i <= request.MapSize - 3; i++)
         {
             var upTile = mapGenerator.GetNext(new Position(i, request.MapSize - 2));
-            upLanding.Wealth += upTile.Type.CoinsCount();
+            SetLandingResult(upLanding, upTile);
             
             var rightTile = mapGenerator.GetNext(new Position(request.MapSize - 2, i));
-            rightLanding.Wealth += rightTile.Type.CoinsCount();
+            SetLandingResult(rightLanding, rightTile);
             
             var downTile = mapGenerator.GetNext(new Position(i, 1));
-            downLanding.Wealth += downTile.Type.CoinsCount();
+            SetLandingResult(downLanding, downTile);
             
             var leftTile = mapGenerator.GetNext(new Position(1, i));
-            leftLanding.Wealth += leftTile.Type.CoinsCount();
+            SetLandingResult(leftLanding, leftTile);
         }
         
         return
@@ -57,5 +61,11 @@ public class MapController : Controller
             downLanding,
             leftLanding
         ];
+    }
+
+    private static void SetLandingResult(CheckLandingResult landing, Tile tile)
+    {
+        landing.Coins += tile.Type.CoinsCount();
+        landing.Cannibals += tile.Type == TileType.Cannibal ? 1 : 0;
     }
 }
