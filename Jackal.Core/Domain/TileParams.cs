@@ -19,10 +19,9 @@ public class TileParams : IClonable<TileParams>
     public int ArrowsCode;
         
     /// <summary>
-    /// Направление клетки (или количество поворотов):
-    /// 0 - вверх, 1 - вправо, 2 - вниз, 3 - влево
+    /// Направление клетки (или количество поворотов)
     /// </summary>
-    public int Direction;
+    public DirectionType Direction;
         
     /// <summary>
     /// Количество ходов на клетке-вертушке

@@ -1,6 +1,7 @@
-using Jackal.Core.MapGenerator;
 using Jackal.Core.MapGenerator.TilesPack;
 using JackalWebHost2.Controllers.Models.Map;
+using JackalWebHost2.Models.Map;
+using JackalWebHost2.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,7 @@ namespace JackalWebHost2.Controllers.V1;
 
 [AllowAnonymous]
 [Route("/api/v1/map")]
-public class MapController : Controller
+public class MapController(IMapService mapService) : Controller
 {
     /// <summary>
     /// Список названий игровых наборов,
@@ -26,15 +27,15 @@ public class MapController : Controller
     [HttpGet("check-landing")]
     public List<CheckLandingResponse> CheckLanding([FromQuery] CheckLandingRequest request)
     {
-        // todo mapSize validator
-        //IMapGenerator mapGenerator = new RandomMapGenerator(request.MapId, request.MapSize, request.TilesPackName);
-        
-        return
-        [
-            new(0, 0), // нижняя высадка, далее по часовой стрелке
-            new(1, 1),
-            new(2, 2),
-            new(3, 3)
-        ];
+        var landingResults = mapService.CheckLanding(request);
+
+        return landingResults.Select(ToCheckLandingResponse).ToList();
     }
+
+    private static CheckLandingResponse ToCheckLandingResponse(CheckLandingResult landing) =>
+        new()
+        {
+            Direction = landing.Direction,
+            Difficulty = landing.Difficulty
+        };
 }

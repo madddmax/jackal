@@ -7,6 +7,7 @@ using JackalWebHost2.Infrastructure.Auth;
 using JackalWebHost2.Infrastructure.Middleware;
 using JackalWebHost2.Services;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace JackalWebHost2;
 
@@ -56,6 +57,8 @@ public class Program
             })
             .AddNewtonsoftJson(jsonOpt =>
             {
+                var enumConverter = new StringEnumConverter();
+                jsonOpt.SerializerSettings.Converters.Add(enumConverter);
                 jsonOpt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 jsonOpt.SerializerSettings.DateFormatString = "dd.MM.yyyy";
             });
@@ -110,6 +113,7 @@ public class Program
 
         services.AddScoped<IGameService, GameService>();
         services.AddScoped<IDrawService, DrawService>();
+        services.AddScoped<IMapService, MapService>();
         services.AddScoped<ILobbyService, LobbyService>();
         services.AddScoped<IFastUserService, FastUserService>();
 

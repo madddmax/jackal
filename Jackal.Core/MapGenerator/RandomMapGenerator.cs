@@ -124,12 +124,12 @@ public class RandomMapGenerator : IMapGenerator
                 tempDef.Type != TileType.Hole)
             {
                 // клетки не указанные в условии - вращаем при отображении на карте
-                tempDef.Direction = _rand.Next(4);
+                tempDef.Direction = (DirectionType)_rand.Next(4);
             }
                 
             if (tempDef.Type is TileType.Arrow)
             {
-                for (var j = 1; j <= tempDef.Direction; j++)
+                for (var j = 1; j <= (int)tempDef.Direction; j++)
                 {
                     tempDef.ArrowsCode = ArrowsCodesHelper.DoRotate(tempDef.ArrowsCode);
                 }

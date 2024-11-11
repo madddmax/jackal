@@ -277,16 +277,12 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         return GameActionResult.Live;
     }
         
-    private static TilePosition GetCannonFly(int direction, Position pos, int mapSize) =>
+    private static TilePosition GetCannonFly(DirectionType direction, Position pos, int mapSize) =>
         direction switch
         {
-            // вверх
-            0 => new TilePosition(pos.X, mapSize - 1),
-            // вправо
-            1 => new TilePosition(mapSize - 1, pos.Y),
-            // вниз
-            2 => new TilePosition(pos.X, 0),
-            // влево
+            DirectionType.Up => new TilePosition(pos.X, mapSize - 1),
+            DirectionType.Right => new TilePosition(mapSize - 1, pos.Y),
+            DirectionType.Down => new TilePosition(pos.X, 0),
             _ => new TilePosition(0, pos.Y)
         };
 }

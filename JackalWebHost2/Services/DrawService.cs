@@ -334,7 +334,7 @@ public class DrawService : IDrawService
         }
 
         tileChange.BackgroundImageSrc = $"/fields/{filename}.png";
-        tileChange.Rotate = tile.Direction;
+        tileChange.Rotate = (int)tile.Direction;
     }
 
     private static string GetTeamColor(int teamId) =>

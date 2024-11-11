@@ -1,17 +1,20 @@
+using Jackal.Core.Domain;
+using JackalWebHost2.Models.Map;
+
 namespace JackalWebHost2.Controllers.Models.Map;
 
 /// <summary>
 /// Результат проверки места высадки
 /// </summary>
-public class CheckLandingResponse(short danger, short wealth)
+public class CheckLandingResponse
 {
     /// <summary>
-    /// Опасность
+    /// Направление
     /// </summary>
-    public short Danger { get; set; } = danger;
-
+    public DirectionType Direction { get; set; }
+    
     /// <summary>
-    /// Богатство
+    /// Сложность
     /// </summary>
-    public short Wealth { get; set; } = wealth;
+    public DifficultyLevel Difficulty { get; set; }
 }
