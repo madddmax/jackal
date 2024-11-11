@@ -4,6 +4,7 @@ import { Constants } from '/app/constants';
 
 describe('redux logic tests', () => {
     const previousState: GameState = {
+        tilesPackNames: [],
         hasPirateAutoChange: false,
         cellSize: 50,
         pirateSize: 15,
