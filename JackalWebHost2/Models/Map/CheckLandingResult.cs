@@ -13,6 +13,11 @@ public class CheckLandingResult(DirectionType direction)
     public DirectionType Direction { get; } = direction;
     
     /// <summary>
+    /// Сложность
+    /// </summary>
+    public DifficultyLevel Difficulty { get; set; }
+    
+    /// <summary>
     /// Золото
     /// </summary>
     public int Coins { get; set; }

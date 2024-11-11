@@ -113,6 +113,7 @@ public class Program
 
         services.AddScoped<IGameService, GameService>();
         services.AddScoped<IDrawService, DrawService>();
+        services.AddScoped<IMapService, MapService>();
         services.AddScoped<ILobbyService, LobbyService>();
         services.AddScoped<IFastUserService, FastUserService>();
 
