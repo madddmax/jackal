@@ -27,6 +27,7 @@ export const gameSlice = createSlice({
         pirateSize: 15,
         fields: [[]],
         lastMoves: [],
+        tilesPackNames: [],
         userSettings: {
             groups: [
                 Constants.groupIds.girls,
@@ -46,6 +47,9 @@ export const gameSlice = createSlice({
     } satisfies GameState as GameState,
     reducers: {
         initMySettings: (state, action: PayloadAction<StorageState>) => {
+            Object.assign(state.userSettings, action.payload);
+        },
+        saveMySettings: (state, action: PayloadAction<StorageState>) => {
             localStorage.state = JSON.stringify(action.payload, null, 2);
             Object.assign(state.userSettings, action.payload);
         },
@@ -390,6 +394,9 @@ export const gameSlice = createSlice({
         applyStat: (state, action: PayloadAction<GameStat>) => {
             state.stat = action.payload;
         },
+        setTilesPackNames: (state, action: PayloadAction<string[]>) => {
+            state.tilesPackNames = action.payload;
+        },
     },
     selectors: {
         getTeamById: (state, teamId: number): TeamState | undefined => state.teams.find((it) => it.id == teamId),
@@ -418,6 +425,7 @@ export const gameSlice = createSlice({
 
 export const {
     initMySettings,
+    saveMySettings,
     initMap,
     setCurrentHumanTeam,
     setPirateAutoChange,
@@ -427,6 +435,7 @@ export const {
     applyChanges,
     initGame,
     applyStat,
+    setTilesPackNames,
 } = gameSlice.actions;
 
 export const { getCurrentTeam } = gameSlice.selectors;

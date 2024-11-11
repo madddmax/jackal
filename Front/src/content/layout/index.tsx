@@ -23,6 +23,7 @@ const Layout = () => {
             }
         }
 
+        dispatch({ type: sagaActions.GET_TILES_PACK_NAMES, payload: {} });
         dispatch({ type: sagaActions.AUTH_CHECK, payload: {} });
     }, []);
 
