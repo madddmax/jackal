@@ -46,7 +46,7 @@ export const Constants = {
         },
         {
             id: groupIds.anime,
-            photoMaxId: 3,
+            photoMaxId: 5,
             extension: '.jpg',
         },
     ],
