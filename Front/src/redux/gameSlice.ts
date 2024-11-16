@@ -252,40 +252,30 @@ export const gameSlice = createSlice({
                     }
                     state.pirates = state.pirates?.filter((pr) => pr.id !== it.id);
                 } else if (it.isAlive === true) {
-                    let nm;
                     let pname;
-                    if (it.type == Constants.pirateTypes.Gann && team.group.gannMaxId) {
-                        pname = `${team.group.id}/gann`;
-                        nm = getAnotherRandomValue(
-                            1,
-                            team.group.gannMaxId,
-                            state.pirates
-                                ?.filter((pr) => pr.teamId == it.teamId && pr.type == Constants.pirateTypes.Gann)
-                                .map((pr) => pr.photoId ?? 0) ?? [],
-                        );
-                    } else if (it.type == Constants.pirateTypes.Gann && !team.group.gannMaxId) {
+                    let pnumber;
+                    let extension = '.png';
+
+                    if (it.type == Constants.pirateTypes.BenGunn) {
                         pname = 'commonganns/gann';
-                        nm = getAnotherRandomValue(
+                        pnumber = getAnotherRandomValue(
                             1,
                             Constants.commonGannMaxId,
                             state.pirates
-                                ?.filter(
-                                    (pr) =>
-                                        pr.type == Constants.pirateTypes.Gann &&
-                                        !Constants.groups.find((gr) => gr.id == pr.id)?.gannMaxId,
-                                )
+                                ?.filter((pr) => pr.type == Constants.pirateTypes.BenGunn)
                                 .map((pr) => pr.photoId ?? 0) ?? [],
                         );
                     } else if (it.type == Constants.pirateTypes.Friday) {
                         pname = 'commonfridays/friday';
-                        nm = getAnotherRandomValue(1, Constants.commonFridayMaxId, []);
+                        pnumber = getAnotherRandomValue(1, Constants.commonFridayMaxId, []);
                     } else {
                         pname = `${team.group.id}/pirate`;
-                        nm = getAnotherRandomValue(
+                        pnumber = getAnotherRandomValue(
                             1,
                             team.group.photoMaxId,
                             state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ?? [],
                         );
+                        extension = team.group.extension || '.png';
                     }
 
                     state.pirates?.push({
@@ -293,16 +283,16 @@ export const gameSlice = createSlice({
                         teamId: it.teamId,
                         position: it.position,
                         groupId: team.group.id,
-                        photo: `${pname}_${nm}${team.group.extension || '.png'}`,
-                        photoId: nm,
+                        photo: `${pname}_${pnumber}${extension}`,
+                        photoId: pnumber,
                         type: it.type,
                     });
                     const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
                     const drawPirate: CellPirate = {
                         id: it.id,
                         teamId: it.teamId,
-                        photo: `${pname}_${nm}${team.group.extension || '.png'}`,
-                        photoId: nm + 100 * it.type,
+                        photo: `${pname}_${pnumber}${extension}`,
+                        photoId: pnumber,
                         backgroundColor: team.backColor,
                         isActive: it.id === team.activePirate,
                     };

@@ -51,7 +51,6 @@ export interface TeamState {
 export interface TeamGroup {
     id: string;
     photoMaxId: number;
-    gannMaxId?: number;
     extension?: string;
 }
 
@@ -237,12 +236,12 @@ export interface GamePirate {
     groupId: string;
     photo: string;
     photoId: number;
-    type: number;
+    type: string;
 }
 
 export interface PirateDiff {
     id: string;
-    type: number;
+    type: string;
     teamId: number;
     position: {
         level: number;

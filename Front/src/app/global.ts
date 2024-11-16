@@ -21,7 +21,7 @@ export const getRandomValues = (min: number, max: number, count: number): number
 };
 
 export const getAnotherRandomValue = (min: number, max: number, except: number[]): number => {
-    if (max - min + 1 < except.length) return 0;
+    if (max - min + 1 <= except.length) return min;
 
     let num = except.length > 0 ? except[0] : min;
     while (except.includes(num)) {

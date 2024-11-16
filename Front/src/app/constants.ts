@@ -10,9 +10,9 @@ const groupIds = {
 
 export const Constants = {
     pirateTypes: {
-        Base: 0,
-        Gann: 1,
-        Friday: 2,
+        Usual: 'Usual',
+        BenGunn: 'BenGunn',
+        Friday: 'Friday',
     },
     commonGannMaxId: 4,
     commonFridayMaxId: 1,
@@ -21,7 +21,6 @@ export const Constants = {
         {
             id: groupIds.girls,
             photoMaxId: 6,
-            gannMaxId: 4,
         },
         {
             id: groupIds.caribian,
@@ -34,13 +33,11 @@ export const Constants = {
         {
             id: groupIds.redalert,
             photoMaxId: 5,
-            gannMaxId: 4,
             extension: '.jpg',
         },
         {
             id: groupIds.orcs,
             photoMaxId: 6,
-            gannMaxId: 2,
             extension: '.jpg',
         },
         {
@@ -50,7 +47,6 @@ export const Constants = {
         {
             id: groupIds.anime,
             photoMaxId: 3,
-            gannMaxId: 2,
             extension: '.jpg',
         },
     ],

@@ -66,7 +66,7 @@ describe('redux logic tests', () => {
                 groupId: Constants.groupIds.girls,
                 photo: 'pirate_10',
                 photoId: 10,
-                type: Constants.pirateTypes.Base,
+                type: Constants.pirateTypes.Usual,
             },
             {
                 id: '200',
@@ -79,7 +79,7 @@ describe('redux logic tests', () => {
                 groupId: Constants.groupIds.somali,
                 photo: 'pirate_20',
                 photoId: 20,
-                type: Constants.pirateTypes.Base,
+                type: Constants.pirateTypes.Usual,
             },
         ],
         userSettings: {
