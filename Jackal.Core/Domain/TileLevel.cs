@@ -1,39 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Jackal.Core.Domain;
 
-public class TileLevel
+public record TileLevel(TilePosition Position)
 {
     [JsonProperty]
     public int Coins;
 
     [JsonProperty]
-    public readonly TilePosition Position;
+    public readonly TilePosition Position = Position;
 
     [JsonProperty]
-    public readonly HashSet<Pirate> Pirates = new HashSet<Pirate>();
+    public readonly HashSet<Pirate> Pirates = [];
 
     [JsonIgnore]
-    public int? OccupationTeamId
+    public int? OccupationTeamId => Pirates.Count > 0 ? Pirates.First().TeamId : null;
+
+    public bool HasNoEnemy(int ownTeamId) => OccupationTeamId.HasValue == false || OccupationTeamId == ownTeamId;
+    
+    public virtual bool Equals(TileLevel? other)
     {
-        get
-        {
-            if (Pirates != null)
-            {
-                foreach (Pirate pirate in Pirates)
-                {
-                    return pirate.TeamId;
-                }
-            }
-            return null;
-        }
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Coins == other.Coins && 
+               Position.Equals(other.Position) && 
+               Pirates.SequenceEqual(other.Pirates);
     }
 
-    public TileLevel(TilePosition position)
+    public override int GetHashCode()
     {
-        Position = position;
+        return HashCode.Combine(Position, Pirates);
     }
-    
-    public bool HasNoEnemy(int ownTeamId) => OccupationTeamId.HasValue == false || OccupationTeamId == ownTeamId;
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Jackal.Core.Domain;
@@ -93,4 +95,22 @@ public record Tile
 	}
 
 	public bool HasNoEnemy(int ownTeamId) => OccupationTeamId.HasValue == false || OccupationTeamId == ownTeamId;
+	
+	public virtual bool Equals(Tile? other)
+	{
+		if (ReferenceEquals(null, other)) return false;
+		if (ReferenceEquals(this, other)) return true;
+		return Position.Equals(other.Position) && 
+		       Type == other.Type && 
+		       ArrowsCode == other.ArrowsCode && 
+		       Direction == other.Direction && 
+		       SpinningCount == other.SpinningCount && 
+		       Levels.SequenceEqual(other.Levels) && 
+		       Used == other.Used;
+	}
+
+	public override int GetHashCode()
+	{
+		return HashCode.Combine(Position, (int)Type, ArrowsCode, (int)Direction, SpinningCount, Levels);
+	}
 }

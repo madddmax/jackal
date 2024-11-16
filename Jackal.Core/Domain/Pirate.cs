@@ -3,19 +3,19 @@ using Newtonsoft.Json;
 
 namespace Jackal.Core.Domain;
 
-public class Pirate(int teamId, TilePosition position, PirateType type)
+public record Pirate(int TeamId, TilePosition Position, PirateType Type)
 {
     [JsonProperty]
     public readonly Guid Id = Guid.NewGuid();
 
     [JsonProperty]
-    public PirateType Type = type;
+    public PirateType Type = Type;
 
     [JsonProperty]
-    public readonly int TeamId = teamId;
+    public readonly int TeamId = TeamId;
 
     [JsonProperty]
-    public TilePosition Position = position;
+    public TilePosition Position = Position;
 
     /// <summary>
     /// Напился на бочке с ромом
@@ -27,7 +27,7 @@ public class Pirate(int teamId, TilePosition position, PirateType type)
     /// Номер хода с которого пират поддался пьянству,
     /// наша команда категорически не одобряет пьянство
     /// </summary>
-    internal int? DrunkSinceTurnNo;
+    public int? DrunkSinceTurnNo;
 
     /// <summary>
     /// Попал в ловушку
@@ -40,15 +40,12 @@ public class Pirate(int teamId, TilePosition position, PirateType type)
     /// </summary>
     [JsonProperty]
     public bool IsInHole;
-        
-    // TODO-MAD Оптимизация DrawService - заполнять при изменении позиции и сбрасывать каждый ход
-    public bool Changed;
 
     /// <summary>
     /// Пират доступен для хода
     /// </summary>
     public bool IsActive => IsDrunk == false && IsInTrap == false && IsInHole == false;
-    
+
     /// <summary>
     /// Сбросить все эффекты недоступности
     /// </summary>
@@ -58,5 +55,21 @@ public class Pirate(int teamId, TilePosition position, PirateType type)
         IsInHole = false;
         IsDrunk = false;
         DrunkSinceTurnNo = null;
+    }
+    
+    public virtual bool Equals(Pirate? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Id.Equals(other.Id) && 
+               Position.Equals(other.Position) && 
+               IsDrunk == other.IsDrunk && 
+               IsInTrap == other.IsInTrap && 
+               IsInHole == other.IsInHole;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id);
     }
 }
