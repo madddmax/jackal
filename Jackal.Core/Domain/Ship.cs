@@ -2,7 +2,7 @@
 
 namespace Jackal.Core.Domain;
 
-public class Ship
+public record Ship
 {
     [JsonProperty]
     public int TeamId;

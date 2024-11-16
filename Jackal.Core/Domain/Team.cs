@@ -1,6 +1,6 @@
 ﻿namespace Jackal.Core.Domain;
 
-public class Team
+public record Team
 {
     public int Id;
     public string Name;
