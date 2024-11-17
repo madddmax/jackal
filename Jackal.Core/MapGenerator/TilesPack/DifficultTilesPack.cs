@@ -12,7 +12,7 @@ public class DifficultTilesPack : ITilesPack
     /// </summary>
     public TileParams[] AllTiles { get; } =
     [
-        // 108 значимых клеток
+        // 120 значимых клеток
         new TileParams(TileType.Chest1), // 1 монета - первый сундук берем всегда
         new TileParams(TileType.Chest1), // 2
         new TileParams(TileType.Chest1), // 3
@@ -28,6 +28,9 @@ public class DifficultTilesPack : ITilesPack
         new TileParams(TileType.Chest3), // 19
         new TileParams(TileType.Chest3), // 21
         new TileParams(TileType.Cannibal), // берем сундук вместе с людоедом
+        new TileParams(TileType.Cannibal),
+        new TileParams(TileType.Cannibal),
+        new TileParams(TileType.Cannibal),
         new TileParams(TileType.Cannibal),
         new TileParams(TileType.RumBarrel),
         new TileParams(TileType.RumBarrel),
@@ -99,6 +102,14 @@ public class DifficultTilesPack : ITilesPack
         new TileParams(TileType.Arrow, ArrowsCodesHelper.FourArrowsDiagonal),
         new TileParams(TileType.BenGunn),
         new TileParams(TileType.BenGunn),
+        new TileParams(TileType.BenGunn),
+        new TileParams(TileType.BenGunn),
+        new TileParams(TileType.BenGunn),
+        new TileParams(TileType.BenGunn),
+        new TileParams(TileType.BenGunn),
+        new TileParams(TileType.BenGunn),
+        new TileParams(TileType.BenGunn),
+        new TileParams(TileType.BenGunn),
         new TileParams(TileType.Hole) { Direction = DirectionType.Left },
         new TileParams(TileType.Hole) { Direction = DirectionType.Left },
         new TileParams(TileType.Hole) { Direction = DirectionType.Left },
@@ -121,18 +132,6 @@ public class DifficultTilesPack : ITilesPack
         new TileParams(TileType.Quake),
         new TileParams(TileType.Quake),
         new TileParams(TileType.Quake),
-        // 12 пустых клеток
-        new TileParams(TileType.Grass, 0),
-        new TileParams(TileType.Grass, 0),
-        new TileParams(TileType.Grass, 0),
-        new TileParams(TileType.Grass, 1),
-        new TileParams(TileType.Grass, 1),
-        new TileParams(TileType.Grass, 1),
-        new TileParams(TileType.Grass, 2),
-        new TileParams(TileType.Grass, 2),
-        new TileParams(TileType.Grass, 2),
-        new TileParams(TileType.Grass, 3),
-        new TileParams(TileType.Grass, 3),
-        new TileParams(TileType.Grass, 3)
+        new TileParams(TileType.Quake)
     ];
 }
