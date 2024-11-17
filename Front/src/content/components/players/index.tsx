@@ -11,9 +11,10 @@ const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.grou
 interface PlayersProps {
     players: PlayersInfo;
     setPlayers: (data: PlayersInfo) => void;
+    mapInfo?: string[];
 }
 
-const Players = ({ players, setPlayers }: PlayersProps) => {
+const Players = ({ players, setPlayers, mapInfo }: PlayersProps) => {
     const [grps, setGrps] = useState<number[]>(convertGroups(players.groups));
 
     const changePlayer = (pos: number) => {
@@ -69,6 +70,7 @@ const Players = ({ players, setPlayers }: PlayersProps) => {
                             position={index}
                             type={players.members[index]}
                             group={grps[index]}
+                            posInfo={mapInfo && mapInfo[index]}
                             changePlayer={() => changePlayer(index)}
                             changeGroup={() => changeGroup(index)}
                         />

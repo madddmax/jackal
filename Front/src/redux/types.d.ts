@@ -12,6 +12,7 @@ export interface GameState {
     gameName?: string;
     tilesPackName?: string;
     mapId?: number;
+    mapInfo?: string[];
     mapSize?: number;
     cellSize: number;
     pirateSize: number;
@@ -76,7 +77,7 @@ export interface AvailableMove {
 
 export interface GameStartResponse {
     gameName: string;
-    tilesPackName: string,
+    tilesPackName: string;
     mapId: number;
     map: GameMap;
     pirates: GamePirate[];
@@ -118,6 +119,17 @@ export interface LobbyInfo {
     lobbyMembers: Record<number, LobbyMember>;
     gameSettings: GameSettings;
     gameId?: string;
+}
+
+export interface CheckMapRequest {
+    mapId?: number;
+    mapSize: number;
+    tilesPackName?: string;
+}
+
+export interface CheckMapInfo {
+    direction: string;
+    difficulty: string;
 }
 
 export interface GameSettings {
