@@ -102,6 +102,14 @@ export interface LobbyJoinResponse {
     lobby: LobbyInfo;
 }
 
+export interface LobbyGetRequest {
+    lobbyId: string;
+}
+
+export interface LobbyGetResponse {
+    lobby: LobbyInfo;
+}
+
 export interface LobbyInfo {
     id: string;
     ownerId: long;
