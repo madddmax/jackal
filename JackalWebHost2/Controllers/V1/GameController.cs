@@ -1,4 +1,5 @@
-﻿using JackalWebHost2.Controllers.Models;
+﻿using Jackal.Core.MapGenerator.TilesPack;
+using JackalWebHost2.Controllers.Models;
 using JackalWebHost2.Models;
 using JackalWebHost2.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -29,9 +30,11 @@ public class GameController : Controller
             Settings = request.Settings
         });
 
+        var packName = TilesPackFactory.CheckName(request.Settings.TilesPackName);
         return new StartGameResponse
         {
             GameName = result.GameName,
+            TilesPackName = packName,
             Pirates = result.Pirates,
             Map = result.Map,
             MapId = result.MapId,

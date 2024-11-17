@@ -10,6 +10,7 @@ export interface ReduxState {
 export interface GameState {
     stat?: GameStat;
     gameName?: string;
+    tilesPackName?: string;
     mapId?: number;
     mapSize?: number;
     cellSize: number;
@@ -75,6 +76,7 @@ export interface AvailableMove {
 
 export interface GameStartResponse {
     gameName: string;
+    tilesPackName: string,
     mapId: number;
     map: GameMap;
     pirates: GamePirate[];

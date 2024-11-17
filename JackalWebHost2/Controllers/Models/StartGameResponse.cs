@@ -6,6 +6,8 @@ public class StartGameResponse
 {
     public string GameName { get; set; }
     
+    public string TilesPackName { get; set; }
+    
     public List<PirateChange> Pirates { get; set; }
     
     public DrawMap Map { get; set; }
