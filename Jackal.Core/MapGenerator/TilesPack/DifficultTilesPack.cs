@@ -5,7 +5,7 @@ namespace Jackal.Core.MapGenerator.TilesPack;
 /// <summary>
 /// Безумный игровой набор от madddmax-а
 /// </summary>
-public class MadddmaxTilesPack : ITilesPack
+public class DifficultTilesPack : ITilesPack
 {
     /// <summary>
     /// 120 клеток
