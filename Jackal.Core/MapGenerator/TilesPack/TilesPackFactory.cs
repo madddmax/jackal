@@ -10,6 +10,16 @@ public static class TilesPackFactory
     private const string AllGold = "all-gold";
     private const string LotsOfBen = "lots-of-ben";
     
+    public static string CheckName(string? name) =>
+        name switch
+        {
+            Classic => Classic,
+            Madddmax => Madddmax,
+            AllGold => AllGold,
+            LotsOfBen => LotsOfBen,
+            _ => Extended
+        };
+    
     public static ITilesPack Create(string? name) =>
         name switch
         {

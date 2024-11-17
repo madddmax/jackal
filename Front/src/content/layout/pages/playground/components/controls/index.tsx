@@ -33,6 +33,9 @@ function Controls() {
                     Код карты: <span>{game?.mapId}</span>
                 </div>
                 <div>
+                    Игровой набор: <span>{game?.tilesPackName}</span>
+                </div>
+                <div>
                     Размер карты: <span>{game?.mapSize}</span>
                 </div>
                 <div>

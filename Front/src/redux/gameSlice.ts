@@ -80,6 +80,7 @@ export const gameSlice = createSlice({
         },
         initGame: (state, action: PayloadAction<GameStartResponse>) => {
             state.gameName = action.payload.gameName;
+            state.tilesPackName = action.payload.tilesPackName;
             state.mapId = action.payload.mapId;
             state.mapSize = action.payload.map.width;
             state.teams = action.payload.stats.teams.map((it, idx, arr) => {
