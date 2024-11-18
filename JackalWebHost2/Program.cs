@@ -92,6 +92,7 @@ public class Program
                 options.ExpireTimeSpan = TimeSpan.FromHours(24);
                 options.Cookie.Name = "FastAuthCookie";
                 options.Cookie.IsEssential = false;
+                options.Cookie.SameSite = SameSiteMode.Strict;
                 options.SlidingExpiration = true;
                 options.Events.OnRedirectToLogin = _ => Task.CompletedTask;
                 options.Events.OnRedirectToLogout = _ => Task.CompletedTask;

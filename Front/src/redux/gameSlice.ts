@@ -388,6 +388,9 @@ export const gameSlice = createSlice({
         setTilesPackNames: (state, action: PayloadAction<string[]>) => {
             state.tilesPackNames = action.payload;
         },
+        setMapInfo: (state, action: PayloadAction<string[] | undefined>) => {
+            state.mapInfo = action.payload;
+        },
     },
     selectors: {
         getTeamById: (state, teamId: number): TeamState | undefined => state.teams.find((it) => it.id == teamId),
@@ -427,6 +430,7 @@ export const {
     initGame,
     applyStat,
     setTilesPackNames,
+    setMapInfo,
 } = gameSlice.actions;
 
 export const { getCurrentTeam } = gameSlice.selectors;

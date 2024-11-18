@@ -2,19 +2,19 @@ import { Button, Container, Form, Row } from 'react-bootstrap';
 import classes from './lobbyCard.module.less';
 import { useDispatch, useSelector } from 'react-redux';
 import { LobbyInfo, ReduxState, StorageState } from '/redux/types';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { sagaActions } from '/sagas/constants';
 import Players from '/content/components/players';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PlayersInfo } from '/content/components/types';
+import { UserInfo } from '/redux/authSlice.types';
 
 const LobbyCard = () => {
-    let { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const lobby = useSelector<ReduxState, LobbyInfo | undefined>((state) => state.lobby.lobby);
-
+    const authInfo = useSelector<ReduxState, UserInfo | undefined>((state) => state.auth.user);
     const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
 
     const [players, setPlayers] = useState<PlayersInfo>({
@@ -23,11 +23,23 @@ const LobbyCard = () => {
         groups: userSettings.groups,
     });
 
+    useEffect(() => {
+        dispatch({ type: sagaActions.LOBBY_DO_POLLING });
+
+        return () => {
+            dispatch({ type: sagaActions.LOBBY_STOP_POLLING });
+        };
+    }, []);
+
+    const isInLobby = authInfo && !!lobby?.lobbyMembers[authInfo?.id];
+
     const joinLobby = () => {
+        if (!lobby) return;
+
         dispatch({
             type: sagaActions.LOBBY_JOIN,
             payload: {
-                lobbyId: id,
+                lobbyId: lobby.id,
             },
         });
     };
@@ -65,9 +77,11 @@ const LobbyCard = () => {
                             <Players players={players} setPlayers={setPlayers} />
                         </>
                     )}
-                    <Button variant="primary" type="submit" onClick={joinLobby}>
-                        Присоединиться
-                    </Button>
+                    {!isInLobby && (
+                        <Button variant="primary" type="submit" onClick={joinLobby}>
+                            Присоединиться
+                        </Button>
+                    )}
                     <Button className="float-end" variant="outline-primary" type="submit" onClick={exitLobby}>
                         Вернуться
                     </Button>

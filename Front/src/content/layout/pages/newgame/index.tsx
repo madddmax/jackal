@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { Button, Form, InputGroup } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import classes from './newgame.module.less';
 import { useDispatch, useSelector } from 'react-redux';
-import { saveMySettings } from '/redux/gameSlice';
+import { saveMySettings, setMapInfo } from '/redux/gameSlice';
 import { sagaActions } from '/sagas/constants';
 import { useNavigate } from 'react-router-dom';
 import { uuidGen } from '/app/global';
@@ -31,6 +31,7 @@ function Newgame() {
 
     const tilesPackNames = useSelector<ReduxState, string[]>((state) => state.game.tilesPackNames);
     const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
+    const mapInfo = useSelector<ReduxState, string[] | undefined>((state) => state.game.mapInfo);
 
     const [players, setPlayers] = useState<PlayersInfo>({
         count: userSettings.playersCount || 4,
@@ -46,6 +47,21 @@ function Newgame() {
     const [mapSize, setMapSize] = useState(userSettings.mapSize || 11);
     const [tilesPackName, setTilesPackName] = useState<string | undefined>(userSettings.tilesPackName); // useState(userSettings.mapSize || 11);
 
+    useEffect(() => {
+        dispatch({
+            type: sagaActions.CHECK_MAP,
+            payload: {
+                mapId: randNumber[0],
+                mapSize,
+                tilesPackName,
+            },
+        });
+
+        return () => {
+            dispatch(setMapInfo());
+        };
+    }, []);
+
     const newStart = () => {
         navigate('/');
         saveToLocalStorage(isStoredMap);
@@ -59,6 +75,19 @@ function Newgame() {
                     mapSize,
                     tilesPackName,
                 },
+            },
+        });
+    };
+
+    const changeMapId = () => {
+        let newId = crypto.getRandomValues(new Int32Array(1));
+        setRandNumber(newId);
+        dispatch({
+            type: sagaActions.CHECK_MAP,
+            payload: {
+                mapId: newId[0],
+                mapSize,
+                tilesPackName,
             },
         });
     };
@@ -99,7 +128,7 @@ function Newgame() {
             <Row className="justify-content-center">
                 <Form className={classes.newgame} onSubmit={(event) => event.preventDefault()}>
                     {/* <h3>Новая игра</h3> */}
-                    <Players players={players} setPlayers={setPlayers} />
+                    <Players players={players} setPlayers={setPlayers} mapInfo={mapInfo} />
                     <div className="mt-3">
                         <div>
                             <Form.Label>Размер карты: {mapSize}</Form.Label>
@@ -132,15 +161,20 @@ function Newgame() {
                     )}
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Код карты</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="mapcode"
-                            placeholder="Введите код"
-                            value={randNumber[0]}
-                            onChange={(event) => {
-                                setRandNumber(convertMapId(event.target.value)!);
-                            }}
-                        />
+                        <InputGroup>
+                            <Form.Control
+                                type="text"
+                                name="mapcode"
+                                placeholder="Введите код"
+                                value={randNumber[0]}
+                                onChange={(event) => {
+                                    setRandNumber(convertMapId(event.target.value)!);
+                                }}
+                            />
+                            <Button variant="outline-secondary" onClick={changeMapId}>
+                                Поменять
+                            </Button>
+                        </InputGroup>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                         <Form.Check

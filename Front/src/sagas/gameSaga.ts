@@ -8,8 +8,9 @@ import {
     applyStat,
     initGame,
     setTilesPackNames,
+    setMapInfo,
 } from '../redux/gameSlice';
-import { GameStartResponse, GameTurnResponse } from '../redux/types';
+import { CheckMapInfo, GameStartResponse, GameTurnResponse } from '../redux/types';
 import { axiosInstance, errorsWrapper, sagaActions } from './constants';
 
 export function* gameReset() {
@@ -103,9 +104,22 @@ export function* getTilesPackNames() {
     yield put(setTilesPackNames(result.data));
 }
 
+export function* checkMap(action: any) {
+    let result: { data: CheckMapInfo[] } = yield call(
+        async () =>
+            await axiosInstance({
+                url: 'v1/map/check-landing',
+                method: 'get',
+                params: action.payload,
+            }),
+    );
+    yield put(setMapInfo(result.data.map((it) => it.difficulty)));
+}
+
 export default function* rootSaga() {
     yield takeEvery(sagaActions.GAME_RESET, errorsWrapper(gameReset));
     yield takeEvery(sagaActions.GAME_START, errorsWrapper(gameStart));
     yield takeEvery(sagaActions.GAME_TURN, errorsWrapper(gameTurn));
     yield takeEvery(sagaActions.GET_TILES_PACK_NAMES, errorsWrapper(getTilesPackNames));
+    yield takeEvery(sagaActions.CHECK_MAP, errorsWrapper(checkMap));
 }

@@ -6,11 +6,12 @@ interface PlayerProps {
     position: number;
     type: string;
     group: number;
+    posInfo?: string;
     changePlayer: () => void;
     changeGroup: () => void;
 }
 
-const Player = ({ position, type, group, changePlayer, changeGroup }: PlayerProps) => {
+const Player = ({ position, type, group, posInfo, changePlayer, changeGroup }: PlayerProps) => {
     const getUrlByPlayer = (type: string) => {
         if (type === 'human') return '/pictures/human.png';
         else if (type === 'robot') return '/pictures/robot.png';
@@ -45,6 +46,7 @@ const Player = ({ position, type, group, changePlayer, changeGroup }: PlayerProp
                 alt={Constants.groups[group].id}
                 onClick={changeGroup}
             />
+            {posInfo && <div>{posInfo}</div>}
         </div>
     );
 };
