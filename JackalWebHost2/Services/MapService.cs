@@ -32,9 +32,10 @@ public class MapService : IMapService
             SetLandingResult(leftLanding, leftTile);
         }
 
+        // порядок возврата на фронт - имеет значение
         var landingResults = new List<CheckLandingResult>
         {
-            upLanding, rightLanding, downLanding, leftLanding
+            downLanding, leftLanding, upLanding, rightLanding
         };
 
         foreach (var landing in landingResults)
