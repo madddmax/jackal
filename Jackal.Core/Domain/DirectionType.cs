@@ -1,7 +1,7 @@
 namespace Jackal.Core.Domain;
 
 /// <summary>
-/// Направление
+/// Направление игровой клетки
 /// </summary>
 public enum DirectionType
 {

@@ -35,7 +35,7 @@ public class MapController(IMapService mapService) : Controller
     private static CheckLandingResponse ToCheckLandingResponse(CheckLandingResult landing) =>
         new()
         {
-            Direction = landing.Direction,
+            Position = landing.Position,
             Difficulty = landing.Difficulty
         };
 }

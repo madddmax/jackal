@@ -9,9 +9,9 @@ namespace JackalWebHost2.Controllers.Models.Map;
 public class CheckLandingResponse
 {
     /// <summary>
-    /// Направление
+    /// Позиция
     /// </summary>
-    public DirectionType Direction { get; set; }
+    public MapPositionId Position { get; set; }
     
     /// <summary>
     /// Сложность
