@@ -1,5 +1,7 @@
 import { AuthState } from './authSlice.types';
 import { CommonState } from './commonSlice.types';
+import { GameSettings } from './gameSlice.types';
+
 export interface ReduxState {
     auth: AuthState;
     common: CommonState;
@@ -130,13 +132,6 @@ export interface CheckMapRequest {
 export interface CheckMapInfo {
     direction: string;
     difficulty: string;
-}
-
-export interface GameSettings {
-    players?: string[];
-    mapId?: number;
-    mapSize: number;
-    tilesPackName?: string;
 }
 
 export interface LobbyMember {

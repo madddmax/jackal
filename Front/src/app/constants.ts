@@ -16,6 +16,7 @@ export const Constants = {
         BenGunn: 'BenGunn',
         Friday: 'Friday',
     },
+    positions: ['Down', 'Left', 'Up', 'Right'],
     commonGannMaxId: 4,
     commonFridayMaxId: 1,
     groupIds,
