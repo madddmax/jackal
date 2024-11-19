@@ -11,11 +11,17 @@ import { uuidGen } from '/app/global';
 import { ReduxState, StorageState } from '/redux/types';
 import Players from '/content/components/players';
 import { PlayersInfo } from '/content/components/types';
+import { GamePlayer, GameSettings, GameStartRequest } from '/redux/gameSlice.types';
+import { Constants } from '/app/constants';
 
-const getPlayers = (gamers: string[], count: number): string[] => {
-    if (count == 1) return [gamers[0]];
-    else if (count == 2) return [gamers[0], gamers[2]];
-    else return gamers;
+const getPlayers = (gamers: string[], count: number): GamePlayer[] => {
+    if (count == 1) return [{ id: 0, type: gamers[0], position: Constants.positions[0] }];
+    else if (count == 2)
+        return [
+            { id: 0, type: gamers[0], position: Constants.positions[0] },
+            { id: 0, type: gamers[2], position: Constants.positions[2] },
+        ];
+    else return gamers.map((it, index) => ({ id: 0, type: it, position: Constants.positions[index] }));
 };
 
 const convertMapId = (val: string | number | undefined) => {
@@ -75,7 +81,7 @@ function Newgame() {
                     mapSize,
                     tilesPackName,
                 },
-            },
+            } as GameStartRequest,
         });
     };
 
@@ -100,7 +106,7 @@ function Newgame() {
                     players: getPlayers(players.members, players.count),
                     mapId: randNumber[0],
                     mapSize,
-                },
+                } as GameSettings,
             },
         });
     };

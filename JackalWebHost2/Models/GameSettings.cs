@@ -5,7 +5,7 @@ public class GameSettings
     /// <summary>
     /// Игроки robot/human
     /// </summary>
-    public string[] Players { get; set; } = null!;
+    public Player[] Players { get; set; } = null!;
         
     /// <summary>
     /// ИД карты, по нему генерируется расположение клеток

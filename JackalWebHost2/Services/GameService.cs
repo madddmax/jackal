@@ -31,7 +31,7 @@ public class GameService : IGameService
 
         foreach (var player in gameSettings.Players)
         {
-            gamePlayers[index++] = player switch
+            gamePlayers[index++] = player.Type switch
             {
                 "robot" => new RandomPlayer(),
                 "human" => new WebHumanPlayer(),

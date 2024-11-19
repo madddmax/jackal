@@ -11,6 +11,8 @@ import { ReduxState, StorageState } from '/redux/types';
 import config from '/app/config';
 import { AuthState } from '/redux/authSlice.types';
 import { HiLogin, HiLogout } from 'react-icons/hi';
+import { GameStartRequest } from '/redux/gameSlice.types';
+import { Constants } from '/app/constants';
 
 function Header() {
     const dispatch = useDispatch();
@@ -24,12 +26,15 @@ function Header() {
             payload: {
                 gameName: uuidGen(),
                 settings: {
-                    players: ['human', 'robot2'],
+                    players: [
+                        { id: 0, type: 'human', position: Constants.positions[0] },
+                        { id: 0, type: 'robot2', position: Constants.positions[2] },
+                    ],
                     mapId: userSettings.mapId,
                     mapSize: 11,
                     tilesPackName: userSettings.tilesPackName,
                 },
-            },
+            } as GameStartRequest,
         });
 
     const doLogout = () =>
