@@ -1,5 +1,3 @@
-using Jackal.Core.Domain;
-
 namespace JackalWebHost2.Models.Map;
 
 /// <summary>

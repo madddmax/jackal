@@ -1,4 +1,4 @@
-namespace Jackal.Core.Domain;
+namespace JackalWebHost2.Models.Map;
 
 /// <summary>
 /// Позиция относительно игровой карты,
