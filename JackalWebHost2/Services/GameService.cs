@@ -4,6 +4,7 @@ using Jackal.Core.Players;
 using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Exceptions;
 using JackalWebHost2.Models;
+using JackalWebHost2.Models.Player;
 using GameState = JackalWebHost2.Models.GameState;
 
 namespace JackalWebHost2.Services;
@@ -33,15 +34,15 @@ public class GameService : IGameService
         {
             gamePlayers[index++] = player.Type switch
             {
-                "robot" => new RandomPlayer(),
-                "human" => new WebHumanPlayer(),
+                PlayerType.Robot => new RandomPlayer(),
+                PlayerType.Human => new WebHumanPlayer(),
                 _ => new EasyPlayer()
             };
         }
 
         gameSettings.MapId ??= new Random().Next();
 
-        // TODO-MIKE для ручной отладки можно использовать закомментированные генераторы карт
+        // для ручной отладки можно использовать закомментированные генераторы карт
         int mapSize = gameSettings.MapSize ?? 5;
         IMapGenerator mapGenerator = new RandomMapGenerator(gameSettings.MapId.Value, mapSize, gameSettings.TilesPackName);
         // mapGenerator = new OneTileMapGenerator(new TileParams(TileType.Trap));

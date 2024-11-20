@@ -1,4 +1,3 @@
-using Jackal.Core.Domain;
 using JackalWebHost2.Models.Map;
 
 namespace JackalWebHost2.Controllers.Models.Map;
@@ -9,9 +8,9 @@ namespace JackalWebHost2.Controllers.Models.Map;
 public class CheckLandingResponse
 {
     /// <summary>
-    /// Направление
+    /// Позиция
     /// </summary>
-    public DirectionType Direction { get; set; }
+    public MapPositionId Position { get; set; }
     
     /// <summary>
     /// Сложность

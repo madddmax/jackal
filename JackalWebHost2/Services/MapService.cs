@@ -12,27 +12,27 @@ public class MapService : IMapService
     {
         var mapGenerator = new RandomMapGenerator(request.MapId, request.MapSize, request.TilesPackName);
         
-        var upLanding = new CheckLandingResult(DirectionType.Up);
-        var rightLanding = new CheckLandingResult(DirectionType.Right);
-        var downLanding = new CheckLandingResult(DirectionType.Down);
-        var leftLanding = new CheckLandingResult(DirectionType.Left);
+        var downLanding = new CheckLandingResult(MapPositionId.Down);
+        var leftLanding = new CheckLandingResult(MapPositionId.Left);
+        var upLanding = new CheckLandingResult(MapPositionId.Up);
+        var rightLanding = new CheckLandingResult(MapPositionId.Right);
         
         for (int i = 2; i <= request.MapSize - 3; i++)
         {
-            var upTile = mapGenerator.GetNext(new Position(i, request.MapSize - 2));
-            SetLandingResult(upLanding, upTile);
-            
-            var rightTile = mapGenerator.GetNext(new Position(request.MapSize - 2, i));
-            SetLandingResult(rightLanding, rightTile);
-            
             var downTile = mapGenerator.GetNext(new Position(i, 1));
             SetLandingResult(downLanding, downTile);
             
             var leftTile = mapGenerator.GetNext(new Position(1, i));
             SetLandingResult(leftLanding, leftTile);
+            
+            var upTile = mapGenerator.GetNext(new Position(i, request.MapSize - 2));
+            SetLandingResult(upLanding, upTile);
+            
+            var rightTile = mapGenerator.GetNext(new Position(request.MapSize - 2, i));
+            SetLandingResult(rightLanding, rightTile);
         }
 
-        // порядок возврата на фронт - имеет значение
+        // порядок возврата на фронт: по возрастанию MapPositionId
         var landingResults = new List<CheckLandingResult>
         {
             downLanding, leftLanding, upLanding, rightLanding

@@ -1,16 +1,14 @@
-using Jackal.Core.Domain;
-
 namespace JackalWebHost2.Models.Map;
 
 /// <summary>
 /// Результат проверки места высадки
 /// </summary>
-public class CheckLandingResult(DirectionType direction)
+public class CheckLandingResult(MapPositionId position)
 {
     /// <summary>
-    /// Направление
+    /// Позиция
     /// </summary>
-    public DirectionType Direction { get; } = direction;
+    public MapPositionId Position { get; } = position;
     
     /// <summary>
     /// Сложность

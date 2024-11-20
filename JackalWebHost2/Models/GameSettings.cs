@@ -1,12 +1,14 @@
-﻿namespace JackalWebHost2.Models;
+﻿using JackalWebHost2.Models.Player;
+
+namespace JackalWebHost2.Models;
 
 public class GameSettings
 {
     /// <summary>
     /// Игроки robot/human
     /// </summary>
-    public Player[] Players { get; set; } = null!;
-        
+    public PlayerModel[] Players { get; set; } = null!;
+    
     /// <summary>
     /// ИД карты, по нему генерируется расположение клеток
     /// </summary>
@@ -21,4 +23,10 @@ public class GameSettings
     /// Название игрового набора клеток
     /// </summary>
     public string? TilesPackName { get; set; }
+    
+    /// <summary>
+    /// Режим игры
+    /// todo добавить командный режим 2x2 
+    /// </summary>
+    public GameModeType? Mode { get; set; }
 }
