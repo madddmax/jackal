@@ -7,13 +7,7 @@ public class GameSettings
     /// <summary>
     /// Игроки robot/human
     /// </summary>
-    public Player[] Players { get; set; } = null!;
-        
-    /// <summary>
-    /// Игроки - новая модель,
-    /// todo заменить Players
-    /// </summary>
-    public PlayerModel[] PlayersNew { get; set; } = null!;
+    public PlayerModel[] Players { get; set; } = null!;
     
     /// <summary>
     /// ИД карты, по нему генерируется расположение клеток
