@@ -85,6 +85,17 @@ public class GameService : IGameService
             throw new GameNotFoundException();
         }
 
+        if (gameState.game.IsGameOver)
+        {
+            return new TurnGameResult
+            {
+                PirateChanges = [],
+                Changes = [],
+                Statistics = _drawService.GetStatistics(gameState.game),
+                Moves = []
+            };
+        }
+        
         var prevBoardStr = JsonHelper.SerializeWithType(gameState.board);
             
         if (gameState.game.CurrentPlayer is WebHumanPlayer && request.TurnNum.HasValue)

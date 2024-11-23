@@ -72,10 +72,7 @@ export function* oneTurn(action: any) {
                 data: action.payload,
             }),
     );
-    if (result.data.stats.isGameOver) {
-        yield put(applyStat(result.data.stats));
-        return false;
-    }
+
     yield put(applyChanges(result.data.changes));
     yield put(
         applyPirateChanges({
@@ -84,11 +81,18 @@ export function* oneTurn(action: any) {
             isHumanPlayer: result.data.stats.isHumanPlayer,
         }),
     );
+    
     if (result.data.stats.isHumanPlayer) {
         yield put(setCurrentHumanTeam(result.data.stats.currentTeamId));
         yield put(highlightHumanMoves({ moves: result.data.moves }));
     }
+
     yield put(applyStat(result.data.stats));
+
+    if (result.data.stats.isGameOver) {
+        yield put(highlightHumanMoves({ moves: [] }));
+        return false;
+    }
 
     return !result.data.stats.isHumanPlayer || result.data.moves?.length == 0;
 }
