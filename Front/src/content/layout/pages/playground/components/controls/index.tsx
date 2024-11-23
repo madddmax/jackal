@@ -57,7 +57,7 @@ function Controls() {
 
             {game?.stat?.isGameOver && (
                 <Alert variant={'danger'} className="my-2">
-                    Игра закончена. Победил {getWinner(game.stat)}'
+                    Игра закончена. Победил {getWinner(game.stat)}.
                 </Alert>
             )}
         </>
