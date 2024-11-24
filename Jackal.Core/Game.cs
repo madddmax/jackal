@@ -194,7 +194,7 @@ public class Game
             }
 
             // закончились пираты
-            if (!Board.AllPirates.Any(p => p.IsActive))
+            if (Board.AllPirates.All(p => p.IsDisable))
             {
                 return true;
             }

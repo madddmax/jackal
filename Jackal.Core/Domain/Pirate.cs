@@ -45,6 +45,11 @@ public record Pirate(int TeamId, TilePosition Position, PirateType Type)
     /// Пират доступен для хода
     /// </summary>
     public bool IsActive => IsDrunk == false && IsInTrap == false && IsInHole == false;
+    
+    /// <summary>
+    /// Пират застрял
+    /// </summary>
+    public bool IsDisable => IsInTrap || IsInHole;
 
     /// <summary>
     /// Сбросить все эффекты недоступности
