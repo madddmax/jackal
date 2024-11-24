@@ -104,8 +104,12 @@ public class GameService : IGameService
         }
 
         gameState.game.Turn();
-        await _gameStateRepository.UpdateGameState(request.GameName, gameState);
+        if (gameState.game.IsGameOver)
+        {
+            gameState.board.ShowUnknownTiles();
+        }
         
+        await _gameStateRepository.UpdateGameState(request.GameName, gameState);
         var prevBoard = JsonHelper.DeserializeWithType<Board>(prevBoardStr);
         
         return new TurnGameResult

@@ -24,8 +24,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         bool newTile = false;
         if (targetTile.Type == TileType.Unknown)
         {
-            targetTile = board.Generator.GetNext(To.Position);
-            board.Map[To.Position] = targetTile;
+            targetTile = board.OpenTile(To.Position);
             game.LastActionTurnNo = game.TurnNo;
             game.CoinsOnMap += targetTile.Type.CoinsCount();
             newTile = true;

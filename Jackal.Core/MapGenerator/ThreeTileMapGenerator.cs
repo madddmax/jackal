@@ -12,12 +12,9 @@ public class ThreeTileMapGenerator(
     TileParams firstTileParams, TileParams secondTileParams, TileParams thirdTileParams) : IMapGenerator
 {
     private readonly Dictionary<Position, Tile> _tiles = new();
-    
-    /// <summary>
-    /// Идентификатор карты
-    /// </summary>
-    public int MapId => 0;
-    
+
+    public int TotalCoins => 1;
+
     public Tile GetNext(Position position)
     {
         if (!_tiles.ContainsKey(position))
