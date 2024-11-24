@@ -19,7 +19,7 @@ public class Game
     public readonly Dictionary<int, int> Scores;
         
     /// <summary>
-    /// Золото на карте
+    /// Открытое золото на карте
     /// </summary>
     public int CoinsOnMap;
 
@@ -162,39 +162,46 @@ public class Game
     {
         get
         {
-            var allTilesOpen = !Board.AllTiles(x => x.Type == TileType.Unknown).Any();
-            if (allTilesOpen)
-            {
-                // все клетки открыты
-                var orderedTeamCoins = Scores
-                    .OrderByDescending(s => s.Value)
-                    .Select(s => s.Value)
-                    .ToList();
+            var orderedTeamCoins = Scores
+                .OrderByDescending(s => s.Value)
+                .Select(s => s.Value)
+                .ToList();
 
-                int firstTeamCoins = orderedTeamCoins[0];
-                int secondTeamCoins = orderedTeamCoins.Count > 1 ? orderedTeamCoins[1] + CoinsOnMap : 0;
-                if (firstTeamCoins > secondTeamCoins)
+            // игра на несколько игроков
+            if (orderedTeamCoins.Count > 1)
+            {
+                // свободное золото
+                int freeCoins = Board.Generator.TotalCoins;
+                foreach (var teamCoins in orderedTeamCoins)
                 {
-                    // игрок выйграл с большим перевесом
-                    return true;
+                    freeCoins -= teamCoins;
                 }
 
-                if (CoinsOnMap == 0)
+                // игрок затащил большую часть монет
+                int firstTeamCoins = orderedTeamCoins[0];
+                int secondTeamCoins = orderedTeamCoins[1] + freeCoins;
+                if (firstTeamCoins > secondTeamCoins)
                 {
-                    // закончилось золото
                     return true;
                 }
             }
 
+            // все клетки открыты и нет золота на карте
+            var allTilesOpen = !Board.AllTiles(x => x.Type == TileType.Unknown).Any();
+            if (allTilesOpen && CoinsOnMap == 0)
+            {
+                return true;
+            }
+
+            // закончились пираты
             if (!Board.AllPirates.Any(p => p.IsActive))
             {
-                // закончились пираты
                 return true;
             }
             
+            // защита от яичинга (ходов без открытия клеток или переноса монет)
             if (TurnNo - 50 * _players.Length > LastActionTurnNo)
             {
-                // защита от яичинга (ходов без открытия клеток или переноса монет)
                 return true;
             }
 

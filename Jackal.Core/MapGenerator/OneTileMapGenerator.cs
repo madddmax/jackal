@@ -9,7 +9,9 @@ public class OneTileMapGenerator(TileParams oneTileParams) : IMapGenerator
 {
     private readonly ThreeTileMapGenerator _mapGenerator = 
         new(oneTileParams, oneTileParams, oneTileParams);
-    
+
+    public int TotalCoins => _mapGenerator.TotalCoins;
+
     public Tile GetNext(Position position) => _mapGenerator.GetNext(position);
     
     public void Swap(Position from, Position to) => _mapGenerator.Swap(from, to);

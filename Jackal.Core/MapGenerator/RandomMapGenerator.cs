@@ -11,6 +11,8 @@ public class RandomMapGenerator : IMapGenerator
     private readonly Random _rand;
     private readonly Dictionary<Position,Tile> _tiles;
 
+    public int TotalCoins { get; private set; }
+    
     public RandomMapGenerator(int mapId, int mapSize, string? tilesPackName = null)
     {
         _rand = new Random(mapId + 5000000);
@@ -27,7 +29,7 @@ public class RandomMapGenerator : IMapGenerator
         _tiles = InitTiles(shuffledTiles, positions);
     }
 
-    private static List<TileParams> PullOut(Random rand, int mapSize, ITilesPack pack)
+    private List<TileParams> PullOut(Random rand, int mapSize, ITilesPack pack)
     {
         var landSize = mapSize - 2;
         var totalTiles = landSize * landSize - 4;
@@ -61,6 +63,8 @@ public class RandomMapGenerator : IMapGenerator
                     random = true;
                     break;
             }
+
+            TotalCoins += pack.AllTiles[index].Type.CoinsCount();
 
             // сдвигаем оставшиеся клетки в наборе, последнюю ставим на место выбранной
             pack.AllTiles[index] = pack.AllTiles[pack.AllTiles.Length - 1 - i];

@@ -5,6 +5,11 @@ namespace Jackal.Core.MapGenerator;
 public interface IMapGenerator
 {
     /// <summary>
+    /// Всего золота на карте
+    /// </summary>
+    int TotalCoins { get; }
+    
+    /// <summary>
     /// Открыть закрытую клетку,
     /// тип клетки строго привязан к позиции на карте,
     /// сделано для возможности воспроизведения карты
