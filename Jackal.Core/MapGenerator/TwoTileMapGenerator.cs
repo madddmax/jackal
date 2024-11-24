@@ -11,11 +11,6 @@ public class TwoTileMapGenerator(TileParams firstTileParams, TileParams secondTi
     private readonly ThreeTileMapGenerator _mapGenerator = 
         new(firstTileParams, secondTileParams, secondTileParams);
 
-    /// <summary>
-    /// Идентификатор карты
-    /// </summary>
-    public int MapId => _mapGenerator.MapId;
-
     public Tile GetNext(Position position) => _mapGenerator.GetNext(position);
     
     public void Swap(Position from, Position to) => _mapGenerator.Swap(from, to);

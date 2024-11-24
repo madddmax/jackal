@@ -5,11 +5,6 @@ namespace Jackal.Core.MapGenerator;
 public interface IMapGenerator
 {
     /// <summary>
-    /// Идентификатор карты
-    /// </summary>
-    public int MapId { get; }
-
-    /// <summary>
     /// Открыть закрытую клетку,
     /// тип клетки строго привязан к позиции на карте,
     /// сделано для возможности воспроизведения карты

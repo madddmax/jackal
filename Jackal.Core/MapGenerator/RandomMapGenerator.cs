@@ -10,16 +10,10 @@ public class RandomMapGenerator : IMapGenerator
 {
     private readonly Random _rand;
     private readonly Dictionary<Position,Tile> _tiles;
-    
-    /// <summary>
-    /// Идентификатор карты
-    /// </summary>
-    public int MapId { get; }
 
     public RandomMapGenerator(int mapId, int mapSize, string? tilesPackName = null)
     {
-        MapId = mapId;
-        _rand = new Random(MapId + 5000000);
+        _rand = new Random(mapId + 5000000);
 
         var pack = TilesPackFactory.Create(tilesPackName);
         var selectedTiles = PullOut(_rand, mapSize, pack);

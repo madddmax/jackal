@@ -13,11 +13,6 @@ public class ThreeTileMapGenerator(
 {
     private readonly Dictionary<Position, Tile> _tiles = new();
     
-    /// <summary>
-    /// Идентификатор карты
-    /// </summary>
-    public int MapId => 0;
-    
     public Tile GetNext(Position position)
     {
         if (!_tiles.ContainsKey(position))
