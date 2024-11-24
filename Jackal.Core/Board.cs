@@ -430,6 +430,23 @@ public class Board
         return rez.Where(x => IsValidMapPosition(x.Position)).ToList();
     }
 
+    public void ShowUnknownTiles()
+    {
+        var unknownTiles = AllTiles(x => x.Type == TileType.Unknown);
+        foreach (var tile in unknownTiles)
+        {
+            OpenTile(tile.Position);
+        }
+    }
+
+    public Tile OpenTile(Position position)
+    {
+        var tile = Generator.GetNext(position);
+        Map[position] = tile;
+
+        return tile;
+    }
+    
     private IEnumerable<TilePosition> GetAirplaneMoves(Ship ourShip) =>
         AllTiles(x =>
                 x.Type != TileType.Ice &&

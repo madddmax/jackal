@@ -275,8 +275,8 @@ public class Game
             
         pirate.ResetEffects();
     }
-    
-    public void MovePirateToPosition(Pirate pirate, Position position)
+
+    private void MovePirateToPosition(Pirate pirate, Position position)
     {
         var pirateTileLevel = Board.Map[pirate.Position];
             
