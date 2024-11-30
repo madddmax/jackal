@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using JackalWebHost2.Controllers.Hubs;
 using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Data.Repositories;
 using JackalWebHost2.Infrastructure;
@@ -41,13 +42,22 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.MapHub<GameHub>("/gamehub");
         app.MapControllers();
     }
 
     private static void ConfigureServices(WebApplicationBuilder builder)
     {
         var services = builder.Services;
-        
+
+        services.AddSignalR().AddNewtonsoftJsonProtocol(jsonOpt =>
+        {
+            var enumConverter = new StringEnumConverter();
+            jsonOpt.PayloadSerializerSettings.Converters.Add(enumConverter);
+            jsonOpt.PayloadSerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            jsonOpt.PayloadSerializerSettings.DateFormatString = "dd.MM.yyyy";
+        }); 
+
         services
             .AddControllers(opt =>
             {
