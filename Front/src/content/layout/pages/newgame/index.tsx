@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { saveMySettings, setMapInfo } from '/redux/gameSlice';
 import { sagaActions } from '/sagas/constants';
 import { useNavigate } from 'react-router-dom';
-import { uuidGen } from '/app/global';
+import { debugLog, hubConnection, uuidGen } from '/app/global';
 import { ReduxState, StorageState } from '/redux/types';
 import Players from '/content/components/players';
 import { PlayersInfo } from '/content/components/types';
@@ -35,6 +35,7 @@ function Newgame() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const useSockets = useSelector<ReduxState, boolean>((state) => state.common.useSockets);
     const tilesPackNames = useSelector<ReduxState, string[]>((state) => state.game.tilesPackNames);
     const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
     const mapInfo = useSelector<ReduxState, string[] | undefined>((state) => state.game.mapInfo);
@@ -71,18 +72,35 @@ function Newgame() {
     const newStart = () => {
         navigate('/');
         saveToLocalStorage(isStoredMap);
-        dispatch({
-            type: sagaActions.GAME_START,
-            payload: {
-                gameName: uuidGen(),
-                settings: {
-                    players: getPlayers(players.members, players.count),
-                    mapId: randNumber[0],
-                    mapSize,
-                    tilesPackName,
-                },
-            } as GameStartRequest,
-        });
+
+        if (useSockets) {
+            hubConnection
+                .invoke('start', {
+                    gameName: uuidGen(),
+                    settings: {
+                        players: getPlayers(players.members, players.count),
+                        mapId: randNumber[0],
+                        mapSize,
+                        tilesPackName,
+                    },
+                })
+                .catch((err) => {
+                    debugLog(err);
+                });
+        } else {
+            dispatch({
+                type: sagaActions.GAME_START,
+                payload: {
+                    gameName: uuidGen(),
+                    settings: {
+                        players: getPlayers(players.members, players.count),
+                        mapId: randNumber[0],
+                        mapSize,
+                        tilesPackName,
+                    },
+                } as GameStartRequest,
+            });
+        }
     };
 
     const changeMapId = () => {

@@ -1,5 +1,6 @@
 import { NavigateFunction } from 'react-router-dom';
 import config from './config';
+import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 
 export const uuidGen = () => {
     return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
@@ -39,3 +40,9 @@ interface History {
 }
 
 export const history: History = {};
+
+export const hubConnection = new HubConnectionBuilder()
+    .withUrl(config.HubApi)
+    .withAutomaticReconnect()
+    .configureLogging(LogLevel.Information)
+    .build();

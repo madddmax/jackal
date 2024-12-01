@@ -12,6 +12,7 @@
         "test": "jest"
     },
     "dependencies": {
+        "@microsoft/signalr": "^8.0.7",
         "@reduxjs/toolkit": "^2.2.5",
         "axios": "^1.7.2",
         "bootstrap": "^5.3.3",
