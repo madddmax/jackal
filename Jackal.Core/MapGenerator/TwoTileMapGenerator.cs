@@ -6,14 +6,18 @@ namespace Jackal.Core.MapGenerator;
 /// Нижняя береговая линия firstTile,
 /// остальные все клетки secondTile
 /// </summary>
-public class TwoTileMapGenerator(TileParams firstTileParams, TileParams secondTileParams) : IMapGenerator
+public class TwoTileMapGenerator(
+    TileParams firstTileParams,
+    TileParams secondTileParams,
+    int totalCoins = 1
+) : IMapGenerator
 {
-    private readonly ThreeTileMapGenerator _mapGenerator = 
-        new(firstTileParams, secondTileParams, secondTileParams);
+    private readonly ThreeTileMapGenerator _mapGenerator =
+        new(firstTileParams, secondTileParams, secondTileParams, totalCoins);
 
     public int TotalCoins => _mapGenerator.TotalCoins;
-    
+
     public Tile GetNext(Position position) => _mapGenerator.GetNext(position);
-    
+
     public void Swap(Position from, Position to) => _mapGenerator.Swap(from, to);
 }
