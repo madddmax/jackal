@@ -34,6 +34,22 @@ export function* gameStart(action: any) {
                 data: action.payload,
             }),
     );
+
+    yield call(applyStartData, {
+        type: sagaActions.GAME_START_APPLY_DATA,
+        payload: result.data,
+    });
+
+    if (!result.data.stats.isHumanPlayer || result.data.moves?.length == 0) {
+        yield call(gameTurn, {
+            type: sagaActions.GAME_TURN,
+            payload: { gameName: result.data.gameName },
+        });
+    }
+}
+
+export function* applyStartData(action: any) {
+    const result = { data: action.payload };
     yield put(initMap(result.data.map));
     yield put(initGame(result.data));
     yield put(
@@ -48,12 +64,6 @@ export function* gameStart(action: any) {
         yield put(highlightHumanMoves({ moves: result.data.moves }));
     }
     yield put(applyStat(result.data.stats));
-    if (!result.data.stats.isHumanPlayer || result.data.moves?.length == 0) {
-        yield call(gameTurn, {
-            type: sagaActions.GAME_TURN,
-            payload: { gameName: result.data.gameName },
-        });
-    }
 }
 
 export function* gameTurn(action: any) {
@@ -73,6 +83,20 @@ export function* oneTurn(action: any) {
             }),
     );
 
+    yield call(applyTurnData, {
+        type: sagaActions.GAME_TURN_APPLY_DATA,
+        payload: result.data,
+    });
+
+    if (result.data.stats.isGameOver) {
+        return false;
+    }
+
+    return !result.data.stats.isHumanPlayer || result.data.moves?.length == 0;
+}
+
+export function* applyTurnData(action: any) {
+    const result = { data: action.payload };
     yield put(applyChanges(result.data.changes));
     yield put(
         applyPirateChanges({
@@ -81,7 +105,7 @@ export function* oneTurn(action: any) {
             isHumanPlayer: result.data.stats.isHumanPlayer,
         }),
     );
-    
+
     if (result.data.stats.isHumanPlayer) {
         yield put(setCurrentHumanTeam(result.data.stats.currentTeamId));
         yield put(highlightHumanMoves({ moves: result.data.moves }));
@@ -91,10 +115,7 @@ export function* oneTurn(action: any) {
 
     if (result.data.stats.isGameOver) {
         yield put(highlightHumanMoves({ moves: [] }));
-        return false;
     }
-
-    return !result.data.stats.isHumanPlayer || result.data.moves?.length == 0;
 }
 
 export function* getTilesPackNames() {
@@ -123,7 +144,9 @@ export function* checkMap(action: any) {
 export default function* rootSaga() {
     yield takeEvery(sagaActions.GAME_RESET, errorsWrapper(gameReset));
     yield takeEvery(sagaActions.GAME_START, errorsWrapper(gameStart));
+    yield takeEvery(sagaActions.GAME_START_APPLY_DATA, errorsWrapper(applyStartData));
     yield takeEvery(sagaActions.GAME_TURN, errorsWrapper(gameTurn));
+    yield takeEvery(sagaActions.GAME_TURN_APPLY_DATA, errorsWrapper(applyTurnData));
     yield takeEvery(sagaActions.GET_TILES_PACK_NAMES, errorsWrapper(getTilesPackNames));
     yield takeEvery(sagaActions.CHECK_MAP, errorsWrapper(checkMap));
 }

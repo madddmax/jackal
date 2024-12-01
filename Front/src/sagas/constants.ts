@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { call, put } from 'redux-saga/effects';
 import { ErrorInfo } from '../redux/commonSlice.types';
-import { showError } from '/redux/commonSlice';
+import { showMessage } from '/redux/commonSlice';
 import { debugLog } from '/app/global';
 import { setAuth } from '/redux/authSlice';
 import config from '/app/config';
@@ -9,7 +9,9 @@ import config from '/app/config';
 export const sagaActions = {
     GAME_RESET: 'GAME_RESET',
     GAME_START: 'GAME_START',
+    GAME_START_APPLY_DATA: 'GAME_START_APPLY_DATA',
     GAME_TURN: 'GAME_TURN',
+    GAME_TURN_APPLY_DATA: 'GAME_TURN_APPLY_DATA',
     GET_TILES_PACK_NAMES: 'GET_TILES_PACK_NAMES',
     CHECK_MAP: 'CHECK_MAP',
 
@@ -40,7 +42,13 @@ export const errorsWrapper = (saga: (action: any) => void) =>
                 debugLog(error, err);
 
                 if (error) {
-                    yield put(showError(error));
+                    yield put(
+                        showMessage({
+                            isError: true,
+                            errorCode: error.errorCode,
+                            messageText: error.errorMessage,
+                        }),
+                    );
                 } else if (err.response?.status == 401) {
                     yield put(
                         setAuth({
@@ -48,18 +56,18 @@ export const errorsWrapper = (saga: (action: any) => void) =>
                         }),
                     );
                     yield put(
-                        showError({
-                            error: true,
+                        showMessage({
+                            isError: true,
                             errorCode: err.response?.statusText,
-                            errorMessage: 'Не авторизован',
+                            messageText: 'Не авторизован',
                         }),
                     );
                 } else {
                     yield put(
-                        showError({
-                            error: true,
+                        showMessage({
+                            isError: true,
                             errorCode: 'InternalServerError',
-                            errorMessage: 'Ошибка сервера',
+                            messageText: 'Ошибка сервера',
                         }),
                     );
                 }

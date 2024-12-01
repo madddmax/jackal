@@ -16,6 +16,7 @@ export default defineConfig(({ mode }) => {
             alias: {
                 '/app': fileURLToPath(new URL('./src/app', import.meta.url)),
                 '/content': fileURLToPath(new URL('./src/content', import.meta.url)),
+                '/hubs': fileURLToPath(new URL('./src/hubs', import.meta.url)),
                 '/redux': fileURLToPath(new URL('./src/redux', import.meta.url)),
                 '/sagas': fileURLToPath(new URL('./src/sagas', import.meta.url)),
             },

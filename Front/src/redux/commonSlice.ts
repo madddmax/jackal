@@ -1,28 +1,32 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { CommonState, ErrorInfo } from './commonSlice.types';
+import { CommonState, MessageInfo } from './commonSlice.types';
 
 export const commonSlice = createSlice({
     name: 'common',
     initialState: {
-        errorQueue: [],
+        useSockets: false,
+        messageQueue: [],
     } satisfies CommonState as CommonState,
     reducers: {
-        showError: (state, action: PayloadAction<ErrorInfo>) => {
-            if (state.error) {
-                state.errorQueue.push(action.payload);
+        activateSockets: (state, action: PayloadAction<boolean>) => {
+            state.useSockets = action.payload;
+        },
+        showMessage: (state, action: PayloadAction<MessageInfo>) => {
+            if (state.message) {
+                state.messageQueue.push(action.payload);
             } else {
-                state.error = action.payload;
+                state.message = action.payload;
             }
         },
         processError: (state) => {
-            state.error = state.errorQueue.shift();
+            state.message = state.messageQueue.shift();
         },
         hideError: (state) => {
-            state.error = undefined;
+            state.message = undefined;
         },
     },
 });
 
-export const { showError, processError, hideError } = commonSlice.actions;
+export const { activateSockets, showMessage, processError, hideError } = commonSlice.actions;
 
 export default commonSlice.reducer;

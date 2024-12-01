@@ -9,6 +9,7 @@ import Level from './level';
 import LevelZero from './levelZero';
 import { TooltipRefProps } from 'react-tooltip';
 import { RefObject, useCallback } from 'react';
+import { hubConnection } from '/app/global';
 
 interface CellAvailableMove extends AvailableMove {
     img?: string;
@@ -24,6 +25,7 @@ interface CellProps {
 function Cell({ row, col, tooltipRef }: CellProps) {
     const dispatch = useDispatch();
 
+    const useSockets = useSelector<ReduxState, boolean>((state) => state.common.useSockets);
     const field = useSelector<ReduxState, FieldState>((state) => state.game.fields[row][col]);
     const cellSize = useSelector<ReduxState, number>((state) => state.game.cellSize);
     const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
@@ -46,14 +48,22 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                             cursor: 'pointer',
                         }}
                         onClick={() => {
-                            dispatch({
-                                type: sagaActions.GAME_TURN,
-                                payload: {
+                            if (useSockets) {
+                                hubConnection.send('Move', {
                                     gameName: gamename,
                                     turnNum: move.num,
                                     pirateId: move.pirateId,
-                                },
-                            });
+                                });
+                            } else {
+                                dispatch({
+                                    type: sagaActions.GAME_TURN,
+                                    payload: {
+                                        gameName: gamename,
+                                        turnNum: move.num,
+                                        pirateId: move.pirateId,
+                                    },
+                                });
+                            }
                             tooltipRef.current?.close();
                         }}
                     />
@@ -85,14 +95,22 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                                 }}
                                 src={it.img}
                                 onClick={() => {
-                                    dispatch({
-                                        type: sagaActions.GAME_TURN,
-                                        payload: {
+                                    if (useSockets) {
+                                        hubConnection.send('Move', {
                                             gameName: gamename,
                                             turnNum: it.num,
                                             pirateId: it.pirateId,
-                                        },
-                                    });
+                                        });
+                                    } else {
+                                        dispatch({
+                                            type: sagaActions.GAME_TURN,
+                                            payload: {
+                                                gameName: gamename,
+                                                turnNum: it.num,
+                                                pirateId: it.pirateId,
+                                            },
+                                        });
+                                    }
                                     tooltipRef.current?.close();
                                 }}
                             />
@@ -102,14 +120,22 @@ function Cell({ row, col, tooltipRef }: CellProps) {
             });
         } else {
             let move = field.availableMoves[0];
-            dispatch({
-                type: sagaActions.GAME_TURN,
-                payload: {
+            if (useSockets) {
+                hubConnection.send('Move', {
                     gameName: gamename,
                     turnNum: move.num,
                     pirateId: move.pirateId,
-                },
-            });
+                });
+            } else {
+                dispatch({
+                    type: sagaActions.GAME_TURN,
+                    payload: {
+                        gameName: gamename,
+                        turnNum: move.num,
+                        pirateId: move.pirateId,
+                    },
+                });
+            }
         }
     }, [dispatch, field, gamename]);
 
