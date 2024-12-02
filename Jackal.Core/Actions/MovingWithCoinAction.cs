@@ -26,12 +26,11 @@ internal class MovingWithCoinAction(TilePosition from, TilePosition to, TilePosi
 
         fromTileLevel.Coins--;
 
-        if (ourTeam.Ship.Position == to.Position)
+        if (ourShip.Position == to.Position)
         {
             // перенос монеты на корабль
             ourShip.Coins++;
-
-            game.Scores[pirate.TeamId]++;
+            ourTeam.Coins++;
             game.CoinsOnMap--;
 
             game.LastActionTurnNo = game.TurnNo;
