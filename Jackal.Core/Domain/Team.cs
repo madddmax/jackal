@@ -2,11 +2,17 @@
 
 public record Team
 {
-    public int Id;
-    public string Name;
-    public Ship Ship;
+    public readonly int Id;
+    
+    public readonly string Name;
+    
+    public readonly Ship Ship;
+    
     public Pirate[] Pirates;
+    
     public int[] Enemies;
+    
+    public int Coins;
 
     public Team(int id, string name, Ship ship, Pirate[] pirates)
     {

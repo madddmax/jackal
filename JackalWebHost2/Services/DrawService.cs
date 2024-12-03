@@ -77,13 +77,12 @@ public class DrawService : IDrawService
         var teams = new List<DrawTeam>();
         foreach (var team in game.Board.Teams)
         {
-            game.Scores.TryGetValue(team.Id, out var goldCount);
             teams.Add(new DrawTeam
             {
                 backcolor = GetTeamColor(team.Id),
                 id = team.Id,
                 name = team.Name,
-                gold = goldCount
+                gold = team.Coins
             });
         }
 

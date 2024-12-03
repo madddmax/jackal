@@ -12,11 +12,6 @@ public class Game
     private readonly IPlayer[] _players;
 
     public readonly Board Board;
-
-    /// <summary>
-    /// Key = TeamId, Value = TeamCoins
-    /// </summary>
-    public readonly Dictionary<int, int> Scores;
         
     /// <summary>
     /// Открытое золото на карте
@@ -31,13 +26,7 @@ public class Game
     public Game(IPlayer[] players, Board board)
     {
         _players = players;
-
         Board = board;
-        Scores = new Dictionary<int, int>();
-        foreach (var team in Board.Teams)
-        {
-            Scores[team.Id] = 0;
-        }
 
         _availableMoves = new List<Move>();
         _actions = new List<IGameAction>();
@@ -162,9 +151,9 @@ public class Game
     {
         get
         {
-            var orderedTeamCoins = Scores
-                .OrderByDescending(s => s.Value)
-                .Select(s => s.Value)
+            var orderedTeamCoins = Board.Teams
+                .Select(x => x.Coins)
+                .OrderByDescending(x => x)
                 .ToList();
 
             // игра на несколько игроков

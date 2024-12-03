@@ -9,11 +9,15 @@ namespace Jackal.Core.MapGenerator;
 /// остальные все клетки thirdTile
 /// </summary>
 public class ThreeTileMapGenerator(
-    TileParams firstTileParams, TileParams secondTileParams, TileParams thirdTileParams) : IMapGenerator
+    TileParams firstTileParams,
+    TileParams secondTileParams,
+    TileParams thirdTileParams,
+    int totalCoins = 1
+) : IMapGenerator
 {
     private readonly Dictionary<Position, Tile> _tiles = new();
 
-    public int TotalCoins => 1;
+    public int TotalCoins => totalCoins;
 
     public Tile GetNext(Position position)
     {
@@ -27,7 +31,7 @@ public class ThreeTileMapGenerator(
             };
 
             tileParams.Position = position;
-            
+
             var tile = new Tile(tileParams);
             if (tile.Type.CoinsCount() > 0)
             {
@@ -36,7 +40,7 @@ public class ThreeTileMapGenerator(
 
             _tiles[position] = tile;
         }
-        
+
         return _tiles[position];
     }
 
@@ -45,14 +49,14 @@ public class ThreeTileMapGenerator(
         // инициализируем клетки, если их нет
         GetNext(from);
         GetNext(to);
-        
+
         // меняем сгенеренные клетки местами
         var fromTile = _tiles[from];
         var toTile = _tiles[to];
-        
+
         _tiles[from] = new Tile(from, toTile);
         _tiles[from].Levels[0].Coins = toTile.Coins;
-        
+
         _tiles[to] = new Tile(to, fromTile);
         _tiles[to].Levels[0].Coins = fromTile.Coins;
     }

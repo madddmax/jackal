@@ -98,7 +98,8 @@ public class GameOrganizer
                     }
                 }
             }
-            Results.AddGameResult(currentPlayers[playerId].Id, positionsCount,game.Scores[playerId]);
+
+            Results.AddGameResult(currentPlayers[playerId].Id, positionsCount, game.Board.Teams[playerId].Coins);
         }
 
         AddPlayersSet(currentPlayers);
@@ -114,7 +115,7 @@ public class GameOrganizer
         List<int> gold = new List<int>(4);
         for (int id = 0; id <= 3; id++)
         {
-            gold.Add(game.Scores[id]);
+            gold.Add(game.Board.Teams[id].Coins);
         }
 
         //определяем место
