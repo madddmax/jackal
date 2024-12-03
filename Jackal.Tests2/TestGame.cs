@@ -63,7 +63,9 @@ public class TestGame
     }
     
     /// <summary>
-    /// Добавить вражескую команду и пирата в игру
+    /// Добавить вражескую команду и пирата в игру,
+    /// при этом не добавляем сущность игрока противника
+    /// следовательно ход не будет передаваться вражеской команде
     /// </summary>
     /// <param name="piratePosition">Позиция пирата противника</param>
     public void AddEnemyTeamAndPirate(TilePosition piratePosition)
@@ -118,11 +120,12 @@ public class TestGame
     /// </summary>
     /// <param name="x">X координата куда делаем ход</param>
     /// <param name="y">Y координата куда делаем ход</param>
-    public void SetMoveAndTurn(int x, int y)
+    /// <param name="withCoin">С монетой</param>
+    public void SetMoveAndTurn(int x, int y, bool withCoin = false)
     {
         var position = new TilePosition(x, y);
         var moves = _testGame.GetAvailableMoves();
-        var moveNum = moves.FindIndex(a => a.To == position);
+        var moveNum = moves.FindIndex(a => a.To == position && a.WithCoin == withCoin);
         
         _testGame.CurrentPlayer.SetHumanMove(moveNum, null);
         _testGame.Turn();

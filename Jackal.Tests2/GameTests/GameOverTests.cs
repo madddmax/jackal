@@ -12,48 +12,68 @@ public class GameOverTests
         // Arrange
         var lighthouseSpinningLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Lighthouse), 
-            new TileParams(TileType.Grass)
+            new TileParams(TileType.Spinning) {SpinningCount = 2}
         );
         var game = new TestGame(lighthouseSpinningLineMap);
         
         // Act - высадка с корабля на маяк
         game.Turn();
         
-        // по очереди смотрим маяком неизвестные клетки: все джунгли-вертушки
+        // по очереди смотрим маяком неизвестные клетки
         game.Turn();
         game.Turn();
         game.Turn();
         game.Turn();
         
-        // Assert - все поле открыто, золота нет = конец игры
+        // Assert - один игрок, вся карта открыта, золота нет = конец игры
         Assert.True(game.IsGameOver);
         Assert.Equal(1, game.TurnNo);
     }
     
     [Fact]
-    public void TwoPlayersLighthouse_TurnSearchAllMap_ReturnGameOver()
+    public void OnePlayerChest1_MoveAllCoinsToTheShip_ReturnNoGameOver()
     {
         // Arrange
-        var totalCoins = 0;
-        var lighthouseSpinningLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Lighthouse), 
+        var totalCoins = 1;
+        var chest1GrassLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.Chest1), 
             new TileParams(TileType.Grass),
             totalCoins
         );
-        var game = new TestGame(lighthouseSpinningLineMap);
+        var game = new TestGame(chest1GrassLineMap);
+        
+        // Act - высадка с корабля на сундук с одной монетой
+        game.Turn();
+        
+        // переносим монету на корабль
+        game.SetMoveAndTurn(2, 0, true);
+        
+        // Assert - один игрок, карта не открыта, перенесли большую часть золота (всё золото) <> конец игры
+        Assert.False(game.IsGameOver);
+        Assert.Equal(2, game.TurnNo);
+    }
+    
+    [Fact]
+    public void TwoPlayersChest1_MoveAllCoinsToTheShip_ReturnGameOver()
+    {
+        // Arrange
+        var totalCoins = 1;
+        var chest1GrassLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.Chest1), 
+            new TileParams(TileType.Grass),
+            totalCoins
+        );
+        var game = new TestGame(chest1GrassLineMap);
         game.AddEnemyTeamAndPirate(new TilePosition(2, 4));
         
-        // Act - высадка с корабля на маяк
+        // Act - высадка с корабля на сундук с одной монетой
         game.Turn();
         
-        // по очереди смотрим маяком неизвестные клетки: все джунгли-вертушки
-        game.Turn();
-        game.Turn();
-        game.Turn();
-        game.Turn();
+        // переносим монету на корабль
+        game.SetMoveAndTurn(2, 0, true);
         
-        // Assert - все поле открыто, золота нет = конец игры
+        // Assert - два игрока, карта не открыта, перенесли большую часть золота (всё золото) = конец игры
         Assert.True(game.IsGameOver);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(2, game.TurnNo);
     }
 }
