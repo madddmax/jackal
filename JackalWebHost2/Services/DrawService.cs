@@ -171,7 +171,7 @@ public class DrawService : IDrawService
     {
         var tileElement = new TileChange();
 
-        var teamShip = teams.FirstOrDefault(item => item.Ship.Position == tile.Position);
+        var teamShip = teams.FirstOrDefault(item => item.ShipPosition == tile.Position);
         if (teamShip != null)
         {
             tileElement.BackgroundImageSrc = null;

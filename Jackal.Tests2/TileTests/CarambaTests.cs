@@ -27,11 +27,11 @@ public class CarambaTests
         Assert.Single(game.Board.Teams[1].Pirates);
 
         var ownPirate = game.Board.Teams[0].Pirates[0];
-        Assert.Equal(game.Board.Teams[0].Ship.Position, ownPirate.Position.Position);
+        Assert.Equal(game.Board.Teams[0].ShipPosition, ownPirate.Position.Position);
         Assert.Equal(new Position(2, 0), ownPirate.Position.Position);
         
         var enemyPirate = game.Board.Teams[1].Pirates[0];
-        Assert.Equal(game.Board.Teams[1].Ship.Position, enemyPirate.Position.Position);
+        Assert.Equal(game.Board.Teams[1].ShipPosition, enemyPirate.Position.Position);
         Assert.Equal(new Position(2, 4), enemyPirate.Position.Position);
 
         Assert.Equal(1, game.TurnNo);
@@ -91,11 +91,11 @@ public class CarambaTests
         Assert.Single(game.Board.Teams[1].Pirates);
 
         var ownPirate = game.Board.Teams[0].Pirates[0];
-        Assert.Equal(game.Board.Teams[0].Ship.Position, ownPirate.Position.Position);
+        Assert.Equal(game.Board.Teams[0].ShipPosition, ownPirate.Position.Position);
         Assert.Equal(new Position(2, 0), ownPirate.Position.Position);
         
         var enemyPirate = game.Board.Teams[1].Pirates[0];
-        Assert.Equal(game.Board.Teams[1].Ship.Position, enemyPirate.Position.Position);
+        Assert.Equal(game.Board.Teams[1].ShipPosition, enemyPirate.Position.Position);
         Assert.Equal(new Position(2, 4), enemyPirate.Position.Position);
 
         Assert.Equal(0, game.TurnNo);

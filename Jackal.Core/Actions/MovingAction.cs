@@ -14,7 +14,6 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         Map map = board.Map;
 
         Team ourTeam = board.Teams[pirate.TeamId];
-        Ship ourShip = ourTeam.Ship;
             
         Tile targetTile = map[To.Position];
         Tile sourceTile = map[from.Position];
@@ -33,7 +32,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         // воздушный шар переносит сразу на наш корабль
         if (targetTile.Type == TileType.Balloon)
         {
-            To = new TilePosition(ourShip.Position);
+            To = new TilePosition(ourTeam.ShipPosition);
         }
             
         // пушка выстреливает сразу в воду
@@ -56,7 +55,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             {
                 foreach (var pirateOnMap in team.Pirates)
                 {
-                    if (pirateOnMap.Position.Position == team.Ship.Position)
+                    if (pirateOnMap.Position.Position == team.ShipPosition)
                         continue;
 
                     // возвращаем пирата на его корабль
@@ -64,7 +63,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 }
             }
                 
-            To = new TilePosition(ourShip.Position);
+            To = new TilePosition(ourTeam.ShipPosition);
             targetTile.Used = true;
         }
         
@@ -117,18 +116,18 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         TileLevel targetTileLevel = map[To];
         TileLevel fromTileLevel = map[from];
             
-        if (from.Position == ourShip.Position && 
+        if (from.Position == ourTeam.ShipPosition && 
             targetTile.Type == TileType.Water &&
-            Board.GetPossibleShipMoves(ourShip.Position, game.Board.MapSize).Contains(To.Position)) 
+            Board.GetPossibleShipMoves(ourTeam.ShipPosition, game.Board.MapSize).Contains(To.Position)) 
         {
             // двигаем свой корабль
-            var pirateOnShips = map[ourShip.Position].Pirates;
+            var pirateOnShips = map[ourTeam.ShipPosition].Pirates;
             foreach (var pirateOnShip in pirateOnShips)
             {
                 pirateOnShip.Position = To;
                 targetTileLevel.Pirates.Add(pirateOnShip);
             }
-            ourShip.Position = To.Position;
+            ourTeam.ShipPosition = To.Position;
             sourceTile.Pirates.Clear();
         }
         else
@@ -221,7 +220,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         // проверяем, не попадаем ли мы на чужой корабль - тогда мы погибли
         IEnumerable<Position> enemyShips = game.Board.Teams
             .Where(x => x != ourTeam)
-            .Select(x => x.Ship.Position);
+            .Select(x => x.ShipPosition);
             
         if (enemyShips.Contains(To.Position))
         {

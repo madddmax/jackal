@@ -23,11 +23,11 @@ public class EasyPlayer : IPlayer
     {
         int teamId = gameState.TeamId;
         Board board = gameState.Board;
-        var ship = board.Teams[teamId].Ship;
+        var shipPosition = board.Teams[teamId].ShipPosition;
 
         var enemyShipPositions = board.Teams
-            .Select(t => t.Ship.Position)
-            .Where(p => p != ship.Position)
+            .Select(t => t.ShipPosition)
+            .Where(p => p != shipPosition)
             .ToList();
             
         var unknownPositions = board
@@ -38,7 +38,7 @@ public class EasyPlayer : IPlayer
         var waterPositions = board
             .AllTiles(x => x.Type == TileType.Water)
             .Select(x => x.Position)
-            .Except(new[] { ship.Position })
+            .Except(new[] { shipPosition })
             .ToList();
             
         var goldPositions = board
@@ -104,7 +104,7 @@ public class EasyPlayer : IPlayer
                 .Select(x => x.Position)
                 .ToList();
                 
-            escapePositions.Add(ship.Position);
+            escapePositions.Add(shipPosition);
                 
             List<Tuple<int, Move>> list = [];
             foreach (Move move in safeAvailableMoves
@@ -207,8 +207,6 @@ public class EasyPlayer : IPlayer
         if (goodMoves.Count == 0)
         {
             // залазим на свой корабль или бьемся об чужой
-            var shipPosition = board.Teams[teamId].Ship.Position;
-                
             List<Tuple<int, Move>> list = [];
             foreach (Move move in gameState.AvailableMoves.Where(x => waterPositions.Contains(x.From.Position)))
             {
@@ -283,7 +281,7 @@ public class EasyPlayer : IPlayer
         var occupationTeamId = board.Map[to].OccupationTeamId;
         if (occupationTeamId.HasValue &&
             board.Teams[teamId].Enemies.ToList().Exists(x => x == occupationTeamId.Value) &&
-            to != board.Teams[occupationTeamId.Value].Ship.Position)
+            to != board.Teams[occupationTeamId.Value].ShipPosition)
         {
             return true;
         }
@@ -293,8 +291,8 @@ public class EasyPlayer : IPlayer
 
     private static bool TargetIsShip(Board board, int teamId, Move move)
     {
-        var ship = board.Teams[teamId].Ship;
-        return ship.Position == move.To.Position;
+        var shipPosition = board.Teams[teamId].ShipPosition;
+        return shipPosition == move.To.Position;
     }
         
     private static int MinDistance(List<Position> positions, Position to)

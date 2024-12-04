@@ -258,8 +258,8 @@ public class Game
         var team = Board.Teams[pirate.TeamId];
         var pirateTileLevel = Board.Map[pirate.Position];
             
-        pirate.Position = new TilePosition(team.Ship.Position);
-        Board.Map[team.Ship.Position].Pirates.Add(pirate);
+        pirate.Position = new TilePosition(team.ShipPosition);
+        Board.Map[team.ShipPosition].Pirates.Add(pirate);
         pirateTileLevel.Pirates.Remove(pirate);
             
         pirate.ResetEffects();
