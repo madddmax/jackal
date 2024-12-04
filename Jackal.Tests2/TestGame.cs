@@ -73,8 +73,8 @@ public class TestGame
         const int enemyTeamId = 1;
         
         // помещаем корабль противника сверху на противоположный берег
-        var enemyShip = new Ship(enemyTeamId, new Position((Board.MapSize - 1) / 2, Board.MapSize - 1));
-        Board.Teams = [Board.Teams[0], new Team(enemyTeamId, "Test enemy team", enemyShip, [])];
+        var shipPosition = new Position((Board.MapSize - 1) / 2, Board.MapSize - 1);
+        Board.Teams = [Board.Teams[0], new Team(enemyTeamId, "Test enemy team", shipPosition, [])];
         _testGame.AddPirate(enemyTeamId, piratePosition, PirateType.Usual);
     }
 

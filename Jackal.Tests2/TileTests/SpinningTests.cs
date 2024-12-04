@@ -153,7 +153,7 @@ public class SpinningTests
         
         // пират противника на своем корабле
         var enemyPirate = game.Board.Teams[1].Pirates[0];
-        Assert.Equal(game.Board.Teams[1].Ship.Position, enemyPirate.Position.Position);
+        Assert.Equal(game.Board.Teams[1].ShipPosition, enemyPirate.Position.Position);
         Assert.Equal(new Position(2, 4), enemyPirate.Position.Position);
 
         Assert.Equal(2, game.TurnNo);

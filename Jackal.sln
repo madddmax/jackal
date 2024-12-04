@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackal.Tests2", "Jackal.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackal.Core", "Jackal.Core\Jackal.Core.csproj", "{84B19D12-3D5D-4B65-B11F-C57901096B2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackal.RolloPlayer2", "Jackal.RolloPlayer2\Jackal.RolloPlayer2.csproj", "{947EFB1C-998F-469A-AA04-ECC375559C79}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{84B19D12-3D5D-4B65-B11F-C57901096B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84B19D12-3D5D-4B65-B11F-C57901096B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84B19D12-3D5D-4B65-B11F-C57901096B2C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{947EFB1C-998F-469A-AA04-ECC375559C79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{947EFB1C-998F-469A-AA04-ECC375559C79}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{947EFB1C-998F-469A-AA04-ECC375559C79}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{947EFB1C-998F-469A-AA04-ECC375559C79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

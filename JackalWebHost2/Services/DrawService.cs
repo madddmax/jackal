@@ -51,7 +51,6 @@ public class DrawService : IDrawService
     public List<TileChange> GetTileChanges(Board board, Board prevBoard)
     {
         var tileChanges = new List<TileChange>();
-        var ships = board.Teams.Select(item => item.Ship).ToList();
         
         for (int y = 0; y < board.MapSize; y++)
         {
@@ -62,7 +61,7 @@ public class DrawService : IDrawService
                 if (tile == prevTile) 
                     continue;
                 
-                var tileChange = Draw(tile, ships);
+                var tileChange = Draw(tile, board.Teams);
                 tileChange.X = x;
                 tileChange.Y = y;
                 tileChanges.Add(tileChange);
@@ -148,14 +147,13 @@ public class DrawService : IDrawService
     public DrawMap Map(Board board)
     {
         var changes = new List<TileChange>();
-
-        var ships = board.Teams.Select(item => item.Ship).ToList();
+        
         for (int y = 0; y < board.MapSize; y++)
         {
             for (int x = 0; x < board.MapSize; x++)
             {
                 var tile = board.Map[x, y];
-                var tileChange = Draw(tile, ships);
+                var tileChange = Draw(tile, board.Teams);
                 tileChange.X = x;
                 tileChange.Y = y;
                 changes.Add(tileChange);
@@ -169,15 +167,15 @@ public class DrawService : IDrawService
         };
     }
 
-    private static TileChange Draw(Tile tile, List<Ship> ships)
+    private static TileChange Draw(Tile tile, Team[] teams)
     {
         var tileElement = new TileChange();
 
-        var tileShip = ships.FirstOrDefault(item => item.Position == tile.Position);
-        if (tileShip != null)
+        var teamShip = teams.FirstOrDefault(item => item.ShipPosition == tile.Position);
+        if (teamShip != null)
         {
             tileElement.BackgroundImageSrc = null;
-            tileElement.BackgroundColor = GetTeamColor(tileShip.TeamId);
+            tileElement.BackgroundColor = GetTeamColor(teamShip.Id);
         }
         else if (tile.Type == TileType.Water && tileElement.BackgroundImageSrc == null)
         {
@@ -190,18 +188,18 @@ public class DrawService : IDrawService
         for (int i = 0; i < tile.Levels.Count; i++)
         {
             var level = tile.Levels[i];
-            tileElement.Levels[i] = DrawCoins(level, i, tileShip);
+            tileElement.Levels[i] = DrawCoins(level, i, teamShip);
         }
-        DrawTileBackground(tile, tileShip, ref tileElement);
+        DrawTileBackground(tile, teamShip, ref tileElement);
 
         return tileElement;
     }
 
-    private static LevelChange DrawCoins(TileLevel level, int levelIndex, Ship? tileShip)
+    private static LevelChange DrawCoins(TileLevel level, int levelIndex, Team? teamShip)
     {
         LevelChange levelChange = new LevelChange();
             
-        bool hasCoins = tileShip is { Coins: > 0 } || level.Coins > 0;
+        bool hasCoins = teamShip is { Coins: > 0 } || level.Coins > 0;
             
         levelChange.hasCoins = hasCoins;
         levelChange.Level = levelIndex;
@@ -209,7 +207,7 @@ public class DrawService : IDrawService
         // draw coins
         if (hasCoins)
         {
-            int coins = tileShip?.Coins ?? level.Coins;
+            int coins = teamShip?.Coins ?? level.Coins;
 
             var coin = new DrawCoin
             {
@@ -224,12 +222,12 @@ public class DrawService : IDrawService
         return levelChange;
     }
 
-    private static void DrawTileBackground(Tile tile, Ship? ship, ref TileChange tileChange)
+    private static void DrawTileBackground(Tile tile, Team? teamShip, ref TileChange tileChange)
     {
         TileType type = tile.Type;
 
         // не зарисовываем корабль водой
-        if (ship != null)
+        if (teamShip != null)
         {
             return;
         }

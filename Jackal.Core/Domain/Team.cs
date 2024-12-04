@@ -6,7 +6,7 @@ public record Team
     
     public readonly string Name;
     
-    public readonly Ship Ship;
+    public Position ShipPosition;
     
     public Pirate[] Pirates;
     
@@ -14,11 +14,11 @@ public record Team
     
     public int Coins;
 
-    public Team(int id, string name, Ship ship, Pirate[] pirates)
+    public Team(int id, string name, Position shipPosition, Pirate[] pirates)
     {
         Id = id;
         Name = name;
-        Ship = ship;
+        ShipPosition = shipPosition;
         Pirates = pirates;
     }
 }

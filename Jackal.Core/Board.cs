@@ -136,18 +136,19 @@ public class Board
 
     private void InitTeam(int teamId, string teamName, int x, int y, int piratesPerPlayer)
     {
-        var startPosition = new Position(x, y);
+        var shipPosition = new Position(x, y);
         var pirates = new Pirate[piratesPerPlayer];
         for (int i = 0; i < pirates.Length; i++)
         {
-            pirates[i] = new Pirate(teamId, new TilePosition(startPosition), PirateType.Usual);
+            pirates[i] = new Pirate(teamId, new TilePosition(shipPosition), PirateType.Usual);
         }
-        var ship = new Ship(teamId, startPosition);
+
         foreach (var pirate in pirates)
         {
-            Map[ship.Position].Pirates.Add(pirate);
+            Map[shipPosition].Pirates.Add(pirate);
         }
-        Teams[teamId] = new Team(teamId, teamName, ship, pirates);
+        
+        Teams[teamId] = new Team(teamId, teamName, shipPosition, pirates);
     }
 
     /// <summary>
@@ -163,7 +164,6 @@ public class Board
 
         var ourTeamId = task.TeamId;
         var ourTeam = Teams[ourTeamId];
-        var ourShip = ourTeam.Ship;
 
         if (sourceTile.Type is TileType.Arrow or TileType.Horse or TileType.Ice or TileType.Crocodile)
         {
@@ -232,7 +232,7 @@ public class Board
                     break;
 
                 case TileType.Water:
-                    if (ourShip.Position == newPosition.Position)
+                    if (ourTeam.ShipPosition == newPosition.Position)
                     {
                         // заходим на свой корабль
                         goodTargets.Add(usualMove);
@@ -242,14 +242,14 @@ public class Board
                     }
                     else if (sourceTile.Type == TileType.Water)
                     {
-                        if (source.Position != ourShip.Position &&
+                        if (source.Position != ourTeam.ShipPosition &&
                             GetPossibleSwimming(task.Source.Position).Contains(newPosition.Position))
                         {
                             // пират плавает
                             goodTargets.Add(usualMove);
                         }
 
-                        if (source.Position == ourShip.Position &&
+                        if (source.Position == ourTeam.ShipPosition &&
                             GetPossibleShipMoves(task.Source.Position, MapSize).Contains(newPosition.Position))
                         {
                             // корабль плавает
@@ -320,11 +320,10 @@ public class Board
         SubTurnState subTurn)
     {
         var sourceTile = Map[source.Position];
-        var ourShip = ourTeam.Ship;
 
         IEnumerable<TilePosition> rez = GetNearDeltas(source.Position)
             .Where(IsValidMapPosition)
-            .Where(x => Map[x].Type != TileType.Water || x == ourShip.Position)
+            .Where(x => Map[x].Type != TileType.Water || x == ourTeam.ShipPosition)
             .Select(IncomeTilePosition);
             
         switch (sourceTile.Type)
@@ -351,7 +350,7 @@ public class Board
                 rez = GetHorseDeltas(source.Position)
                     .Where(IsValidMapPosition)
                     .Where(x =>
-                        Map[x].Type != TileType.Water || Teams.Select(t => t.Ship.Position).Contains(x)
+                        Map[x].Type != TileType.Water || Teams.Select(t => t.ShipPosition).Contains(x)
                     )
                     .Select(IncomeTilePosition);
                 break;
@@ -362,13 +361,13 @@ public class Board
             case TileType.Airplane:
                 if (sourceTile.Used == false)
                 {
-                    rez = GetAirplaneMoves(ourShip);
+                    rez = GetAirplaneMoves(ourTeam.ShipPosition);
                 }
                 break;
             case TileType.Crocodile:
                 if (subTurn.AirplaneFlying)
                 {
-                    rez = GetAirplaneMoves(ourShip);
+                    rez = GetAirplaneMoves(ourTeam.ShipPosition);
                     break;
                 }
                     
@@ -377,7 +376,7 @@ public class Board
             case TileType.Ice:
                 if (subTurn.AirplaneFlying)
                 {
-                    rez = GetAirplaneMoves(ourShip);
+                    rez = GetAirplaneMoves(ourTeam.ShipPosition);
                     break;
                 }
                 
@@ -392,7 +391,7 @@ public class Board
                 }
                 break;
             case TileType.Water:
-                if (source.Position == ourShip.Position)
+                if (source.Position == ourTeam.ShipPosition)
                 {
                     // со своего корабля
                     rez = GetPossibleShipMoves(source.Position, MapSize)
@@ -447,12 +446,12 @@ public class Board
         return tile;
     }
     
-    private IEnumerable<TilePosition> GetAirplaneMoves(Ship ourShip) =>
+    private IEnumerable<TilePosition> GetAirplaneMoves(Position ourShipPosition) =>
         AllTiles(x =>
                 x.Type != TileType.Ice &&
                 x.Type != TileType.Crocodile &&
                 x.Type != TileType.Horse &&
-                (x.Type != TileType.Water || x.Position == ourShip.Position)
+                (x.Type != TileType.Water || x.Position == ourShipPosition)
             )
             .Select(x => IncomeTilePosition(x.Position));
 
