@@ -29,7 +29,6 @@ internal class MovingWithCoinAction(TilePosition from, TilePosition to, TilePosi
         if (ourShip.Position == to.Position)
         {
             // перенос монеты на корабль
-            ourShip.Coins++;
             ourTeam.Coins++;
             game.CoinsOnMap--;
 

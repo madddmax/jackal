@@ -10,13 +10,9 @@ public record Ship
     [JsonProperty]
     public Position Position;
 
-    [JsonProperty]
-    public int Coins;
-
     public Ship(int teamId, Position position)
     {
         TeamId = teamId;
         Position = position;
-        Coins = 0;
     }
 }
