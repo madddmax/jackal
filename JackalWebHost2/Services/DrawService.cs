@@ -90,6 +90,7 @@ public class DrawService : IDrawService
             Teams = teams,
             TurnNo = game.TurnNo,
             IsGameOver = game.IsGameOver,
+            GameMessage = game.GameMessage,
             CurrentTeamId = game.CurrentTeamId,
             IsHumanPlayer = game.CurrentPlayer is WebHumanPlayer
         };
