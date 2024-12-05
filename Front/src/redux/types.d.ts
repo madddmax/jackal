@@ -145,6 +145,7 @@ export interface GameStat {
     currentTeamId: number;
     isHumanPlayer: boolean;
     isGameOver: boolean;
+    gameMessage: string;
     teams: GameTeamStat[];
 }
 
