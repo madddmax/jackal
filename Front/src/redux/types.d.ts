@@ -38,6 +38,7 @@ export interface StorageState {
     mapSize: number;
     mapId?: number;
     tilesPackName?: string;
+    gameSpeed: number;
 }
 
 export interface LobbyState {
