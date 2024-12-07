@@ -4,7 +4,7 @@ import { CommonState, MessageInfo } from './commonSlice.types';
 export const commonSlice = createSlice({
     name: 'common',
     initialState: {
-        useSockets: false,
+        useSockets: true,
         messageQueue: [],
     } satisfies CommonState as CommonState,
     reducers: {
