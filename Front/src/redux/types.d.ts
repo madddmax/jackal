@@ -65,6 +65,7 @@ export interface FieldState {
     levels: GameLevel[];
     availableMoves: AvailableMove[];
     highlight?: boolean;
+    dark?: boolean;
 }
 
 export interface AvailableMove {
