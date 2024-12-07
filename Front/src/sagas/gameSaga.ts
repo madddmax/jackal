@@ -97,6 +97,7 @@ export function* oneTurn(action: any) {
 
 export function* applyTurnData(action: any) {
     const result = { data: action.payload };
+    yield put(applyStat(result.data.stats));
     yield put(applyChanges(result.data.changes));
     yield put(
         applyPirateChanges({
@@ -110,8 +111,6 @@ export function* applyTurnData(action: any) {
         yield put(setCurrentHumanTeam(result.data.stats.currentTeamId));
         yield put(highlightHumanMoves({ moves: result.data.moves }));
     }
-
-    yield put(applyStat(result.data.stats));
 
     if (result.data.stats.isGameOver) {
         yield put(highlightHumanMoves({ moves: [] }));

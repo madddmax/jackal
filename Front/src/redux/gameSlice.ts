@@ -374,6 +374,9 @@ export const gameSlice = createSlice({
                     cell.backColor = it.backgroundColor;
                     cell.rotate = it.rotate;
                 }
+                if (state.stat?.isGameOver) {
+                    cell.dark = true;
+                }
                 cell.levels = it.levels.map((lev) => ({
                     ...lev,
                     pirate: undefined,

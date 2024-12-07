@@ -144,9 +144,11 @@ function Cell({ row, col, tooltipRef }: CellProps) {
             <div
                 key="main_cell"
                 id={`cell_${col}_${row}`}
-                className={cn('cell', {
-                    'sell-active': field.highlight && field.highlight === true,
-                })}
+                className={cn(
+                    'cell',
+                    { 'cell-dark': field.dark && field.dark === true },
+                    { 'sell-active': field.highlight && field.highlight === true }
+                )}
                 style={{
                     width: cellSize,
                     height: cellSize,
