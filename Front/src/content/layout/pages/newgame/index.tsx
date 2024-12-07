@@ -137,6 +137,7 @@ function Newgame() {
     const saveToLocalStorage = (hasStoredMapCode: boolean) => {
         dispatch(
             saveMySettings({
+                ...userSettings,
                 groups: players.groups,
                 mapSize,
                 players: players.members,

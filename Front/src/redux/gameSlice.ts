@@ -166,7 +166,6 @@ export const gameSlice = createSlice({
         },
         highlightHumanMoves: (state, action: PayloadAction<PirateMoves>) => {
             let currentTeam = gameSlice.selectors.getCurrentTeam({ game: state })!;
-            console.log('highlightMoves');
             // undraw previous moves
             state.lastMoves.forEach((move) => {
                 const cell = state.fields[move.to.y][move.to.x];
@@ -191,15 +190,7 @@ export const gameSlice = createSlice({
             const pirate = gameSlice.selectors.getPirateById({ game: state }, currentTeam.activePirate);
             if (!pirate) return;
 
-            if (pirate?.position.x != state.highlight_x || pirate?.position.y != state.highlight_y) {
-                const prevCell = state.fields[state.highlight_y][state.highlight_x];
-                prevCell.highlight = false;
-            }
-
-            state.highlight_x = pirate?.position.x || 0;
-            state.highlight_y = pirate?.position.y || 0;
-            const curCell = state.fields[state.highlight_y][state.highlight_x];
-            curCell.highlight = true;
+            gameSlice.caseReducers.highlightPirate(state, highlightPirate(pirate));
 
             const cellPirate = gameSlice.selectors.getCellPirateById({ game: state }, pirate.id);
             if (cellPirate) cellPirate.isActive = true;
@@ -222,6 +213,27 @@ export const gameSlice = createSlice({
                         prev: move.prev,
                     });
                 });
+        },
+        removeHumanMoves: (state) => {
+            // undraw previous moves
+            state.lastMoves.forEach((move) => {
+                const cell = state.fields[move.to.y][move.to.x];
+                cell.availableMoves = [];
+            });
+        },
+        highlightPirate: (state, action: PayloadAction<GamePirate>) => {
+            const pirate = action.payload;
+            if (!pirate) return;
+
+            if (pirate?.position.x != state.highlight_x || pirate?.position.y != state.highlight_y) {
+                const prevCell = state.fields[state.highlight_y][state.highlight_x];
+                prevCell.highlight = false;
+            }
+
+            state.highlight_x = pirate?.position.x || 0;
+            state.highlight_y = pirate?.position.y || 0;
+            const curCell = state.fields[state.highlight_y][state.highlight_x];
+            curCell.highlight = true;
         },
         applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {
             let cached = {} as { [id: number]: GameLevel };
@@ -334,6 +346,9 @@ export const gameSlice = createSlice({
                     };
                     if (level.pirates == undefined) level.pirates = [drawPirate];
                     else level.pirates.push(drawPirate);
+                    if (it.id === team.activePirate) {
+                        gameSlice.caseReducers.highlightPirate(state, highlightPirate(pirate));
+                    }
                 }
             });
 
@@ -427,7 +442,9 @@ export const {
     setCurrentHumanTeam,
     setPirateAutoChange,
     chooseHumanPirate,
+    highlightPirate,
     highlightHumanMoves,
+    removeHumanMoves,
     applyPirateChanges,
     applyChanges,
     initGame,
