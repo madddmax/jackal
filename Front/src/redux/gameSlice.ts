@@ -38,7 +38,7 @@ export const gameSlice = createSlice({
             mapSize: 11,
             players: ['human', 'robot2', 'robot', 'robot2'],
             playersCount: 4,
-            gameSpeed: 5,
+            gameSpeed: 1,
         },
         teams: [],
         currentHumanTeamId: 0,

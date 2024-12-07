@@ -85,7 +85,7 @@ describe('redux logic tests', () => {
         userSettings: {
             groups: [],
             mapSize: 11,
-            gameSpeed: 5,
+            gameSpeed: 1,
         },
         teams: [
             {
