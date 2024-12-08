@@ -91,9 +91,10 @@ public class Game
             var winners = string.Join(" и ", Board.Teams.Where(x => x.Coins == maxCoins).Select(x => x.Name));
             GameMessage = $"Победа {winners} путём {gameOverMessage}!";
         }
-        else if(TurnNo % 12 == 0)
+        else
         {
-            GameMessage = GameMessages.List[TurnNo % GameMessages.List.Count];
+            var gameMessages = GameMessages.Storage[0];
+            GameMessage = gameMessages[TurnNo / _players.Length % gameMessages.Length];
         }
     }
 
@@ -165,7 +166,7 @@ public class Game
     /// <summary>
     /// Игровое сообщение
     /// </summary>
-    public string GameMessage { get; private set; } = "Удачи в поисках пиратских сокровищ.";
+    public string GameMessage { get; private set; } = GameMessages.Storage[0][0];
 
     /// <summary>
     /// Текущий ход - определяет какая команда ходит
