@@ -21,8 +21,21 @@ public class Game
     private readonly List<Move> _availableMoves;
     private readonly List<IGameAction> _actions;
 
+    /// <summary>
+    /// ИД игры
+    /// </summary>
     public readonly Guid GameId = Guid.NewGuid();
+    
+    /// <summary>
+    /// Индекс набора игровых сообщений
+    /// </summary>
+    private int MessagesKitIndex => Math.Abs(GameId.GetHashCode() % GameMessages.Kit.Length);
 
+    /// <summary>
+    /// Игровое сообщение
+    /// </summary>
+    public string GameMessage { get; private set; }
+    
     public Game(IPlayer[] players, Board board)
     {
         _players = players;
@@ -35,6 +48,8 @@ public class Game
         {
             player.OnNewGame();
         }
+
+        GameMessage = GameMessages.Kit[MessagesKitIndex][0];
     }
 
     public void Turn()
@@ -93,7 +108,7 @@ public class Game
         }
         else
         {
-            var gameMessages = GameMessages.Storage[0];
+            var gameMessages = GameMessages.Kit[MessagesKitIndex];
             GameMessage = gameMessages[TurnNo / _players.Length % gameMessages.Length];
         }
     }
@@ -162,11 +177,6 @@ public class Game
     /// Конец игры
     /// </summary>
     public bool IsGameOver { get; private set; }
-
-    /// <summary>
-    /// Игровое сообщение
-    /// </summary>
-    public string GameMessage { get; private set; } = GameMessages.Storage[0][0];
 
     /// <summary>
     /// Текущий ход - определяет какая команда ходит
