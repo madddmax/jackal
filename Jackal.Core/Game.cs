@@ -103,7 +103,10 @@ public class Game
         if (IsGameOver)
         {
             var maxCoins = Board.Teams.Max(x => x.Coins);
-            var winners = string.Join(" и ", Board.Teams.Where(x => x.Coins == maxCoins).Select(x => x.Name));
+            var winners = Board.Teams.Length == 1 || Board.Teams.Any(x => x.Coins != maxCoins)
+                ? string.Join(" и ", Board.Teams.Where(x => x.Coins == maxCoins).Select(x => x.Name))
+                : "дружбы";
+            
             GameMessage = $"Победа {winners} путём {gameOverMessage}!";
         }
         else
@@ -306,7 +309,7 @@ public class Game
         // закончились пираты
         if (Board.AllPirates.All(p => p.IsDisable))
         {
-            return (true, "пиратских похорон");
+            return (true, "конца всех пиратов");
         }
             
         // защита от яичинга (ходов без открытия клеток или переноса монет)
