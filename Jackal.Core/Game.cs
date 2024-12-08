@@ -21,8 +21,21 @@ public class Game
     private readonly List<Move> _availableMoves;
     private readonly List<IGameAction> _actions;
 
+    /// <summary>
+    /// ИД игры
+    /// </summary>
     public readonly Guid GameId = Guid.NewGuid();
+    
+    /// <summary>
+    /// Индекс набора игровых сообщений
+    /// </summary>
+    private int MessagesKitIndex => Math.Abs(GameId.GetHashCode() % GameMessages.Kit.Length);
 
+    /// <summary>
+    /// Игровое сообщение
+    /// </summary>
+    public string GameMessage { get; private set; }
+    
     public Game(IPlayer[] players, Board board)
     {
         _players = players;
@@ -35,6 +48,8 @@ public class Game
         {
             player.OnNewGame();
         }
+
+        GameMessage = GameMessages.Kit[MessagesKitIndex][0];
     }
 
     public void Turn()
@@ -88,12 +103,16 @@ public class Game
         if (IsGameOver)
         {
             var maxCoins = Board.Teams.Max(x => x.Coins);
-            var winners = string.Join(" и ", Board.Teams.Where(x => x.Coins == maxCoins).Select(x => x.Name));
+            var winners = Board.Teams.Length == 1 || Board.Teams.Any(x => x.Coins != maxCoins)
+                ? string.Join(" и ", Board.Teams.Where(x => x.Coins == maxCoins).Select(x => x.Name))
+                : "дружбы";
+            
             GameMessage = $"Победа {winners} путём {gameOverMessage}!";
         }
-        else if(TurnNo % 12 == 0)
+        else
         {
-            GameMessage = GameMessages.List[TurnNo % GameMessages.List.Count];
+            var gameMessages = GameMessages.Kit[MessagesKitIndex];
+            GameMessage = gameMessages[TurnNo / _players.Length % gameMessages.Length];
         }
     }
 
@@ -161,11 +180,6 @@ public class Game
     /// Конец игры
     /// </summary>
     public bool IsGameOver { get; private set; }
-
-    /// <summary>
-    /// Игровое сообщение
-    /// </summary>
-    public string GameMessage { get; private set; } = "Удачи в поисках пиратских сокровищ.";
 
     /// <summary>
     /// Текущий ход - определяет какая команда ходит
@@ -295,7 +309,7 @@ public class Game
         // закончились пираты
         if (Board.AllPirates.All(p => p.IsDisable))
         {
-            return (true, "пиратских похорон");
+            return (true, "конца всех пиратов");
         }
             
         // защита от яичинга (ходов без открытия клеток или переноса монет)
