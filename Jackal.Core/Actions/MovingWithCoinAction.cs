@@ -37,12 +37,14 @@ internal class MovingWithCoinAction(TilePosition from, TilePosition to, TilePosi
         {
             // монета в воде - тонет
             game.CoinsOnMap--;
+            game.LostCoins++;
             game.LastActionTurnNo = game.TurnNo;
         }
         else if (targetTile.Type == TileType.Cannibal)
         {
             // монета на людоеде - пропадает т.к. Пятница не реализован
             game.CoinsOnMap--;
+            game.LostCoins++;
             game.LastActionTurnNo = game.TurnNo;
         }
         else
