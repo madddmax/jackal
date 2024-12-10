@@ -32,6 +32,11 @@ public class TestGame
     /// Конец игры
     /// </summary>
     public bool IsGameOver => _testGame.IsGameOver;
+
+    /// <summary>
+    /// Игровое сообщение
+    /// </summary>
+    public string GameMessage => _testGame.GameMessage;
     
     /// <summary>
     /// Конструктор, всегда тестируем - производим ход только одной командой.
@@ -68,13 +73,19 @@ public class TestGame
     /// следовательно ход не будет передаваться вражеской команде
     /// </summary>
     /// <param name="piratePosition">Позиция пирата противника</param>
-    public void AddEnemyTeamAndPirate(TilePosition piratePosition)
+    /// <param name="coins">Количество затащенных монет</param>
+    public void AddEnemyTeamAndPirate(TilePosition piratePosition, int coins = 0)
     {
         const int enemyTeamId = 1;
         
         // помещаем корабль противника сверху на противоположный берег
         var shipPosition = new Position((Board.MapSize - 1) / 2, Board.MapSize - 1);
-        Board.Teams = [Board.Teams[0], new Team(enemyTeamId, "Test enemy team", shipPosition, [])];
+        var enemyTeam = new Team(enemyTeamId, "Test enemy team", shipPosition, [])
+        {
+            Coins = coins
+        };
+
+        Board.Teams = [Board.Teams[0], enemyTeam];
         _testGame.AddPirate(enemyTeamId, piratePosition, PirateType.Usual);
     }
 

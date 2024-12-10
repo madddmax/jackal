@@ -18,6 +18,11 @@ public class Game
     /// </summary>
     public int CoinsOnMap;
 
+    /// <summary>
+    /// Потерянные монеты
+    /// </summary>
+    public int LostCoins;
+
     private readonly List<Move> _availableMoves;
     private readonly List<IGameAction> _actions;
 
@@ -284,12 +289,8 @@ public class Game
         if (orderedTeamCoins.Count > 1)
         {
             // свободное золото
-            int freeCoins = Board.Generator.TotalCoins;
-            foreach (var teamCoins in orderedTeamCoins)
-            {
-                freeCoins -= teamCoins;
-            }
-
+            int freeCoins = Board.Generator.TotalCoins - LostCoins - orderedTeamCoins.Sum();
+            
             // игрок затащил большую часть монет
             int firstTeamCoins = orderedTeamCoins[0];
             int secondTeamCoins = orderedTeamCoins[1] + freeCoins;
