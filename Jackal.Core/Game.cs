@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Jackal.Core.Actions;
 using Jackal.Core.Domain;
+using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
 
 namespace Jackal.Core;
@@ -41,10 +42,9 @@ public class Game
     /// </summary>
     public string GameMessage { get; private set; }
     
-    public Game(IPlayer[] players, Board board)
+    public Game(IPlayer[] players, IMapGenerator mapGenerator, int mapSize, int piratesPerPlayer)
     {
         _players = players;
-        Board = board;
 
         _availableMoves = new List<Move>();
         _actions = new List<IGameAction>();
@@ -54,6 +54,7 @@ public class Game
             player.OnNewGame();
         }
 
+        Board = new Board(players, mapGenerator, mapSize, piratesPerPlayer);
         GameMessage = GameMessages.Kit[MessagesKitIndex][0];
     }
 

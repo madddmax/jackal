@@ -45,12 +45,8 @@ public class TestGame
     /// <param name="generator">Генератор карты</param>
     /// <param name="mapSize">Размер карты вместе с морем, по умолчанию минимальный 5x5 (поле из 5 клеток)</param>
     /// <param name="piratesPerPlayer">Пиратов в команде, по умолчанию 1</param>
-    public TestGame (IMapGenerator generator, int mapSize = 5, int piratesPerPlayer = 1)
-    {
-        IPlayer[] players = [new WebHumanPlayer()];
-        var board = new Board(players, generator, mapSize, piratesPerPlayer);
-        _testGame = new Game(players, board);
-    }
+    public TestGame (IMapGenerator generator, int mapSize = 5, int piratesPerPlayer = 1) => 
+        _testGame = new Game([new WebHumanPlayer()], generator, mapSize, piratesPerPlayer);
 
     /// <summary>
     /// Добавить монету в игру

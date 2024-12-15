@@ -128,7 +128,7 @@ public class Program
         services.AddScoped<ILobbyService, LobbyService>();
         services.AddScoped<IFastUserService, FastUserService>();
 
-        services.AddScoped<IGameStateRepository, InMemoryGameStateRepository>();
+        services.AddScoped<IGameRepository, InMemoryGameRepository>();
         services.AddScoped<ILobbyRepository, InMemoryLobbyRepository>();
         
         services.AddScoped<IUserAuthProvider, UserAuthProvider>();

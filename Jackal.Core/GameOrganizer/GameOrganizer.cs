@@ -74,7 +74,7 @@ public class GameOrganizer
         var mapSize = 13;
         var randomMap = new RandomMapGenerator(_mapId, mapSize);
         var board = new Board(players, randomMap, mapSize, 3);
-        var game = new Game(players, board);
+        var game = new Game(players, randomMap, mapSize, 3);
 
         while (game.IsGameOver == false)
         {

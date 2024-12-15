@@ -5,18 +5,17 @@ using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Exceptions;
 using JackalWebHost2.Models;
 using JackalWebHost2.Models.Player;
-using GameState = JackalWebHost2.Models.GameState;
 
 namespace JackalWebHost2.Services;
 
 public class GameService : IGameService
 {
-    private readonly IGameStateRepository _gameStateRepository;
+    private readonly IGameRepository _gameRepository;
     private readonly IDrawService _drawService;
     
-    public GameService(IGameStateRepository gameStateRepository, IDrawService drawService)
+    public GameService(IGameRepository gameRepository, IDrawService drawService)
     {
-        _gameStateRepository = gameStateRepository;
+        _gameRepository = gameRepository;
         _drawService = drawService;
     }
     
@@ -24,9 +23,7 @@ public class GameService : IGameService
     {
         // todo validate game name
         
-        GameState gameState = new GameState();
         GameSettings gameSettings = request.Settings;
-
         IPlayer[] gamePlayers = new IPlayer[gameSettings.Players.Length];
         int index = 0;
 
@@ -53,15 +50,14 @@ public class GameService : IGameService
         // );
         
         int piratesPerPlayer = 3;
-        gameState.board = new Board(gamePlayers, mapGenerator, mapSize, piratesPerPlayer);
-        gameState.game = new Game(gamePlayers, gameState.board);
+        var game = new Game(gamePlayers, mapGenerator, mapSize, piratesPerPlayer);
 
-        await _gameStateRepository.CreateGameState(request.GameName, gameState);
+        await _gameRepository.CreateGame(request.GameName, game);
         
-        var map = _drawService.Map(gameState.board);
+        var map = _drawService.Map(game.Board);
 
         List<PirateChange> pirateChanges = [];
-        foreach (var pirate in gameState.game.Board.AllPirates)
+        foreach (var pirate in game.Board.AllPirates)
         {
             pirateChanges.Add(new PirateChange(pirate));
         }
@@ -72,52 +68,52 @@ public class GameService : IGameService
             Pirates = pirateChanges,
             Map = map,
             MapId = gameSettings.MapId.Value,
-            Statistics = _drawService.GetStatistics(gameState.game),
-            Moves = _drawService.GetAvailableMoves(gameState.game)
+            Statistics = _drawService.GetStatistics(game),
+            Moves = _drawService.GetAvailableMoves(game)
         };
     }
     
     public async Task<TurnGameResult> MakeGameTurn(TurnGameModel request)
     {
-        var gameState = await _gameStateRepository.GetGameState(request.GameName);
-        if (gameState == null)
+        var game = await _gameRepository.GetGame(request.GameName);
+        if (game == null)
         {
             throw new GameNotFoundException();
         }
 
-        if (gameState.game.IsGameOver)
+        if (game.IsGameOver)
         {
             return new TurnGameResult
             {
                 PirateChanges = [],
                 Changes = [],
-                Statistics = _drawService.GetStatistics(gameState.game),
+                Statistics = _drawService.GetStatistics(game),
                 Moves = []
             };
         }
         
-        var prevBoardStr = JsonHelper.SerializeWithType(gameState.board);
+        var prevBoardStr = JsonHelper.SerializeWithType(game.Board);
             
-        if (gameState.game.CurrentPlayer is WebHumanPlayer && request.TurnNum.HasValue)
+        if (game.CurrentPlayer is WebHumanPlayer && request.TurnNum.HasValue)
         {
-            gameState.game.CurrentPlayer.SetHumanMove(request.TurnNum.Value, request.PirateId);
+            game.CurrentPlayer.SetHumanMove(request.TurnNum.Value, request.PirateId);
         }
 
-        gameState.game.Turn();
-        if (gameState.game.IsGameOver)
+        game.Turn();
+        if (game.IsGameOver)
         {
-            gameState.board.ShowUnknownTiles();
+            game.Board.ShowUnknownTiles();
         }
         
-        await _gameStateRepository.UpdateGameState(request.GameName, gameState);
+        await _gameRepository.UpdateGame(request.GameName, game);
         var prevBoard = JsonHelper.DeserializeWithType<Board>(prevBoardStr);
         
         return new TurnGameResult
         {
-            PirateChanges = _drawService.GetPirateChanges(gameState.board, prevBoard),
-            Changes = _drawService.GetTileChanges(gameState.board, prevBoard),
-            Statistics = _drawService.GetStatistics(gameState.game),
-            Moves = _drawService.GetAvailableMoves(gameState.game)
+            PirateChanges = _drawService.GetPirateChanges(game.Board, prevBoard),
+            Changes = _drawService.GetTileChanges(game.Board, prevBoard),
+            Statistics = _drawService.GetStatistics(game),
+            Moves = _drawService.GetAvailableMoves(game)
         };
     }
 }
