@@ -5,6 +5,7 @@ using Jackal.Core.Actions;
 using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
+using Newtonsoft.Json;
 
 namespace Jackal.Core;
 
@@ -35,11 +36,13 @@ public class Game
     /// <summary>
     /// Индекс набора игровых сообщений
     /// </summary>
+    [JsonIgnore]
     private int MessagesKitIndex => Math.Abs(GameId.GetHashCode() % GameMessages.Kit.Length);
 
     /// <summary>
     /// Игровое сообщение
     /// </summary>
+    [JsonIgnore]
     public string GameMessage { get; private set; }
     
     public Game(IPlayer[] players, IMapGenerator mapGenerator, int mapSize, int piratesPerPlayer)
