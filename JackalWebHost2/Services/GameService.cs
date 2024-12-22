@@ -48,8 +48,9 @@ public class GameService : IGameService
         //     new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.FourArrowsDiagonal },
         //     new TileParams(TileType.Quake)
         // );
-        
-        var gameRequest = new GameRequest(gamePlayers, mapGenerator, mapSize);
+
+        var gameMode = gameSettings.GameMode ?? GameModeType.FreeForAll;
+        var gameRequest = new GameRequest(mapSize, mapGenerator, gamePlayers, gameMode);
         var game = new Game(gameRequest);
 
         await _gameRepository.CreateGame(request.GameName, game);

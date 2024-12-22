@@ -47,7 +47,9 @@ public class TestGame
     /// <param name="piratesPerPlayer">Пиратов в команде, по умолчанию 1</param>
     public TestGame(IMapGenerator generator, int mapSize = 5, int piratesPerPlayer = 1)
     {
-        var gameRequest = new GameRequest([new WebHumanPlayer()], generator, mapSize, piratesPerPlayer);
+        var gameRequest = new GameRequest(
+            mapSize, generator, [new WebHumanPlayer()], GameModeType.FreeForAll, piratesPerPlayer
+        );
         _testGame = new Game(gameRequest);
     }
 

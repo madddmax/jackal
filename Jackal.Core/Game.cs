@@ -9,7 +9,15 @@ using Newtonsoft.Json;
 
 namespace Jackal.Core;
 
-public record GameRequest(IPlayer[] Players, IMapGenerator MapGenerator, int MapSize, int PiratesPerPlayer = 3);
+public record GameRequest(
+    // данные по карте todo подумать об объединении
+    int MapSize,
+    IMapGenerator MapGenerator,
+    // данные по игрокам
+    IPlayer[] Players,
+    GameModeType GameMode = GameModeType.FreeForAll,
+    int PiratesPerPlayer = 3
+);
 
 public class Game
 {
