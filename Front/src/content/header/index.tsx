@@ -37,6 +37,7 @@ const Header = () => {
                         mapId: userSettings.mapId,
                         mapSize: 11,
                         tilesPackName: userSettings.tilesPackName,
+                        mode: 1
                     },
                 })
                 .catch((err) => {
@@ -55,6 +56,7 @@ const Header = () => {
                         mapId: userSettings.mapId,
                         mapSize: 11,
                         tilesPackName: userSettings.tilesPackName,
+                        mode: 1
                     },
                 } as GameStartRequest,
             });
