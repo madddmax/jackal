@@ -61,13 +61,13 @@ public class Board
         Teams = teams;
     }
 
-    public Board(IPlayer[] players, IMapGenerator mapGenerator, int mapSize, int piratesPerPlayer)
+    public Board(GameRequest request)
     {
-        Generator = mapGenerator;
-        MapSize = mapSize;
-        Map = new Map(mapSize);
+        Generator = request.MapGenerator;
+        MapSize = request.MapSize;
+        Map = new Map(MapSize);
         InitMap();
-        InitTeams(players, piratesPerPlayer);
+        InitTeams(request.Players, request.PiratesPerPlayer);
     }
 
     private void InitTeams(IPlayer[] players, int piratesPerPlayer)

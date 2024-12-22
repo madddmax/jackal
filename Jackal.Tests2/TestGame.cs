@@ -37,7 +37,7 @@ public class TestGame
     /// Игровое сообщение
     /// </summary>
     public string GameMessage => _testGame.GameMessage;
-    
+
     /// <summary>
     /// Конструктор, всегда тестируем - производим ход только одной командой.
     /// Пиратов команды противника добавляем отдельно, за них не ходим.
@@ -45,8 +45,11 @@ public class TestGame
     /// <param name="generator">Генератор карты</param>
     /// <param name="mapSize">Размер карты вместе с морем, по умолчанию минимальный 5x5 (поле из 5 клеток)</param>
     /// <param name="piratesPerPlayer">Пиратов в команде, по умолчанию 1</param>
-    public TestGame (IMapGenerator generator, int mapSize = 5, int piratesPerPlayer = 1) => 
-        _testGame = new Game([new WebHumanPlayer()], generator, mapSize, piratesPerPlayer);
+    public TestGame(IMapGenerator generator, int mapSize = 5, int piratesPerPlayer = 1)
+    {
+        var gameRequest = new GameRequest([new WebHumanPlayer()], generator, mapSize, piratesPerPlayer);
+        _testGame = new Game(gameRequest);
+    }
 
     /// <summary>
     /// Добавить монету в игру

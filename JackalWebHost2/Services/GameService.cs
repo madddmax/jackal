@@ -49,8 +49,8 @@ public class GameService : IGameService
         //     new TileParams(TileType.Quake)
         // );
         
-        int piratesPerPlayer = 3;
-        var game = new Game(gamePlayers, mapGenerator, mapSize, piratesPerPlayer);
+        var gameRequest = new GameRequest(gamePlayers, mapGenerator, mapSize);
+        var game = new Game(gameRequest);
 
         await _gameRepository.CreateGame(request.GameName, game);
         

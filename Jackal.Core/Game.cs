@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 
 namespace Jackal.Core;
 
+public record GameRequest(IPlayer[] Players, IMapGenerator MapGenerator, int MapSize, int PiratesPerPlayer = 3);
+
 public class Game
 {
     private readonly IPlayer[] _players;
@@ -45,9 +47,9 @@ public class Game
     [JsonIgnore]
     public string GameMessage { get; private set; }
     
-    public Game(IPlayer[] players, IMapGenerator mapGenerator, int mapSize, int piratesPerPlayer)
+    public Game(GameRequest request)
     {
-        _players = players;
+        _players = request.Players;
 
         _availableMoves = new List<Move>();
         _actions = new List<IGameAction>();
@@ -57,7 +59,7 @@ public class Game
             player.OnNewGame();
         }
 
-        Board = new Board(players, mapGenerator, mapSize, piratesPerPlayer);
+        Board = new Board(request);
         GameMessage = GameMessages.Kit[MessagesKitIndex][0];
     }
 
