@@ -1,21 +1,21 @@
-﻿using JackalWebHost2.Models;
+﻿using Jackal.Core;
 
 namespace JackalWebHost2.Data.Interfaces;
 
-public interface IGameStateRepository
+public interface IGameRepository
 {
     /// <summary>
     /// Получить состояние игры
     /// </summary>
-    Task<GameState?> GetGameState(string gameName);
+    Task<Game?> GetGame(string gameName);
 
     /// <summary>
     /// Создать новое игровое состояние
     /// </summary>
-    Task CreateGameState(string gameName, GameState gameState);
+    Task CreateGame(string gameName, Game game);
 
     /// <summary>
     /// Обновить состояние игры
     /// </summary>
-    Task UpdateGameState(string gameName, GameState gameState);
+    Task UpdateGame(string gameName, Game gameState);
 }

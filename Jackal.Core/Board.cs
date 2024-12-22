@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
-using Jackal.Core.Players;
 using Newtonsoft.Json;
 
 namespace Jackal.Core;
@@ -61,39 +60,60 @@ public class Board
         Teams = teams;
     }
 
-    public Board(IPlayer[] players, IMapGenerator mapGenerator, int mapSize, int piratesPerPlayer)
+    public Board(GameRequest request)
     {
-        Generator = mapGenerator;
-        MapSize = mapSize;
-        Map = new Map(mapSize);
+        Generator = request.MapGenerator;
+        MapSize = request.MapSize;
+        Map = new Map(MapSize);
         InitMap();
-        InitTeams(players, piratesPerPlayer);
+        InitTeams(request);
     }
 
-    private void InitTeams(IPlayer[] players, int piratesPerPlayer)
+    private void InitTeams(GameRequest request)
     {
+        var players = request.Players;
         Teams = new Team[players.Length];
+        
         switch (players.Length)
         {
             case 1:
-                InitTeam(0, players[0].GetType().Name, (MapSize - 1) / 2, 0, piratesPerPlayer);
-                Teams[0].Enemies = [];
+                InitTeam(0, players[0].GetType().Name, (MapSize - 1) / 2, 0, request.PiratesPerPlayer);
+                Teams[0].EnemyTeamIds = [];
                 break;
             case 2:
-                InitTeam(0, players[0].GetType().Name, (MapSize - 1) / 2, 0, piratesPerPlayer);
-                InitTeam(1, players[1].GetType().Name, (MapSize - 1) / 2, (MapSize - 1), piratesPerPlayer);
-                Teams[0].Enemies = [1];
-                Teams[1].Enemies = [0];
+                InitTeam(0, players[0].GetType().Name, (MapSize - 1) / 2, 0, request.PiratesPerPlayer);
+                InitTeam(1, players[1].GetType().Name, (MapSize - 1) / 2, (MapSize - 1), request.PiratesPerPlayer);
+                Teams[0].EnemyTeamIds = [1];
+                Teams[1].EnemyTeamIds = [0];
                 break;
             case 4:
-                InitTeam(0, players[0].GetType().Name, (MapSize - 1) / 2, 0, piratesPerPlayer);
-                InitTeam(1, players[1].GetType().Name, 0, (MapSize - 1) / 2, piratesPerPlayer);
-                InitTeam(2, players[2].GetType().Name, (MapSize - 1) / 2, (MapSize - 1), piratesPerPlayer);
-                InitTeam(3, players[3].GetType().Name, (MapSize - 1), (MapSize - 1) / 2, piratesPerPlayer);
-                Teams[0].Enemies = [1, 2, 3];
-                Teams[1].Enemies = [0, 2, 3];
-                Teams[2].Enemies = [0, 1, 3];
-                Teams[3].Enemies = [0, 1, 2];
+                InitTeam(0, players[0].GetType().Name, (MapSize - 1) / 2, 0, request.PiratesPerPlayer);
+                InitTeam(1, players[1].GetType().Name, 0, (MapSize - 1) / 2, request.PiratesPerPlayer);
+                InitTeam(2, players[2].GetType().Name, (MapSize - 1) / 2, (MapSize - 1), request.PiratesPerPlayer);
+                InitTeam(3, players[3].GetType().Name, (MapSize - 1), (MapSize - 1) / 2, request.PiratesPerPlayer);
+
+                if (request.GameMode == GameModeType.TwoPlayersInTeam)
+                {
+                    Teams[0].EnemyTeamIds = [1, 3];
+                    Teams[0].AllyTeamId = 2;
+                    
+                    Teams[1].EnemyTeamIds = [0, 2];
+                    Teams[1].AllyTeamId = 3;
+                    
+                    Teams[2].EnemyTeamIds = [1, 3];
+                    Teams[2].AllyTeamId = 0;
+                    
+                    Teams[3].EnemyTeamIds = [0, 2];
+                    Teams[3].AllyTeamId = 1;
+                }
+                else
+                {
+                    Teams[0].EnemyTeamIds = [1, 2, 3];
+                    Teams[1].EnemyTeamIds = [0, 2, 3];
+                    Teams[2].EnemyTeamIds = [0, 1, 3];
+                    Teams[3].EnemyTeamIds = [0, 1, 2];
+                }
+
                 break;
             default:
                 throw new NotSupportedException("Only one player, two players or four");
@@ -164,6 +184,9 @@ public class Board
 
         var ourTeamId = task.TeamId;
         var ourTeam = Teams[ourTeamId];
+        var allyTeam = ourTeam.AllyTeamId.HasValue 
+            ? Teams[ourTeam.AllyTeamId.Value] 
+            : null;
 
         if (sourceTile.Type is TileType.Arrow or TileType.Horse or TileType.Ice or TileType.Crocodile)
         {
@@ -232,7 +255,8 @@ public class Board
                     break;
 
                 case TileType.Water:
-                    if (ourTeam.ShipPosition == newPosition.Position)
+                    if (ourTeam.ShipPosition == newPosition.Position ||
+                        (allyTeam != null && allyTeam.ShipPosition == newPosition.Position))
                     {
                         // заходим на свой корабль
                         goodTargets.Add(usualMove);
@@ -242,19 +266,8 @@ public class Board
                     }
                     else if (sourceTile.Type == TileType.Water)
                     {
-                        if (source.Position != ourTeam.ShipPosition &&
-                            GetPossibleSwimming(task.Source.Position).Contains(newPosition.Position))
-                        {
-                            // пират плавает
-                            goodTargets.Add(usualMove);
-                        }
-
-                        if (source.Position == ourTeam.ShipPosition &&
-                            GetPossibleShipMoves(task.Source.Position, MapSize).Contains(newPosition.Position))
-                        {
-                            // корабль плавает
-                            goodTargets.Add(usualMove);
-                        }
+                        // пират плавает на корабле или брасом
+                        goodTargets.Add(usualMove);
                     }
                     else if (sourceTile.Type is TileType.Arrow or TileType.Cannon or TileType.Ice)
                     {
@@ -264,11 +277,12 @@ public class Board
                         if (Map[task.Source].Coins > 0)
                             goodTargets.Add(coinMove);
                     }
+
                     break;
 
                 case TileType.Fort:
                 case TileType.RespawnFort:
-                    if (newPositionTile.HasNoEnemy(ourTeamId))
+                    if (newPositionTile.HasNoEnemy(ourTeam.EnemyTeamIds))
                     {
                         // форт не занят противником
                         goodTargets.Add(usualMove);
@@ -298,7 +312,7 @@ public class Board
 
                     var newPositionTileLevel = Map[newPosition];
                     if (Map[task.Source].Coins > 0 && 
-                        newPositionTileLevel.HasNoEnemy(ourTeamId))
+                        newPositionTileLevel.HasNoEnemy(ourTeam.EnemyTeamIds))
                     {
                         goodTargets.Add(coinMove);
                     }
@@ -319,13 +333,20 @@ public class Board
         Team ourTeam, 
         SubTurnState subTurn)
     {
-        var sourceTile = Map[source.Position];
+        var allyTeam = ourTeam.AllyTeamId.HasValue 
+            ? Teams[ourTeam.AllyTeamId.Value] 
+            : null;
 
-        IEnumerable<TilePosition> rez = GetNearDeltas(source.Position)
+        var rez = GetNearDeltas(source.Position)
             .Where(IsValidMapPosition)
-            .Where(x => Map[x].Type != TileType.Water || x == ourTeam.ShipPosition)
+            .Where(x =>
+                Map[x].Type != TileType.Water ||
+                x == ourTeam.ShipPosition ||
+                (allyTeam != null && x == allyTeam.ShipPosition)
+            )
             .Select(IncomeTilePosition);
             
+        var sourceTile = Map[source.Position];
         switch (sourceTile.Type)
         {
             case TileType.Hole:
@@ -337,7 +358,7 @@ public class Board
                 else if (subTurn.FallingInTheHole)
                 {
                     var freeHoleTiles = holeTiles
-                        .Where(x => x.Position != source.Position && x.HasNoEnemy(ourTeam.Id))
+                        .Where(x => x.Position != source.Position && x.HasNoEnemy(ourTeam.EnemyTeamIds))
                         .ToList();
 
                     if (freeHoleTiles.Count > 0)
@@ -361,13 +382,13 @@ public class Board
             case TileType.Airplane:
                 if (sourceTile.Used == false)
                 {
-                    rez = GetAirplaneMoves(ourTeam.ShipPosition);
+                    rez = GetAirplaneMoves(ourTeam.ShipPosition, allyTeam?.ShipPosition);
                 }
                 break;
             case TileType.Crocodile:
                 if (subTurn.AirplaneFlying)
                 {
-                    rez = GetAirplaneMoves(ourTeam.ShipPosition);
+                    rez = GetAirplaneMoves(ourTeam.ShipPosition, allyTeam?.ShipPosition);
                     break;
                 }
                     
@@ -376,7 +397,7 @@ public class Board
             case TileType.Ice:
                 if (subTurn.AirplaneFlying)
                 {
-                    rez = GetAirplaneMoves(ourTeam.ShipPosition);
+                    rez = GetAirplaneMoves(ourTeam.ShipPosition, allyTeam?.ShipPosition);
                     break;
                 }
                 
@@ -391,7 +412,8 @@ public class Board
                 }
                 break;
             case TileType.Water:
-                if (source.Position == ourTeam.ShipPosition)
+                if (source.Position == ourTeam.ShipPosition ||
+                    (allyTeam != null && source.Position == allyTeam.ShipPosition))
                 {
                     // со своего корабля
                     rez = GetPossibleShipMoves(source.Position, MapSize)
@@ -445,13 +467,17 @@ public class Board
 
         return tile;
     }
-    
-    private IEnumerable<TilePosition> GetAirplaneMoves(Position ourShipPosition) =>
+
+    private IEnumerable<TilePosition> GetAirplaneMoves(Position ourShipPosition, Position? allyShipPosition) =>
         AllTiles(x =>
                 x.Type != TileType.Ice &&
                 x.Type != TileType.Crocodile &&
                 x.Type != TileType.Horse &&
-                (x.Type != TileType.Water || x.Position == ourShipPosition)
+                (
+                    x.Type != TileType.Water ||
+                    x.Position == ourShipPosition ||
+                    x.Position == allyShipPosition
+                )
             )
             .Select(x => IncomeTilePosition(x.Position));
 

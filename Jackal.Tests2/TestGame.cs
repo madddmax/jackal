@@ -37,7 +37,7 @@ public class TestGame
     /// Игровое сообщение
     /// </summary>
     public string GameMessage => _testGame.GameMessage;
-    
+
     /// <summary>
     /// Конструктор, всегда тестируем - производим ход только одной командой.
     /// Пиратов команды противника добавляем отдельно, за них не ходим.
@@ -45,11 +45,12 @@ public class TestGame
     /// <param name="generator">Генератор карты</param>
     /// <param name="mapSize">Размер карты вместе с морем, по умолчанию минимальный 5x5 (поле из 5 клеток)</param>
     /// <param name="piratesPerPlayer">Пиратов в команде, по умолчанию 1</param>
-    public TestGame (IMapGenerator generator, int mapSize = 5, int piratesPerPlayer = 1)
+    public TestGame(IMapGenerator generator, int mapSize = 5, int piratesPerPlayer = 1)
     {
-        IPlayer[] players = [new WebHumanPlayer()];
-        var board = new Board(players, generator, mapSize, piratesPerPlayer);
-        _testGame = new Game(players, board);
+        var gameRequest = new GameRequest(
+            mapSize, generator, [new WebHumanPlayer()], GameModeType.FreeForAll, piratesPerPlayer
+        );
+        _testGame = new Game(gameRequest);
     }
 
     /// <summary>
@@ -82,9 +83,11 @@ public class TestGame
         var shipPosition = new Position((Board.MapSize - 1) / 2, Board.MapSize - 1);
         var enemyTeam = new Team(enemyTeamId, "Test enemy team", shipPosition, [])
         {
-            Coins = coins
+            Coins = coins,
+            EnemyTeamIds = [0]
         };
 
+        Board.Teams[0].EnemyTeamIds = [1];
         Board.Teams = [Board.Teams[0], enemyTeam];
         _testGame.AddPirate(enemyTeamId, piratePosition, PirateType.Usual);
     }

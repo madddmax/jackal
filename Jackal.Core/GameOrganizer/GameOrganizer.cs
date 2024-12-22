@@ -73,8 +73,8 @@ public class GameOrganizer
         var players = currentPlayers.Select(x => x.Player).ToArray();
         var mapSize = 13;
         var randomMap = new RandomMapGenerator(_mapId, mapSize);
-        var board = new Board(players, randomMap, mapSize, 3);
-        var game = new Game(players, board);
+        var gameRequest = new GameRequest(mapSize, randomMap, players);
+        var game = new Game(gameRequest);
 
         while (game.IsGameOver == false)
         {

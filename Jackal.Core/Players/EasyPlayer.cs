@@ -258,7 +258,7 @@ public class EasyPlayer : IPlayer
     {
         if (board.Map[to].Type == TileType.Water) return false;
 
-        List<int> enemyList = board.Teams[ourTeamId].Enemies.ToList();
+        List<int> enemyList = board.Teams[ourTeamId].EnemyTeamIds.ToList();
         for (int deltaX = -1; deltaX <= 1; deltaX++)
         {
             for (int deltaY = -1; deltaY <= 1; deltaY++)
@@ -280,7 +280,7 @@ public class EasyPlayer : IPlayer
     {
         var occupationTeamId = board.Map[to].OccupationTeamId;
         if (occupationTeamId.HasValue &&
-            board.Teams[teamId].Enemies.ToList().Exists(x => x == occupationTeamId.Value) &&
+            board.Teams[teamId].EnemyTeamIds.ToList().Exists(x => x == occupationTeamId.Value) &&
             to != board.Teams[occupationTeamId.Value].ShipPosition)
         {
             return true;

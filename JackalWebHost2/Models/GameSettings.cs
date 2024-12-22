@@ -1,4 +1,5 @@
-﻿using JackalWebHost2.Models.Player;
+﻿using Jackal.Core;
+using JackalWebHost2.Models.Player;
 
 namespace JackalWebHost2.Models;
 
@@ -26,7 +27,6 @@ public class GameSettings
     
     /// <summary>
     /// Режим игры
-    /// todo добавить командный режим 2x2 
     /// </summary>
-    public GameModeType? Mode { get; set; }
+    public GameModeType? GameMode { get; set; }
 }

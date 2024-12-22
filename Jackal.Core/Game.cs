@@ -3,9 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using Jackal.Core.Actions;
 using Jackal.Core.Domain;
+using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
+using Newtonsoft.Json;
 
 namespace Jackal.Core;
+
+public record GameRequest(
+    // данные по карте todo подумать об объединении
+    int MapSize,
+    IMapGenerator MapGenerator,
+    // данные по игрокам
+    IPlayer[] Players,
+    GameModeType GameMode = GameModeType.FreeForAll,
+    int PiratesPerPlayer = 3
+);
 
 public class Game
 {
@@ -30,21 +42,28 @@ public class Game
     /// ИД игры
     /// </summary>
     public readonly Guid GameId = Guid.NewGuid();
+
+    /// <summary>
+    /// Режим игры
+    /// </summary>
+    public readonly GameModeType GameMode;
     
     /// <summary>
     /// Индекс набора игровых сообщений
     /// </summary>
+    [JsonIgnore]
     private int MessagesKitIndex => Math.Abs(GameId.GetHashCode() % GameMessages.Kit.Length);
 
     /// <summary>
     /// Игровое сообщение
     /// </summary>
+    [JsonIgnore]
     public string GameMessage { get; private set; }
     
-    public Game(IPlayer[] players, Board board)
+    public Game(GameRequest request)
     {
-        _players = players;
-        Board = board;
+        _players = request.Players;
+        GameMode = request.GameMode;
 
         _availableMoves = new List<Move>();
         _actions = new List<IGameAction>();
@@ -54,6 +73,7 @@ public class Game
             player.OnNewGame();
         }
 
+        Board = new Board(request);
         GameMessage = GameMessages.Kit[MessagesKitIndex][0];
     }
 
@@ -286,7 +306,21 @@ public class Game
             .ToList();
 
         // игра на несколько игроков
-        if (orderedTeamCoins.Count > 1)
+        if (orderedTeamCoins.Count == 4 && 
+            GameMode == GameModeType.TwoPlayersInTeam)
+        {
+            // свободное золото
+            int freeCoins = Board.Generator.TotalCoins - LostCoins - orderedTeamCoins.Sum() / 2;
+            
+            // игрок затащил большую часть монет
+            int firstTeamCoins = orderedTeamCoins[0];
+            int secondTeamCoins = orderedTeamCoins[2] + freeCoins;
+            if (firstTeamCoins > secondTeamCoins)
+            {
+                return (true, "доминирования по золоту");
+            }
+        }
+        else if (orderedTeamCoins.Count > 1)
         {
             // свободное золото
             int freeCoins = Board.Generator.TotalCoins - LostCoins - orderedTeamCoins.Sum();

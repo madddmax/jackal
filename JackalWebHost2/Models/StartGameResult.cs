@@ -1,9 +1,13 @@
 ﻿
+using Jackal.Core;
+
 namespace JackalWebHost2.Models;
 
 public class StartGameResult
 {
     public string GameName { get; init; }
+    
+    public GameModeType GameMode { get; init; }
     
     public List<PirateChange> Pirates { get; init; }
     
