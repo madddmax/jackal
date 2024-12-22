@@ -42,6 +42,11 @@ public class Game
     /// ИД игры
     /// </summary>
     public readonly Guid GameId = Guid.NewGuid();
+
+    /// <summary>
+    /// Режим игры
+    /// </summary>
+    public readonly GameModeType GameMode;
     
     /// <summary>
     /// Индекс набора игровых сообщений
@@ -58,6 +63,7 @@ public class Game
     public Game(GameRequest request)
     {
         _players = request.Players;
+        GameMode = request.GameMode;
 
         _availableMoves = new List<Move>();
         _actions = new List<IGameAction>();
@@ -300,7 +306,21 @@ public class Game
             .ToList();
 
         // игра на несколько игроков
-        if (orderedTeamCoins.Count > 1)
+        if (orderedTeamCoins.Count == 4 && 
+            GameMode == GameModeType.TwoPlayersInTeam)
+        {
+            // свободное золото
+            int freeCoins = Board.Generator.TotalCoins - LostCoins - orderedTeamCoins.Sum() / 2;
+            
+            // игрок затащил большую часть монет
+            int firstTeamCoins = orderedTeamCoins[0];
+            int secondTeamCoins = orderedTeamCoins[2] + freeCoins;
+            if (firstTeamCoins > secondTeamCoins)
+            {
+                return (true, "доминирования по золоту");
+            }
+        }
+        else if (orderedTeamCoins.Count > 1)
         {
             // свободное золото
             int freeCoins = Board.Generator.TotalCoins - LostCoins - orderedTeamCoins.Sum();

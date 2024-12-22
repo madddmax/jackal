@@ -94,7 +94,8 @@ public record Tile
 		Direction = tileParams.Direction;
 	}
 
-	public bool HasNoEnemy(int ownTeamId) => OccupationTeamId.HasValue == false || OccupationTeamId == ownTeamId;
+	public bool HasNoEnemy(int[] enemyTeamIds) => 
+		OccupationTeamId.HasValue == false || !enemyTeamIds.Contains(OccupationTeamId.Value);
 	
 	public virtual bool Equals(Tile? other)
 	{

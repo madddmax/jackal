@@ -14,6 +14,9 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         Map map = board.Map;
 
         Team ourTeam = board.Teams[pirate.TeamId];
+        Team? allyTeam = ourTeam.AllyTeamId.HasValue 
+            ? board.Teams[ourTeam.AllyTeamId.Value] 
+            : null;
             
         Tile targetTile = map[To.Position];
         Tile sourceTile = map[from.Position];
@@ -116,7 +119,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         TileLevel targetTileLevel = map[To];
         TileLevel fromTileLevel = map[from];
             
-        if (from.Position == ourTeam.ShipPosition && 
+        if (from.Position == ourTeam.ShipPosition &&
             targetTile.Type == TileType.Water &&
             Board.GetPossibleShipMoves(ourTeam.ShipPosition, game.Board.MapSize).Contains(To.Position)) 
         {
@@ -128,6 +131,21 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 targetTileLevel.Pirates.Add(pirateOnShip);
             }
             ourTeam.ShipPosition = To.Position;
+            sourceTile.Pirates.Clear();
+        }
+        else if (allyTeam != null &&
+                 from.Position == allyTeam.ShipPosition &&
+                 targetTile.Type == TileType.Water &&
+                 Board.GetPossibleShipMoves(allyTeam.ShipPosition, game.Board.MapSize).Contains(To.Position))
+        {
+            // двигаем союзный корабль
+            var pirateOnShips = map[allyTeam.ShipPosition].Pirates;
+            foreach (var pirateOnShip in pirateOnShips)
+            {
+                pirateOnShip.Position = To;
+                targetTileLevel.Pirates.Add(pirateOnShip);
+            }
+            allyTeam.ShipPosition = To.Position;
             sourceTile.Pirates.Clear();
         }
         else
@@ -153,7 +171,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             var holeTiles = board.AllTiles(x => x.Type == TileType.Hole).ToList();
             
             var freeHoleTiles = holeTiles
-                .Where(x => x.Position != targetTile.Position && x.HasNoEnemy(ourTeam.Id))
+                .Where(x => x.Position != targetTile.Position && x.HasNoEnemy(ourTeam.EnemyTeamIds))
                 .ToList();
             
             if(holeTiles.Count == 1)
@@ -219,7 +237,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
 
         // проверяем, не попадаем ли мы на чужой корабль - тогда мы погибли
         IEnumerable<Position> enemyShips = game.Board.Teams
-            .Where(x => x != ourTeam)
+            .Where(x => ourTeam.EnemyTeamIds.Contains(x.Id))
             .Select(x => x.ShipPosition);
             
         if (enemyShips.Contains(To.Position))
@@ -232,7 +250,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         {
             // убиваем чужих пиратов
             var enemyPirates = targetTileLevel.Pirates
-                .Where(x => x.TeamId != pirate.TeamId)
+                .Where(x => ourTeam.EnemyTeamIds.Contains(x.TeamId))
                 .ToList();
 
             foreach (var enemyPirate in enemyPirates)

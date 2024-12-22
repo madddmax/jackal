@@ -19,7 +19,8 @@ public record TileLevel(TilePosition Position)
     [JsonIgnore]
     public int? OccupationTeamId => Pirates.Count > 0 ? Pirates.First().TeamId : null;
 
-    public bool HasNoEnemy(int ownTeamId) => OccupationTeamId.HasValue == false || OccupationTeamId == ownTeamId;
+    public bool HasNoEnemy(int[] enemyTeamIds) => 
+        OccupationTeamId.HasValue == false || !enemyTeamIds.Contains(OccupationTeamId.Value);
     
     public virtual bool Equals(TileLevel? other)
     {

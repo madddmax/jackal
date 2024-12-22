@@ -1,4 +1,5 @@
 ﻿using Jackal.Core;
+using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
 using JackalWebHost2.Data.Interfaces;
@@ -42,7 +43,7 @@ public class GameService : IGameService
         // для ручной отладки можно использовать закомментированные генераторы карт
         int mapSize = gameSettings.MapSize ?? 5;
         IMapGenerator mapGenerator = new RandomMapGenerator(gameSettings.MapId.Value, mapSize, gameSettings.TilesPackName);
-        // mapGenerator = new OneTileMapGenerator(new TileParams(TileType.Trap));
+        //mapGenerator = new OneTileMapGenerator(new TileParams(TileType.Airplane));
         // mapGenerator = new ThreeTileMapGenerator(
         //     new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.ThreeArrows },
         //     new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.FourArrowsDiagonal },
@@ -66,6 +67,7 @@ public class GameService : IGameService
         return new StartGameResult
         {
             GameName = request.GameName,
+            GameMode = gameMode,
             Pirates = pirateChanges,
             Map = map,
             MapId = gameSettings.MapId.Value,

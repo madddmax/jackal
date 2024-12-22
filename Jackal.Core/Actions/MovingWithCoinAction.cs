@@ -15,6 +15,9 @@ internal class MovingWithCoinAction(TilePosition from, TilePosition to, TilePosi
         Map map = board.Map;
 
         Team ourTeam = board.Teams[pirate.TeamId];
+        Team? allyTeam = ourTeam.AllyTeamId.HasValue 
+            ? board.Teams[ourTeam.AllyTeamId.Value] 
+            : null;
             
         Tile targetTile = map[to.Position];
         TileLevel targetTileLevel = map[to];
@@ -25,12 +28,16 @@ internal class MovingWithCoinAction(TilePosition from, TilePosition to, TilePosi
 
         fromTileLevel.Coins--;
 
-        if (ourTeam.ShipPosition == to.Position)
+        if (ourTeam.ShipPosition == to.Position ||
+            (allyTeam != null &&
+             allyTeam.ShipPosition == to.Position))
         {
             // перенос монеты на корабль
             ourTeam.Coins++;
+            if (allyTeam != null)
+                allyTeam.Coins++;
+            
             game.CoinsOnMap--;
-
             game.LastActionTurnNo = game.TurnNo;
         }
         else if (targetTile.Type == TileType.Water)

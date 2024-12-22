@@ -83,9 +83,11 @@ public class TestGame
         var shipPosition = new Position((Board.MapSize - 1) / 2, Board.MapSize - 1);
         var enemyTeam = new Team(enemyTeamId, "Test enemy team", shipPosition, [])
         {
-            Coins = coins
+            Coins = coins,
+            EnemyTeamIds = [0]
         };
 
+        Board.Teams[0].EnemyTeamIds = [1];
         Board.Teams = [Board.Teams[0], enemyTeam];
         _testGame.AddPirate(enemyTeamId, piratePosition, PirateType.Usual);
     }
