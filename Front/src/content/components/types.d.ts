@@ -1,5 +1,5 @@
 export interface PlayersInfo {
-    count: number;
+    mode: number;
     members: string[];
     groups: string[];
 }

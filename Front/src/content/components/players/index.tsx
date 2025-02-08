@@ -46,10 +46,11 @@ const Players = ({ players, setPlayers, mapInfo }: PlayersProps) => {
         });
     };
 
-    const calcCount = (prev: number) => {
-        if (prev == 4) return 1;
+    const calcNextMode = (prev: number) => {
+        if (prev == 8) return 1;
         else if (prev == 1) return 2;
-        return 4;
+        else if (prev == 2) return 4;
+        return 8;
     };
 
     return (
@@ -57,10 +58,10 @@ const Players = ({ players, setPlayers, mapInfo }: PlayersProps) => {
             {players &&
                 players.members &&
                 players.members.map((_, index) => {
-                    if (players.count < 4 && (index == 1 || index == 3)) {
+                    if (players.mode < 4 && (index == 1 || index == 3)) {
                         return null;
                     }
-                    if (players.count < 2 && index == 2) {
+                    if (players.mode < 2 && index == 2) {
                         return null;
                     }
 
@@ -81,19 +82,19 @@ const Players = ({ players, setPlayers, mapInfo }: PlayersProps) => {
                 onClick={() =>
                     setPlayers({
                         ...players,
-                        count: calcCount(players.count),
+                        mode: calcNextMode(players.mode),
                     })
                 }
                 style={{
                     cursor: 'pointer',
                     top: '110px',
-                    left: '130px',
+                    left: players.mode == 8 ? '110px' : '130px',
                     fontSize: '48px',
                     lineHeight: '48px',
                     textAlign: 'center',
                 }}
             >
-                {players.count}
+                {players.mode == 8 ? '2x2' : players.mode}
             </div>
         </div>
     );

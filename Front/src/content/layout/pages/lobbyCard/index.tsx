@@ -18,7 +18,7 @@ const LobbyCard = () => {
     const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
 
     const [players, setPlayers] = useState<PlayersInfo>({
-        count: 4,
+        mode: 4,
         members: ['human', 'human', 'human', 'human'],
         groups: userSettings.groups,
     });

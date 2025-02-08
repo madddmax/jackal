@@ -5,9 +5,7 @@ import { GameState, ReduxState } from '/redux/types';
 import { Alert } from 'react-bootstrap';
 
 function Controls() {
-    const game = useSelector<ReduxState, GameState | undefined>(
-        (state) => state.game,
-    );
+    const game = useSelector<ReduxState, GameState | undefined>((state) => state.game);
 
     return (
         <>
@@ -22,6 +20,9 @@ function Controls() {
                     Игровой набор: <span>{game?.tilesPackName}</span>
                 </div>
                 <div>
+                    Режим игры: <span>{game?.gameMode == 1 ? '2x2' : 'каждый сам за себя'}</span>
+                </div>
+                <div>
                     Размер карты: <span>{game?.mapSize}</span>
                 </div>
                 <div>
@@ -29,11 +30,7 @@ function Controls() {
                 </div>
                 <div className={cn(classes.teams, 'container')}>
                     {game?.stat?.teams.map((it) => (
-                        <div
-                            key={`ctrl_${it.id}`}
-                            className="row"
-                            style={{ backgroundColor: it.backcolor }}
-                        >
+                        <div key={`ctrl_${it.id}`} className="row" style={{ backgroundColor: it.backcolor }}>
                             <div className="col-md-8">{it.name}</div>
                             <div className="col-md-4">{it.gold}</div>
                         </div>
