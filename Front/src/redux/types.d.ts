@@ -12,6 +12,7 @@ export interface ReduxState {
 export interface GameState {
     stat?: GameStat;
     gameName?: string;
+    gameMode?: number;
     tilesPackName?: string;
     mapId?: number;
     mapInfo?: string[];
@@ -34,7 +35,7 @@ export interface GameState {
 export interface StorageState {
     groups: string[];
     players?: string[];
-    playersCount?: number;
+    playersMode?: number;
     mapSize: number;
     mapId?: number;
     tilesPackName?: string;
@@ -81,6 +82,7 @@ export interface AvailableMove {
 
 export interface GameStartResponse {
     gameName: string;
+    gameMode?: number;
     tilesPackName: string;
     mapId: number;
     map: GameMap;

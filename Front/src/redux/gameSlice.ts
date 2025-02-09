@@ -37,7 +37,7 @@ export const gameSlice = createSlice({
             ],
             mapSize: 11,
             players: ['human', 'robot2', 'robot', 'robot2'],
-            playersCount: 4,
+            playersMode: 4,
             gameSpeed: 1,
         },
         teams: [],
@@ -81,6 +81,7 @@ export const gameSlice = createSlice({
         },
         initGame: (state, action: PayloadAction<GameStartResponse>) => {
             state.gameName = action.payload.gameName;
+            state.gameMode = action.payload.gameMode;
             state.tilesPackName = action.payload.tilesPackName;
             state.mapId = action.payload.mapId;
             state.mapSize = action.payload.map.width;
