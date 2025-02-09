@@ -32,9 +32,7 @@ const Header = () => {
                     settings: {
                         players: [
                             { id: 0, type: 'human', position: Constants.positions[0] },
-                            { id: 0, type: 'robot2', position: Constants.positions[1] },
                             { id: 0, type: 'robot2', position: Constants.positions[2] },
-                            { id: 0, type: 'robot2', position: Constants.positions[3] },
                         ],
                         mapId: userSettings.mapId,
                         mapSize: 11,
@@ -52,9 +50,7 @@ const Header = () => {
                     settings: {
                         players: [
                             { id: 0, type: 'human', position: Constants.positions[0] },
-                            { id: 0, type: 'robot2', position: Constants.positions[1] },
                             { id: 0, type: 'robot2', position: Constants.positions[2] },
-                            { id: 0, type: 'robot2', position: Constants.positions[3] },
                         ],
                         mapId: userSettings.mapId,
                         mapSize: 11,
