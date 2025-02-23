@@ -1,10 +1,13 @@
-﻿using JackalWebHost2.Models;
+﻿using Jackal.Core;
+using JackalWebHost2.Models;
 
 namespace JackalWebHost2.Controllers.Models;
 
 public class StartGameResponse
 {
     public string GameName { get; set; }
+    
+    public GameModeType GameMode { get; set; }
     
     public string TilesPackName { get; set; }
     
