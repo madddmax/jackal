@@ -82,7 +82,9 @@ function Newgame() {
                         mapId: randNumber[0],
                         mapSize,
                         tilesPackName,
-                        gameMode: players.mode == 8 ? 1 : 0,
+                        gameMode: players.mode == 8
+                            ? Constants.gameModeTypes.TwoPlayersInTeam
+                            : Constants.gameModeTypes.FreeForAll,
                     },
                 })
                 .catch((err) => {
@@ -98,7 +100,9 @@ function Newgame() {
                         mapId: randNumber[0],
                         mapSize,
                         tilesPackName,
-                        gameMode: players.mode == 8 ? 1 : 0,
+                        gameMode: players.mode == 8
+                            ? Constants.gameModeTypes.TwoPlayersInTeam
+                            : Constants.gameModeTypes.FreeForAll,
                     },
                 } as GameStartRequest,
             });
@@ -126,7 +130,9 @@ function Newgame() {
                     players: getPlayers(players.members, players.mode),
                     mapId: randNumber[0],
                     mapSize,
-                    gameMode: players.mode == 8 ? 1 : 0,
+                    gameMode: players.mode == 8
+                        ? Constants.gameModeTypes.TwoPlayersInTeam
+                        : Constants.gameModeTypes.FreeForAll,
                 } as GameSettings,
             },
         });

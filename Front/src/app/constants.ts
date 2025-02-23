@@ -11,6 +11,10 @@ const groupIds = {
 };
 
 export const Constants = {
+    gameModeTypes: {
+        FreeForAll: 'FreeForAll',
+        TwoPlayersInTeam: 'TwoPlayersInTeam',
+    },
     pirateTypes: {
         Usual: 'Usual',
         BenGunn: 'BenGunn',

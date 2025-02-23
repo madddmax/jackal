@@ -8,7 +8,7 @@ export interface GameSettings {
     mapId?: number;
     mapSize: number;
     tilesPackName?: string;
-    gameMode?: number;
+    gameMode?: string;
 }
 
 export interface GamePlayer {
