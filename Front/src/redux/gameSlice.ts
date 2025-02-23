@@ -19,6 +19,7 @@ import {
 } from './types';
 import { debugLog, getAnotherRandomValue, getRandomValues } from '/app/global';
 import { Constants } from '/app/constants';
+import { ScreenSizes } from './gameSlice.types';
 
 export const gameSlice = createSlice({
     name: 'game',
@@ -54,6 +55,25 @@ export const gameSlice = createSlice({
             localStorage.state = JSON.stringify(action.payload, null, 2);
             Object.assign(state.userSettings, action.payload);
         },
+        initGame: (state, action: PayloadAction<GameStartResponse>) => {
+            state.gameName = action.payload.gameName;
+            state.gameMode = action.payload.gameMode;
+            state.tilesPackName = action.payload.tilesPackName;
+            state.mapId = action.payload.mapId;
+            state.mapSize = action.payload.map.width;
+            state.pirates = action.payload.pirates;
+            state.lastMoves = [];
+            state.highlight_x = 0;
+            state.highlight_y = 0;
+
+            gameSlice.caseReducers.initMap(state, initMap(action.payload.map));
+            gameSlice.caseReducers.initTeams(state, initTeams(action.payload.stats));
+            gameSlice.caseReducers.initPhotos(state);
+            gameSlice.caseReducers.initSizes(
+                state,
+                initSizes({ width: window.innerWidth, height: window.innerHeight }),
+            );
+        },
         initMap: (state, action: PayloadAction<GameMap>) => {
             let map = [];
             let j = 0;
@@ -79,13 +99,8 @@ export const gameSlice = createSlice({
             }
             state.fields = map;
         },
-        initGame: (state, action: PayloadAction<GameStartResponse>) => {
-            state.gameName = action.payload.gameName;
-            state.gameMode = action.payload.gameMode;
-            state.tilesPackName = action.payload.tilesPackName;
-            state.mapId = action.payload.mapId;
-            state.mapSize = action.payload.map.width;
-            state.teams = action.payload.stats.teams.map((it, idx, arr) => {
+        initTeams: (state, action: PayloadAction<GameStat>) => {
+            state.teams = action.payload.teams.map((it, idx, arr) => {
                 let grId = arr.length == 2 && idx == 1 ? 2 : idx;
                 return {
                     id: it.id,
@@ -96,15 +111,11 @@ export const gameSlice = createSlice({
                         Constants.groups.find((gr) => gr.id == state.userSettings.groups[grId]) || Constants.groups[0],
                 };
             });
-            state.lastMoves = [];
-            state.pirates = action.payload.pirates;
-            debugLog('state.teams', state.teams);
+        },
+        initPhotos: (state) => {
             state.teams.forEach((team) => {
-                let arr = getRandomValues(
-                    1,
-                    team.group.photoMaxId,
-                    state.pirates?.filter((it) => it.teamId == team.id).length ?? 0,
-                );
+                const teamPiratesCount = state.pirates?.filter((it) => it.teamId == team.id).length;
+                let arr = getRandomValues(1, team.group.photoMaxId, teamPiratesCount ?? 0);
                 state.pirates
                     ?.filter((it) => it.teamId == team.id)
                     .forEach((it, index) => {
@@ -113,17 +124,16 @@ export const gameSlice = createSlice({
                         it.groupId = team.group.id;
                     });
             });
-            debugLog('state.pirates', state.pirates);
-
-            const width = window.innerWidth;
-            const height = window.innerHeight - 56;
+        },
+        initSizes: (state, action: PayloadAction<ScreenSizes>) => {
+            const width = action.payload.width;
+            const height = action.payload.height - 56;
             const mSize = width > height ? height : width;
+
             if (mSize > 560) {
-                state.cellSize = Math.floor(mSize / state.mapSize / 10) * 10;
+                state.cellSize = Math.floor(mSize / state.mapSize! / 10) * 10;
             }
             state.pirateSize = state.cellSize * 0.55;
-            state.highlight_x = 0;
-            state.highlight_y = 0;
         },
         setCurrentHumanTeam: (state, action: PayloadAction<number>) => {
             if (action.payload !== undefined && action.payload !== state.currentHumanTeamId) {
@@ -434,6 +444,7 @@ export const gameSlice = createSlice({
                 pirate: level.pirates?.find((it) => it.id == gamePirate?.id),
             };
         },
+        getUserSettings: (state): StorageState => state.userSettings,
     },
 });
 
@@ -441,6 +452,10 @@ export const {
     initMySettings,
     saveMySettings,
     initMap,
+    initGame,
+    initTeams,
+    initPhotos,
+    initSizes,
     setCurrentHumanTeam,
     setPirateAutoChange,
     chooseHumanPirate,
@@ -449,7 +464,6 @@ export const {
     removeHumanMoves,
     applyPirateChanges,
     applyChanges,
-    initGame,
     applyStat,
     setTilesPackNames,
     setMapInfo,

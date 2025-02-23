@@ -16,3 +16,8 @@ export interface GamePlayer {
     type: string;
     position: string;
 }
+
+export interface ScreenSizes {
+    width: number;
+    height: number;
+}
