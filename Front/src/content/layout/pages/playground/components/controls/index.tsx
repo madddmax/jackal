@@ -3,6 +3,7 @@ import cn from 'classnames';
 import classes from './controls.module.less';
 import { GameState, ReduxState } from '/redux/types';
 import { Alert } from 'react-bootstrap';
+import { Constants } from '/app/constants';
 
 function Controls() {
     const game = useSelector<ReduxState, GameState | undefined>((state) => state.game);
@@ -20,7 +21,7 @@ function Controls() {
                     Игровой набор: <span>{game?.tilesPackName}</span>
                 </div>
                 <div>
-                    Режим игры: <span>{game?.gameMode == 'TwoPlayersInTeam' ? '2x2' : 'каждый сам за себя'}</span>
+                    Режим игры: <span>{game?.gameMode == Constants.gameModeTypes.TwoPlayersInTeam ? '2x2' : 'каждый сам за себя'}</span>
                 </div>
                 <div>
                     Размер карты: <span>{game?.mapSize}</span>
