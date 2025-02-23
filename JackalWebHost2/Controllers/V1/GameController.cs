@@ -34,6 +34,7 @@ public class GameController : Controller
         return new StartGameResponse
         {
             GameName = result.GameName,
+            GameMode = result.GameMode,
             TilesPackName = packName,
             Pirates = result.Pirates,
             Map = result.Map,

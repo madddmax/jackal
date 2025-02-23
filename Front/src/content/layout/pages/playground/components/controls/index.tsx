@@ -20,7 +20,7 @@ function Controls() {
                     Игровой набор: <span>{game?.tilesPackName}</span>
                 </div>
                 <div>
-                    Режим игры: <span>{game?.gameMode == 1 ? '2x2' : 'каждый сам за себя'}</span>
+                    Режим игры: <span>{game?.gameMode == 'TwoPlayersInTeam' ? '2x2' : 'каждый сам за себя'}</span>
                 </div>
                 <div>
                     Размер карты: <span>{game?.mapSize}</span>

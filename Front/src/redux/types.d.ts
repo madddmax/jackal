@@ -12,7 +12,7 @@ export interface ReduxState {
 export interface GameState {
     stat?: GameStat;
     gameName?: string;
-    gameMode?: number;
+    gameMode?: string;
     tilesPackName?: string;
     mapId?: number;
     mapInfo?: string[];
@@ -82,7 +82,7 @@ export interface AvailableMove {
 
 export interface GameStartResponse {
     gameName: string;
-    gameMode?: number;
+    gameMode?: string;
     tilesPackName: string;
     mapId: number;
     map: GameMap;

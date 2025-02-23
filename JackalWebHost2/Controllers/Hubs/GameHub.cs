@@ -47,6 +47,7 @@ public class GameHub : Hub
         await Clients.Caller.SendAsync(CALLBACK_GET_START_DATA, new StartGameResponse
         {
             GameName = result.GameName,
+            GameMode = result.GameMode,
             TilesPackName = packName,
             Pirates = result.Pirates,
             Map = result.Map,
