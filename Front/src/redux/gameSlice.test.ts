@@ -7,6 +7,9 @@ import reducer, {
     initSizes,
     initPiratePositions,
     applyPirateChanges,
+    highlightHumanMoves,
+    removeHumanMoves,
+    applyChanges,
 } from './gameSlice';
 import { getMapData } from './gameSlice.test.mapData';
 import { GamePirate, GameStat, GameState, PiratePosition } from './types';
@@ -242,6 +245,14 @@ describe('redux init tests', () => {
             }),
         );
     });
+
+    test('Устанавливаем текущую команду', () => {
+        expect(reducer(defaultState, setCurrentHumanTeam(2))).toEqual(
+            expect.objectContaining({
+                currentHumanTeamId: 2,
+            }),
+        );
+    });
 });
 
 describe('redux basic tests', () => {
@@ -265,30 +276,65 @@ describe('redux basic tests', () => {
                 moves: [],
             }),
         );
+        previousState = reducer(previousState, setCurrentHumanTeam(2));
     });
 
-    test('Устанавливаем текущую команду', () => {
-        expect(reducer(previousState, setCurrentHumanTeam(2))).toEqual(
-            expect.objectContaining({
-                currentHumanTeamId: 2,
+    test('Автовыбор пиратки, для которой возможны ходы, и подсвечивание её ходов', () => {
+        expect(previousState.fields[2][2].availableMoves).toHaveLength(0);
+        expect(previousState.highlight_x).toEqual(0);
+        expect(previousState.highlight_y).toEqual(0);
+
+        const result = reducer(
+            previousState,
+            highlightHumanMoves({
+                moves: [
+                    {
+                        moveNum: 1,
+                        from: { pirateIds: ['200'], level: 0, x: 2, y: 4 },
+                        to: { pirateIds: ['200'], level: 0, x: 2, y: 2 },
+                        withCoin: true,
+                        withRespawn: false,
+                    },
+                ],
             }),
         );
+
+        expect(result.fields[2][2].availableMoves).toHaveLength(1);
+        expect(result.teams.find((it) => it.id === 2)?.activePirate).toEqual('200');
+        expect(result.highlight_x).toEqual(2);
+        expect(result.highlight_y).toEqual(4);
+        const girl = result.fields[4][2].levels[0].pirates?.find((it) => it.id == '200');
+        expect(girl).not.toBeUndefined();
+        expect(girl).not.toBeNull();
+        expect(girl?.isActive).toBeTruthy();
+    });
+
+    test('Убираем подсветку ходов', () => {
+        const currentState = reducer(
+            previousState,
+            highlightHumanMoves({
+                moves: [
+                    {
+                        moveNum: 1,
+                        from: { pirateIds: ['200'], level: 0, x: 2, y: 4 },
+                        to: { pirateIds: ['200'], level: 0, x: 2, y: 2 },
+                        withCoin: true,
+                        withRespawn: false,
+                    },
+                ],
+            }),
+        );
+
+        expect(currentState.fields[2][2].availableMoves).toHaveLength(1);
+
+        const result = reducer(currentState, removeHumanMoves());
+
+        expect(result.fields[2][2].availableMoves).toHaveLength(0);
     });
 
     test('Выбираем активного пирата', () => {
-        let currentState = reducer(previousState, setCurrentHumanTeam(2));
-        const result = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
-        expect(result.teams).toContainEqual({
-            activePirate: '200',
-            backColor: 'green',
-            group: {
-                id: Constants.groupIds.orcs,
-                extension: '.jpg',
-                photoMaxId: 6,
-            },
-            id: 2,
-            isHumanPlayer: false,
-        });
+        const result = reducer(previousState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
+        expect(result.teams.find((it) => it.id === 2)?.activePirate).toEqual('200');
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);
         const boy = result.fields[4][2].levels[0].pirates?.find((it) => it.id == '200');
@@ -298,8 +344,7 @@ describe('redux basic tests', () => {
     });
 
     test('Меняем активного пирата', () => {
-        let currentState = reducer(previousState, setCurrentHumanTeam(2));
-        currentState = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
+        let currentState = reducer(previousState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
         const result = reducer(currentState, chooseHumanPirate({ pirate: '300', withCoinAction: true }));
         expect(result.teams).toContainEqual({
             activePirate: '300',
@@ -321,8 +366,7 @@ describe('redux basic tests', () => {
     });
 
     test('Уходим с клетки, на клетке - никого', () => {
-        let currentState = reducer(previousState, setCurrentHumanTeam(2));
-        currentState = reducer(currentState, chooseHumanPirate({ pirate: '100', withCoinAction: true }));
+        let currentState = reducer(previousState, chooseHumanPirate({ pirate: '100', withCoinAction: true }));
         const result = reducer(
             currentState,
             applyPirateChanges({
@@ -426,6 +470,53 @@ describe('redux logic tests', () => {
         );
         previousState = reducer(previousState, setCurrentHumanTeam(2));
         previousState = reducer(previousState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
+    });
+
+    test('Производим изменения на карте', () => {
+        const result = reducer(
+            previousState,
+            applyChanges([
+                {
+                    backgroundImageSrc: '/fields/forest.png',
+                    backgroundColor: 'Green',
+                    rotate: 2,
+                    levels: [
+                        { level: 0, hasCoins: false },
+                        { level: 1, hasCoins: false },
+                        { level: 2, hasCoins: false },
+                    ],
+                    x: 2,
+                    y: 4,
+                },
+            ]),
+        );
+
+        expect(result.fields[4][2].levels[0]).toEqual(
+            expect.objectContaining({
+                level: 0,
+                hasCoins: false,
+                pirate: undefined,
+                pirates: [
+                    {
+                        id: '200',
+                        backgroundColor: 'green',
+                        isActive: true,
+                        photo: '',
+                        photoId: 0,
+                        teamId: 2,
+                    },
+                    {
+                        id: '300',
+                        backgroundColor: 'green',
+                        isActive: false,
+                        photo: '',
+                        photoId: 0,
+                        teamId: 2,
+                    },
+                ],
+                features: undefined,
+            }),
+        );
     });
 
     test('Открываем Бен Ганна', () => {
