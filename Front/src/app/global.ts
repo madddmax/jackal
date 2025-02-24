@@ -1,7 +1,7 @@
 import { NavigateFunction } from 'react-router-dom';
 import config from './config';
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
-import { GameTurnResponse } from '/redux/types';
+import { GameTurnResponse, PiratePosition } from '/redux/types';
 
 export const uuidGen = () => {
     return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
@@ -49,3 +49,44 @@ export const hubConnection = new HubConnectionBuilder()
     .build();
 
 export const animateQueue: GameTurnResponse[] = [];
+
+export interface GirlsLevel {
+    level: number;
+    girls: string[] | undefined;
+}
+
+export interface GirlsPositions {
+    Map: { [id: number]: GirlsLevel };
+    AddPosition: (it: PiratePosition) => void;
+    RemovePosition: (it: PiratePosition) => void;
+}
+
+// словарь, отслеживающий размещение нескольких пираток на одной клетке
+// для корректного их смещения относительно друг друга
+export const girlsMap: GirlsPositions = {
+    Map: {},
+    AddPosition: function (it: PiratePosition) {
+        let cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
+        let level = this.Map[cachedId];
+        if (!level) {
+            this.Map[cachedId] = {
+                level: it.position.level,
+                girls: [it.id],
+            };
+        } else {
+            if (level.girls) {
+                level.girls.push(it.id);
+            } else {
+                level.girls = [it.id];
+            }
+        }
+    },
+    RemovePosition: function (it: PiratePosition) {
+        let cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
+        let girlsLevel = girlsMap.Map[cachedId];
+        if (girlsLevel?.girls != undefined) {
+            girlsLevel.girls = girlsLevel.girls.filter((girl) => girl != it.id);
+            if (girlsLevel.girls.length == 0) girlsLevel.girls = undefined;
+        }
+    },
+};

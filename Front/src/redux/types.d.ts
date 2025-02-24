@@ -243,14 +243,8 @@ export interface PirateChanges {
     isHumanPlayer: boolean;
 }
 
-export interface GamePirate {
-    id: string;
+export interface GamePirate extends PiratePosition {
     teamId: number;
-    position: {
-        level: number;
-        x: number;
-        y: number;
-    };
     withCoin?: boolean;
     withRum?: boolean;
     isInTrap?: boolean;
@@ -261,17 +255,20 @@ export interface GamePirate {
     type: string;
 }
 
-export interface PirateDiff {
-    id: string;
+export interface PirateDiff extends PiratePosition {
     type: string;
     teamId: number;
+    isAlive?: boolean;
+    isDrunk?: boolean;
+    isInTrap?: boolean;
+    isInHole?: boolean;
+}
+
+export interface PiratePosition {
+    id: string;
     position: {
         level: number;
         x: number;
         y: number;
     };
-    isAlive?: boolean;
-    isDrunk?: boolean;
-    isInTrap?: boolean;
-    isInHole?: boolean;
 }
