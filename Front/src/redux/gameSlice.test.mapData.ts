@@ -297,7 +297,8 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    hasCoins: true,
+                    coin: { text: '2' },
                 },
             ],
             x: 2,

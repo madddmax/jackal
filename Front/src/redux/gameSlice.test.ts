@@ -69,7 +69,7 @@ const stat4Data: GameStat = {
     ],
 };
 
-const getPirates = (data: PiratePosition[]) => {
+const getPirates = (data: PiratePosition[]): GamePirate[] => {
     return data.map((it) => ({
         id: it.id,
         teamId: 2,
@@ -77,6 +77,7 @@ const getPirates = (data: PiratePosition[]) => {
         groupId: '',
         photo: '',
         photoId: 0,
+        withCoin: false,
         type: Constants.pirateTypes.Usual,
     }));
 };
@@ -317,6 +318,88 @@ describe('redux basic tests', () => {
         expect(boy).not.toBeUndefined();
         expect(boy).not.toBeNull();
         expect(boy?.isActive).toBeTruthy();
+    });
+
+    test('Уходим с клетки, на клетке - никого', () => {
+        let currentState = reducer(previousState, setCurrentHumanTeam(2));
+        currentState = reducer(currentState, chooseHumanPirate({ pirate: '100', withCoinAction: true }));
+        const result = reducer(
+            currentState,
+            applyPirateChanges({
+                changes: [
+                    {
+                        id: '100',
+                        type: Constants.pirateTypes.Usual,
+                        teamId: 2,
+                        position: { level: 0, x: 2, y: 2 },
+                    },
+                ],
+                isHumanPlayer: true,
+                moves: [],
+            }),
+        );
+        expect(result.highlight_x).toEqual(2);
+        expect(result.highlight_y).toEqual(2);
+        expect(result.fields[0][2].levels[0].pirates).toBeUndefined();
+    });
+});
+
+describe('redux money actions tests', () => {
+    let previousState: GameState;
+
+    beforeAll(() => {
+        const pirates = getPirates([
+            { id: '100', position: { level: 0, x: 2, y: 0 } },
+            { id: '200', position: { level: 0, x: 2, y: 4 } },
+            { id: '300', position: { level: 0, x: 2, y: 4 } },
+        ]);
+
+        previousState = getState(pirates);
+        previousState = reducer(previousState, initMap(getMapData));
+        previousState = reducer(previousState, initTeams(stat2Data));
+        previousState = reducer(
+            previousState,
+            applyPirateChanges({
+                changes: pirates,
+                isHumanPlayer: true,
+                moves: [
+                    {
+                        moveNum: 1,
+                        from: { pirateIds: ['200'], level: 0, x: 2, y: 4 },
+                        to: { pirateIds: ['200'], level: 0, x: 2, y: 2 },
+                        withCoin: true,
+                        withRespawn: false,
+                    },
+                    {
+                        moveNum: 2,
+                        from: { pirateIds: ['200'], level: 0, x: 2, y: 4 },
+                        to: { pirateIds: ['200'], level: 0, x: 2, y: 2 },
+                        withCoin: false,
+                        withRespawn: false,
+                    },
+                ],
+            }),
+        );
+    });
+
+    test('Автоподнятие монеты по возможному действию', () => {
+        expect(previousState.pirates?.find((it) => it.id == '200')?.withCoin).toBeTruthy();
+    });
+
+    test('Кладём монету', () => {
+        let currentState = reducer(previousState, setCurrentHumanTeam(2));
+        currentState = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
+        expect(currentState.highlight_x).toEqual(2);
+        expect(currentState.highlight_y).toEqual(4);
+
+        const result = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
+
+        expect(result.pirates?.find((it) => it.id == '200')?.withCoin).toBeFalsy();
+        const boy = result.fields[4][2].levels[0].pirates?.find((it) => it.id == '200');
+        expect(boy).not.toBeUndefined();
+        expect(boy).not.toBeNull();
+        expect(boy?.isActive).toBeTruthy();
+        expect(boy?.withCoin).toBeFalsy();
     });
 });
 
