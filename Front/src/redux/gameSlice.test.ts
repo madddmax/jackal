@@ -428,6 +428,13 @@ describe('redux money actions tests', () => {
 
     test('Автоподнятие монеты по возможному действию', () => {
         expect(previousState.pirates?.find((it) => it.id == '200')?.withCoin).toBeTruthy();
+        const level = previousState.fields[4][2].levels[0];
+        expect(level.piratesWithCoinsCount).toEqual(1);
+        expect(level.freeCoinGirlId).toEqual('300');
+        // expect(level).toEqual({
+        //     piratesWithCoinsCount: 1,
+        //     freeCoinGirlId: '300',
+        // });
     });
 
     test('Кладём монету', () => {
@@ -435,6 +442,9 @@ describe('redux money actions tests', () => {
         currentState = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
         expect(currentState.highlight_x).toEqual(2);
         expect(currentState.highlight_y).toEqual(4);
+        let level = currentState.fields[4][2].levels[0];
+        expect(level.piratesWithCoinsCount).toEqual(1);
+        expect(level.freeCoinGirlId).toEqual('300');
 
         const result = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
 
@@ -444,6 +454,9 @@ describe('redux money actions tests', () => {
         expect(boy).not.toBeNull();
         expect(boy?.isActive).toBeTruthy();
         expect(boy?.withCoin).toBeFalsy();
+        level = result.fields[4][2].levels[0];
+        expect(level.piratesWithCoinsCount).toEqual(0);
+        expect(level.freeCoinGirlId).toEqual('200');
     });
 });
 
@@ -606,7 +619,6 @@ describe('redux logic tests', () => {
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
                 '20': { girls: ['100'], level: 0 },
-                //'2020': { girls: undefined, level: 0 },
                 '4020': { girls: ['300'], level: 0 },
             }),
         );

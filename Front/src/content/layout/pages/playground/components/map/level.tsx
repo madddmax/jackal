@@ -98,7 +98,12 @@ const Level = ({ cellSize, pirateSize, field, data, hasFeaturesOnly, onClick }: 
             onClick={onClick}
         >
             {data.coin && (
-                <CoinPhoto coinCount={Number(data.coin.text)} pirates={data.pirates} pirateSize={pirateSize} />
+                <CoinPhoto
+                    coinCount={Number(data.coin.text)}
+                    piratesWithCoins={data.piratesWithCoinsCount}
+                    freeCoinGirlId={data.freeCoinGirlId}
+                    pirateSize={pirateSize}
+                />
             )}
             {data.pirates && data.pirates.length > 0 && (
                 <PiratePhoto

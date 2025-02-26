@@ -59,6 +59,7 @@ export interface GirlsPositions {
     Map: { [id: number]: GirlsLevel };
     AddPosition: (it: PiratePosition) => void;
     RemovePosition: (it: PiratePosition) => void;
+    GetPosition: (it: PiratePosition) => GirlsLevel | undefined;
 }
 
 // словарь, отслеживающий размещение нескольких пираток на одной клетке
@@ -83,10 +84,14 @@ export const girlsMap: GirlsPositions = {
     },
     RemovePosition: function (it: PiratePosition) {
         let cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
-        let girlsLevel = girlsMap.Map[cachedId];
+        let girlsLevel = this.Map[cachedId];
         if (girlsLevel?.girls != undefined) {
             girlsLevel.girls = girlsLevel.girls.filter((girl) => girl != it.id);
             if (girlsLevel.girls.length == 0) girlsLevel.girls = undefined;
         }
+    },
+    GetPosition: function (it: PiratePosition): GirlsLevel | undefined {
+        let cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
+        return this.Map[cachedId];
     },
 };

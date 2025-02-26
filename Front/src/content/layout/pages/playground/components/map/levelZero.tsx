@@ -43,7 +43,12 @@ const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
                     }}
                     onClick={onClick}
                 >
-                    <CoinPhoto coinCount={Number(data.coin.text)} pirates={data.pirates} pirateSize={pirateSize} />
+                    <CoinPhoto
+                        coinCount={Number(data.coin.text)}
+                        piratesWithCoins={data.piratesWithCoinsCount}
+                        freeCoinGirlId={data.freeCoinGirlId}
+                        pirateSize={pirateSize}
+                    />
                 </div>
             )}
             {data.pirates?.map((pirate, idx) => (

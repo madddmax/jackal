@@ -178,6 +178,8 @@ interface GameCell {
 interface GameLevel {
     level: number;
     pirates?: CellPirate[];
+    piratesWithCoinsCount?: number;
+    freeCoinGirlId?: string;
     features?: LevelFeature[];
     hasCoins: boolean;
     coin?: {
