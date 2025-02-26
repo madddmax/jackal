@@ -248,13 +248,15 @@ export interface PirateChanges {
 export interface GamePirate extends PiratePosition {
     teamId: number;
     withCoin?: boolean;
-    withRum?: boolean;
+    isDrunk?: boolean;
     isInTrap?: boolean;
     isInHole?: boolean;
     groupId: string;
     photo: string;
     photoId: number;
     type: string;
+    isActive?: boolean;
+    backgroundColor?: string;
 }
 
 export interface PirateDiff extends PiratePosition {

@@ -52,12 +52,13 @@ export const animateQueue: GameTurnResponse[] = [];
 
 export interface GirlsLevel {
     level: number;
+    levelsCountInCell: number;
     girls: string[] | undefined;
 }
 
 export interface GirlsPositions {
     Map: { [id: number]: GirlsLevel };
-    AddPosition: (it: PiratePosition) => void;
+    AddPosition: (it: PiratePosition, levelsCount: number) => void;
     RemovePosition: (it: PiratePosition) => void;
     GetPosition: (it: PiratePosition) => GirlsLevel | undefined;
 }
@@ -66,12 +67,13 @@ export interface GirlsPositions {
 // для корректного их смещения относительно друг друга
 export const girlsMap: GirlsPositions = {
     Map: {},
-    AddPosition: function (it: PiratePosition) {
+    AddPosition: function (it: PiratePosition, levelsCount: number) {
         let cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
         let level = this.Map[cachedId];
         if (!level) {
             this.Map[cachedId] = {
                 level: it.position.level,
+                levelsCountInCell: levelsCount,
                 girls: [it.id],
             };
         } else {

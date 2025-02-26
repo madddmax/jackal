@@ -1,25 +1,27 @@
-import { CellPirate, GameState } from '/redux/types';
+import { GameLevel, GamePirate, GameState, ReduxState } from '/redux/types';
 import Image from 'react-bootstrap/Image';
 import cn from 'classnames';
 import './cell.less';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { chooseHumanPirate } from '/redux/gameSlice';
 import { useRef } from 'react';
 import store from '/app/store';
 
 interface PiratePhotoProps {
-    pirates: CellPirate[];
+    pirates: GamePirate[];
     pirateSize: number;
-    coins: number;
 }
 
-const PiratePhoto = ({ pirates, pirateSize, coins }: PiratePhotoProps) => {
+const PiratePhoto = ({ pirates, pirateSize }: PiratePhotoProps) => {
+    const level = useSelector<ReduxState, GameLevel>(
+        (state) => state.game.fields[pirates[0].position.y][pirates[0].position.x].levels[pirates[0].position.level],
+    );
     const dispatch = useDispatch();
     const topGirl = useRef<number>(0);
 
     let sorted = [...pirates];
-    let allowChoosingPirate =
-        pirates.reduce((sum, it) => sum - (it.withCoin ? 1 : 0), coins) === 0 && pirates.length > coins;
+    const coins = Number(level.coin?.text);
+    let allowChoosingPirate = (level.piratesWithCoinsCount || 0) === coins && pirates.length > coins;
     sorted.sort((a, b) => {
         if (a.backgroundColor == 'transparent') return 1;
         if (b.backgroundColor == 'transparent') return -1;
@@ -31,13 +33,13 @@ const PiratePhoto = ({ pirates, pirateSize, coins }: PiratePhotoProps) => {
     });
     let pirate = sorted[0];
 
-    const isCurrentTeam = (girls: CellPirate[]): boolean => {
+    const isCurrentTeam = (girls: GamePirate[]): boolean => {
         let gameState = store.getState().game as GameState;
         let team = gameState.teams.find((it) => it.id == gameState.currentHumanTeamId);
         return girls[0].teamId === team?.id;
     };
 
-    const onTeamPirateClick = (girls: CellPirate[], allowChoosing: boolean) => {
+    const onTeamPirateClick = (girls: GamePirate[], allowChoosing: boolean) => {
         let willChangePirate = girls.length > 1 && girls[0].isActive && allowChoosing;
         if (willChangePirate) {
             topGirl.current = girls[0].photoId;

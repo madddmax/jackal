@@ -124,6 +124,7 @@ export const gameSlice = createSlice({
                         it.photo = `${team.group.id}/pirate_${arr[index]}${team.group.extension || '.png'}`;
                         it.photoId = arr[index];
                         it.groupId = team.group.id;
+                        it.backgroundColor = team.backColor;
                     });
             });
         },
@@ -140,7 +141,7 @@ export const gameSlice = createSlice({
         initPiratePositions: (state) => {
             girlsMap.Map = {};
             state.pirates!.forEach((it: GamePirate) => {
-                girlsMap.AddPosition(it);
+                girlsMap.AddPosition(it, 1);
             });
         },
         setCurrentHumanTeam: (state, action: PayloadAction<number>) => {
@@ -161,6 +162,11 @@ export const gameSlice = createSlice({
                 if (prevPirate) prevPirate.isActive = false;
                 const nextPirate = selectors.getCellPirateById(state, pirate.id);
                 if (nextPirate) nextPirate.isActive = true;
+
+                const pPirate = selectors.getPirateById(state, currentTeam.activePirate);
+                if (pPirate) pPirate.isActive = false;
+                const nPirate = selectors.getPirateById(state, pirate.id);
+                if (nPirate) nPirate.isActive = true;
 
                 currentTeam.activePirate = pirate.id;
             }
@@ -203,12 +209,16 @@ export const gameSlice = createSlice({
                 const prevPirate = selectors.getCellPirateById(state, currentTeam.activePirate);
                 if (prevPirate) prevPirate.isActive = false;
 
+                let pr = selectors.getPirateById(state, currentTeam.activePirate);
+                if (pr) pr.isActive = false;
+
                 currentTeam.activePirate = state.lastMoves[0].from.pirateIds[0];
             }
 
             const pirate = selectors.getPirateById(state, currentTeam.activePirate);
             if (!pirate) return;
 
+            pirate.isActive = true;
             gameSlice.caseReducers.highlightPirate(state, highlightPirate(pirate));
 
             const cellPirate = selectors.getCellPirateById(state, pirate.id);
@@ -258,19 +268,25 @@ export const gameSlice = createSlice({
             let cached = {} as { [id: number]: GameLevel };
             const selectors = gameSlice.getSelectors();
 
-            action.payload.changes
-                .filter((it) => it.isAlive === undefined)
-                .forEach((it) => {
-                    let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
-                    const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
+            // action.payload.changes
+            //     .filter((it) => it.isAlive === undefined)
+            //     .forEach((it) => {
+            //         let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
+            //         const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
 
-                    let cachedId = pirate.position.y * 1000 + pirate.position.x * 10 + pirate.position.level;
-                    cached[cachedId] = prevLevel;
-                    if (prevLevel.pirates != undefined) {
-                        prevLevel.pirates = prevLevel.pirates.filter((it) => it.id != pirate.id);
-                        if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
-                    }
-                });
+            //         let cachedId = pirate.position.y * 1000 + pirate.position.x * 10 + pirate.position.level;
+            //         cached[cachedId] = prevLevel;
+            //         if (prevLevel.pirates != undefined) {
+            //             prevLevel.pirates = prevLevel.pirates.filter((it) => it.id != pirate.id);
+            //             if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
+            //         }
+
+            //         let girlsLevel = girlsMap[cachedId];
+            //         if (girlsLevel.girls != undefined) {
+            //             girlsLevel.girls = girlsLevel.girls.filter((it) => it.id != pirate.id);
+            //             if (girlsLevel.girls.length == 0) girlsLevel.girls = undefined;
+            //         }
+            //     });
             action.payload.changes.forEach((it) => {
                 let team = state.teams.find((tm) => tm.id == it.teamId)!;
                 if (it.isAlive === false) {
@@ -325,6 +341,8 @@ export const gameSlice = createSlice({
                         photo: `${pname}_${pnumber}${extension}`,
                         photoId: pnumber,
                         type: it.type,
+                        isActive: it.id === team.activePirate,
+                        backgroundColor: team.backColor,
                     });
                     const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
                     const drawPirate: CellPirate = {
@@ -332,13 +350,13 @@ export const gameSlice = createSlice({
                         teamId: it.teamId,
                         photo: `${pname}_${pnumber}${extension}`,
                         photoId: pnumber,
-                        backgroundColor: team.backColor,
                         isActive: it.id === team.activePirate,
+                        backgroundColor: team.backColor,
                     };
                     if (level.pirates == undefined) level.pirates = [drawPirate];
                     else level.pirates.push(drawPirate);
 
-                    girlsMap.AddPosition(it);
+                    girlsMap.AddPosition(it, state.fields[it.position.y][it.position.x].levels.length);
                 } else {
                     let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
 
@@ -357,11 +375,12 @@ export const gameSlice = createSlice({
                     gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
 
                     pirate.position = it.position;
-                    pirate.withRum = it.isDrunk;
+                    pirate.isDrunk = it.isDrunk;
                     pirate.isInTrap = it.isInTrap;
                     pirate.isInHole = it.isInHole;
+                    pirate.isActive = it.id === team.activePirate;
 
-                    girlsMap.AddPosition(pirate);
+                    girlsMap.AddPosition(pirate, state.fields[it.position.y][it.position.x].levels.length);
                     gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
 
                     const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
@@ -442,10 +461,9 @@ export const gameSlice = createSlice({
                 state.fields[action.payload.position.y][action.payload.position.x].levels[
                     action.payload.position.level
                 ];
-            level.piratesWithCoinsCount = state.pirates?.filter(
-                (it) => it.withCoin && cell?.girls?.includes(it.id),
-            ).length;
-            level.freeCoinGirlId = state.pirates?.find((it) => !it.withCoin && cell?.girls?.includes(it.id))?.id;
+            const levelPirates = state.pirates?.filter((it) => cell?.girls?.includes(it.id));
+            level.piratesWithCoinsCount = levelPirates?.filter((it) => it.withCoin).length;
+            level.freeCoinGirlId = levelPirates?.find((it) => !it.withCoin)?.id;
         },
         applyStat: (state, action: PayloadAction<GameStat>) => {
             state.stat = action.payload;

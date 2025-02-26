@@ -52,7 +52,7 @@ function Pirates() {
                         <Pirate
                             key={`pirate_${index}`}
                             pirate={girl}
-                            isActive={team?.activePirate === girl.id}
+                            isActive={girl.isActive}
                             onClick={onClick(girl, false)}
                             onCoinClick={onClick(girl, true)}
                         />
