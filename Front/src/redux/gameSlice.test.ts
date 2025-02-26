@@ -238,8 +238,7 @@ describe('redux init tests', () => {
                 moves: [],
             }),
         );
-        expect(result.fields[0][2].levels[0].pirates).toHaveLength(1);
-        expect(result.fields[4][2].levels[0].pirates).toHaveLength(1);
+        expect(result.pirates).toHaveLength(2);
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
                 '20': { girls: ['100'], level: 0, levelsCountInCell: 1 },
@@ -305,14 +304,10 @@ describe('redux basic tests', () => {
         expect(result.teams.find((it) => it.id === 2)?.activePirate).toEqual('200');
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);
-        const girl = result.fields[4][2].levels[0].pirates?.find((it) => it.id == '200');
+        const girl = result.pirates?.find((it) => it.id == '200');
         expect(girl).not.toBeUndefined();
         expect(girl).not.toBeNull();
         expect(girl?.isActive).toBeTruthy();
-        const sboy = result.pirates?.find((it) => it.id == '200');
-        expect(sboy).not.toBeUndefined();
-        expect(sboy).not.toBeNull();
-        expect(sboy?.isActive).toBeTruthy();
     });
 
     test('Убираем подсветку ходов', () => {
@@ -343,14 +338,10 @@ describe('redux basic tests', () => {
         expect(result.teams.find((it) => it.id === 2)?.activePirate).toEqual('200');
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);
-        const boy = result.fields[4][2].levels[0].pirates?.find((it) => it.id == '200');
+        const boy = result.pirates?.find((it) => it.id == '200');
         expect(boy).not.toBeUndefined();
         expect(boy).not.toBeNull();
         expect(boy?.isActive).toBeTruthy();
-        const sboy = result.pirates?.find((it) => it.id == '200');
-        expect(sboy).not.toBeUndefined();
-        expect(sboy).not.toBeNull();
-        expect(sboy?.isActive).toBeTruthy();
     });
 
     test('Меняем активного пирата', () => {
@@ -369,10 +360,6 @@ describe('redux basic tests', () => {
         });
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);
-        const boy = result.fields[4][2].levels[0].pirates?.find((it) => it.id == '300');
-        expect(boy).not.toBeUndefined();
-        expect(boy).not.toBeNull();
-        expect(boy?.isActive).toBeTruthy();
         const pboy = result.pirates?.find((it) => it.id == '200');
         expect(pboy?.isActive).toBeFalsy();
         const sboy = result.pirates?.find((it) => it.id == '300');
@@ -398,7 +385,15 @@ describe('redux basic tests', () => {
         );
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(2);
-        expect(result.fields[0][2].levels[0].pirates).toBeUndefined();
+        const boy = result.pirates?.find((it) => it.id == '100');
+        expect(boy?.position).toEqual({ level: 0, x: 2, y: 2 });
+        expect(girlsMap.Map).toEqual(
+            expect.objectContaining({
+                '20': { girls: undefined, level: 0, levelsCountInCell: 1 },
+                '2020': { girls: ['100'], level: 0, levelsCountInCell: 1 },
+                '4020': { girls: ['200', '300'], level: 0, levelsCountInCell: 1 },
+            }),
+        );
     });
 });
 
@@ -443,12 +438,13 @@ describe('redux money actions tests', () => {
     test('Автоподнятие монеты по возможному действию', () => {
         expect(previousState.pirates?.find((it) => it.id == '200')?.withCoin).toBeTruthy();
         const level = previousState.fields[4][2].levels[0];
-        expect(level.piratesWithCoinsCount).toEqual(1);
-        expect(level.freeCoinGirlId).toEqual('300');
-        // expect(level).toEqual({
-        //     piratesWithCoinsCount: 1,
-        //     freeCoinGirlId: '300',
-        // });
+        expect(level).toEqual({
+            level: 0,
+            hasCoins: true,
+            piratesWithCoinsCount: 1,
+            freeCoinGirlId: '300',
+            coin: { text: '2' },
+        });
     });
 
     test('Кладём монету', () => {
@@ -456,23 +452,26 @@ describe('redux money actions tests', () => {
         currentState = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
         expect(currentState.highlight_x).toEqual(2);
         expect(currentState.highlight_y).toEqual(4);
-        let level = currentState.fields[4][2].levels[0];
-        expect(level.piratesWithCoinsCount).toEqual(1);
-        expect(level.freeCoinGirlId).toEqual('300');
+        expect(currentState.fields[4][2].levels[0]).toEqual({
+            level: 0,
+            hasCoins: true,
+            piratesWithCoinsCount: 1,
+            freeCoinGirlId: '300',
+            coin: { text: '2' },
+        });
 
         const result = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
 
-        const sboy = result.pirates?.find((it) => it.id == '200');
-        expect(sboy?.withCoin).toBeFalsy();
-        expect(sboy?.isActive).toBeTruthy();
-        const boy = result.fields[4][2].levels[0].pirates?.find((it) => it.id == '200');
-        expect(boy).not.toBeUndefined();
-        expect(boy).not.toBeNull();
-        expect(boy?.isActive).toBeTruthy();
+        const boy = result.pirates?.find((it) => it.id == '200');
         expect(boy?.withCoin).toBeFalsy();
-        level = result.fields[4][2].levels[0];
-        expect(level.piratesWithCoinsCount).toEqual(0);
-        expect(level.freeCoinGirlId).toEqual('200');
+        expect(boy?.isActive).toBeTruthy();
+        expect(result.fields[4][2].levels[0]).toEqual({
+            level: 0,
+            hasCoins: true,
+            piratesWithCoinsCount: 0,
+            freeCoinGirlId: '200',
+            coin: { text: '2' },
+        });
     });
 });
 
@@ -520,37 +519,16 @@ describe('redux logic tests', () => {
             ]),
         );
 
-        expect(result.fields[4][2].levels[0]).toEqual(
-            expect.objectContaining({
-                level: 0,
-                hasCoins: false,
-                pirate: undefined,
-                pirates: [
-                    {
-                        id: '200',
-                        backgroundColor: 'green',
-                        isActive: true,
-                        photo: '',
-                        photoId: 0,
-                        teamId: 2,
-                    },
-                    {
-                        id: '300',
-                        backgroundColor: 'green',
-                        isActive: false,
-                        photo: '',
-                        photoId: 0,
-                        teamId: 2,
-                    },
-                ],
-                features: undefined,
-            }),
-        );
+        expect(result.fields[4][2].levels[0]).toEqual({
+            level: 0,
+            hasCoins: false,
+            pirate: undefined,
+            features: undefined,
+        });
     });
 
     test('Открываем Бен Ганна', () => {
-        expect(previousState.fields[0][2].levels[0].pirates).toHaveLength(1);
-        expect(previousState.fields[4][2].levels[0].pirates).toHaveLength(2);
+        expect(previousState.pirates).toHaveLength(3);
         expect(previousState.highlight_x).toEqual(2);
         expect(previousState.highlight_y).toEqual(4);
 
@@ -585,18 +563,24 @@ describe('redux logic tests', () => {
             }),
         );
 
+        expect(result.pirates).toHaveLength(4);
         const boy = result.pirates?.find((it) => it.id == '200');
         expect(boy?.position).toEqual({ level: 0, x: 2, y: 3 });
         expect(boy?.isActive).toBeTruthy();
-        const sboy = result.pirates?.find((it) => it.id == '400');
-        expect(sboy?.position).toEqual({ level: 0, x: 2, y: 3 });
-        expect(sboy?.isActive).toBeFalsy();
-        expect(sboy?.backgroundColor).toEqual('green');
+        const ben = result.pirates?.find((it) => it.id == '400');
+        expect(ben?.position).toEqual({ level: 0, x: 2, y: 3 });
+        expect(ben?.isActive).toBeFalsy();
+        expect(ben?.backgroundColor).toEqual('green');
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(3);
-        expect(result.fields[4][2].levels[0].pirates).toBeUndefined;
-        expect(result.fields[3][2].levels[0].pirates).toHaveLength(2);
-        expect(result.fields[3][2].levels[0].features).toBeUndefined();
+        expect(result.fields[3][2].levels[0]).toEqual({
+            level: 0,
+            hasCoins: false,
+            features: undefined,
+            piratesWithCoinsCount: 0,
+            freeCoinGirlId: '200',
+            coin: undefined,
+        });
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
                 '20': { girls: ['100'], level: 0, levelsCountInCell: 1 },
@@ -631,9 +615,19 @@ describe('redux logic tests', () => {
         expect(result.pirates).toHaveLength(2);
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);
-        expect(result.fields[2][2].levels[0].pirates).toBeUndefined();
-        expect(result.fields[4][2].levels[0].pirates).toHaveLength(1);
-        expect(result.fields[4][2].levels[0].features).toHaveLength(1);
+        expect(result.fields[4][2].levels[0]).toEqual({
+            level: 0,
+            hasCoins: true,
+            features: [
+                {
+                    photo: 'skull_light.png',
+                    backgroundColor: 'transparent',
+                },
+            ],
+            piratesWithCoinsCount: 0,
+            freeCoinGirlId: '300',
+            coin: { text: '2' },
+        });
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
                 '20': { girls: ['100'], level: 0, levelsCountInCell: 1 },

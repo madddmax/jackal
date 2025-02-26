@@ -1,5 +1,4 @@
 import CoinPhoto from './coinPhoto';
-// import PiratePhoto from './piratePhoto';
 import FeaturePhoto from './featurePhoto';
 import { GameLevel } from '/redux/types';
 
@@ -11,7 +10,7 @@ interface LevelZeroProps {
 }
 
 const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
-    const addSize = data.pirates && data.pirates.length > 3 ? cellSize / 10 : 0;
+    const addSize = data.features && data.features.length > 3 ? cellSize / 10 : 0;
     const unitSize = cellSize - pirateSize;
 
     const getMarginTop = (idx: number) => {
@@ -51,23 +50,6 @@ const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
                     />
                 </div>
             )}
-            {/* {data.pirates?.map((pirate, idx) => (
-                <div
-                    key={`cell_level_${data.level}_pirate_${pirate.id}`}
-                    className="level"
-                    style={{
-                        top: (mapSize - 1 - row) * (cellSize + 1) + getMarginTop(idx),
-                        left: (mapSize - 1 - col) * (cellSize + 1) + getMarginLeft(idx),
-                    }}
-                    onClick={onClick}
-                >
-                    <PiratePhoto
-                        pirates={[pirate]}
-                        pirateSize={pirateSize}
-                        coins={(data.coin && Number(data.coin.text)) || 0}
-                    />
-                </div>
-            ))} */}
             {data.features?.map((feature, idx) => (
                 <div
                     key={`cell_level_${data.level}_feature_${idx}`}

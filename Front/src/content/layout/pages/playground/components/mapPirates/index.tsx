@@ -12,8 +12,6 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
     const pirates = useSelector<ReduxState, GamePirate[] | undefined>((state) => state.game.pirates);
     const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
 
-    // const addSize = data.pirates && data.pirates.length > 3 ? cellSize / 10 : 0;
-    // const addSize = 0;
     const unitSize = cellSize - pirateSize;
 
     const mul_x_times = cellSize / 50;

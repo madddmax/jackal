@@ -177,7 +177,6 @@ interface GameCell {
 
 interface GameLevel {
     level: number;
-    pirates?: CellPirate[];
     piratesWithCoinsCount?: number;
     freeCoinGirlId?: string;
     features?: LevelFeature[];
@@ -195,20 +194,6 @@ export interface LevelFeature {
 export interface GamePlace {
     cell: FieldState;
     level: GameLevel;
-    pirate: CellPirate | undefined;
-}
-
-export interface CellPirate {
-    id: string;
-    teamId: number;
-    withCoin?: boolean;
-    isInTrap?: boolean;
-    isInHole?: boolean;
-    isDrunk?: boolean;
-    isActive: boolean;
-    backgroundColor: string;
-    photo: string;
-    photoId: number;
 }
 
 export interface GameMove {
