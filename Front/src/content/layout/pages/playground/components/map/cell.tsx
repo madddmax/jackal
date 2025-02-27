@@ -38,11 +38,13 @@ function Cell({ row, col, tooltipRef }: CellProps) {
         let activePirate = gameState.pirates?.find((it) => it.id == team?.activePirate);
         if (field.levels.length == 1 && activePirate?.position.y === row && activePirate?.position.x === col) {
             let move = field.availableMoves[0];
+            let imgClass = field.image?.includes('hole.png') ? 'groundhole' : 'skipmove';
+            if (move.isRespawn) imgClass = 'respawn';
             tooltipRef.current?.open({
                 anchorSelect: `#cell_${col}_${row}`,
                 content: (
                     <div
-                        className={move.isRespawn ? 'respawn' : 'skipmove'}
+                        className={imgClass}
                         style={{
                             width: pirateSize,
                             height: pirateSize,
