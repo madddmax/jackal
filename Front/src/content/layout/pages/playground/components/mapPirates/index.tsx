@@ -19,13 +19,13 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
     const xUnitSize = cellSize - pirateSize / 2;
 
     const getMarginTop = (girl: GamePirate) => {
-        const cachedId = girl.position.y * 1000 + girl.position.x * 10 + girl.position.level;
-        let levelsCount = girlsMap.Map[cachedId].levelsCountInCell;
-        let level = girlsMap.Map[cachedId].level;
+        const position = girlsMap.GetPosition(girl);
+        let levelsCount = position!.levelsCountInCell;
+        let level = position!.level;
 
         if (levelsCount === 1) {
-            const addSize = girlsMap.Map[cachedId].girls!.length > 3 ? cellSize / 10 : 0;
-            const idx = girlsMap.Map[cachedId].girls!.findIndex((it) => it == girl.id);
+            const addSize = position!.girls!.length > 3 ? cellSize / 10 : 0;
+            const idx = position!.girls!.findIndex((it) => it == girl.id);
             if (idx === 0) return -addSize;
             if (idx === 1) return unitSize + addSize;
             if (idx === 2) return unitSize + addSize;
@@ -51,13 +51,13 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
     };
 
     const getMarginLeft = (girl: GamePirate) => {
-        const cachedId = girl.position.y * 1000 + girl.position.x * 10 + girl.position.level;
-        let levelsCount = girlsMap.Map[cachedId].levelsCountInCell;
-        let level = girlsMap.Map[cachedId].level;
+        const position = girlsMap.GetPosition(girl);
+        let levelsCount = position!.levelsCountInCell;
+        let level = position!.level;
 
         if (levelsCount === 1) {
-            const addSize = girlsMap.Map[cachedId].girls!.length > 3 ? cellSize / 10 : 0;
-            const idx = girlsMap.Map[cachedId].girls!.findIndex((it) => it == girl.id);
+            const addSize = position!.girls!.length > 3 ? cellSize / 10 : 0;
+            const idx = position!.girls!.findIndex((it) => it == girl.id);
             if (idx === 0) return -addSize;
             if (idx === 1) return unitSize + addSize;
             if (idx === 2) return -addSize;

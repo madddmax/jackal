@@ -73,7 +73,7 @@ export const gameSlice = createSlice({
                 state,
                 initSizes({ width: window.innerWidth, height: window.innerHeight }),
             );
-            // gameSlice.caseReducers.initPiratePositions(state);
+            gameSlice.caseReducers.initPiratePositions(state);
         },
         initMap: (state, action: PayloadAction<GameMap>) => {
             let map = [];
@@ -330,7 +330,7 @@ export const gameSlice = createSlice({
                     girlsMap.AddPosition(pirate, state.fields[it.position.y][it.position.x].levels.length);
                     gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
 
-                    debugLog('drawPirate', current(pirate).position.x, current(pirate).position.y, current(pirate).id);
+                    debugLog('move pirate', current(pirate).position.x, current(pirate).position.y, current(pirate).id);
                     if (it.id === team.activePirate) {
                         gameSlice.caseReducers.highlightPirate(state, highlightPirate(pirate));
                     }

@@ -89,7 +89,7 @@ export const girlsMap: GirlsPositions = {
         let girlsLevel = this.Map[cachedId];
         if (girlsLevel?.girls != undefined) {
             girlsLevel.girls = girlsLevel.girls.filter((girl) => girl != it.id);
-            if (girlsLevel.girls.length == 0) girlsLevel.girls = undefined;
+            if (girlsLevel.girls.length == 0) delete this.Map[cachedId];
         }
     },
     GetPosition: function (it: PiratePosition): GirlsLevel | undefined {

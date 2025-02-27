@@ -389,7 +389,6 @@ describe('redux basic tests', () => {
         expect(boy?.position).toEqual({ level: 0, x: 2, y: 2 });
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
-                '20': { girls: undefined, level: 0, levelsCountInCell: 1 },
                 '2020': { girls: ['100'], level: 0, levelsCountInCell: 1 },
                 '4020': { girls: ['200', '300'], level: 0, levelsCountInCell: 1 },
             }),
