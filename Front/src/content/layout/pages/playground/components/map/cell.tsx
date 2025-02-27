@@ -36,6 +36,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
         let gameState = store.getState().game as GameState;
         let team = gameState.teams.find((it) => it.id == gameState.currentHumanTeamId);
         let activePirate = gameState.pirates?.find((it) => it.id == team?.activePirate);
+        let pirateField = activePirate && gameState.fields[activePirate.position.y][activePirate.position.x];
         if (field.levels.length == 1 && activePirate?.position.y === row && activePirate?.position.x === col) {
             let move = field.availableMoves[0];
             let imgClass = field.image?.includes('hole.png') ? 'groundhole' : 'skipmove';
@@ -119,6 +120,44 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                             />
                         ))}
                     </>
+                ),
+            });
+        } else if (
+            field.image?.includes('water.png') &&
+            pirateField?.image &&
+            !pirateField?.image?.includes('water.png')
+        ) {
+            let move = field.availableMoves[0];
+            tooltipRef.current?.open({
+                anchorSelect: `#cell_${col}_${row}`,
+                content: (
+                    <div
+                        className={'seajump'}
+                        style={{
+                            width: pirateSize,
+                            height: pirateSize,
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                            if (useSockets) {
+                                hubConnection.send('Move', {
+                                    gameName: gamename,
+                                    turnNum: move.num,
+                                    pirateId: move.pirateId,
+                                });
+                            } else {
+                                dispatch({
+                                    type: sagaActions.GAME_TURN,
+                                    payload: {
+                                        gameName: gamename,
+                                        turnNum: move.num,
+                                        pirateId: move.pirateId,
+                                    },
+                                });
+                            }
+                            tooltipRef.current?.close();
+                        }}
+                    />
                 ),
             });
         } else {
