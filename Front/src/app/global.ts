@@ -52,25 +52,28 @@ export const animateQueue: GameTurnResponse[] = [];
 
 export interface GirlsLevel {
     level: number;
+    levelsCountInCell: number;
     girls: string[] | undefined;
 }
 
 export interface GirlsPositions {
     Map: { [id: number]: GirlsLevel };
-    AddPosition: (it: PiratePosition) => void;
+    AddPosition: (it: PiratePosition, levelsCount: number) => void;
     RemovePosition: (it: PiratePosition) => void;
+    GetPosition: (it: PiratePosition) => GirlsLevel | undefined;
 }
 
 // словарь, отслеживающий размещение нескольких пираток на одной клетке
 // для корректного их смещения относительно друг друга
 export const girlsMap: GirlsPositions = {
     Map: {},
-    AddPosition: function (it: PiratePosition) {
+    AddPosition: function (it: PiratePosition, levelsCount: number) {
         let cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
         let level = this.Map[cachedId];
         if (!level) {
             this.Map[cachedId] = {
                 level: it.position.level,
+                levelsCountInCell: levelsCount,
                 girls: [it.id],
             };
         } else {
@@ -83,10 +86,14 @@ export const girlsMap: GirlsPositions = {
     },
     RemovePosition: function (it: PiratePosition) {
         let cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
-        let girlsLevel = girlsMap.Map[cachedId];
+        let girlsLevel = this.Map[cachedId];
         if (girlsLevel?.girls != undefined) {
             girlsLevel.girls = girlsLevel.girls.filter((girl) => girl != it.id);
-            if (girlsLevel.girls.length == 0) girlsLevel.girls = undefined;
+            if (girlsLevel.girls.length == 0) delete this.Map[cachedId];
         }
+    },
+    GetPosition: function (it: PiratePosition): GirlsLevel | undefined {
+        let cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
+        return this.Map[cachedId];
     },
 };

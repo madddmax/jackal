@@ -2,6 +2,7 @@ import { Tooltip, TooltipRefProps } from 'react-tooltip';
 import Cell from './cell';
 import './map.less';
 import { useRef } from 'react';
+import MapPirates from '../mapPirates';
 
 interface MapProps {
     mapSize: number;
@@ -14,26 +15,29 @@ function Map({ mapSize, cellSize }: MapProps) {
 
     return (
         <>
-            <div
-                className="map"
-                style={{
-                    width: mapWidth,
-                    height: mapWidth,
-                }}
-            >
-                {Array(mapSize)
-                    .fill(0)
-                    .map((_, rIndex) => (
-                        <div className="map-row" key={`map-row-${mapSize - 1 - rIndex}`}>
-                            {Array(mapSize)
-                                .fill(0)
-                                .map((_, cIndex) => (
-                                    <div className="map-cell" key={`map-cell-${cIndex}`}>
-                                        <Cell col={cIndex} row={mapSize - 1 - rIndex} tooltipRef={actionsTooltip} />
-                                    </div>
-                                ))}
-                        </div>
-                    ))}
+            <div style={{ position: 'relative' }}>
+                <div
+                    className="map"
+                    style={{
+                        width: mapWidth,
+                        height: mapWidth,
+                    }}
+                >
+                    {Array(mapSize)
+                        .fill(0)
+                        .map((_, rIndex) => (
+                            <div className="map-row" key={`map-row-${mapSize - 1 - rIndex}`}>
+                                {Array(mapSize)
+                                    .fill(0)
+                                    .map((_, cIndex) => (
+                                        <div className="map-cell" key={`map-cell-${cIndex}`}>
+                                            <Cell col={cIndex} row={mapSize - 1 - rIndex} tooltipRef={actionsTooltip} />
+                                        </div>
+                                    ))}
+                            </div>
+                        ))}
+                </div>
+                <MapPirates mapSize={mapSize} cellSize={cellSize} />
             </div>
             <Tooltip
                 ref={actionsTooltip}

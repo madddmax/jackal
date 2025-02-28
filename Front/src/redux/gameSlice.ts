@@ -1,6 +1,5 @@
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 import {
-    CellPirate,
     FieldState,
     GameCell,
     GameLevel,
@@ -14,6 +13,7 @@ import {
     PirateChanges,
     PirateChoose,
     PirateMoves,
+    PiratePosition,
     StorageState,
     TeamState,
 } from './types';
@@ -73,7 +73,7 @@ export const gameSlice = createSlice({
                 state,
                 initSizes({ width: window.innerWidth, height: window.innerHeight }),
             );
-            // gameSlice.caseReducers.initPiratePositions(state);
+            gameSlice.caseReducers.initPiratePositions(state);
         },
         initMap: (state, action: PayloadAction<GameMap>) => {
             let map = [];
@@ -123,6 +123,7 @@ export const gameSlice = createSlice({
                         it.photo = `${team.group.id}/pirate_${arr[index]}${team.group.extension || '.png'}`;
                         it.photoId = arr[index];
                         it.groupId = team.group.id;
+                        it.backgroundColor = team.backColor;
                     });
             });
         },
@@ -139,7 +140,7 @@ export const gameSlice = createSlice({
         initPiratePositions: (state) => {
             girlsMap.Map = {};
             state.pirates!.forEach((it: GamePirate) => {
-                girlsMap.AddPosition(it);
+                girlsMap.AddPosition(it, 1);
             });
         },
         setCurrentHumanTeam: (state, action: PayloadAction<number>) => {
@@ -156,9 +157,9 @@ export const gameSlice = createSlice({
             let currentTeam = selectors.getCurrentTeam(state)!;
             let hasPirateChanging = currentTeam.activePirate !== pirate.id;
             if (hasPirateChanging) {
-                const prevPirate = selectors.getCellPirateById(state, currentTeam.activePirate);
+                const prevPirate = selectors.getPirateById(state, currentTeam.activePirate);
                 if (prevPirate) prevPirate.isActive = false;
-                const nextPirate = selectors.getCellPirateById(state, pirate.id);
+                const nextPirate = selectors.getPirateById(state, pirate.id);
                 if (nextPirate) nextPirate.isActive = true;
 
                 currentTeam.activePirate = pirate.id;
@@ -167,12 +168,9 @@ export const gameSlice = createSlice({
             let hasCoinChanging = action.payload.withCoinAction && !hasPirateChanging && pirate.withCoin !== undefined;
             if (hasCoinChanging) {
                 const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
-                const cellPirate = level.pirates?.find((it) => it.id == pirate.id)!;
-                if (
-                    level.pirates!.filter((pr) => pr.id != pirate.id && pr.withCoin).length < Number(level.coin?.text)
-                ) {
+                if (pirate.withCoin || (level.piratesWithCoinsCount || 0) < Number(level.coin?.text)) {
                     pirate.withCoin = !pirate.withCoin;
-                    cellPirate.withCoin = pirate.withCoin;
+                    gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
                 }
             }
 
@@ -198,7 +196,7 @@ export const gameSlice = createSlice({
                 state.lastMoves.length > 0 &&
                 !state.lastMoves.some((move) => move.from.pirateIds.includes(currentTeam.activePirate))
             ) {
-                const prevPirate = selectors.getCellPirateById(state, currentTeam.activePirate);
+                const prevPirate = selectors.getPirateById(state, currentTeam.activePirate);
                 if (prevPirate) prevPirate.isActive = false;
 
                 currentTeam.activePirate = state.lastMoves[0].from.pirateIds[0];
@@ -207,10 +205,8 @@ export const gameSlice = createSlice({
             const pirate = selectors.getPirateById(state, currentTeam.activePirate);
             if (!pirate) return;
 
+            pirate.isActive = true;
             gameSlice.caseReducers.highlightPirate(state, highlightPirate(pirate));
-
-            const cellPirate = selectors.getCellPirateById(state, pirate.id);
-            if (cellPirate) cellPirate.isActive = true;
 
             // собственно подсвечиваем ходы
             state.lastMoves
@@ -256,37 +252,24 @@ export const gameSlice = createSlice({
             let cached = {} as { [id: number]: GameLevel };
             const selectors = gameSlice.getSelectors();
 
-            action.payload.changes
-                .filter((it) => it.isAlive === undefined)
-                .forEach((it) => {
-                    let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
-                    const prevLevel = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
-
-                    let cachedId = pirate.position.y * 1000 + pirate.position.x * 10 + pirate.position.level;
-                    cached[cachedId] = prevLevel;
-                    if (prevLevel.pirates != undefined) {
-                        prevLevel.pirates = prevLevel.pirates.filter((it) => it.id != pirate.id);
-                        if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
-                    }
-                });
             action.payload.changes.forEach((it) => {
                 let team = state.teams.find((tm) => tm.id == it.teamId)!;
                 if (it.isAlive === false) {
                     const place = selectors.getPirateCell(state, it.id);
-                    if (place?.pirate != undefined) {
-                        debugLog('dead pirate', current(place?.pirate));
+                    if (place) {
                         const skull: LevelFeature = {
                             photo: place.cell.image?.includes('arrow') ? 'skull.png' : 'skull_light.png',
                             backgroundColor: 'transparent',
                         };
                         if (place.level.features === undefined) place.level.features = [skull];
                         else place.level.features.push(skull);
-                        place.level.pirates = place.level.pirates?.filter((pr) => pr.id !== it.id);
                     }
                     let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
-                    girlsMap.RemovePosition(pirate);
-
                     state.pirates = state.pirates?.filter((pr) => pr.id !== it.id);
+
+                    debugLog('dead pirate', current(pirate));
+                    girlsMap.RemovePosition(pirate);
+                    gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
                 } else if (it.isAlive === true) {
                     let pname;
                     let pnumber;
@@ -322,20 +305,10 @@ export const gameSlice = createSlice({
                         photo: `${pname}_${pnumber}${extension}`,
                         photoId: pnumber,
                         type: it.type,
-                    });
-                    const level = state.fields[it.position.y][it.position.x].levels[it.position.level];
-                    const drawPirate: CellPirate = {
-                        id: it.id,
-                        teamId: it.teamId,
-                        photo: `${pname}_${pnumber}${extension}`,
-                        photoId: pnumber,
-                        backgroundColor: team.backColor,
                         isActive: it.id === team.activePirate,
-                    };
-                    if (level.pirates == undefined) level.pirates = [drawPirate];
-                    else level.pirates.push(drawPirate);
-
-                    girlsMap.AddPosition(it);
+                        backgroundColor: team.backColor,
+                    });
+                    girlsMap.AddPosition(it, state.fields[it.position.y][it.position.x].levels.length);
                 } else {
                     let pirate = state.pirates!.find((pr) => pr.id === it.id)!;
 
@@ -344,37 +317,20 @@ export const gameSlice = createSlice({
                         cached[cachedId] =
                             state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
                     }
-                    const prevLevel = cached[cachedId];
-                    if (prevLevel.pirates != undefined) {
-                        prevLevel.pirates = prevLevel.pirates.filter((it) => it.id != pirate.id);
-                        if (prevLevel.pirates.length == 0) prevLevel.pirates = undefined;
-                    }
 
                     girlsMap.RemovePosition(pirate);
+                    gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
 
                     pirate.position = it.position;
-                    pirate.withRum = it.isDrunk;
+                    pirate.isDrunk = it.isDrunk;
                     pirate.isInTrap = it.isInTrap;
                     pirate.isInHole = it.isInHole;
+                    pirate.isActive = it.id === team.activePirate;
 
-                    girlsMap.AddPosition(pirate);
+                    girlsMap.AddPosition(pirate, state.fields[it.position.y][it.position.x].levels.length);
+                    gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
 
-                    const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
-                    debugLog('drawPirate', current(pirate).position.x, current(pirate).position.y, current(pirate).id);
-                    const drawPirate: CellPirate = {
-                        id: pirate.id,
-                        teamId: it.teamId,
-                        photo: pirate.photo,
-                        photoId: pirate.photoId,
-                        withCoin: pirate.withCoin,
-                        isInTrap: it.isInTrap,
-                        isInHole: it.isInHole,
-                        isDrunk: it.isDrunk,
-                        isActive: it.id === team.activePirate,
-                        backgroundColor: team.backColor,
-                    };
-                    if (level.pirates == undefined) level.pirates = [drawPirate];
-                    else level.pirates.push(drawPirate);
+                    debugLog('move pirate', current(pirate).position.x, current(pirate).position.y, current(pirate).id);
                     if (it.id === team.activePirate) {
                         gameSlice.caseReducers.highlightPirate(state, highlightPirate(pirate));
                     }
@@ -397,15 +353,20 @@ export const gameSlice = createSlice({
                             cached[cachedId] = state.fields[it.position.y][it.position.x].levels[it.position.level];
                         }
 
+                        const cell = girlsMap.GetPosition(it);
                         const level = cached[cachedId];
+                        const levelPirates = state.pirates?.filter((it) => cell?.girls?.includes(it.id));
+
                         if (changeCoin !== undefined) {
                             changeCoin =
-                                level.pirates!.filter((pr) => pr.id != it.id && pr.withCoin).length <
+                                levelPirates!.filter((pr) => pr.id != it.id && pr.withCoin).length <
                                 Number(level.coin?.text);
                         }
                         it.withCoin = changeCoin;
-                        const prt = level.pirates?.find((pr) => pr.id == it.id)!;
+                        const prt = levelPirates?.find((pr) => pr.id == it.id)!;
                         prt.withCoin = changeCoin;
+
+                        gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(it));
                     }
                 });
             }
@@ -424,10 +385,19 @@ export const gameSlice = createSlice({
                 cell.levels = it.levels.map((lev) => ({
                     ...lev,
                     pirate: undefined,
-                    pirates: cell?.levels && cell?.levels[lev.level]?.pirates,
                     features: cell?.levels && cell?.levels[lev.level]?.features,
                 }));
             });
+        },
+        updateLevelCoinsData: (state, action: PayloadAction<PiratePosition>) => {
+            const cell = girlsMap.GetPosition(action.payload);
+            const level =
+                state.fields[action.payload.position.y][action.payload.position.x].levels[
+                    action.payload.position.level
+                ];
+            const levelPirates = state.pirates?.filter((it) => cell?.girls?.includes(it.id));
+            level.piratesWithCoinsCount = levelPirates?.filter((it) => it.withCoin).length;
+            level.freeCoinGirlId = levelPirates?.find((it) => !it.withCoin)?.id;
         },
         applyStat: (state, action: PayloadAction<GameStat>) => {
             state.stat = action.payload;
@@ -444,12 +414,6 @@ export const gameSlice = createSlice({
         getCurrentTeam: (state): TeamState | undefined => state.teams.find((it) => it.id == state.currentHumanTeamId),
         getPirateById: (state, pirateId: string): GamePirate | undefined =>
             state.pirates!.find((it) => it.id === pirateId),
-        getCellPirateById: (state, pirateId: string): CellPirate | undefined => {
-            let gamePirate = gameSlice.selectors.getPirateById({ game: state }, pirateId);
-            if (!gamePirate) return undefined;
-            let level = state.fields[gamePirate.position.y][gamePirate.position.x].levels[gamePirate.position.level];
-            return level.pirates?.find((it) => it.id == gamePirate?.id);
-        },
         getPirateCell: (state, pirateId: string): GamePlace | undefined => {
             let gamePirate = gameSlice.getSelectors().getPirateById(state, pirateId);
             if (!gamePirate) return undefined;
@@ -458,7 +422,6 @@ export const gameSlice = createSlice({
             return {
                 cell,
                 level,
-                pirate: level.pirates?.find((it) => it.id == gamePirate?.id),
             };
         },
         getUserSettings: (state): StorageState => state.userSettings,
@@ -482,6 +445,7 @@ export const {
     removeHumanMoves,
     applyPirateChanges,
     applyChanges,
+    updateLevelCoinsData,
     applyStat,
     setTilesPackNames,
     setMapInfo,

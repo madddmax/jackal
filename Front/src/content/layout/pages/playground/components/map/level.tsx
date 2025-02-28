@@ -1,5 +1,4 @@
 import CoinPhoto from './coinPhoto';
-import PiratePhoto from './piratePhoto';
 import FeaturePhoto from './featurePhoto';
 import { FieldState, GameLevel } from '/redux/types';
 
@@ -98,13 +97,11 @@ const Level = ({ cellSize, pirateSize, field, data, hasFeaturesOnly, onClick }: 
             onClick={onClick}
         >
             {data.coin && (
-                <CoinPhoto coinCount={Number(data.coin.text)} pirates={data.pirates} pirateSize={pirateSize} />
-            )}
-            {data.pirates && data.pirates.length > 0 && (
-                <PiratePhoto
-                    pirates={data.pirates}
+                <CoinPhoto
+                    coinCount={Number(data.coin.text)}
+                    piratesWithCoins={data.piratesWithCoinsCount}
+                    freeCoinGirlId={data.freeCoinGirlId}
                     pirateSize={pirateSize}
-                    coins={(data.coin && Number(data.coin.text)) || 0}
                 />
             )}
         </div>

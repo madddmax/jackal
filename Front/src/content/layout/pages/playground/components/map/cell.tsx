@@ -35,13 +35,17 @@ function Cell({ row, col, tooltipRef }: CellProps) {
     const onClick = useCallback(() => {
         let gameState = store.getState().game as GameState;
         let team = gameState.teams.find((it) => it.id == gameState.currentHumanTeamId);
-        if (field.levels.length == 1 && field.levels[0].pirates?.some((it) => it.id == team?.activePirate)) {
+        let activePirate = gameState.pirates?.find((it) => it.id == team?.activePirate);
+        let pirateField = activePirate && gameState.fields[activePirate.position.y][activePirate.position.x];
+        if (field.levels.length == 1 && activePirate?.position.y === row && activePirate?.position.x === col) {
             let move = field.availableMoves[0];
+            let imgClass = field.image?.includes('hole.png') ? 'groundhole' : 'skipmove';
+            if (move.isRespawn) imgClass = 'respawn';
             tooltipRef.current?.open({
                 anchorSelect: `#cell_${col}_${row}`,
                 content: (
                     <div
-                        className={move.isRespawn ? 'respawn' : 'skipmove'}
+                        className={imgClass}
                         style={{
                             width: pirateSize,
                             height: pirateSize,
@@ -118,6 +122,44 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                     </>
                 ),
             });
+        } else if (
+            field.image?.includes('water.png') &&
+            pirateField?.image &&
+            !pirateField?.image?.includes('water.png')
+        ) {
+            let move = field.availableMoves[0];
+            tooltipRef.current?.open({
+                anchorSelect: `#cell_${col}_${row}`,
+                content: (
+                    <div
+                        className={'seajump'}
+                        style={{
+                            width: pirateSize,
+                            height: pirateSize,
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                            if (useSockets) {
+                                hubConnection.send('Move', {
+                                    gameName: gamename,
+                                    turnNum: move.num,
+                                    pirateId: move.pirateId,
+                                });
+                            } else {
+                                dispatch({
+                                    type: sagaActions.GAME_TURN,
+                                    payload: {
+                                        gameName: gamename,
+                                        turnNum: move.num,
+                                        pirateId: move.pirateId,
+                                    },
+                                });
+                            }
+                            tooltipRef.current?.close();
+                        }}
+                    />
+                ),
+            });
         } else {
             let move = field.availableMoves[0];
             if (useSockets) {
@@ -162,9 +204,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
             ></div>
             {field.levels &&
                 field.levels.length === 1 &&
-                ((field.levels[0].pirates && field.levels[0].pirates.length > 0) ||
-                    field.levels[0].coin ||
-                    (field.levels[0].features && field.levels[0].features.length > 0)) && (
+                (field.levels[0].coin || (field.levels[0].features && field.levels[0].features.length > 0)) && (
                     <LevelZero
                         key={`cell-level-0`}
                         cellSize={cellSize}
@@ -191,7 +231,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
             {field.levels &&
                 field.levels.length > 1 &&
                 field.levels
-                    .filter((it) => (it.pirates && it.pirates.length > 0) || it.coin)
+                    .filter((it) => it.coin)
                     .map((it, idx) => (
                         <Level
                             key={`cell-level-${idx}-pirates`}

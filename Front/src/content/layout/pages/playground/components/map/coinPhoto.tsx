@@ -1,38 +1,35 @@
 import { useDispatch } from 'react-redux';
 import { chooseHumanPirate } from '/redux/gameSlice';
-import { CellPirate } from '/redux/types';
 
 interface CoinPhotoProps {
-    pirates: CellPirate[] | undefined;
+    piratesWithCoins: number | undefined;
+    freeCoinGirlId: string | undefined;
     pirateSize: number;
     coinCount: number;
 }
 
-const CoinPhoto = ({ coinCount, pirates, pirateSize }: CoinPhotoProps) => {
+const CoinPhoto = ({ coinCount, piratesWithCoins, freeCoinGirlId, pirateSize }: CoinPhotoProps) => {
     const dispatch = useDispatch();
 
-    let piratesWithCoins = (pirates && pirates.filter((it) => it.withCoin).length) || 0;
     if (piratesWithCoins === coinCount) return <div />;
 
-    let text = coinCount - piratesWithCoins;
+    let text = coinCount - (piratesWithCoins || 0);
     const coinSize = pirateSize * 0.6;
 
-    const onClick = (girl: CellPirate) => {
-        if (girl.withCoin === false) {
-            dispatch(chooseHumanPirate({ pirate: girl.id, withCoinAction: true }));
-        }
+    const onClick = (girlId: string) => {
+        dispatch(chooseHumanPirate({ pirate: girlId, withCoinAction: true }));
     };
 
-    return pirates && pirates.length == 1 ? (
+    return freeCoinGirlId ? (
         <div
             className="coins"
             style={{
                 width: coinSize,
                 height: coinSize,
                 fontSize: Math.ceil(coinSize * 0.6),
-                cursor: pirates[0].withCoin === false ? 'pointer' : 'default',
+                cursor: 'pointer',
             }}
-            onClick={() => onClick(pirates[0])}
+            onClick={() => onClick(freeCoinGirlId)}
         >
             {text}
         </div>
