@@ -123,9 +123,10 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                 ),
             });
         } else if (
-            field.image?.includes('water.png') &&
-            pirateField?.image &&
-            !pirateField?.image?.includes('water.png')
+            (field.image?.includes('water.png') &&
+                pirateField?.image && // and no ship
+                !pirateField?.image?.includes('water.png')) || // and jump from beach
+            field.image?.includes('cannon.png')
         ) {
             let move = field.availableMoves[0];
             tooltipRef.current?.open({
