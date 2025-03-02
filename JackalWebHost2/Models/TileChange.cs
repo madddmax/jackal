@@ -2,10 +2,9 @@
 
 public class TileChange
 {
-    public string? BackgroundImageSrc;
-    public string BackgroundColor;
+    public string BackgroundImageSrc;
     public int Rotate;
-
+    
     public bool IsUnknown;
 
     public LevelChange[] Levels;
