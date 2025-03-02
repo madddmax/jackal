@@ -170,21 +170,11 @@ public class DrawService : IDrawService
 
     private static TileChange Draw(Tile tile, Team[] teams)
     {
-        var tileElement = new TileChange();
-
+        var tileElement = new TileChange
+        {
+            Levels = new LevelChange[tile.Levels.Count]
+        };
         var teamShip = teams.FirstOrDefault(item => item.ShipPosition == tile.Position);
-        if (teamShip != null)
-        {
-            tileElement.BackgroundImageSrc = null;
-            tileElement.BackgroundColor = GetTeamColor(teamShip.Id);
-        }
-        else if (tile.Type == TileType.Water && tileElement.BackgroundImageSrc == null)
-        {
-            tileElement.BackgroundImageSrc = @"/fields/water.png";
-            tileElement.BackgroundColor = "Gray";
-        }
-
-        tileElement.Levels = new LevelChange[tile.Levels.Count];
 
         for (int i = 0; i < tile.Levels.Count; i++)
         {
@@ -225,23 +215,15 @@ public class DrawService : IDrawService
 
     private static void DrawTileBackground(Tile tile, Team? teamShip, ref TileChange tileChange)
     {
-        TileType type = tile.Type;
-
-        // не зарисовываем корабль водой
-        if (teamShip != null)
-        {
-            return;
-        }
-
         string filename;
-        switch (type)
+        switch (tile.Type)
         {
             case TileType.Unknown:
                 tileChange.IsUnknown = true;
                 filename = "back";
                 break;
             case TileType.Water:
-                filename = "water";
+                filename = teamShip != null ? $"ship_{teamShip.Id + 1}" : "water";
                 break;
             case TileType.Grass:
                 filename = $"empty{tile.ArrowsCode + 1}";
@@ -327,10 +309,11 @@ public class DrawService : IDrawService
                 var search = ArrowsCodesHelper.Search(tile.ArrowsCode);
                 filename = $"arrow{search.ArrowType + 1}";
                 break;
+            
             default:
                 throw new NotSupportedException();
         }
-
+        
         tileChange.BackgroundImageSrc = $"/fields/{filename}.png";
         tileChange.Rotate = (int)tile.Direction;
     }

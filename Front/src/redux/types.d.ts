@@ -62,7 +62,6 @@ export interface TeamGroup {
 
 export interface FieldState {
     image?: string;
-    backColor?: string;
     rotate?: number;
     levels: GameLevel[];
     availableMoves: AvailableMove[];
@@ -168,7 +167,6 @@ export interface GameMap {
 
 interface GameCell {
     backgroundImageSrc: string;
-    backgroundColor: string;
     rotate: number;
     levels: GameLevel[];
     x: number;

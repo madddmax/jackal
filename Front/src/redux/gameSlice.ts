@@ -84,7 +84,6 @@ export const gameSlice = createSlice({
                     const change = action.payload.changes[j];
                     if (!change.backgroundImageSrc) {
                         row.push({
-                            backColor: change.backgroundColor,
                             levels: change.levels,
                             availableMoves: [],
                         });
@@ -376,7 +375,6 @@ export const gameSlice = createSlice({
                 const cell = state.fields[it.y][it.x];
                 if (cell.image != it.backgroundImageSrc) {
                     cell.image = it.backgroundImageSrc;
-                    cell.backColor = it.backgroundColor;
                     cell.rotate = it.rotate;
                 }
                 if (state.stat?.isGameOver) {

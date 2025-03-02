@@ -505,7 +505,6 @@ describe('redux logic tests', () => {
             applyChanges([
                 {
                     backgroundImageSrc: '/fields/forest.png',
-                    backgroundColor: 'Green',
                     rotate: 2,
                     levels: [
                         { level: 0, hasCoins: false },

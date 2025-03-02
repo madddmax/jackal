@@ -6,7 +6,6 @@ export const getMapData: GameMap = {
     changes: [
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -19,7 +18,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -32,7 +30,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -45,7 +42,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -58,7 +54,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -71,7 +66,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -84,7 +78,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -97,7 +90,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -110,7 +102,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -123,7 +114,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -136,7 +126,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -149,7 +138,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -162,7 +150,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -175,7 +162,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -188,7 +174,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -201,7 +186,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -214,7 +198,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -227,7 +210,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -240,7 +222,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -253,7 +234,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -266,7 +246,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -279,7 +258,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -292,7 +270,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -306,7 +283,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
@@ -319,7 +295,6 @@ export const getMapData: GameMap = {
         },
         {
             backgroundImageSrc: '/fields/water.png',
-            backgroundColor: 'Gray',
             rotate: 0,
             levels: [
                 {
