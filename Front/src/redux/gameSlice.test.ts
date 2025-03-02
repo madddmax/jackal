@@ -11,7 +11,7 @@ import reducer, {
     removeHumanMoves,
     applyChanges,
 } from './gameSlice';
-import { getMapData } from './gameSlice.test.mapData';
+import { getMapData } from '/app/mapDataForTests';
 import { GamePirate, GameStat, GameState, PiratePosition } from './types';
 import { Constants } from '/app/constants';
 import { girlsMap } from '/app/global';

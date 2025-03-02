@@ -7,6 +7,7 @@ const config: JestConfigWithTsJest = {
     modulePaths: ['<rootDir>/src'],
     moduleNameMapper: {
         '/app/(.*)': ['<rootDir>/src/app/$1'],
+        '/redux/(.*)': ['<rootDir>/src/redux/$1'],
     },
 };
 

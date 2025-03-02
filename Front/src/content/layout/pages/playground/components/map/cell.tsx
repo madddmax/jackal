@@ -8,8 +8,9 @@ import './cell.less';
 import Level from './level';
 import LevelZero from './levelZero';
 import { TooltipRefProps } from 'react-tooltip';
-import { RefObject, useCallback } from 'react';
+import { RefObject } from 'react';
 import { hubConnection } from '/app/global';
+import { CalcTooltipType, TooltipTypes } from './cell.logic';
 
 interface CellAvailableMove extends AvailableMove {
     img?: string;
@@ -32,136 +33,8 @@ function Cell({ row, col, tooltipRef }: CellProps) {
     const gamename = useSelector<ReduxState, string | undefined>((state) => state.game.gameName);
     const hasMove = field.availableMoves.length > 0;
 
-    const onClick = useCallback(() => {
-        let gameState = store.getState().game as GameState;
-        let team = gameState.teams.find((it) => it.id == gameState.currentHumanTeamId);
-        let activePirate = gameState.pirates?.find((it) => it.id == team?.activePirate);
-        let pirateField = activePirate && gameState.fields[activePirate.position.y][activePirate.position.x];
-        if (field.levels.length == 1 && activePirate?.position.y === row && activePirate?.position.x === col) {
-            let move = field.availableMoves[0];
-            let imgClass = field.image?.includes('hole.png') ? 'groundhole' : 'skipmove';
-            if (move.isRespawn) imgClass = 'respawn';
-            tooltipRef.current?.open({
-                anchorSelect: `#cell_${col}_${row}`,
-                content: (
-                    <div
-                        className={imgClass}
-                        style={{
-                            width: pirateSize,
-                            height: pirateSize,
-                            cursor: 'pointer',
-                        }}
-                        onClick={() => {
-                            if (useSockets) {
-                                hubConnection.send('Move', {
-                                    gameName: gamename,
-                                    turnNum: move.num,
-                                    pirateId: move.pirateId,
-                                });
-                            } else {
-                                dispatch({
-                                    type: sagaActions.GAME_TURN,
-                                    payload: {
-                                        gameName: gamename,
-                                        turnNum: move.num,
-                                        pirateId: move.pirateId,
-                                    },
-                                });
-                            }
-                            tooltipRef.current?.close();
-                        }}
-                    />
-                ),
-            });
-        } else if (field.availableMoves.length > 1 && !field.availableMoves.some((it) => !it.prev)) {
-            let moves = [] as CellAvailableMove[];
-            field.availableMoves.forEach((it) => {
-                let cell = gameState.fields[it.prev!.y][it.prev!.x];
-                moves.push({
-                    ...it,
-                    img: cell.image!,
-                    rotate: cell.rotate,
-                });
-            });
-
-            tooltipRef.current?.open({
-                anchorSelect: `#cell_${col}_${row}`,
-                content: (
-                    <>
-                        {moves.map((it) => (
-                            <img
-                                style={{
-                                    transform: it.rotate && it.rotate > 0 ? `rotate(${it.rotate * 90}deg)` : 'none',
-                                    margin: '5px 3px',
-                                    width: pirateSize * 1.6,
-                                    height: pirateSize * 1.6,
-                                    cursor: 'pointer',
-                                }}
-                                src={it.img}
-                                onClick={() => {
-                                    if (useSockets) {
-                                        hubConnection.send('Move', {
-                                            gameName: gamename,
-                                            turnNum: it.num,
-                                            pirateId: it.pirateId,
-                                        });
-                                    } else {
-                                        dispatch({
-                                            type: sagaActions.GAME_TURN,
-                                            payload: {
-                                                gameName: gamename,
-                                                turnNum: it.num,
-                                                pirateId: it.pirateId,
-                                            },
-                                        });
-                                    }
-                                    tooltipRef.current?.close();
-                                }}
-                            />
-                        ))}
-                    </>
-                ),
-            });
-        } else if (
-            field.image?.includes('water.png') &&
-            pirateField?.image &&
-            !pirateField?.image?.includes('water.png')
-        ) {
-            let move = field.availableMoves[0];
-            tooltipRef.current?.open({
-                anchorSelect: `#cell_${col}_${row}`,
-                content: (
-                    <div
-                        className={'seajump'}
-                        style={{
-                            width: pirateSize,
-                            height: pirateSize,
-                            cursor: 'pointer',
-                        }}
-                        onClick={() => {
-                            if (useSockets) {
-                                hubConnection.send('Move', {
-                                    gameName: gamename,
-                                    turnNum: move.num,
-                                    pirateId: move.pirateId,
-                                });
-                            } else {
-                                dispatch({
-                                    type: sagaActions.GAME_TURN,
-                                    payload: {
-                                        gameName: gamename,
-                                        turnNum: move.num,
-                                        pirateId: move.pirateId,
-                                    },
-                                });
-                            }
-                            tooltipRef.current?.close();
-                        }}
-                    />
-                ),
-            });
-        } else {
-            let move = field.availableMoves[0];
+    const onClick = () => {
+        const makeMove = (move: AvailableMove) => {
             if (useSockets) {
                 hubConnection.send('Move', {
                     gameName: gamename,
@@ -178,8 +51,72 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                     },
                 });
             }
+        };
+        const tooltipOnClick = (move: AvailableMove) => () => {
+            makeMove(move);
+            tooltipRef.current?.close();
+        };
+
+        let gameState = store.getState().game as GameState;
+        const tooltipType = CalcTooltipType({ row, col, field, state: gameState });
+        switch (tooltipType) {
+            case TooltipTypes.Respawn:
+            case TooltipTypes.GroundHole:
+            case TooltipTypes.SkipMove:
+            case TooltipTypes.Seajump:
+                tooltipRef.current?.open({
+                    anchorSelect: `#cell_${col}_${row}`,
+                    content: (
+                        <div
+                            className={tooltipType}
+                            style={{
+                                width: pirateSize,
+                                height: pirateSize,
+                                cursor: 'pointer',
+                            }}
+                            onClick={tooltipOnClick(field.availableMoves[0])}
+                        />
+                    ),
+                });
+                break;
+            case TooltipTypes.SomeFields:
+                let moves = [] as CellAvailableMove[];
+                field.availableMoves.forEach((it) => {
+                    let cell = gameState.fields[it.prev!.y][it.prev!.x];
+                    moves.push({
+                        ...it,
+                        img: cell.image!,
+                        rotate: cell.rotate,
+                    });
+                });
+
+                tooltipRef.current?.open({
+                    anchorSelect: `#cell_${col}_${row}`,
+                    content: (
+                        <>
+                            {moves.map((it) => (
+                                <img
+                                    style={{
+                                        transform: it.rotate && it.rotate > 0 ? `rotate(${it.rotate * 90}deg)` : 'none',
+                                        margin: '5px 3px',
+                                        width: pirateSize * 1.6,
+                                        height: pirateSize * 1.6,
+                                        cursor: 'pointer',
+                                    }}
+                                    src={it.img}
+                                    onClick={tooltipOnClick(it)}
+                                />
+                            ))}
+                        </>
+                    ),
+                });
+                break;
+            case TooltipTypes.NoTooltip:
+            default:
+                makeMove(field.availableMoves[0]);
+                break;
         }
-    }, [dispatch, field, gamename]);
+    };
 
     return (
         <>
