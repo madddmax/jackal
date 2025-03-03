@@ -11,6 +11,7 @@ interface MapPiratesProps {
 const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
     const pirates = useSelector<ReduxState, GamePirate[] | undefined>((state) => state.game.pirates);
     const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
+    const currentTeam = useSelector<ReduxState, number>((state) => state.game.currentHumanTeamId);
 
     const unitSize = cellSize - pirateSize;
 
@@ -105,6 +106,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
                             top: (mapSize - 1 - girl.position.y) * (cellSize + 1) + getMarginTop(girl),
                             left: girl.position.x * (cellSize + 1) + getMarginLeft(girl),
                             zIndex: girl.isActive ? 4 : 3,
+                            pointerEvents: girl.teamId === currentTeam ? 'auto' : 'none',
                         }}
                     >
                         <PiratePhoto pirates={getCellPirates(girl, pirates)} pirateSize={pirateSize} />
