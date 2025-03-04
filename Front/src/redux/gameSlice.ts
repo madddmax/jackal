@@ -393,7 +393,9 @@ export const gameSlice = createSlice({
             const level = field.levels[action.payload.position.level];
             const levelPirates = state.pirates?.filter((it) => cell?.girls?.includes(it.id));
             level.piratesWithCoinsCount = levelPirates?.filter((it) => it.withCoin).length;
-            level.freeCoinGirlId = field.image && levelPirates?.find((it) => !it.withCoin)?.id;
+            level.freeCoinGirlId = !field.image?.includes('ship')
+                ? levelPirates?.find((it) => !it.withCoin)?.id
+                : undefined;
         },
         applyStat: (state, action: PayloadAction<GameStat>) => {
             state.stat = action.payload;

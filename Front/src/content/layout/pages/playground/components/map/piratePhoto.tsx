@@ -56,6 +56,7 @@ const PiratePhoto = ({ pirates, pirateSize }: PiratePhotoProps) => {
     const addSize = (pirateSize - coinSize - 20) / 10;
     const coinPos = pirateSize - coinSize - addSize;
     const isDisabled = pirate.isDrunk || pirate.isInTrap || pirate.isInHole;
+    const isCurrentTeamPirate = isCurrentTeam(sorted);
 
     return (
         <>
@@ -72,10 +73,10 @@ const PiratePhoto = ({ pirates, pirateSize }: PiratePhotoProps) => {
                     filter: isDisabled ? 'grayscale(100%)' : undefined,
                     width: pirateSize,
                     height: pirateSize,
-                    cursor: isDisabled ? 'default' : 'pointer',
+                    cursor: isDisabled && isCurrentTeamPirate ? 'default' : 'pointer',
                 }}
                 onClick={(event) => {
-                    if (isCurrentTeam(sorted)) {
+                    if (isCurrentTeamPirate) {
                         event.stopPropagation();
                         onTeamPirateClick(sorted, allowChoosingPirate);
                     }

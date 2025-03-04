@@ -132,7 +132,6 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                     width: cellSize,
                     height: cellSize,
                     backgroundImage: field.image ? `url(${field.image})` : '',
-                    backgroundColor: 'transparent',
                     transform: field.rotate && field.rotate > 0 ? `rotate(${field.rotate * 90}deg)` : 'none',
                     opacity: hasMove ? '0.5' : '1',
                     cursor: hasMove ? 'pointer' : 'default',
