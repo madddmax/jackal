@@ -10,7 +10,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 0,
@@ -22,7 +22,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 1,
@@ -34,7 +34,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 2,
@@ -46,7 +46,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 3,
@@ -58,7 +58,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 4,
@@ -70,7 +70,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 0,
@@ -82,7 +82,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 1,
@@ -94,7 +94,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 2,
@@ -106,7 +106,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 3,
@@ -118,7 +118,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 4,
@@ -130,7 +130,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 0,
@@ -142,7 +142,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 1,
@@ -154,7 +154,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 2,
@@ -166,7 +166,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 3,
@@ -178,7 +178,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 4,
@@ -190,7 +190,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 0,
@@ -202,7 +202,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 1,
@@ -214,7 +214,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 2,
@@ -226,7 +226,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 3,
@@ -238,7 +238,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 4,
@@ -250,7 +250,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 0,
@@ -262,7 +262,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 1,
@@ -274,8 +274,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: true,
-                    coin: { text: '2' },
+                    coins: 2,
                 },
             ],
             x: 2,
@@ -287,7 +286,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 3,
@@ -299,7 +298,7 @@ export const getMapData: GameMap = {
             levels: [
                 {
                     level: 0,
-                    hasCoins: false,
+                    coins: 0,
                 },
             ],
             x: 4,

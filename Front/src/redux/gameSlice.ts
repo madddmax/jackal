@@ -106,7 +106,7 @@ export const gameSlice = createSlice({
                     id: it.id,
                     activePirate: '',
                     isHumanPlayer: it.name.includes('Human'),
-                    backColor: it.backcolor,
+                    backColor: Constants.teamColors.get(it.id) ?? '',
                     group:
                         Constants.groups.find((gr) => gr.id == state.userSettings.groups[grId]) || Constants.groups[0],
                 };
@@ -167,7 +167,7 @@ export const gameSlice = createSlice({
             let hasCoinChanging = action.payload.withCoinAction && !hasPirateChanging && pirate.withCoin !== undefined;
             if (hasCoinChanging) {
                 const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
-                if (pirate.withCoin || (level.piratesWithCoinsCount || 0) < Number(level.coin?.text)) {
+                if (pirate.withCoin || (level.piratesWithCoinsCount || 0) < level.coins) {
                     pirate.withCoin = !pirate.withCoin;
                     gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
                 }
@@ -358,8 +358,7 @@ export const gameSlice = createSlice({
 
                         if (changeCoin !== undefined) {
                             changeCoin =
-                                levelPirates!.filter((pr) => pr.id != it.id && pr.withCoin).length <
-                                Number(level.coin?.text);
+                                levelPirates!.filter((pr) => pr.id != it.id && pr.withCoin).length < level.coins;
                         }
                         it.withCoin = changeCoin;
                         const prt = levelPirates?.find((pr) => pr.id == it.id)!;

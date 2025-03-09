@@ -26,14 +26,20 @@ const stat2Data: GameStat = {
         {
             id: 1,
             name: 'girls',
-            gold: 0,
-            backcolor: 'red',
+            coins: 0,
+            ship: {
+                x: 5,
+                y: 0,
+            },
         },
         {
             id: 2,
             name: 'boys',
-            gold: 0,
-            backcolor: 'green',
+            coins: 0,
+            ship: {
+                x: 5,
+                y: 10,
+            },
         },
     ],
 };
@@ -48,26 +54,38 @@ const stat4Data: GameStat = {
         {
             id: 1,
             name: 'girls',
-            gold: 0,
-            backcolor: 'red',
+            coins: 0,
+            ship: {
+                x: 5,
+                y: 0,
+            },
         },
         {
             id: 2,
             name: 'boys',
-            gold: 0,
-            backcolor: 'green',
+            coins: 0,
+            ship: {
+                x: 0,
+                y: 5,
+            },
         },
         {
             id: 3,
             name: 'cats',
-            gold: 0,
-            backcolor: 'white',
+            coins: 0,
+            ship: {
+                x: 5,
+                y: 10,
+            },
         },
         {
             id: 4,
             name: 'dogs',
-            gold: 0,
-            backcolor: 'black',
+            coins: 0,
+            ship: {
+                x: 10,
+                y: 5,
+            },
         },
     ],
 };
@@ -160,9 +178,6 @@ describe('redux init tests', () => {
     test('Инициализируем команды для игры 1х1', () => {
         const result = reducer(defaultState, initTeams(stat2Data));
         expect(result.teams).toHaveLength(2);
-        result.teams.forEach((it) => {
-            expect(it.isHumanPlayer).not.toEqual(true);
-        });
         expect(result.teams[0].group.id).toEqual(Constants.groupIds.girls);
         expect(result.teams[1].group.id).toEqual(Constants.groupIds.orcs);
     });
@@ -170,9 +185,6 @@ describe('redux init tests', () => {
     test('Инициализируем команды для игры 2х2', () => {
         const result = reducer(defaultState, initTeams(stat4Data));
         expect(result.teams).toHaveLength(4);
-        result.teams.forEach((it) => {
-            expect(it.isHumanPlayer).not.toEqual(true);
-        });
         expect(result.teams[0].group.id).toEqual(Constants.groupIds.girls);
         expect(result.teams[1].group.id).toEqual(Constants.groupIds.redalert);
     });
@@ -188,10 +200,10 @@ describe('redux init tests', () => {
         });
         expect(result.pirates![0].groupId).toEqual(Constants.groupIds.girls);
         expect(result.pirates![0].photo).toContain(Constants.groupIds.girls + '/pirate_');
-        expect(result.pirates![0].backgroundColor).toEqual('red');
+        expect(result.pirates![0].backgroundColor).toEqual('DarkBlue');
         expect(result.pirates![1].groupId).toEqual(Constants.groupIds.orcs);
         expect(result.pirates![1].photo).toContain(Constants.groupIds.orcs + '/pirate_');
-        expect(result.pirates![1].backgroundColor).toEqual('green');
+        expect(result.pirates![1].backgroundColor).toEqual('DarkViolet');
     });
 
     test('Определяем размеры объектов на карте', () => {
@@ -349,7 +361,7 @@ describe('redux basic tests', () => {
         const result = reducer(currentState, chooseHumanPirate({ pirate: '300', withCoinAction: true }));
         expect(result.teams).toContainEqual({
             activePirate: '300',
-            backColor: 'green',
+            backColor: 'DarkViolet',
             group: {
                 id: Constants.groupIds.orcs,
                 extension: '.jpg',
@@ -439,10 +451,9 @@ describe('redux money actions tests', () => {
         const level = previousState.fields[4][2].levels[0];
         expect(level).toEqual({
             level: 0,
-            hasCoins: true,
+            coins: 2,
             piratesWithCoinsCount: 1,
             freeCoinGirlId: '300',
-            coin: { text: '2' },
         });
     });
 
@@ -453,10 +464,9 @@ describe('redux money actions tests', () => {
         expect(currentState.highlight_y).toEqual(4);
         expect(currentState.fields[4][2].levels[0]).toEqual({
             level: 0,
-            hasCoins: true,
+            coins: 2,
             piratesWithCoinsCount: 1,
             freeCoinGirlId: '300',
-            coin: { text: '2' },
         });
 
         const result = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
@@ -466,10 +476,9 @@ describe('redux money actions tests', () => {
         expect(boy?.isActive).toBeTruthy();
         expect(result.fields[4][2].levels[0]).toEqual({
             level: 0,
-            hasCoins: true,
+            coins: 2,
             piratesWithCoinsCount: 0,
             freeCoinGirlId: '200',
-            coin: { text: '2' },
         });
     });
 });
@@ -507,9 +516,9 @@ describe('redux logic tests', () => {
                     backgroundImageSrc: '/fields/forest.png',
                     rotate: 2,
                     levels: [
-                        { level: 0, hasCoins: false },
-                        { level: 1, hasCoins: false },
-                        { level: 2, hasCoins: false },
+                        { level: 0, coins: 0 },
+                        { level: 1, coins: 0 },
+                        { level: 2, coins: 0 },
                     ],
                     x: 2,
                     y: 4,
@@ -519,7 +528,7 @@ describe('redux logic tests', () => {
 
         expect(result.fields[4][2].levels[0]).toEqual({
             level: 0,
-            hasCoins: false,
+            coins: 0,
             pirate: undefined,
             features: undefined,
         });
@@ -568,16 +577,15 @@ describe('redux logic tests', () => {
         const ben = result.pirates?.find((it) => it.id == '400');
         expect(ben?.position).toEqual({ level: 0, x: 2, y: 3 });
         expect(ben?.isActive).toBeFalsy();
-        expect(ben?.backgroundColor).toEqual('green');
+        expect(ben?.backgroundColor).toEqual('DarkViolet');
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(3);
         expect(result.fields[3][2].levels[0]).toEqual({
             level: 0,
-            hasCoins: false,
+            coins: 0,
             features: undefined,
             piratesWithCoinsCount: 0,
             freeCoinGirlId: '200',
-            coin: undefined,
         });
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
@@ -615,7 +623,7 @@ describe('redux logic tests', () => {
         expect(result.highlight_y).toEqual(4);
         expect(result.fields[4][2].levels[0]).toEqual({
             level: 0,
-            hasCoins: true,
+            coins: 2,
             features: [
                 {
                     photo: 'skull_light.png',
@@ -624,7 +632,6 @@ describe('redux logic tests', () => {
             ],
             piratesWithCoinsCount: 0,
             freeCoinGirlId: '300',
-            coin: { text: '2' },
         });
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({

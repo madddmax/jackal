@@ -71,31 +71,17 @@ public class DrawService : IDrawService
         return tileChanges;
     }
     
-    public GameStatistics GetStatistics(Game game)
-    {
-        var teams = new List<DrawTeam>();
-        foreach (var team in game.Board.Teams)
+    public GameStatistics GetStatistics(Game game) =>
+        new()
         {
-            teams.Add(new DrawTeam
-            {
-                backcolor = GetTeamColor(team.Id),
-                id = team.Id,
-                name = team.Name,
-                gold = team.Coins
-            });
-        }
-
-        return new GameStatistics
-        {
-            Teams = teams,
+            Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
             TurnNo = game.TurnNo,
             IsGameOver = game.IsGameOver,
             GameMessage = game.GameMessage,
             CurrentTeamId = game.CurrentTeamId,
             IsHumanPlayer = game.CurrentPlayer is WebHumanPlayer
         };
-    }
-    
+
     public List<DrawMove> GetAvailableMoves(Game game)
     {
         var result = new List<DrawMove>();
@@ -186,32 +172,12 @@ public class DrawService : IDrawService
         return tileElement;
     }
 
-    private static LevelChange DrawCoins(TileLevel level, int levelIndex, Team? teamShip)
-    {
-        LevelChange levelChange = new LevelChange();
-            
-        bool hasCoins = teamShip is { Coins: > 0 } || level.Coins > 0;
-            
-        levelChange.hasCoins = hasCoins;
-        levelChange.Level = levelIndex;
-
-        // draw coins
-        if (hasCoins)
+    private static LevelChange DrawCoins(TileLevel level, int levelIndex, Team? teamShip) =>
+        new()
         {
-            int coins = teamShip?.Coins ?? level.Coins;
-
-            var coin = new DrawCoin
-            {
-                ForeColor = "black",
-                BackColor = "gold",
-                Text = coins.ToString()
-            };
-
-            levelChange.Coin = coin;
-        }
-
-        return levelChange;
-    }
+            Level = levelIndex,
+            Coins = teamShip?.Coins ?? level.Coins
+        };
 
     private static void DrawTileBackground(Tile tile, Team? teamShip, ref TileChange tileChange)
     {
@@ -317,14 +283,4 @@ public class DrawService : IDrawService
         tileChange.BackgroundImageSrc = $"/fields/{filename}.png";
         tileChange.Rotate = (int)tile.Direction;
     }
-
-    private static string GetTeamColor(int teamId) =>
-        teamId switch
-        {
-            0 => "DarkRed",
-            1 => "DarkBlue",
-            2 => "DarkViolet",
-            3 => "DarkOrange",
-            _ => ""
-        };
 }

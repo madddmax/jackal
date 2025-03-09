@@ -49,7 +49,6 @@ export interface LobbyState {
 export interface TeamState {
     id: number;
     activePirate: string;
-    isHumanPlayer: boolean;
     backColor: string;
     group: TeamGroup;
 }
@@ -155,8 +154,11 @@ export interface GameStat {
 interface GameTeamStat {
     id: number;
     name: string;
-    gold: number;
-    backcolor: string;
+    coins: number;
+    ship: {
+        x: number;
+        y: number;
+    };
 }
 
 export interface GameMap {
@@ -175,13 +177,10 @@ interface GameCell {
 
 interface GameLevel {
     level: number;
+    coins: number;
     piratesWithCoinsCount?: number;
     freeCoinGirlId?: string;
     features?: LevelFeature[];
-    hasCoins: boolean;
-    coin?: {
-        text: string;
-    };
 }
 
 export interface LevelFeature {

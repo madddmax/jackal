@@ -31,9 +31,9 @@ function Controls() {
                 </div>
                 <div className={cn(classes.teams, 'container')}>
                     {game?.stat?.teams.map((it) => (
-                        <div key={`ctrl_${it.id}`} className="row" style={{ backgroundColor: it.backcolor }}>
+                        <div key={`ctrl_${it.id}`} className="row" style={{ backgroundColor: Constants.teamColors.get(it.id) ?? '' }}>
                             <div className="col-md-8">{it.name}</div>
-                            <div className="col-md-4">{it.gold}</div>
+                            <div className="col-md-4">{it.coins}</div>
                         </div>
                     ))}
                 </div>

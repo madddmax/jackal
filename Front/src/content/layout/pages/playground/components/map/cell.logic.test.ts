@@ -20,14 +20,20 @@ const stat2Data: GameStat = {
         {
             id: 1,
             name: 'girls',
-            gold: 0,
-            backcolor: 'red',
+            coins: 0,
+            ship: {
+                x: 5,
+                y: 0,
+            },
         },
         {
             id: 2,
             name: 'boys',
-            gold: 0,
-            backcolor: 'green',
+            coins: 0,
+            ship: {
+                x: 5,
+                y: 10,
+            },
         },
     ],
 };
