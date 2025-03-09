@@ -21,7 +21,10 @@ function Controls() {
                     Игровой набор: <span>{game?.tilesPackName}</span>
                 </div>
                 <div>
-                    Режим игры: <span>{game?.gameMode == Constants.gameModeTypes.TwoPlayersInTeam ? '2x2' : 'каждый сам за себя'}</span>
+                    Режим игры:{' '}
+                    <span>
+                        {game?.gameMode == Constants.gameModeTypes.TwoPlayersInTeam ? '2x2' : 'каждый сам за себя'}
+                    </span>
                 </div>
                 <div>
                     Размер карты: <span>{game?.mapSize}</span>
@@ -31,7 +34,11 @@ function Controls() {
                 </div>
                 <div className={cn(classes.teams, 'container')}>
                     {game?.stat?.teams.map((it) => (
-                        <div key={`ctrl_${it.id}`} className="row" style={{ backgroundColor: Constants.teamColors.get(it.id) ?? '' }}>
+                        <div
+                            key={`ctrl_${it.id}`}
+                            className="row"
+                            style={{ backgroundColor: game.teams.find((tm) => tm.id === it.id)?.backColor ?? '' }}
+                        >
                             <div className="col-md-8">{it.name}</div>
                             <div className="col-md-4">{it.coins}</div>
                         </div>
