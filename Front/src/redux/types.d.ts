@@ -155,8 +155,7 @@ export interface GameStat {
 interface GameTeamStat {
     id: number;
     name: string;
-    gold: number;
-    backcolor: string;
+    coins: number;
 }
 
 export interface GameMap {

@@ -106,7 +106,7 @@ export const gameSlice = createSlice({
                     id: it.id,
                     activePirate: '',
                     isHumanPlayer: it.name.includes('Human'),
-                    backColor: it.backcolor,
+                    backColor: Constants.teamColors.get(it.id) ?? '',
                     group:
                         Constants.groups.find((gr) => gr.id == state.userSettings.groups[grId]) || Constants.groups[0],
                 };

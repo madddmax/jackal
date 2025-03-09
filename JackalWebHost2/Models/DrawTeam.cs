@@ -1,9 +1,10 @@
-﻿namespace JackalWebHost2.Models;
+﻿using Jackal.Core.Domain;
 
-public class DrawTeam
+namespace JackalWebHost2.Models;
+
+public class DrawTeam(Team team)
 {
-    public int id;
-    public string name;
-    public int gold;
-    public string backcolor;
+    public int Id = team.Id;
+    public string Name = team.Name;
+    public int Coins = team.Coins;
 }

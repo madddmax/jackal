@@ -26,14 +26,12 @@ const stat2Data: GameStat = {
         {
             id: 1,
             name: 'girls',
-            gold: 0,
-            backcolor: 'red',
+            coins: 0,
         },
         {
             id: 2,
             name: 'boys',
-            gold: 0,
-            backcolor: 'green',
+            coins: 0,
         },
     ],
 };
@@ -48,26 +46,22 @@ const stat4Data: GameStat = {
         {
             id: 1,
             name: 'girls',
-            gold: 0,
-            backcolor: 'red',
+            coins: 0,
         },
         {
             id: 2,
             name: 'boys',
-            gold: 0,
-            backcolor: 'green',
+            coins: 0,
         },
         {
             id: 3,
             name: 'cats',
-            gold: 0,
-            backcolor: 'white',
+            coins: 0,
         },
         {
             id: 4,
             name: 'dogs',
-            gold: 0,
-            backcolor: 'black',
+            coins: 0,
         },
     ],
 };
@@ -188,10 +182,10 @@ describe('redux init tests', () => {
         });
         expect(result.pirates![0].groupId).toEqual(Constants.groupIds.girls);
         expect(result.pirates![0].photo).toContain(Constants.groupIds.girls + '/pirate_');
-        expect(result.pirates![0].backgroundColor).toEqual('red');
+        expect(result.pirates![0].backgroundColor).toEqual('DarkBlue');
         expect(result.pirates![1].groupId).toEqual(Constants.groupIds.orcs);
         expect(result.pirates![1].photo).toContain(Constants.groupIds.orcs + '/pirate_');
-        expect(result.pirates![1].backgroundColor).toEqual('green');
+        expect(result.pirates![1].backgroundColor).toEqual('DarkViolet');
     });
 
     test('Определяем размеры объектов на карте', () => {
@@ -349,7 +343,7 @@ describe('redux basic tests', () => {
         const result = reducer(currentState, chooseHumanPirate({ pirate: '300', withCoinAction: true }));
         expect(result.teams).toContainEqual({
             activePirate: '300',
-            backColor: 'green',
+            backColor: 'DarkViolet',
             group: {
                 id: Constants.groupIds.orcs,
                 extension: '.jpg',
@@ -565,7 +559,7 @@ describe('redux logic tests', () => {
         const ben = result.pirates?.find((it) => it.id == '400');
         expect(ben?.position).toEqual({ level: 0, x: 2, y: 3 });
         expect(ben?.isActive).toBeFalsy();
-        expect(ben?.backgroundColor).toEqual('green');
+        expect(ben?.backgroundColor).toEqual('DarkViolet');
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(3);
         expect(result.fields[3][2].levels[0]).toEqual({
