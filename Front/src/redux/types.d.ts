@@ -49,7 +49,6 @@ export interface LobbyState {
 export interface TeamState {
     id: number;
     activePirate: string;
-    isHumanPlayer: boolean;
     backColor: string;
     group: TeamGroup;
 }

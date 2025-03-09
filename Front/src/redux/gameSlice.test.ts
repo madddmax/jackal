@@ -154,9 +154,6 @@ describe('redux init tests', () => {
     test('Инициализируем команды для игры 1х1', () => {
         const result = reducer(defaultState, initTeams(stat2Data));
         expect(result.teams).toHaveLength(2);
-        result.teams.forEach((it) => {
-            expect(it.isHumanPlayer).not.toEqual(true);
-        });
         expect(result.teams[0].group.id).toEqual(Constants.groupIds.girls);
         expect(result.teams[1].group.id).toEqual(Constants.groupIds.orcs);
     });
@@ -164,9 +161,6 @@ describe('redux init tests', () => {
     test('Инициализируем команды для игры 2х2', () => {
         const result = reducer(defaultState, initTeams(stat4Data));
         expect(result.teams).toHaveLength(4);
-        result.teams.forEach((it) => {
-            expect(it.isHumanPlayer).not.toEqual(true);
-        });
         expect(result.teams[0].group.id).toEqual(Constants.groupIds.girls);
         expect(result.teams[1].group.id).toEqual(Constants.groupIds.redalert);
     });
