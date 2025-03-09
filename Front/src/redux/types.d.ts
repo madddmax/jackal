@@ -51,6 +51,7 @@ export interface TeamState {
     activePirate: string;
     backColor: string;
     group: TeamGroup;
+    isHuman: boolean;
 }
 
 export interface TeamGroup {
@@ -145,7 +146,6 @@ export interface LobbyMember {
 export interface GameStat {
     turnNo: number;
     currentTeamId: number;
-    isHumanPlayer: boolean;
     isGameOver: boolean;
     gameMessage: string;
     teams: GameTeamStat[];
@@ -155,6 +155,7 @@ interface GameTeamStat {
     id: number;
     name: string;
     coins: number;
+    isHuman: boolean;
     ship: {
         x: number;
         y: number;
@@ -224,7 +225,6 @@ export interface PirateChoose {
 export interface PirateChanges {
     changes: PirateDiff[];
     moves: GameMove[];
-    isHumanPlayer: boolean;
 }
 
 export interface GamePirate extends PiratePosition {

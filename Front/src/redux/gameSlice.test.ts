@@ -21,7 +21,6 @@ const testTeamId = 12;
 const stat2Data: GameStat = {
     turnNo: 1,
     currentTeamId: 5,
-    isHumanPlayer: true,
     isGameOver: false,
     gameMessage: 'пиратская песня',
     teams: [
@@ -29,6 +28,7 @@ const stat2Data: GameStat = {
             id: 5,
             name: 'girls',
             coins: 0,
+            isHuman: false,
             ship: {
                 x: 5,
                 y: 0,
@@ -37,6 +37,7 @@ const stat2Data: GameStat = {
         {
             id: testTeamId,
             name: 'boys',
+            isHuman: true,
             coins: 0,
             ship: {
                 x: 5,
@@ -49,13 +50,13 @@ const stat2Data: GameStat = {
 const stat4Data: GameStat = {
     turnNo: 1,
     currentTeamId: 5,
-    isHumanPlayer: true,
     isGameOver: false,
     gameMessage: 'пиратская песня',
     teams: [
         {
             id: 5,
             name: 'girls',
+            isHuman: false,
             coins: 0,
             ship: {
                 x: 5,
@@ -65,6 +66,7 @@ const stat4Data: GameStat = {
         {
             id: testTeamId,
             name: 'boys',
+            isHuman: true,
             coins: 0,
             ship: {
                 x: 0,
@@ -74,6 +76,7 @@ const stat4Data: GameStat = {
         {
             id: 7,
             name: 'cats',
+            isHuman: false,
             coins: 0,
             ship: {
                 x: 5,
@@ -83,6 +86,7 @@ const stat4Data: GameStat = {
         {
             id: 8,
             name: 'dogs',
+            isHuman: false,
             coins: 0,
             ship: {
                 x: 10,
@@ -134,7 +138,7 @@ const testPirates: GamePirate[] = [
     },
 ];
 
-const getState = (pirates: GamePirate[]) => ({
+const getState = (pirates: GamePirate[]): GameState => ({
     cellSize: 50,
     mapSize: 5,
     pirateSize: 15,
@@ -152,6 +156,13 @@ const getState = (pirates: GamePirate[]) => ({
         players: ['human', 'robot2', 'robot', 'robot2'],
         playersMode: 4,
         gameSpeed: 0,
+    },
+    stat: {
+        turnNo: 1,
+        currentTeamId: testTeamId,
+        isGameOver: false,
+        gameMessage: '',
+        teams: [],
     },
     teams: [],
     pirates: pirates,
@@ -248,7 +259,6 @@ describe('redux init tests', () => {
             currentState,
             applyPirateChanges({
                 changes: testPirates.map((it) => ({ ...it })),
-                isHumanPlayer: true,
                 moves: [],
             }),
         );
@@ -287,7 +297,6 @@ describe('redux basic tests', () => {
             previousState,
             applyPirateChanges({
                 changes: pirates,
-                isHumanPlayer: true,
                 moves: [],
             }),
         );
@@ -370,6 +379,7 @@ describe('redux basic tests', () => {
                 photoMaxId: 6,
             },
             id: testTeamId,
+            isHuman: true,
         });
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);
@@ -392,7 +402,6 @@ describe('redux basic tests', () => {
                         position: { level: 0, x: 2, y: 2 },
                     },
                 ],
-                isHumanPlayer: true,
                 moves: [],
             }),
         );
@@ -426,7 +435,6 @@ describe('redux money actions tests', () => {
             previousState,
             applyPirateChanges({
                 changes: pirates,
-                isHumanPlayer: true,
                 moves: [
                     {
                         moveNum: 1,
@@ -501,7 +509,6 @@ describe('redux logic tests', () => {
             previousState,
             applyPirateChanges({
                 changes: pirates,
-                isHumanPlayer: true,
                 moves: [],
             }),
         );
@@ -566,7 +573,6 @@ describe('redux logic tests', () => {
                         isAlive: true,
                     },
                 ],
-                isHumanPlayer: true,
                 moves: [],
             }),
         );
@@ -614,7 +620,6 @@ describe('redux logic tests', () => {
                         isAlive: false,
                     },
                 ],
-                isHumanPlayer: true,
                 moves: [],
             }),
         );

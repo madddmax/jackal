@@ -10,7 +10,7 @@ import {
     setMapInfo,
     setTilesPackNames,
 } from '/redux/gameSlice';
-import { CheckMapInfo, GameTurnResponse } from '/redux/types';
+import { CheckMapInfo, GameState, GameTurnResponse, TeamState } from '/redux/types';
 import { animateQueue } from '/app/global';
 import { PayloadAction } from '@reduxjs/toolkit';
 
@@ -54,11 +54,13 @@ export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
         applyPirateChanges({
             moves: result.data.moves,
             changes: result.data.pirateChanges,
-            isHumanPlayer: result.data.stats.isHumanPlayer,
         }),
     );
 
-    if (result.data.stats.isHumanPlayer) {
+    const currentTeam: TeamState = yield select((state: { game: GameState }) =>
+        state.game.teams.find((it) => it.id === result.data.stats.currentTeamId),
+    );
+    if (currentTeam.isHuman) {
         yield put(setCurrentHumanTeam(result.data.stats.currentTeamId));
         yield put(highlightHumanMoves({ moves: result.data.moves }));
     }

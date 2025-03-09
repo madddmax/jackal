@@ -65,6 +65,7 @@ export const gameSlice = createSlice({
             state.lastMoves = [];
             state.highlight_x = 0;
             state.highlight_y = 0;
+            state.stat = action.payload.stats;
 
             gameSlice.caseReducers.initMap(state, initMap(action.payload.map));
             gameSlice.caseReducers.initTeams(state, initTeams(action.payload.stats));
@@ -106,6 +107,7 @@ export const gameSlice = createSlice({
                     id: it.id,
                     activePirate: '',
                     backColor: Constants.teamColors[idx] ?? '',
+                    isHuman: it.isHuman,
                     group:
                         Constants.groups.find((gr) => gr.id == state.userSettings.groups[grId]) || Constants.groups[0],
                 };
@@ -152,7 +154,7 @@ export const gameSlice = createSlice({
         chooseHumanPirate: (state, action: PayloadAction<PirateChoose>) => {
             const selectors = gameSlice.getSelectors();
             let pirate = selectors.getPirateById(state, action.payload.pirate)!;
-            let currentTeam = selectors.getCurrentTeam(state)!;
+            let currentTeam = selectors.getCurrentHumanTeam(state)!;
             let hasPirateChanging = currentTeam.activePirate !== pirate.id;
             if (hasPirateChanging) {
                 const prevPirate = selectors.getPirateById(state, currentTeam.activePirate);
@@ -335,7 +337,9 @@ export const gameSlice = createSlice({
                 }
             });
 
-            if (action.payload.isHumanPlayer) {
+            debugLog(current(state.teams));
+            let currentTeam = selectors.getCurrentTeam(state)!;
+            if (currentTeam.isHuman) {
                 let girls = [] as string[];
                 action.payload.moves
                     .filter((move) => move.withCoin)
@@ -407,7 +411,9 @@ export const gameSlice = createSlice({
     },
     selectors: {
         getTeamById: (state, teamId: number): TeamState | undefined => state.teams.find((it) => it.id == teamId),
-        getCurrentTeam: (state): TeamState | undefined => state.teams.find((it) => it.id == state.currentHumanTeamId),
+        getCurrentHumanTeam: (state): TeamState | undefined =>
+            state.teams.find((it) => it.id == state.currentHumanTeamId),
+        getCurrentTeam: (state): TeamState | undefined => state.teams.find((it) => it.id == state.stat?.currentTeamId),
         getPirateById: (state, pirateId: string): GamePirate | undefined =>
             state.pirates!.find((it) => it.id === pirateId),
         getPirateCell: (state, pirateId: string): GamePlace | undefined => {
@@ -447,6 +453,6 @@ export const {
     setMapInfo,
 } = gameSlice.actions;
 
-export const { getCurrentTeam } = gameSlice.selectors;
+export const { getCurrentTeam, getCurrentHumanTeam } = gameSlice.selectors;
 
 export default gameSlice.reducer;

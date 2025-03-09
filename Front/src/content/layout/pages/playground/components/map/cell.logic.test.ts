@@ -13,7 +13,6 @@ import { GamePirate, GameStat, GameState } from '/redux/types';
 const stat2Data: GameStat = {
     turnNo: 1,
     currentTeamId: 1,
-    isHumanPlayer: true,
     isGameOver: false,
     gameMessage: 'пиратская песня',
     teams: [
@@ -21,6 +20,7 @@ const stat2Data: GameStat = {
             id: 1,
             name: 'girls',
             coins: 0,
+            isHuman: false,
             ship: {
                 x: 5,
                 y: 0,
@@ -30,6 +30,7 @@ const stat2Data: GameStat = {
             id: 2,
             name: 'boys',
             coins: 0,
+            isHuman: true,
             ship: {
                 x: 5,
                 y: 10,
@@ -72,6 +73,13 @@ const getState = (pirates: GamePirate[]) => ({
         players: ['human', 'robot2', 'robot', 'robot2'],
         playersMode: 4,
         gameSpeed: 0,
+    },
+    stat: {
+        turnNo: 1,
+        currentTeamId: 1,
+        isGameOver: false,
+        gameMessage: '',
+        teams: [],
     },
     teams: [],
     pirates: pirates,
