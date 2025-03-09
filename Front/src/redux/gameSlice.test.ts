@@ -368,7 +368,6 @@ describe('redux basic tests', () => {
                 photoMaxId: 6,
             },
             id: 2,
-            isHumanPlayer: false,
         });
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);
