@@ -155,6 +155,10 @@ interface GameTeamStat {
     id: number;
     name: string;
     coins: number;
+    ship: {
+        x: number;
+        y: number;
+    };
 }
 
 export interface GameMap {

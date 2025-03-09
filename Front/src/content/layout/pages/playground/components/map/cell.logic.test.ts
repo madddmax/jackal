@@ -21,11 +21,19 @@ const stat2Data: GameStat = {
             id: 1,
             name: 'girls',
             coins: 0,
+            ship: {
+                x: 5,
+                y: 0,
+            },
         },
         {
             id: 2,
             name: 'boys',
             coins: 0,
+            ship: {
+                x: 5,
+                y: 10,
+            },
         },
     ],
 };

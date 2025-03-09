@@ -27,11 +27,19 @@ const stat2Data: GameStat = {
             id: 1,
             name: 'girls',
             coins: 0,
+            ship: {
+                x: 5,
+                y: 0,
+            },
         },
         {
             id: 2,
             name: 'boys',
             coins: 0,
+            ship: {
+                x: 5,
+                y: 10,
+            },
         },
     ],
 };
@@ -47,21 +55,37 @@ const stat4Data: GameStat = {
             id: 1,
             name: 'girls',
             coins: 0,
+            ship: {
+                x: 5,
+                y: 0,
+            },
         },
         {
             id: 2,
             name: 'boys',
             coins: 0,
+            ship: {
+                x: 0,
+                y: 5,
+            },
         },
         {
             id: 3,
             name: 'cats',
             coins: 0,
+            ship: {
+                x: 5,
+                y: 10,
+            },
         },
         {
             id: 4,
             name: 'dogs',
             coins: 0,
+            ship: {
+                x: 10,
+                y: 5,
+            },
         },
     ],
 };
