@@ -61,6 +61,7 @@ export interface GirlsPositions {
     AddPosition: (it: PiratePosition, levelsCount: number) => void;
     RemovePosition: (it: PiratePosition) => void;
     GetPosition: (it: PiratePosition) => GirlsLevel | undefined;
+    ScrollGirls: (pos: GirlsLevel) => void;
 }
 
 // словарь, отслеживающий размещение нескольких пираток на одной клетке
@@ -95,5 +96,10 @@ export const girlsMap: GirlsPositions = {
     GetPosition: function (it: PiratePosition): GirlsLevel | undefined {
         let cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
         return this.Map[cachedId];
+    },
+    ScrollGirls: function (pos: GirlsLevel) {
+        if (pos && pos.girls && pos.girls.length > 1) {
+            pos.girls.push(pos.girls.shift()!);
+        }
     },
 };

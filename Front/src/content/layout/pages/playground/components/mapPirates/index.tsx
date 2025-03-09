@@ -11,7 +11,6 @@ interface MapPiratesProps {
 const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
     const pirates = useSelector<ReduxState, GamePirate[] | undefined>((state) => state.game.pirates);
     const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
-    const currentTeam = useSelector<ReduxState, number>((state) => state.game.currentHumanTeamId);
 
     const unitSize = cellSize - pirateSize;
 
@@ -19,7 +18,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
     const xAddSize = (mul_x_times - 1) * 5;
     const xUnitSize = cellSize - pirateSize / 2;
 
-    const getMarginTop = (girl: GamePirate) => {
+    const getMarginTop = (girl: GamePirate): number => {
         const position = girlsMap.GetPosition(girl);
         let levelsCount = position!.levelsCountInCell;
         let level = position!.level;
@@ -51,7 +50,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
         return 0;
     };
 
-    const getMarginLeft = (girl: GamePirate) => {
+    const getMarginLeft = (girl: GamePirate): number => {
         const position = girlsMap.GetPosition(girl);
         let levelsCount = position!.levelsCountInCell;
         let level = position!.level;
@@ -86,31 +85,18 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
         return 0;
     };
 
-    const getCellPirates = (girl: GamePirate, pirates: GamePirate[]): GamePirate[] => {
-        const cachedId = girl.position.y * 1000 + girl.position.x * 10 + girl.position.level;
-        if (girlsMap.Map[cachedId].levelsCountInCell == 1) {
-            return [girl];
-        }
-
-        return pirates.filter((pr) => girlsMap.Map[cachedId].girls!.includes(pr.id));
-    };
-
     return (
         <>
             {pirates &&
                 pirates.map((girl) => (
-                    <div
-                        key={`pirate_${girl.id}`}
-                        className="level"
-                        style={{
-                            top: (mapSize - 1 - girl.position.y) * (cellSize + 1) + getMarginTop(girl),
-                            left: girl.position.x * (cellSize + 1) + getMarginLeft(girl),
-                            zIndex: girl.isActive ? 4 : 3,
-                            pointerEvents: girl.teamId === currentTeam ? 'auto' : 'none',
-                        }}
-                    >
-                        <PiratePhoto pirates={getCellPirates(girl, pirates)} pirateSize={pirateSize} />
-                    </div>
+                    <PiratePhoto
+                        pirate={girl}
+                        pirateSize={pirateSize}
+                        getMarginTop={getMarginTop}
+                        getMarginLeft={getMarginLeft}
+                        mapSize={mapSize}
+                        cellSize={cellSize}
+                    />
                 ))}
         </>
     );

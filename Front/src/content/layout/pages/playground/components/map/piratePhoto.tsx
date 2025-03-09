@@ -4,48 +4,46 @@ import cn from 'classnames';
 import './cell.less';
 import { useDispatch, useSelector } from 'react-redux';
 import { chooseHumanPirate } from '/redux/gameSlice';
-import { useRef } from 'react';
 import store from '/app/store';
+import { girlsMap } from '/app/global';
 
 interface PiratePhotoProps {
-    pirates: GamePirate[];
+    pirate: GamePirate;
     pirateSize: number;
+    getMarginTop: (girl: GamePirate) => number;
+    getMarginLeft: (girl: GamePirate) => number;
+    mapSize: number;
+    cellSize: number;
 }
 
-const PiratePhoto = ({ pirates, pirateSize }: PiratePhotoProps) => {
+const PiratePhoto = ({ pirate, pirateSize, getMarginTop, getMarginLeft, mapSize, cellSize }: PiratePhotoProps) => {
     const level = useSelector<ReduxState, GameLevel>(
-        (state) => state.game.fields[pirates[0].position.y][pirates[0].position.x].levels[pirates[0].position.level],
+        (state) => state.game.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level],
     );
     const dispatch = useDispatch();
-    const topGirl = useRef<number>(0);
 
-    let sorted = [...pirates];
-    let allowChoosingPirate = (level.piratesWithCoinsCount || 0) === level.coins && pirates.length > level.coins;
-    sorted.sort((a, b) => {
-        if (a.backgroundColor == 'transparent') return 1;
-        if (b.backgroundColor == 'transparent') return -1;
-        if (a.isActive) return -1;
-        if (b.isActive) return 1;
-        if (a.photoId > topGirl.current && b.photoId <= topGirl.current) return -1;
-        if (a.photoId <= topGirl.current && b.photoId > topGirl.current) return 1;
-        return a.photoId - b.photoId;
-    });
-    let pirate = sorted[0];
+    const mapLevel = girlsMap.GetPosition(pirate);
 
-    const isCurrentTeam = (girls: GamePirate[]): boolean => {
+    let allowChoosingPirate =
+        (level.piratesWithCoinsCount || 0) === level.coins && (mapLevel?.girls?.length || 0) > level.coins;
+
+    const isCurrentTeam = (girl: GamePirate): boolean => {
         let gameState = store.getState().game as GameState;
         let team = gameState.teams.find((it) => it.id == gameState.currentHumanTeamId);
-        return girls[0].teamId === team?.id;
+        return girl.teamId === team?.id;
     };
 
-    const onTeamPirateClick = (girls: GamePirate[], allowChoosing: boolean) => {
-        let willChangePirate = girls.length > 1 && girls[0].isActive && allowChoosing;
+    const onTeamPirateClick = (girl: GamePirate, allowChoosing: boolean) => {
+        const mapLevel = girlsMap.GetPosition(girl);
+        if (!mapLevel || !mapLevel.girls) return;
+
+        let willChangePirate = mapLevel.girls.length > 1 && girl.isActive && allowChoosing;
         if (willChangePirate) {
-            topGirl.current = girls[0].photoId;
+            girlsMap.ScrollGirls(mapLevel);
         }
         dispatch(
             chooseHumanPirate({
-                pirate: willChangePirate ? girls[1].id : girls[0].id,
+                pirate: willChangePirate ? mapLevel.girls[mapLevel.girls.length - 1] : girl.id,
                 withCoinAction: true,
             }),
         );
@@ -55,19 +53,25 @@ const PiratePhoto = ({ pirates, pirateSize }: PiratePhotoProps) => {
     const addSize = (pirateSize - coinSize - 20) / 10;
     const coinPos = pirateSize - coinSize - addSize;
     const isDisabled = pirate.isDrunk || pirate.isInTrap || pirate.isInHole;
-    const isCurrentTeamPirate = isCurrentTeam(sorted);
+    const isCurrentTeamPirate = isCurrentTeam(pirate);
 
     return (
-        <>
+        <div
+            key={`pirate_${pirate.id}`}
+            className="level"
+            style={{
+                top: (mapSize - 1 - pirate.position.y) * (cellSize + 1) + getMarginTop(pirate),
+                left: pirate.position.x * (cellSize + 1) + getMarginLeft(pirate),
+                zIndex: pirate.isActive ? 10 : mapLevel?.girls?.indexOf(pirate.id),
+                pointerEvents: isCurrentTeamPirate ? 'auto' : 'none',
+            }}
+        >
             <Image
                 src={`/pictures/${pirate.photo}`}
-                roundedCircle={!pirate.isActive && pirate.backgroundColor != 'transparent'}
+                roundedCircle={!pirate.isActive}
                 className={cn('pirates')}
                 style={{
-                    border:
-                        pirate.backgroundColor == 'transparent'
-                            ? 'none'
-                            : `${pirateSize >= 50 ? 4 : 3}px ${pirate.backgroundColor || 'transparent'} solid`,
+                    border: `${pirateSize >= 50 ? 4 : 3}px ${pirate.backgroundColor || 'transparent'} solid`,
                     // -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
                     filter: isDisabled ? 'grayscale(100%)' : undefined,
                     width: pirateSize,
@@ -77,7 +81,7 @@ const PiratePhoto = ({ pirates, pirateSize }: PiratePhotoProps) => {
                 onClick={(event) => {
                     if (isCurrentTeamPirate) {
                         event.stopPropagation();
-                        onTeamPirateClick(sorted, allowChoosingPirate);
+                        onTeamPirateClick(pirate, allowChoosingPirate);
                     }
                 }}
             />
@@ -97,7 +101,7 @@ const PiratePhoto = ({ pirates, pirateSize }: PiratePhotoProps) => {
                     }}
                 />
             )}
-        </>
+        </div>
     );
 };
 export default PiratePhoto;

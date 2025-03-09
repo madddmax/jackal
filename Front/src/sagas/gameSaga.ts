@@ -1,6 +1,6 @@
-import { call, takeEvery, put } from 'redux-saga/effects';
+import { call, takeEvery, put, select } from 'redux-saga/effects';
 import { setCurrentHumanTeam, highlightHumanMoves, applyPirateChanges, applyStat, initGame } from '../redux/gameSlice';
-import { GameStartResponse, GameTurnResponse } from '../redux/types';
+import { GameStartResponse, GameState, GameTurnResponse, TeamState } from '../redux/types';
 import { axiosInstance, errorsWrapper, sagaActions } from './constants';
 import { animateQueue } from '/app/global';
 
@@ -19,7 +19,8 @@ export function* gameStart(action: any) {
         payload: result.data,
     });
 
-    if (!result.data.stats.isHumanPlayer || result.data.moves?.length == 0) {
+    const currentTeam = result.data.stats.teams.find((it) => it.id === result.data.stats.currentTeamId);
+    if (!currentTeam!.isHuman || result.data.moves?.length == 0) {
         yield call(gameTurn, {
             type: sagaActions.GAME_TURN,
             payload: { gameName: result.data.gameName },
@@ -28,20 +29,21 @@ export function* gameStart(action: any) {
 }
 
 export function* applyStartData(action: any) {
-    const result = { data: action.payload };
-    yield put(initGame(result.data));
+    const data: GameStartResponse = action.payload;
+    yield put(initGame(data));
     yield put(
         applyPirateChanges({
-            moves: result.data.moves,
-            changes: result.data.pirates,
-            isHumanPlayer: result.data.stats.isHumanPlayer,
+            moves: data.moves,
+            changes: data.pirates,
         }),
     );
-    if (result.data.stats.isHumanPlayer) {
-        yield put(setCurrentHumanTeam(result.data.stats.currentTeamId));
-        yield put(highlightHumanMoves({ moves: result.data.moves }));
+
+    const currentTeam = data.stats.teams.find((it) => it.id === data.stats.currentTeamId);
+    if (currentTeam!.isHuman) {
+        yield put(setCurrentHumanTeam(data.stats.currentTeamId));
+        yield put(highlightHumanMoves({ moves: data.moves }));
     }
-    yield put(applyStat(result.data.stats));
+    yield put(applyStat(data.stats));
 }
 
 export function* gameTurn(action: any) {
@@ -70,7 +72,10 @@ export function* oneTurn(action: any) {
         return false;
     }
 
-    return !result.data.stats.isHumanPlayer || result.data.moves?.length == 0;
+    const currentTeam: TeamState = yield select((state: { game: GameState }) =>
+        state.game.teams.find((it) => it.id === result.data.stats.currentTeamId),
+    );
+    return !currentTeam!.isHuman || result.data.moves?.length == 0;
 }
 
 export function* applyTurnData(action: any) {
