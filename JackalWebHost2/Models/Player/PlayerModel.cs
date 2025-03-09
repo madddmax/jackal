@@ -1,3 +1,4 @@
+using Jackal.Core.Players;
 using JackalWebHost2.Models.Map;
 
 namespace JackalWebHost2.Models.Player;

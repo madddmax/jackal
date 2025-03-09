@@ -1,12 +1,14 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using JackalWebHost2.Controllers.Hubs;
+using JackalWebHost2.Data;
 using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Data.Repositories;
 using JackalWebHost2.Infrastructure;
 using JackalWebHost2.Infrastructure.Auth;
 using JackalWebHost2.Infrastructure.Middleware;
 using JackalWebHost2.Services;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -127,8 +129,13 @@ public class Program
         services.AddScoped<IMapService, MapService>();
         services.AddScoped<ILobbyService, LobbyService>();
         services.AddScoped<IFastUserService, FastUserService>();
-
-        services.AddScoped<IGameRepository, InMemoryGameRepository>();
+        
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                               ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddDatabaseDeveloperPageExceptionFilter();
+        
+        services.AddScoped<IGameRepository, GameRepository>();
         services.AddScoped<ILobbyRepository, InMemoryLobbyRepository>();
         
         services.AddScoped<IUserAuthProvider, UserAuthProvider>();

@@ -1,11 +1,9 @@
 ﻿using Jackal.Core;
-using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
 using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Exceptions;
 using JackalWebHost2.Models;
-using JackalWebHost2.Models.Player;
 
 namespace JackalWebHost2.Services;
 
@@ -25,19 +23,6 @@ public class GameService : IGameService
         // todo validate game name
         
         GameSettings gameSettings = request.Settings;
-        IPlayer[] gamePlayers = new IPlayer[gameSettings.Players.Length];
-        int index = 0;
-
-        foreach (var player in gameSettings.Players)
-        {
-            gamePlayers[index++] = player.Type switch
-            {
-                PlayerType.Robot => new RandomPlayer(),
-                PlayerType.Human => new WebHumanPlayer(),
-                _ => new EasyPlayer()
-            };
-        }
-
         gameSettings.MapId ??= new Random().Next();
 
         // для ручной отладки можно использовать закомментированные генераторы карт
@@ -50,8 +35,9 @@ public class GameService : IGameService
         //     new TileParams(TileType.Quake)
         // );
 
+        var players = gameSettings.Players.Select(g => g.Type).ToArray();
         var gameMode = gameSettings.GameMode ?? GameModeType.FreeForAll;
-        var gameRequest = new GameRequest(mapSize, mapGenerator, gamePlayers, gameMode);
+        var gameRequest = new GameRequest(mapSize, mapGenerator, players, gameMode);
         var game = new Game(gameRequest);
 
         await _gameRepository.CreateGame(request.GameName, game);

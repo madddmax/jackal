@@ -1,4 +1,4 @@
-namespace JackalWebHost2.Models.Player;
+namespace Jackal.Core.Players;
 
 public enum PlayerType
 {

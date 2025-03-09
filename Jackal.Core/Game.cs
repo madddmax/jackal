@@ -14,13 +14,14 @@ public record GameRequest(
     int MapSize,
     IMapGenerator MapGenerator,
     // данные по игрокам
-    IPlayer[] Players,
+    PlayerType[] Players,
     GameModeType GameMode = GameModeType.FreeForAll,
     int PiratesPerPlayer = 3
 );
 
 public class Game
 {
+    public readonly PlayerType[] PlayerTypes;
     private readonly IPlayer[] _players;
 
     public readonly Board Board;
@@ -49,6 +50,22 @@ public class Game
     public readonly GameModeType GameMode;
     
     /// <summary>
+    /// Конец игры
+    /// </summary>
+    public bool IsGameOver { get; private set; }
+
+    /// <summary>
+    /// Текущий ход - определяет какая команда ходит
+    /// </summary>
+    public int TurnNo { get; private set; }
+        
+    /// <summary>
+    /// Последний ход когда производилось действие:
+    /// открытие новой клетки или перенос монеты 
+    /// </summary>
+    public int LastActionTurnNo { get; internal set; }
+    
+    /// <summary>
     /// Индекс набора игровых сообщений
     /// </summary>
     [JsonIgnore]
@@ -60,14 +77,60 @@ public class Game
     [JsonIgnore]
     public string GameMessage { get; private set; }
     
+    [JsonConstructor]
+    public Game(PlayerType[] playerTypes, Board board, int coinsOnMap, int lostCoins, GameModeType gameMode, bool isGameOver, int turnNo, int lastActionTurnNo)
+    {
+        _availableMoves = new List<Move>();
+        _actions = new List<IGameAction>();
+        
+        PlayerTypes = playerTypes;
+        Board = board;
+        CoinsOnMap = coinsOnMap;
+        LostCoins = lostCoins;
+        GameMode = gameMode;
+        IsGameOver = isGameOver;
+        TurnNo = turnNo;
+        LastActionTurnNo = lastActionTurnNo;
+        _players = new IPlayer[PlayerTypes.Length];
+        int index = 0;
+
+        foreach (var player in PlayerTypes)
+        {
+            _players[index++] = player switch
+            {
+                PlayerType.Robot => new RandomPlayer(),
+                PlayerType.Human => new WebHumanPlayer(),
+                _ => new EasyPlayer()
+            };
+        }
+        
+        foreach (var player in _players)
+        {
+            player.OnNewGame();
+        }
+    }
+    
     public Game(GameRequest request)
     {
-        _players = request.Players;
         GameMode = request.GameMode;
 
         _availableMoves = new List<Move>();
         _actions = new List<IGameAction>();
 
+        PlayerTypes = request.Players;
+        _players = new IPlayer[PlayerTypes.Length];
+        int index = 0;
+
+        foreach (var player in PlayerTypes)
+        {
+            _players[index++] = player switch
+            {
+                PlayerType.Robot => new RandomPlayer(),
+                PlayerType.Human => new WebHumanPlayer(),
+                _ => new EasyPlayer()
+            };
+        }
+        
         foreach (var player in _players)
         {
             player.OnNewGame();
@@ -200,22 +263,6 @@ public class Game
             _actions.Add(availableMove.ActionList);
         }
     }
-
-    /// <summary>
-    /// Конец игры
-    /// </summary>
-    public bool IsGameOver { get; private set; }
-
-    /// <summary>
-    /// Текущий ход - определяет какая команда ходит
-    /// </summary>
-    public int TurnNo { get; private set; }
-        
-    /// <summary>
-    /// Последний ход когда производилось действие:
-    /// открытие новой клетки или перенос монеты 
-    /// </summary>
-    public int LastActionTurnNo { get; internal set; }
 
     /// <summary>
     /// ИД команды которая ходит
