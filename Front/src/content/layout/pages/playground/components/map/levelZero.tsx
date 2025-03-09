@@ -31,7 +31,7 @@ const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
 
     return (
         <>
-            {data.coin && (
+            {data.coins > 0 && (
                 <div
                     key={`cell_level_${data.level}_coin`}
                     style={{
@@ -43,7 +43,7 @@ const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
                     onClick={onClick}
                 >
                     <CoinPhoto
-                        coinCount={Number(data.coin.text)}
+                        coinCount={data.coins}
                         piratesWithCoins={data.piratesWithCoinsCount}
                         freeCoinGirlId={data.freeCoinGirlId}
                         pirateSize={pirateSize}

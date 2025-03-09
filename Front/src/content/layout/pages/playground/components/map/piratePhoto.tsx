@@ -20,8 +20,7 @@ const PiratePhoto = ({ pirates, pirateSize }: PiratePhotoProps) => {
     const topGirl = useRef<number>(0);
 
     let sorted = [...pirates];
-    const coins = Number(level.coin?.text);
-    let allowChoosingPirate = (level.piratesWithCoinsCount || 0) === coins && pirates.length > coins;
+    let allowChoosingPirate = (level.piratesWithCoinsCount || 0) === level.coins && pirates.length > level.coins;
     sorted.sort((a, b) => {
         if (a.backgroundColor == 'transparent') return 1;
         if (b.backgroundColor == 'transparent') return -1;

@@ -175,13 +175,10 @@ interface GameCell {
 
 interface GameLevel {
     level: number;
+    coins: number;
     piratesWithCoinsCount?: number;
     freeCoinGirlId?: string;
     features?: LevelFeature[];
-    hasCoins: boolean;
-    coin?: {
-        text: string;
-    };
 }
 
 export interface LevelFeature {

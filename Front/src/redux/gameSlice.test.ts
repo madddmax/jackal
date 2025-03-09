@@ -439,10 +439,9 @@ describe('redux money actions tests', () => {
         const level = previousState.fields[4][2].levels[0];
         expect(level).toEqual({
             level: 0,
-            hasCoins: true,
+            coins: 2,
             piratesWithCoinsCount: 1,
             freeCoinGirlId: '300',
-            coin: { text: '2' },
         });
     });
 
@@ -453,10 +452,9 @@ describe('redux money actions tests', () => {
         expect(currentState.highlight_y).toEqual(4);
         expect(currentState.fields[4][2].levels[0]).toEqual({
             level: 0,
-            hasCoins: true,
+            coins: 2,
             piratesWithCoinsCount: 1,
             freeCoinGirlId: '300',
-            coin: { text: '2' },
         });
 
         const result = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
@@ -466,10 +464,9 @@ describe('redux money actions tests', () => {
         expect(boy?.isActive).toBeTruthy();
         expect(result.fields[4][2].levels[0]).toEqual({
             level: 0,
-            hasCoins: true,
+            coins: 2,
             piratesWithCoinsCount: 0,
             freeCoinGirlId: '200',
-            coin: { text: '2' },
         });
     });
 });
@@ -507,9 +504,9 @@ describe('redux logic tests', () => {
                     backgroundImageSrc: '/fields/forest.png',
                     rotate: 2,
                     levels: [
-                        { level: 0, hasCoins: false },
-                        { level: 1, hasCoins: false },
-                        { level: 2, hasCoins: false },
+                        { level: 0, coins: 0 },
+                        { level: 1, coins: 0 },
+                        { level: 2, coins: 0 },
                     ],
                     x: 2,
                     y: 4,
@@ -519,7 +516,7 @@ describe('redux logic tests', () => {
 
         expect(result.fields[4][2].levels[0]).toEqual({
             level: 0,
-            hasCoins: false,
+            coins: 0,
             pirate: undefined,
             features: undefined,
         });
@@ -573,11 +570,10 @@ describe('redux logic tests', () => {
         expect(result.highlight_y).toEqual(3);
         expect(result.fields[3][2].levels[0]).toEqual({
             level: 0,
-            hasCoins: false,
+            coins: 0,
             features: undefined,
             piratesWithCoinsCount: 0,
             freeCoinGirlId: '200',
-            coin: undefined,
         });
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
@@ -615,7 +611,7 @@ describe('redux logic tests', () => {
         expect(result.highlight_y).toEqual(4);
         expect(result.fields[4][2].levels[0]).toEqual({
             level: 0,
-            hasCoins: true,
+            coins: 2,
             features: [
                 {
                     photo: 'skull_light.png',
@@ -624,7 +620,6 @@ describe('redux logic tests', () => {
             ],
             piratesWithCoinsCount: 0,
             freeCoinGirlId: '300',
-            coin: { text: '2' },
         });
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({

@@ -186,32 +186,12 @@ public class DrawService : IDrawService
         return tileElement;
     }
 
-    private static LevelChange DrawCoins(TileLevel level, int levelIndex, Team? teamShip)
-    {
-        LevelChange levelChange = new LevelChange();
-            
-        bool hasCoins = teamShip is { Coins: > 0 } || level.Coins > 0;
-            
-        levelChange.hasCoins = hasCoins;
-        levelChange.Level = levelIndex;
-
-        // draw coins
-        if (hasCoins)
+    private static LevelChange DrawCoins(TileLevel level, int levelIndex, Team? teamShip) =>
+        new()
         {
-            int coins = teamShip?.Coins ?? level.Coins;
-
-            var coin = new DrawCoin
-            {
-                ForeColor = "black",
-                BackColor = "gold",
-                Text = coins.ToString()
-            };
-
-            levelChange.Coin = coin;
-        }
-
-        return levelChange;
-    }
+            Level = levelIndex,
+            Coins = teamShip?.Coins ?? level.Coins
+        };
 
     private static void DrawTileBackground(Tile tile, Team? teamShip, ref TileChange tileChange)
     {

@@ -3,6 +3,5 @@
 public class LevelChange
 {
     public int Level;
-    public bool hasCoins;
-    public DrawCoin Coin;
+    public int Coins;
 }

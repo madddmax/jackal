@@ -140,7 +140,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
             ></div>
             {field.levels &&
                 field.levels.length === 1 &&
-                (field.levels[0].coin || (field.levels[0].features && field.levels[0].features.length > 0)) && (
+                (field.levels[0].coins > 0 || (field.levels[0].features && field.levels[0].features.length > 0)) && (
                     <LevelZero
                         key={`cell-level-0`}
                         cellSize={cellSize}
@@ -167,7 +167,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
             {field.levels &&
                 field.levels.length > 1 &&
                 field.levels
-                    .filter((it) => it.coin)
+                    .filter((it) => it.coins > 0)
                     .map((it, idx) => (
                         <Level
                             key={`cell-level-${idx}-pirates`}
