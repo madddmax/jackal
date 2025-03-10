@@ -15,12 +15,7 @@ export const Constants = {
         FreeForAll: 'FreeForAll',
         TwoPlayersInTeam: 'TwoPlayersInTeam',
     },
-    teamColors: new Map([
-        [0, "DarkRed"],
-        [1, "DarkBlue"],
-        [2, "DarkViolet"],
-        [3, "DarkOrange"]
-    ]),
+    teamColors: ['DarkRed', 'DarkBlue', 'DarkViolet', 'DarkOrange'],
     pirateTypes: {
         Usual: 'Usual',
         BenGunn: 'BenGunn',

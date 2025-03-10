@@ -8,7 +8,7 @@ import {
     initMap,
     setCurrentHumanTeam,
 } from '/redux/gameSlice';
-import { GameStartResponse, GameState, GameTurnResponse } from '/redux/types';
+import { GameStartResponse, GameState, GameTurnResponse, TeamState } from '/redux/types';
 import { girlsMap } from '/app/global';
 
 export const applyStartData =
@@ -23,10 +23,10 @@ export const applyStartData =
             applyPirateChanges({
                 moves: data.moves,
                 changes: data.pirates,
-                isHumanPlayer: data.stats.isHumanPlayer,
             }),
         );
-        if (data.stats.isHumanPlayer) {
+        const currentTeam = data.stats.teams.find((it) => it.id === data.stats.currentTeamId);
+        if (currentTeam?.isHuman) {
             dispatch(setCurrentHumanTeam(data.stats.currentTeamId));
             dispatch(highlightHumanMoves({ moves: data.moves }));
         }
@@ -35,17 +35,17 @@ export const applyStartData =
 
 export const applyMoveChanges =
     (data: GameTurnResponse): ThunkAction<void, GameState, unknown, UnknownAction> =>
-    async (dispatch) => {
+    async (dispatch, state) => {
         dispatch(applyChanges(data.changes));
         dispatch(
             applyPirateChanges({
                 moves: data.moves,
                 changes: data.pirateChanges,
-                isHumanPlayer: data.stats.isHumanPlayer,
             }),
         );
 
-        if (data.stats.isHumanPlayer) {
+        const currentTeam: TeamState | undefined = state().teams.find((it) => it.id === data.stats.currentTeamId);
+        if (currentTeam!.isHuman) {
             dispatch(setCurrentHumanTeam(data.stats.currentTeamId));
             dispatch(highlightHumanMoves({ moves: data.moves }));
         }
