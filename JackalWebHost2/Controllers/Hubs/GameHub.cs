@@ -4,7 +4,6 @@ using JackalWebHost2.Models;
 using JackalWebHost2.Services;
 using Microsoft.AspNetCore.SignalR;
 
-
 namespace JackalWebHost2.Controllers.Hubs;
 
 public class GameHub : Hub
@@ -56,7 +55,7 @@ public class GameHub : Hub
             Moves = result.Moves
         });
 
-        if (!result.Statistics.IsGameOver && (!result.Statistics.IsHumanPlayer || result.Moves.Count == 0))
+        if (!result.Statistics.IsGameOver && (!result.Statistics.Teams[result.Statistics.CurrentTeamId].IsHuman || result.Moves.Count == 0))
         {
             await Move(new TurnGameRequest
             {
@@ -85,7 +84,7 @@ public class GameHub : Hub
             Moves = result.Moves
         });
 
-        if (!result.Statistics.IsGameOver && (!result.Statistics.IsHumanPlayer || result.Moves.Count == 0))
+        if (!result.Statistics.IsGameOver && (!result.Statistics.Teams[result.Statistics.CurrentTeamId].IsHuman || result.Moves.Count == 0))
         {
             await Move(new TurnGameRequest
             {
@@ -93,6 +92,4 @@ public class GameHub : Hub
             });
         }
     }
-
 }
-

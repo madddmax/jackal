@@ -10,5 +10,4 @@ public class GameStatistics
     public bool IsGameOver;
     public string GameMessage;
     public int CurrentTeamId;
-    public bool IsHumanPlayer;
 }

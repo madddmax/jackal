@@ -78,8 +78,7 @@ public class DrawService : IDrawService
             TurnNo = game.TurnNo,
             IsGameOver = game.IsGameOver,
             GameMessage = game.GameMessage,
-            CurrentTeamId = game.CurrentTeamId,
-            IsHumanPlayer = game.CurrentPlayer is WebHumanPlayer
+            CurrentTeamId = game.CurrentTeamId
         };
 
     public List<DrawMove> GetAvailableMoves(Game game)
