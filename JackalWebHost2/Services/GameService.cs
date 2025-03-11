@@ -1,5 +1,4 @@
 ﻿using Jackal.Core;
-using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.Players;
 using JackalWebHost2.Data.Interfaces;
@@ -72,6 +71,7 @@ public class GameService : IGameService
             Map = map,
             MapId = gameSettings.MapId.Value,
             Statistics = _drawService.GetStatistics(game),
+            Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
             Moves = _drawService.GetAvailableMoves(game)
         };
     }
@@ -91,6 +91,7 @@ public class GameService : IGameService
                 PirateChanges = [],
                 Changes = [],
                 Statistics = _drawService.GetStatistics(game),
+                Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
                 Moves = []
             };
         }
@@ -116,6 +117,7 @@ public class GameService : IGameService
             PirateChanges = _drawService.GetPirateChanges(game.Board, prevBoard),
             Changes = _drawService.GetTileChanges(game.Board, prevBoard),
             Statistics = _drawService.GetStatistics(game),
+            Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
             Moves = _drawService.GetAvailableMoves(game)
         };
     }

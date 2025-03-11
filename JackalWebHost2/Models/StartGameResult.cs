@@ -17,5 +17,7 @@ public class StartGameResult
     
     public GameStatistics Statistics { get; init; }
     
+    public List<DrawTeam> Teams { get; set; }
+    
     public List<DrawMove> Moves { get; init; }
 }

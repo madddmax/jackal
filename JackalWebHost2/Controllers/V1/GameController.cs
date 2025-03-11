@@ -40,6 +40,7 @@ public class GameController : Controller
             Map = result.Map,
             MapId = result.MapId,
             Stats = result.Statistics,
+            Teams = result.Teams,
             Moves = result.Moves
         };
     }
@@ -62,6 +63,7 @@ public class GameController : Controller
             PirateChanges = result.PirateChanges,
             Changes = result.Changes,
             Stats = result.Statistics,
+            TeamChanges = result.Teams.Select(t => new TeamChange(t)).ToList(),
             Moves = result.Moves
         };
     }

@@ -52,10 +52,12 @@ public class GameHub : Hub
             Map = result.Map,
             MapId = result.MapId,
             Stats = result.Statistics,
+            Teams = result.Teams,
             Moves = result.Moves
         });
 
-        if (!result.Statistics.IsGameOver && (!result.Statistics.Teams[result.Statistics.CurrentTeamId].IsHuman || result.Moves.Count == 0))
+        // todo - подумать про пересчет ходов компа в ядре
+        if (!result.Statistics.IsGameOver && (!result.Teams[result.Statistics.CurrentTeamId].IsHuman || result.Moves.Count == 0))
         {
             await Move(new TurnGameRequest
             {
@@ -81,10 +83,12 @@ public class GameHub : Hub
             PirateChanges = result.PirateChanges,
             Changes = result.Changes,
             Stats = result.Statistics,
+            TeamChanges = result.Teams.Select(t => new TeamChange(t)).ToList(),
             Moves = result.Moves
         });
 
-        if (!result.Statistics.IsGameOver && (!result.Statistics.Teams[result.Statistics.CurrentTeamId].IsHuman || result.Moves.Count == 0))
+        // todo - подумать про пересчет ходов компа в ядре, тогда можно сразу отдавать TeamChange вместо DrawTeam
+        if (!result.Statistics.IsGameOver && (!result.Teams[result.Statistics.CurrentTeamId].IsHuman || result.Moves.Count == 0))
         {
             await Move(new TurnGameRequest
             {
