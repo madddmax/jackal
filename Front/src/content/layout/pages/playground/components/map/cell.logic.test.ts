@@ -10,6 +10,8 @@ import reducer, {
 } from '/redux/gameSlice';
 import { GamePirate, GameStat, GameState } from '/redux/types';
 
+const testTeamId = 12;
+
 const stat2Data: GameStat = {
     turnNo: 1,
     currentTeamId: 1,
@@ -27,7 +29,7 @@ const stat2Data: GameStat = {
             },
         },
         {
-            id: 2,
+            id: testTeamId,
             name: 'boys',
             coins: 0,
             isHuman: true,
@@ -42,7 +44,7 @@ const stat2Data: GameStat = {
 const testPirates: GamePirate[] = [
     {
         id: '100',
-        teamId: 1,
+        teamId: testTeamId,
         position: {
             level: 0,
             x: 2,
@@ -76,7 +78,7 @@ const getState = (pirates: GamePirate[]) => ({
     },
     stat: {
         turnNo: 1,
-        currentTeamId: 1,
+        currentTeamId: testTeamId,
         isGameOver: false,
         gameMessage: '',
         teams: [],
@@ -97,7 +99,7 @@ describe('cell logic tests', () => {
         defaultState = reducer(defaultState, initMap(getMapData));
         defaultState = reducer(defaultState, initTeams(stat2Data));
         defaultState = reducer(defaultState, initPiratePositions());
-        defaultState = reducer(defaultState, setCurrentHumanTeam(1));
+        defaultState = reducer(defaultState, setCurrentHumanTeam());
         defaultState = reducer(
             defaultState,
             highlightHumanMoves({

@@ -90,6 +90,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
             {pirates &&
                 pirates.map((girl) => (
                     <PiratePhoto
+                        key={`girl_${girl.id}`}
                         pirate={girl}
                         pirateSize={pirateSize}
                         getMarginTop={getMarginTop}

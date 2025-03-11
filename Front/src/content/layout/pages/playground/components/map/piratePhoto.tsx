@@ -27,7 +27,7 @@ const PiratePhoto = ({ pirate, pirateSize, getMarginTop, getMarginLeft, mapSize,
     let allowChoosingPirate =
         (level.piratesWithCoinsCount || 0) === level.coins && (mapLevel?.girls?.length || 0) > level.coins;
 
-    const isCurrentTeam = (girl: GamePirate): boolean => {
+    const isCurrentPlayerPirate = (girl: GamePirate): boolean => {
         let gameState = store.getState().game as GameState;
         let team = gameState.teams.find((it) => it.id == gameState.currentHumanTeamId);
         return girl.teamId === team?.id;
@@ -53,7 +53,7 @@ const PiratePhoto = ({ pirate, pirateSize, getMarginTop, getMarginLeft, mapSize,
     const addSize = (pirateSize - coinSize - 20) / 10;
     const coinPos = pirateSize - coinSize - addSize;
     const isDisabled = pirate.isDrunk || pirate.isInTrap || pirate.isInHole;
-    const isCurrentTeamPirate = isCurrentTeam(pirate);
+    const isCurrentPlayerGirl = isCurrentPlayerPirate(pirate);
 
     return (
         <div
@@ -63,7 +63,7 @@ const PiratePhoto = ({ pirate, pirateSize, getMarginTop, getMarginLeft, mapSize,
                 top: (mapSize - 1 - pirate.position.y) * (cellSize + 1) + getMarginTop(pirate),
                 left: pirate.position.x * (cellSize + 1) + getMarginLeft(pirate),
                 zIndex: pirate.isActive ? 10 : mapLevel?.girls?.indexOf(pirate.id),
-                pointerEvents: isCurrentTeamPirate ? 'auto' : 'none',
+                pointerEvents: isCurrentPlayerGirl ? 'auto' : 'none',
             }}
         >
             <Image
@@ -76,10 +76,10 @@ const PiratePhoto = ({ pirate, pirateSize, getMarginTop, getMarginLeft, mapSize,
                     filter: isDisabled ? 'grayscale(100%)' : undefined,
                     width: pirateSize,
                     height: pirateSize,
-                    cursor: isDisabled && isCurrentTeamPirate ? 'default' : 'pointer',
+                    cursor: isDisabled && isCurrentPlayerGirl ? 'default' : 'pointer',
                 }}
                 onClick={(event) => {
-                    if (isCurrentTeamPirate) {
+                    if (isCurrentPlayerGirl) {
                         event.stopPropagation();
                         onTeamPirateClick(pirate, allowChoosingPirate);
                     }

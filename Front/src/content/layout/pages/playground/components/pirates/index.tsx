@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { chooseHumanPirate, getCurrentHumanTeam, saveMySettings, setPirateAutoChange } from '/redux/gameSlice';
+import { chooseHumanPirate, getCurrentPlayerTeam, saveMySettings, setPirateAutoChange } from '/redux/gameSlice';
 import Pirate from './pirate';
 import './pirates.less';
 import { GamePirate, ReduxState, StorageState } from '/redux/types';
@@ -12,7 +12,7 @@ function Pirates() {
     const pirates = useSelector<ReduxState, GamePirate[] | undefined>((state) => state.game.pirates);
     const hasPirateAutoChange = useSelector<ReduxState, boolean>((state) => state.game.hasPirateAutoChange);
     const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
-    const team = useSelector(getCurrentHumanTeam);
+    const currentPlayerTeam = useSelector(getCurrentPlayerTeam);
 
     const [gameSpeed, setGameSpeed] = useState<number>(userSettings.gameSpeed || 0);
 
@@ -47,7 +47,7 @@ function Pirates() {
         <>
             {pirates &&
                 pirates
-                    .filter((it) => it.teamId == team?.id)
+                    .filter((it) => it.teamId == currentPlayerTeam?.id)
                     .map((girl, index) => (
                         <Pirate
                             key={`pirate_${index}`}

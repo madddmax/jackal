@@ -1,5 +1,5 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects';
-import { setCurrentHumanTeam, highlightHumanMoves, applyPirateChanges, applyStat, initGame } from '../redux/gameSlice';
+import { highlightHumanMoves, applyPirateChanges, applyStat, initGame } from '../redux/gameSlice';
 import { GameStartResponse, GameState, GameTurnResponse, TeamState } from '../redux/types';
 import { axiosInstance, errorsWrapper, sagaActions } from './constants';
 import { animateQueue } from '/app/global';
@@ -31,19 +31,14 @@ export function* gameStart(action: any) {
 export function* applyStartData(action: any) {
     const data: GameStartResponse = action.payload;
     yield put(initGame(data));
+    yield put(applyStat(data.stats));
     yield put(
         applyPirateChanges({
             moves: data.moves,
             changes: data.pirates,
         }),
     );
-
-    const currentTeam = data.stats.teams.find((it) => it.id === data.stats.currentTeamId);
-    if (currentTeam!.isHuman) {
-        yield put(setCurrentHumanTeam(data.stats.currentTeamId));
-        yield put(highlightHumanMoves({ moves: data.moves }));
-    }
-    yield put(applyStat(data.stats));
+    yield put(highlightHumanMoves({ moves: data.moves }));
 }
 
 export function* gameTurn(action: any) {

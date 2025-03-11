@@ -272,9 +272,10 @@ describe('redux init tests', () => {
     });
 
     test('Устанавливаем текущую команду', () => {
-        expect(reducer(defaultState, setCurrentHumanTeam(2))).toEqual(
+        const result = reducer(defaultState, initTeams(stat2Data));
+        expect(reducer(result, setCurrentHumanTeam())).toEqual(
             expect.objectContaining({
-                currentHumanTeamId: 2,
+                currentHumanTeamId: testTeamId,
             }),
         );
     });
@@ -300,7 +301,7 @@ describe('redux basic tests', () => {
                 moves: [],
             }),
         );
-        previousState = reducer(previousState, setCurrentHumanTeam(testTeamId));
+        previousState = reducer(previousState, setCurrentHumanTeam());
     });
 
     test('Автовыбор пиратки, для которой возможны ходы, и подсвечивание её ходов', () => {
@@ -467,7 +468,7 @@ describe('redux money actions tests', () => {
     });
 
     test('Кладём монету', () => {
-        let currentState = reducer(previousState, setCurrentHumanTeam(testTeamId));
+        let currentState = reducer(previousState, setCurrentHumanTeam());
         currentState = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
         expect(currentState.highlight_x).toEqual(2);
         expect(currentState.highlight_y).toEqual(4);
@@ -512,7 +513,7 @@ describe('redux logic tests', () => {
                 moves: [],
             }),
         );
-        previousState = reducer(previousState, setCurrentHumanTeam(testTeamId));
+        previousState = reducer(previousState, setCurrentHumanTeam());
         previousState = reducer(previousState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
     });
 
