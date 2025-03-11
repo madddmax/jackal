@@ -62,7 +62,7 @@ const PiratePhoto = ({ pirate, pirateSize, getMarginTop, getMarginLeft, mapSize,
             style={{
                 top: (mapSize - 1 - pirate.position.y) * (cellSize + 1) + getMarginTop(pirate),
                 left: pirate.position.x * (cellSize + 1) + getMarginLeft(pirate),
-                zIndex: pirate.isActive ? 10 : mapLevel?.girls?.indexOf(pirate.id),
+                zIndex: pirate.isActive ? 10 : mapLevel?.girls?.indexOf(pirate.id)! + 3,
                 pointerEvents: isCurrentPlayerGirl ? 'auto' : 'none',
             }}
         >
