@@ -4,7 +4,6 @@ using JackalWebHost2.Models;
 using JackalWebHost2.Services;
 using Microsoft.AspNetCore.SignalR;
 
-
 namespace JackalWebHost2.Controllers.Hubs;
 
 public class GameHub : Hub
@@ -53,10 +52,12 @@ public class GameHub : Hub
             Map = result.Map,
             MapId = result.MapId,
             Stats = result.Statistics,
+            Teams = result.Teams,
             Moves = result.Moves
         });
 
-        if (!result.Statistics.IsGameOver && (!result.Statistics.IsHumanPlayer || result.Moves.Count == 0))
+        // todo - подумать про пересчет ходов компа в ядре
+        if (!result.Statistics.IsGameOver && (!result.Teams[result.Statistics.CurrentTeamId].IsHuman || result.Moves.Count == 0))
         {
             await Move(new TurnGameRequest
             {
@@ -82,10 +83,12 @@ public class GameHub : Hub
             PirateChanges = result.PirateChanges,
             Changes = result.Changes,
             Stats = result.Statistics,
+            TeamScores = result.Teams.Select(t => new TeamScore(t)).ToList(),
             Moves = result.Moves
         });
 
-        if (!result.Statistics.IsGameOver && (!result.Statistics.IsHumanPlayer || result.Moves.Count == 0))
+        // todo - подумать про пересчет ходов компа в ядре, тогда можно сразу отдавать TeamScore вместо DrawTeam
+        if (!result.Statistics.IsGameOver && (!result.Teams[result.Statistics.CurrentTeamId].IsHuman || result.Moves.Count == 0))
         {
             await Move(new TurnGameRequest
             {
@@ -93,6 +96,4 @@ public class GameHub : Hub
             });
         }
     }
-
 }
-

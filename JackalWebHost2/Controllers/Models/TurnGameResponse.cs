@@ -10,5 +10,7 @@ public class TurnGameResponse
     
     public GameStatistics Stats { get; set; }
     
+    public List<TeamScore> TeamScores { get; set; }
+    
     public List<DrawMove> Moves { get; set; }
 }

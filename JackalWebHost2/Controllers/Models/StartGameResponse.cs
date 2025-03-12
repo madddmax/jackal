@@ -19,5 +19,7 @@ public class StartGameResponse
     
     public GameStatistics Stats { get; set; }
     
+    public List<DrawTeam> Teams { get; set; }
+    
     public List<DrawMove> Moves { get; set; }
 }
