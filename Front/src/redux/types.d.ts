@@ -11,6 +11,7 @@ export interface ReduxState {
 
 export interface GameState {
     stat?: GameStat;
+    teamScores?: GameScore[];
     gameName?: string;
     gameMode?: string;
     tilesPackName?: string;
@@ -49,6 +50,7 @@ export interface LobbyState {
 export interface TeamState {
     id: number;
     activePirate: string;
+    name: string;
     backColor: string;
     group: TeamGroup;
     isHuman: boolean;
@@ -79,23 +81,27 @@ export interface AvailableMove {
     };
 }
 
-export interface GameStartResponse {
+export interface GameStartResponse extends GameStatistics {
     gameName: string;
     gameMode?: string;
     tilesPackName: string;
     mapId: number;
     map: GameMap;
+    teams: GameTeam[];
     pirates: GamePirate[];
-    stats: GameStat;
     moves: GameMove[];
 }
 
-export interface GameTurnResponse {
+export interface GameTurnResponse extends GameStatistics {
     pirates: GamePirate[];
     pirateChanges: PirateDiff[];
     changes: GameCell[];
-    stats: GameStat;
     moves: GameMove[];
+}
+
+export interface GameStatistics {
+    stats: GameStat;
+    teamScores?: GameScore[];
 }
 
 export interface LobbyCreateResponse {
@@ -148,10 +154,9 @@ export interface GameStat {
     currentTeamId: number;
     isGameOver: boolean;
     gameMessage: string;
-    teams: GameTeamStat[];
 }
 
-interface GameTeamStat {
+interface GameTeam {
     id: number;
     name: string;
     coins: number;
@@ -160,6 +165,11 @@ interface GameTeamStat {
         x: number;
         y: number;
     };
+}
+
+interface GameScore {
+    teamId: number;
+    coins: number;
 }
 
 export interface GameMap {

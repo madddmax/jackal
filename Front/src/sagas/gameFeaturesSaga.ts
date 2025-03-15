@@ -4,13 +4,13 @@ import {
     applyChanges,
     applyPirateChanges,
     applyStat,
+    getCurrentTeam,
     highlightHumanMoves,
     removeHumanMoves,
-    setCurrentHumanTeam,
     setMapInfo,
     setTilesPackNames,
 } from '/redux/gameSlice';
-import { CheckMapInfo, GameState, GameTurnResponse, TeamState } from '/redux/types';
+import { CheckMapInfo, GameTurnResponse, ReduxState, TeamState } from '/redux/types';
 import { animateQueue } from '/app/global';
 import { PayloadAction } from '@reduxjs/toolkit';
 
@@ -38,32 +38,25 @@ function* doAnimate() {
 export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
     const result = { data: action.payload };
 
-    const currentTeamId: number = yield select((state) => state.game.currentHumanTeamId);
+    const currentTeam: TeamState = yield select((state: ReduxState) => getCurrentTeam(state));
     const speed: number = yield select((state) => state.game.userSettings.gameSpeed);
-    if (result.data.pirateChanges.length > 0 && result.data.pirateChanges[0].teamId !== currentTeamId) {
+
+    if (!currentTeam.isHuman) {
         yield put(removeHumanMoves());
         if (speed > 0) {
             yield delay(speed * 100);
         }
     }
 
-    yield put(applyStat(result.data.stats));
+    yield put(applyStat(result.data));
     yield put(applyChanges(result.data.changes));
-
     yield put(
         applyPirateChanges({
             moves: result.data.moves,
             changes: result.data.pirateChanges,
         }),
     );
-
-    const currentTeam: TeamState = yield select((state: { game: GameState }) =>
-        state.game.teams.find((it) => it.id === result.data.stats.currentTeamId),
-    );
-    if (currentTeam.isHuman) {
-        yield put(setCurrentHumanTeam(result.data.stats.currentTeamId));
-        yield put(highlightHumanMoves({ moves: result.data.moves }));
-    }
+    yield put(highlightHumanMoves({ moves: result.data.moves }));
 
     if (result.data.stats.isGameOver) {
         yield put(removeHumanMoves());

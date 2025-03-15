@@ -1,14 +1,6 @@
 import { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
-import {
-    applyChanges,
-    applyPirateChanges,
-    applyStat,
-    highlightHumanMoves,
-    initGame,
-    initMap,
-    setCurrentHumanTeam,
-} from '/redux/gameSlice';
-import { GameStartResponse, GameState, GameTurnResponse, TeamState } from '/redux/types';
+import { applyChanges, applyPirateChanges, applyStat, highlightHumanMoves, initGame, initMap } from '/redux/gameSlice';
+import { GameStartResponse, GameState, GameTurnResponse } from '/redux/types';
 import { girlsMap } from '/app/global';
 
 export const applyStartData =
@@ -16,6 +8,7 @@ export const applyStartData =
     async (dispatch) => {
         dispatch(initMap(data.map));
         dispatch(initGame(data));
+        dispatch(applyStat(data));
         data.pirates.forEach((girl) => {
             girlsMap.AddPosition(girl, 1);
         });
@@ -25,17 +18,13 @@ export const applyStartData =
                 changes: data.pirates,
             }),
         );
-        const currentTeam = data.stats.teams.find((it) => it.id === data.stats.currentTeamId);
-        if (currentTeam?.isHuman) {
-            dispatch(setCurrentHumanTeam(data.stats.currentTeamId));
-            dispatch(highlightHumanMoves({ moves: data.moves }));
-        }
-        dispatch(applyStat(data.stats));
+        dispatch(highlightHumanMoves({ moves: data.moves }));
     };
 
 export const applyMoveChanges =
     (data: GameTurnResponse): ThunkAction<void, GameState, unknown, UnknownAction> =>
-    async (dispatch, state) => {
+    async (dispatch) => {
+        dispatch(applyStat(data));
         dispatch(applyChanges(data.changes));
         dispatch(
             applyPirateChanges({
@@ -43,14 +32,8 @@ export const applyMoveChanges =
                 changes: data.pirateChanges,
             }),
         );
+        dispatch(highlightHumanMoves({ moves: data.moves }));
 
-        const currentTeam: TeamState | undefined = state().teams.find((it) => it.id === data.stats.currentTeamId);
-        if (currentTeam!.isHuman) {
-            dispatch(setCurrentHumanTeam(data.stats.currentTeamId));
-            dispatch(highlightHumanMoves({ moves: data.moves }));
-        }
-
-        dispatch(applyStat(data.stats));
         if (data.stats.isGameOver) {
             dispatch(highlightHumanMoves({ moves: [] }));
         }

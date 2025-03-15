@@ -33,16 +33,19 @@ function Controls() {
                     Номер хода: <span>{game?.stat?.turnNo}</span>
                 </div>
                 <div className={cn(classes.teams, 'container')}>
-                    {game?.stat?.teams.map((it) => (
-                        <div
-                            key={`ctrl_${it.id}`}
-                            className="row"
-                            style={{ backgroundColor: game.teams.find((tm) => tm.id === it.id)?.backColor ?? '' }}
-                        >
-                            <div className="col-md-8">{it.name}</div>
-                            <div className="col-md-4">{it.coins}</div>
-                        </div>
-                    ))}
+                    {game?.teamScores?.map((it) => {
+                        const team = game.teams.find((tm) => tm.id === it.teamId);
+                        return (
+                            <div
+                                key={`ctrl_${it.teamId}`}
+                                className="row"
+                                style={{ backgroundColor: team?.backColor ?? '' }}
+                            >
+                                <div className="col-md-8">{team?.name}</div>
+                                <div className="col-md-4">{it.coins}</div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
 
