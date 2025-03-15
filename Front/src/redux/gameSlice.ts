@@ -9,6 +9,7 @@ import {
     GameStartResponse,
     GameStat,
     GameState,
+    GameTeam,
     LevelFeature,
     PirateChanges,
     PirateChoose,
@@ -67,7 +68,7 @@ export const gameSlice = createSlice({
             state.highlight_y = 0;
 
             gameSlice.caseReducers.initMap(state, initMap(action.payload.map));
-            gameSlice.caseReducers.initTeams(state, initTeams(action.payload.stats));
+            gameSlice.caseReducers.initTeams(state, initTeams(action.payload.teams));
             gameSlice.caseReducers.initPhotos(state);
             gameSlice.caseReducers.initSizes(
                 state,
@@ -99,8 +100,8 @@ export const gameSlice = createSlice({
             }
             state.fields = map;
         },
-        initTeams: (state, action: PayloadAction<GameStat>) => {
-            state.teams = action.payload.teams.map((it, idx, arr) => {
+        initTeams: (state, action: PayloadAction<GameTeam[]>) => {
+            state.teams = action.payload.map((it, idx, arr) => {
                 let grId = arr.length == 2 && idx == 1 ? 2 : idx;
                 return {
                     id: it.id,

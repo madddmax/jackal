@@ -85,6 +85,7 @@ export interface GameStartResponse {
     tilesPackName: string;
     mapId: number;
     map: GameMap;
+    teams: GameTeam[];
     pirates: GamePirate[];
     stats: GameStat;
     moves: GameMove[];
@@ -148,10 +149,9 @@ export interface GameStat {
     currentTeamId: number;
     isGameOver: boolean;
     gameMessage: string;
-    teams: GameTeamStat[];
 }
 
-interface GameTeamStat {
+interface GameTeam {
     id: number;
     name: string;
     coins: number;

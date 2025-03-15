@@ -8,38 +8,32 @@ import reducer, {
     initTeams,
     setCurrentHumanTeam,
 } from '/redux/gameSlice';
-import { GamePirate, GameStat, GameState } from '/redux/types';
+import { GamePirate, GameState, GameTeam } from '/redux/types';
 
 const testTeamId = 12;
 
-const stat2Data: GameStat = {
-    turnNo: 1,
-    currentTeamId: 1,
-    isGameOver: false,
-    gameMessage: 'пиратская песня',
-    teams: [
-        {
-            id: 1,
-            name: 'girls',
-            coins: 0,
-            isHuman: false,
-            ship: {
-                x: 5,
-                y: 0,
-            },
+const twoTeamsData: GameTeam[] = [
+    {
+        id: 1,
+        name: 'girls',
+        coins: 0,
+        isHuman: false,
+        ship: {
+            x: 5,
+            y: 0,
         },
-        {
-            id: testTeamId,
-            name: 'boys',
-            coins: 0,
-            isHuman: true,
-            ship: {
-                x: 5,
-                y: 10,
-            },
+    },
+    {
+        id: testTeamId,
+        name: 'boys',
+        coins: 0,
+        isHuman: true,
+        ship: {
+            x: 5,
+            y: 10,
         },
-    ],
-};
+    },
+];
 
 const testPirates: GamePirate[] = [
     {
@@ -97,7 +91,7 @@ describe('cell logic tests', () => {
     beforeAll(() => {
         defaultState = getState(testPirates);
         defaultState = reducer(defaultState, initMap(getMapData));
-        defaultState = reducer(defaultState, initTeams(stat2Data));
+        defaultState = reducer(defaultState, initTeams(twoTeamsData));
         defaultState = reducer(defaultState, initPiratePositions());
         defaultState = reducer(defaultState, setCurrentHumanTeam());
         defaultState = reducer(
