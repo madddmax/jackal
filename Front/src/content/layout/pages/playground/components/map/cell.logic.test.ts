@@ -75,7 +75,6 @@ const getState = (pirates: GamePirate[]) => ({
         currentTeamId: testTeamId,
         isGameOver: false,
         gameMessage: '',
-        teams: [],
     },
     teams: [],
     pirates: pirates,

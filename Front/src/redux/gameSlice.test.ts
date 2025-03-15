@@ -150,7 +150,6 @@ const getState = (pirates: GamePirate[]): GameState => ({
         currentTeamId: testTeamId,
         isGameOver: false,
         gameMessage: '',
-        teams: [],
     },
     teams: [],
     pirates: pirates,
@@ -367,6 +366,7 @@ describe('redux basic tests', () => {
                 extension: '.jpg',
                 photoMaxId: 6,
             },
+            name: 'boys',
             id: testTeamId,
             isHuman: true,
         });

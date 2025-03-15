@@ -8,7 +8,7 @@ export const applyStartData =
     async (dispatch) => {
         dispatch(initMap(data.map));
         dispatch(initGame(data));
-        dispatch(applyStat(data.stats));
+        dispatch(applyStat(data));
         data.pirates.forEach((girl) => {
             girlsMap.AddPosition(girl, 1);
         });
@@ -24,7 +24,7 @@ export const applyStartData =
 export const applyMoveChanges =
     (data: GameTurnResponse): ThunkAction<void, GameState, unknown, UnknownAction> =>
     async (dispatch) => {
-        dispatch(applyStat(data.stats));
+        dispatch(applyStat(data));
         dispatch(applyChanges(data.changes));
         dispatch(
             applyPirateChanges({

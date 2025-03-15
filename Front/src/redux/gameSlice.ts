@@ -7,8 +7,8 @@ import {
     GamePirate,
     GamePlace,
     GameStartResponse,
-    GameStat,
     GameState,
+    GameStatistics,
     GameTeam,
     LevelFeature,
     PirateChanges,
@@ -107,6 +107,7 @@ export const gameSlice = createSlice({
                     id: it.id,
                     activePirate: '',
                     backColor: Constants.teamColors[idx] ?? '',
+                    name: it.name,
                     isHuman: it.isHuman,
                     group:
                         Constants.groups.find((gr) => gr.id == state.userSettings.groups[grId]) || Constants.groups[0],
@@ -402,8 +403,9 @@ export const gameSlice = createSlice({
                 ? levelPirates?.find((it) => !it.withCoin)?.id
                 : undefined;
         },
-        applyStat: (state, action: PayloadAction<GameStat>) => {
-            state.stat = action.payload;
+        applyStat: (state, action: PayloadAction<GameStatistics>) => {
+            state.stat = action.payload.stats;
+            state.teamScores = action.payload.teamScores;
 
             // вызываем после присваивания stat, т.к. именно от туда приходит stat.currentTeamId
             gameSlice.caseReducers.setCurrentHumanTeam(state);

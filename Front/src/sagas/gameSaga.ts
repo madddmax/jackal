@@ -19,7 +19,7 @@ export function* gameStart(action: any) {
         payload: result.data,
     });
 
-    const currentTeam = result.data.stats.teams.find((it) => it.id === result.data.stats.currentTeamId);
+    const currentTeam = result.data.teams.find((it) => it.id === result.data.stats.currentTeamId);
     if (!currentTeam!.isHuman || result.data.moves?.length == 0) {
         yield call(gameTurn, {
             type: sagaActions.GAME_TURN,
@@ -31,7 +31,7 @@ export function* gameStart(action: any) {
 export function* applyStartData(action: any) {
     const data: GameStartResponse = action.payload;
     yield put(initGame(data));
-    yield put(applyStat(data.stats));
+    yield put(applyStat(data));
     yield put(
         applyPirateChanges({
             moves: data.moves,
