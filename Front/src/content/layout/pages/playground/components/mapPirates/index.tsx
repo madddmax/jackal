@@ -1,7 +1,8 @@
 import { useSelector } from 'react-redux';
 import { GamePirate, ReduxState } from '/redux/types';
-import PiratePhoto from '../map/piratePhoto';
 import { girlsMap } from '/app/global';
+import { getPiratesIds } from '/redux/gameSlice';
+import MapPirate from './mapPirate';
 
 interface MapPiratesProps {
     mapSize: number;
@@ -9,7 +10,7 @@ interface MapPiratesProps {
 }
 
 const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
-    const pirates = useSelector<ReduxState, GamePirate[] | undefined>((state) => state.game.pirates);
+    const piratesIds = useSelector(getPiratesIds);
     const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
 
     const unitSize = cellSize - pirateSize;
@@ -87,11 +88,11 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
 
     return (
         <>
-            {pirates &&
-                pirates.map((girl) => (
-                    <PiratePhoto
-                        key={`girl_${girl.id}`}
-                        pirate={girl}
+            {piratesIds &&
+                piratesIds.map((girlId) => (
+                    <MapPirate
+                        key={`girl_${girlId}`}
+                        id={girlId}
                         pirateSize={pirateSize}
                         getMarginTop={getMarginTop}
                         getMarginLeft={getMarginLeft}

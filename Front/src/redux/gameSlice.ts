@@ -21,6 +21,7 @@ import {
 import { debugLog, getAnotherRandomValue, getRandomValues, girlsMap } from '/app/global';
 import { Constants } from '/app/constants';
 import { ScreenSizes } from './gameSlice.types';
+import { memoize } from 'proxy-memoize';
 
 export const gameSlice = createSlice({
     name: 'game',
@@ -422,8 +423,9 @@ export const gameSlice = createSlice({
         getCurrentPlayerTeam: (state): TeamState | undefined =>
             state.teams.find((it) => it.id == state.currentHumanTeamId),
         getCurrentTeam: (state): TeamState | undefined => state.teams.find((it) => it.id == state.stat?.currentTeamId),
+        getPiratesIds: memoize((state): string[] | undefined => state.pirates?.map((it) => it.id)),
         getPirateById: (state, pirateId: string): GamePirate | undefined =>
-            state.pirates!.find((it) => it.id === pirateId),
+            state.pirates?.find((it) => it.id === pirateId),
         getPirateCell: (state, pirateId: string): GamePlace | undefined => {
             let gamePirate = gameSlice.getSelectors().getPirateById(state, pirateId);
             if (!gamePirate) return undefined;
@@ -461,6 +463,6 @@ export const {
     setMapInfo,
 } = gameSlice.actions;
 
-export const { getCurrentTeam, getCurrentPlayerTeam } = gameSlice.selectors;
+export const { getCurrentTeam, getCurrentPlayerTeam, getPiratesIds, getPirateById } = gameSlice.selectors;
 
 export default gameSlice.reducer;
