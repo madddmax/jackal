@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { GamePirate, ReduxState } from '/redux/types';
+import { PiratePosition, ReduxState } from '/redux/types';
 import { girlsMap } from '/app/global';
 import { getPiratesIds } from '/redux/gameSlice';
 import MapPirate from './mapPirate';
@@ -19,7 +19,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
     const xAddSize = (mul_x_times - 1) * 5;
     const xUnitSize = cellSize - pirateSize / 2;
 
-    const getMarginTop = (girl: GamePirate): number => {
+    const getMarginTop = (girl: PiratePosition): number => {
         const position = girlsMap.GetPosition(girl);
         let levelsCount = position!.levelsCountInCell;
         let level = position!.level;
@@ -51,7 +51,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
         return 0;
     };
 
-    const getMarginLeft = (girl: GamePirate): number => {
+    const getMarginLeft = (girl: PiratePosition): number => {
         const position = girlsMap.GetPosition(girl);
         let levelsCount = position!.levelsCountInCell;
         let level = position!.level;
