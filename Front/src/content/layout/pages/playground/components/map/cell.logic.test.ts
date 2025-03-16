@@ -8,41 +8,37 @@ import reducer, {
     initTeams,
     setCurrentHumanTeam,
 } from '/redux/gameSlice';
-import { GamePirate, GameStat, GameState } from '/redux/types';
+import { GamePirate, GameState, GameTeam } from '/redux/types';
 
-const stat2Data: GameStat = {
-    turnNo: 1,
-    currentTeamId: 1,
-    isGameOver: false,
-    gameMessage: 'пиратская песня',
-    teams: [
-        {
-            id: 1,
-            name: 'girls',
-            coins: 0,
-            isHuman: false,
-            ship: {
-                x: 5,
-                y: 0,
-            },
+const testTeamId = 12;
+
+const twoTeamsData: GameTeam[] = [
+    {
+        id: 1,
+        name: 'girls',
+        coins: 0,
+        isHuman: false,
+        ship: {
+            x: 5,
+            y: 0,
         },
-        {
-            id: 2,
-            name: 'boys',
-            coins: 0,
-            isHuman: true,
-            ship: {
-                x: 5,
-                y: 10,
-            },
+    },
+    {
+        id: testTeamId,
+        name: 'boys',
+        coins: 0,
+        isHuman: true,
+        ship: {
+            x: 5,
+            y: 10,
         },
-    ],
-};
+    },
+];
 
 const testPirates: GamePirate[] = [
     {
         id: '100',
-        teamId: 1,
+        teamId: testTeamId,
         position: {
             level: 0,
             x: 2,
@@ -76,10 +72,9 @@ const getState = (pirates: GamePirate[]) => ({
     },
     stat: {
         turnNo: 1,
-        currentTeamId: 1,
+        currentTeamId: testTeamId,
         isGameOver: false,
         gameMessage: '',
-        teams: [],
     },
     teams: [],
     pirates: pirates,
@@ -95,9 +90,9 @@ describe('cell logic tests', () => {
     beforeAll(() => {
         defaultState = getState(testPirates);
         defaultState = reducer(defaultState, initMap(getMapData));
-        defaultState = reducer(defaultState, initTeams(stat2Data));
+        defaultState = reducer(defaultState, initTeams(twoTeamsData));
         defaultState = reducer(defaultState, initPiratePositions());
-        defaultState = reducer(defaultState, setCurrentHumanTeam(1));
+        defaultState = reducer(defaultState, setCurrentHumanTeam());
         defaultState = reducer(
             defaultState,
             highlightHumanMoves({

@@ -1,7 +1,8 @@
 import { useSelector } from 'react-redux';
-import { GamePirate, ReduxState } from '/redux/types';
-import PiratePhoto from '../map/piratePhoto';
+import { PiratePosition, ReduxState } from '/redux/types';
 import { girlsMap } from '/app/global';
+import { getPiratesIds } from '/redux/gameSlice';
+import MapPirate from './mapPirate';
 
 interface MapPiratesProps {
     mapSize: number;
@@ -9,7 +10,7 @@ interface MapPiratesProps {
 }
 
 const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
-    const pirates = useSelector<ReduxState, GamePirate[] | undefined>((state) => state.game.pirates);
+    const piratesIds = useSelector(getPiratesIds);
     const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
 
     const unitSize = cellSize - pirateSize;
@@ -18,7 +19,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
     const xAddSize = (mul_x_times - 1) * 5;
     const xUnitSize = cellSize - pirateSize / 2;
 
-    const getMarginTop = (girl: GamePirate): number => {
+    const getMarginTop = (girl: PiratePosition): number => {
         const position = girlsMap.GetPosition(girl);
         let levelsCount = position!.levelsCountInCell;
         let level = position!.level;
@@ -50,7 +51,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
         return 0;
     };
 
-    const getMarginLeft = (girl: GamePirate): number => {
+    const getMarginLeft = (girl: PiratePosition): number => {
         const position = girlsMap.GetPosition(girl);
         let levelsCount = position!.levelsCountInCell;
         let level = position!.level;
@@ -87,10 +88,11 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
 
     return (
         <>
-            {pirates &&
-                pirates.map((girl) => (
-                    <PiratePhoto
-                        pirate={girl}
+            {piratesIds &&
+                piratesIds.map((girlId) => (
+                    <MapPirate
+                        key={`girl_${girlId}`}
+                        id={girlId}
                         pirateSize={pirateSize}
                         getMarginTop={getMarginTop}
                         getMarginLeft={getMarginLeft}

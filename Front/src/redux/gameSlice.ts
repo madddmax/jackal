@@ -7,8 +7,9 @@ import {
     GamePirate,
     GamePlace,
     GameStartResponse,
-    GameStat,
     GameState,
+    GameStatistics,
+    GameTeam,
     LevelFeature,
     PirateChanges,
     PirateChoose,
@@ -20,6 +21,7 @@ import {
 import { debugLog, getAnotherRandomValue, getRandomValues, girlsMap } from '/app/global';
 import { Constants } from '/app/constants';
 import { ScreenSizes } from './gameSlice.types';
+import { memoize } from 'proxy-memoize';
 
 export const gameSlice = createSlice({
     name: 'game',
@@ -65,10 +67,9 @@ export const gameSlice = createSlice({
             state.lastMoves = [];
             state.highlight_x = 0;
             state.highlight_y = 0;
-            state.stat = action.payload.stats;
 
             gameSlice.caseReducers.initMap(state, initMap(action.payload.map));
-            gameSlice.caseReducers.initTeams(state, initTeams(action.payload.stats));
+            gameSlice.caseReducers.initTeams(state, initTeams(action.payload.teams));
             gameSlice.caseReducers.initPhotos(state);
             gameSlice.caseReducers.initSizes(
                 state,
@@ -100,13 +101,14 @@ export const gameSlice = createSlice({
             }
             state.fields = map;
         },
-        initTeams: (state, action: PayloadAction<GameStat>) => {
-            state.teams = action.payload.teams.map((it, idx, arr) => {
+        initTeams: (state, action: PayloadAction<GameTeam[]>) => {
+            state.teams = action.payload.map((it, idx, arr) => {
                 let grId = arr.length == 2 && idx == 1 ? 2 : idx;
                 return {
                     id: it.id,
                     activePirate: '',
                     backColor: Constants.teamColors[idx] ?? '',
+                    name: it.name,
                     isHuman: it.isHuman,
                     group:
                         Constants.groups.find((gr) => gr.id == state.userSettings.groups[grId]) || Constants.groups[0],
@@ -143,9 +145,10 @@ export const gameSlice = createSlice({
                 girlsMap.AddPosition(it, 1);
             });
         },
-        setCurrentHumanTeam: (state, action: PayloadAction<number>) => {
-            if (action.payload !== undefined && action.payload !== state.currentHumanTeamId) {
-                state.currentHumanTeamId = action.payload;
+        setCurrentHumanTeam: (state) => {
+            const currentTeam = gameSlice.getSelectors().getCurrentTeam(state);
+            if (currentTeam?.isHuman && currentTeam.id !== state.currentHumanTeamId) {
+                state.currentHumanTeamId = currentTeam.id;
             }
         },
         setPirateAutoChange: (state, action: PayloadAction<boolean>) => {
@@ -154,15 +157,15 @@ export const gameSlice = createSlice({
         chooseHumanPirate: (state, action: PayloadAction<PirateChoose>) => {
             const selectors = gameSlice.getSelectors();
             let pirate = selectors.getPirateById(state, action.payload.pirate)!;
-            let currentTeam = selectors.getCurrentHumanTeam(state)!;
-            let hasPirateChanging = currentTeam.activePirate !== pirate.id;
+            let currentPlayerTeam = selectors.getCurrentPlayerTeam(state)!;
+            let hasPirateChanging = currentPlayerTeam.activePirate !== pirate.id;
             if (hasPirateChanging) {
-                const prevPirate = selectors.getPirateById(state, currentTeam.activePirate);
+                const prevPirate = selectors.getPirateById(state, currentPlayerTeam.activePirate);
                 if (prevPirate) prevPirate.isActive = false;
                 const nextPirate = selectors.getPirateById(state, pirate.id);
                 if (nextPirate) nextPirate.isActive = true;
 
-                currentTeam.activePirate = pirate.id;
+                currentPlayerTeam.activePirate = pirate.id;
             }
 
             let hasCoinChanging = action.payload.withCoinAction && !hasPirateChanging && pirate.withCoin !== undefined;
@@ -181,6 +184,8 @@ export const gameSlice = createSlice({
         highlightHumanMoves: (state, action: PayloadAction<PirateMoves>) => {
             const selectors = gameSlice.getSelectors();
             let currentTeam = selectors.getCurrentTeam(state)!;
+            if (!currentTeam?.isHuman) return;
+
             // undraw previous moves
             state.lastMoves.forEach((move) => {
                 const cell = state.fields[move.to.y][move.to.x];
@@ -399,8 +404,12 @@ export const gameSlice = createSlice({
                 ? levelPirates?.find((it) => !it.withCoin)?.id
                 : undefined;
         },
-        applyStat: (state, action: PayloadAction<GameStat>) => {
-            state.stat = action.payload;
+        applyStat: (state, action: PayloadAction<GameStatistics>) => {
+            state.stat = action.payload.stats;
+            state.teamScores = action.payload.teamScores;
+
+            // вызываем после присваивания stat, т.к. именно от туда приходит stat.currentTeamId
+            gameSlice.caseReducers.setCurrentHumanTeam(state);
         },
         setTilesPackNames: (state, action: PayloadAction<string[]>) => {
             state.tilesPackNames = action.payload;
@@ -411,11 +420,12 @@ export const gameSlice = createSlice({
     },
     selectors: {
         getTeamById: (state, teamId: number): TeamState | undefined => state.teams.find((it) => it.id == teamId),
-        getCurrentHumanTeam: (state): TeamState | undefined =>
+        getCurrentPlayerTeam: (state): TeamState | undefined =>
             state.teams.find((it) => it.id == state.currentHumanTeamId),
         getCurrentTeam: (state): TeamState | undefined => state.teams.find((it) => it.id == state.stat?.currentTeamId),
+        getPiratesIds: memoize((state): string[] | undefined => state.pirates?.map((it) => it.id)),
         getPirateById: (state, pirateId: string): GamePirate | undefined =>
-            state.pirates!.find((it) => it.id === pirateId),
+            state.pirates?.find((it) => it.id === pirateId),
         getPirateCell: (state, pirateId: string): GamePlace | undefined => {
             let gamePirate = gameSlice.getSelectors().getPirateById(state, pirateId);
             if (!gamePirate) return undefined;
@@ -453,6 +463,6 @@ export const {
     setMapInfo,
 } = gameSlice.actions;
 
-export const { getCurrentTeam, getCurrentHumanTeam } = gameSlice.selectors;
+export const { getCurrentTeam, getCurrentPlayerTeam, getPiratesIds, getPirateById } = gameSlice.selectors;
 
 export default gameSlice.reducer;

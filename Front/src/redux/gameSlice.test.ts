@@ -12,89 +12,77 @@ import reducer, {
     applyChanges,
 } from './gameSlice';
 import { getMapData } from '/app/mapDataForTests';
-import { GamePirate, GameStat, GameState, PiratePosition } from './types';
+import { GamePirate, GameState, GameTeam, PiratePosition } from './types';
 import { Constants } from '/app/constants';
 import { girlsMap } from '/app/global';
 
 const testTeamId = 12;
 
-const stat2Data: GameStat = {
-    turnNo: 1,
-    currentTeamId: 5,
-    isGameOver: false,
-    gameMessage: 'пиратская песня',
-    teams: [
-        {
-            id: 5,
-            name: 'girls',
-            coins: 0,
-            isHuman: false,
-            ship: {
-                x: 5,
-                y: 0,
-            },
+const twoTeamsData: GameTeam[] = [
+    {
+        id: 5,
+        name: 'girls',
+        coins: 0,
+        isHuman: false,
+        ship: {
+            x: 5,
+            y: 0,
         },
-        {
-            id: testTeamId,
-            name: 'boys',
-            isHuman: true,
-            coins: 0,
-            ship: {
-                x: 5,
-                y: 10,
-            },
+    },
+    {
+        id: testTeamId,
+        name: 'boys',
+        isHuman: true,
+        coins: 0,
+        ship: {
+            x: 5,
+            y: 10,
         },
-    ],
-};
+    },
+];
 
-const stat4Data: GameStat = {
-    turnNo: 1,
-    currentTeamId: 5,
-    isGameOver: false,
-    gameMessage: 'пиратская песня',
-    teams: [
-        {
-            id: 5,
-            name: 'girls',
-            isHuman: false,
-            coins: 0,
-            ship: {
-                x: 5,
-                y: 0,
-            },
+const fourTeamsData: GameTeam[] = [
+    {
+        id: 5,
+        name: 'girls',
+        isHuman: false,
+        coins: 0,
+        ship: {
+            x: 5,
+            y: 0,
         },
-        {
-            id: testTeamId,
-            name: 'boys',
-            isHuman: true,
-            coins: 0,
-            ship: {
-                x: 0,
-                y: 5,
-            },
+    },
+    {
+        id: testTeamId,
+        name: 'boys',
+        isHuman: true,
+        coins: 0,
+        ship: {
+            x: 0,
+            y: 5,
         },
-        {
-            id: 7,
-            name: 'cats',
-            isHuman: false,
-            coins: 0,
-            ship: {
-                x: 5,
-                y: 10,
-            },
+    },
+    {
+        id: 7,
+        name: 'cats',
+        isHuman: false,
+        coins: 0,
+        ship: {
+            x: 5,
+            y: 10,
         },
-        {
-            id: 8,
-            name: 'dogs',
-            isHuman: false,
-            coins: 0,
-            ship: {
-                x: 10,
-                y: 5,
-            },
+    },
+    {
+        id: 8,
+        name: 'dogs',
+        isHuman: false,
+        coins: 0,
+        ship: {
+            x: 10,
+            y: 5,
         },
-    ],
-};
+    },
+];
 
 const getPirates = (data: PiratePosition[]): GamePirate[] => {
     return data.map((it) => ({
@@ -162,7 +150,6 @@ const getState = (pirates: GamePirate[]): GameState => ({
         currentTeamId: testTeamId,
         isGameOver: false,
         gameMessage: '',
-        teams: [],
     },
     teams: [],
     pirates: pirates,
@@ -189,21 +176,21 @@ describe('redux init tests', () => {
     });
 
     test('Инициализируем команды для игры 1х1', () => {
-        const result = reducer(defaultState, initTeams(stat2Data));
+        const result = reducer(defaultState, initTeams(twoTeamsData));
         expect(result.teams).toHaveLength(2);
         expect(result.teams[0].group.id).toEqual(Constants.groupIds.girls);
         expect(result.teams[1].group.id).toEqual(Constants.groupIds.orcs);
     });
 
     test('Инициализируем команды для игры 2х2', () => {
-        const result = reducer(defaultState, initTeams(stat4Data));
+        const result = reducer(defaultState, initTeams(fourTeamsData));
         expect(result.teams).toHaveLength(4);
         expect(result.teams[0].group.id).toEqual(Constants.groupIds.girls);
         expect(result.teams[1].group.id).toEqual(Constants.groupIds.redalert);
     });
 
     test('Определяем фотки пираток', () => {
-        const currentState = reducer(defaultState, initTeams(stat2Data));
+        const currentState = reducer(defaultState, initTeams(twoTeamsData));
         const result = reducer(currentState, initPhotos());
         expect(result.pirates).not.toBeUndefined();
         expect(result.pirates).not.toBeNull();
@@ -254,7 +241,7 @@ describe('redux init tests', () => {
 
     test('Инициализируем пираток на карте и словарик с позициями пираток', () => {
         let currentState = reducer(defaultState, initMap(getMapData));
-        currentState = reducer(currentState, initTeams(stat2Data));
+        currentState = reducer(currentState, initTeams(twoTeamsData));
         const result = reducer(
             currentState,
             applyPirateChanges({
@@ -272,9 +259,10 @@ describe('redux init tests', () => {
     });
 
     test('Устанавливаем текущую команду', () => {
-        expect(reducer(defaultState, setCurrentHumanTeam(2))).toEqual(
+        const result = reducer(defaultState, initTeams(twoTeamsData));
+        expect(reducer(result, setCurrentHumanTeam())).toEqual(
             expect.objectContaining({
-                currentHumanTeamId: 2,
+                currentHumanTeamId: testTeamId,
             }),
         );
     });
@@ -292,7 +280,7 @@ describe('redux basic tests', () => {
 
         previousState = getState(pirates);
         previousState = reducer(previousState, initMap(getMapData));
-        previousState = reducer(previousState, initTeams(stat2Data));
+        previousState = reducer(previousState, initTeams(twoTeamsData));
         previousState = reducer(
             previousState,
             applyPirateChanges({
@@ -300,7 +288,7 @@ describe('redux basic tests', () => {
                 moves: [],
             }),
         );
-        previousState = reducer(previousState, setCurrentHumanTeam(testTeamId));
+        previousState = reducer(previousState, setCurrentHumanTeam());
     });
 
     test('Автовыбор пиратки, для которой возможны ходы, и подсвечивание её ходов', () => {
@@ -378,6 +366,7 @@ describe('redux basic tests', () => {
                 extension: '.jpg',
                 photoMaxId: 6,
             },
+            name: 'boys',
             id: testTeamId,
             isHuman: true,
         });
@@ -430,7 +419,7 @@ describe('redux money actions tests', () => {
 
         previousState = getState(pirates);
         previousState = reducer(previousState, initMap(getMapData));
-        previousState = reducer(previousState, initTeams(stat2Data));
+        previousState = reducer(previousState, initTeams(twoTeamsData));
         previousState = reducer(
             previousState,
             applyPirateChanges({
@@ -467,7 +456,7 @@ describe('redux money actions tests', () => {
     });
 
     test('Кладём монету', () => {
-        let currentState = reducer(previousState, setCurrentHumanTeam(testTeamId));
+        let currentState = reducer(previousState, setCurrentHumanTeam());
         currentState = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
         expect(currentState.highlight_x).toEqual(2);
         expect(currentState.highlight_y).toEqual(4);
@@ -504,7 +493,7 @@ describe('redux logic tests', () => {
 
         previousState = getState(pirates);
         previousState = reducer(previousState, initMap(getMapData));
-        previousState = reducer(previousState, initTeams(stat2Data));
+        previousState = reducer(previousState, initTeams(twoTeamsData));
         previousState = reducer(
             previousState,
             applyPirateChanges({
@@ -512,7 +501,7 @@ describe('redux logic tests', () => {
                 moves: [],
             }),
         );
-        previousState = reducer(previousState, setCurrentHumanTeam(testTeamId));
+        previousState = reducer(previousState, setCurrentHumanTeam());
         previousState = reducer(previousState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
     });
 
