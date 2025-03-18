@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { debugLog } from '/app/global';
 
 const useClientMethod = (
-    useSockets: boolean,
+    enableSockets: boolean,
     hubConnection: HubConnection | undefined,
     methodName: string,
     method: (...args: any[]) => void,
@@ -15,7 +15,7 @@ const useClientMethod = (
             return;
         }
 
-        if (useSockets) {
+        if (enableSockets) {
             hubConnection.on(methodName, method);
 
             return () => {
@@ -24,7 +24,7 @@ const useClientMethod = (
         } else {
             hubConnection.off(methodName, method);
         }
-    }, [hubConnection, useSockets, method, methodName]);
+    }, [hubConnection, enableSockets, method, methodName]);
 };
 
 export default useClientMethod;

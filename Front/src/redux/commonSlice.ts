@@ -4,12 +4,12 @@ import { CommonState, MessageInfo } from './commonSlice.types';
 export const commonSlice = createSlice({
     name: 'common',
     initialState: {
-        useSockets: true,
+        enableSockets: true,
         messageQueue: [],
     } satisfies CommonState as CommonState,
     reducers: {
         activateSockets: (state, action: PayloadAction<boolean>) => {
-            state.useSockets = action.payload;
+            state.enableSockets = action.payload;
         },
         showMessage: (state, action: PayloadAction<MessageInfo>) => {
             if (state.message) {

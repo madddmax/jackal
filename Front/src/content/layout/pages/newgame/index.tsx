@@ -11,7 +11,7 @@ import { debugLog, hubConnection, uuidGen } from '/app/global';
 import { ReduxState, StorageState } from '/redux/types';
 import Players from '/content/components/players';
 import { PlayersInfo } from '/content/components/types';
-import { GamePlayer, GameSettings, GameStartRequest } from '/redux/gameSlice.types';
+import { GamePlayer, GameSettings } from '/redux/gameSlice.types';
 import { Constants } from '/app/constants';
 
 const getPlayers = (gamers: string[], mode: number): GamePlayer[] => {
@@ -35,7 +35,6 @@ function Newgame() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const useSockets = useSelector<ReduxState, boolean>((state) => state.common.useSockets);
     const tilesPackNames = useSelector<ReduxState, string[]>((state) => state.game.tilesPackNames);
     const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
     const mapInfo = useSelector<ReduxState, string[] | undefined>((state) => state.game.mapInfo);
@@ -73,40 +72,23 @@ function Newgame() {
         navigate('/');
         saveToLocalStorage(isStoredMap);
 
-        if (useSockets) {
-            hubConnection
-                .invoke('start', {
-                    gameName: uuidGen(),
-                    settings: {
-                        players: getPlayers(players.members, players.mode),
-                        mapId: randNumber[0],
-                        mapSize,
-                        tilesPackName,
-                        gameMode: players.mode == 8
+        hubConnection
+            .invoke('start', {
+                gameName: uuidGen(),
+                settings: {
+                    players: getPlayers(players.members, players.mode),
+                    mapId: randNumber[0],
+                    mapSize,
+                    tilesPackName,
+                    gameMode:
+                        players.mode == 8
                             ? Constants.gameModeTypes.TwoPlayersInTeam
                             : Constants.gameModeTypes.FreeForAll,
-                    },
-                })
-                .catch((err) => {
-                    debugLog(err);
-                });
-        } else {
-            dispatch({
-                type: sagaActions.GAME_START,
-                payload: {
-                    gameName: uuidGen(),
-                    settings: {
-                        players: getPlayers(players.members, players.mode),
-                        mapId: randNumber[0],
-                        mapSize,
-                        tilesPackName,
-                        gameMode: players.mode == 8
-                            ? Constants.gameModeTypes.TwoPlayersInTeam
-                            : Constants.gameModeTypes.FreeForAll,
-                    },
-                } as GameStartRequest,
+                },
+            })
+            .catch((err) => {
+                debugLog(err);
             });
-        }
     };
 
     const changeMapId = () => {
@@ -130,9 +112,10 @@ function Newgame() {
                     players: getPlayers(players.members, players.mode),
                     mapId: randNumber[0],
                     mapSize,
-                    gameMode: players.mode == 8
-                        ? Constants.gameModeTypes.TwoPlayersInTeam
-                        : Constants.gameModeTypes.FreeForAll,
+                    gameMode:
+                        players.mode == 8
+                            ? Constants.gameModeTypes.TwoPlayersInTeam
+                            : Constants.gameModeTypes.FreeForAll,
                 } as GameSettings,
             },
         });

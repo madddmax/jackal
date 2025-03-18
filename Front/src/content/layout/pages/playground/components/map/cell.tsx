@@ -1,6 +1,5 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { sagaActions } from '/sagas/constants';
 import { AvailableMove, FieldState, GameState, ReduxState } from '/redux/types';
 import store from '/app/store';
 import cn from 'classnames';
@@ -24,9 +23,6 @@ interface CellProps {
 }
 
 function Cell({ row, col, tooltipRef }: CellProps) {
-    const dispatch = useDispatch();
-
-    const useSockets = useSelector<ReduxState, boolean>((state) => state.common.useSockets);
     const field = useSelector<ReduxState, FieldState>((state) => state.game.fields[row][col]);
     const cellSize = useSelector<ReduxState, number>((state) => state.game.cellSize);
     const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
@@ -35,22 +31,11 @@ function Cell({ row, col, tooltipRef }: CellProps) {
 
     const onClick = () => {
         const makeMove = (move: AvailableMove) => {
-            if (useSockets) {
-                hubConnection.send('Move', {
-                    gameName: gamename,
-                    turnNum: move.num,
-                    pirateId: move.pirateId,
-                });
-            } else {
-                dispatch({
-                    type: sagaActions.GAME_TURN,
-                    payload: {
-                        gameName: gamename,
-                        turnNum: move.num,
-                        pirateId: move.pirateId,
-                    },
-                });
-            }
+            hubConnection.send('Move', {
+                gameName: gamename,
+                turnNum: move.num,
+                pirateId: move.pirateId,
+            });
         };
         const tooltipOnClick = (move: AvailableMove) => () => {
             makeMove(move);

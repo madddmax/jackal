@@ -17,9 +17,9 @@ import { debugLog, hubConnection } from '/app/global';
 
 const Layout = () => {
     const dispatch = useDispatch();
-    const useSockets = useSelector<ReduxState, boolean>((state) => state.common.useSockets);
+    const enableSockets = useSelector<ReduxState, boolean>((state) => state.common.enableSockets);
 
-    useClientMethod(useSockets, hubConnection, 'Notify', (text) => {
+    useClientMethod(enableSockets, hubConnection, 'Notify', (text) => {
         dispatch(
             showMessage({
                 isError: false,
@@ -28,15 +28,15 @@ const Layout = () => {
             }),
         );
     });
-    useClientMethod(useSockets, hubConnection, 'GetStartData', (data) => {
+    useClientMethod(enableSockets, hubConnection, 'GetStartData', (data) => {
         debugLog(data);
         dispatch({ type: sagaActions.GAME_START_APPLY_DATA, payload: data });
     });
-    useClientMethod(useSockets, hubConnection, 'GetMoveChanges', (data) => {
+    useClientMethod(enableSockets, hubConnection, 'GetMoveChanges', (data) => {
         debugLog(data);
         dispatch({ type: sagaActions.GAME_TURN_APPLY_DATA, payload: data });
     });
-    useHub(useSockets, hubConnection);
+    useHub(enableSockets, hubConnection);
 
     useEffect(() => {
         let myStateStr = localStorage.getItem('state');
