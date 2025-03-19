@@ -74,7 +74,6 @@ public class DrawService : IDrawService
     public GameStatistics GetStatistics(Game game) =>
         new()
         {
-            Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
             TurnNo = game.TurnNo,
             IsGameOver = game.IsGameOver,
             GameMessage = game.GameMessage,
