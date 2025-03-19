@@ -63,6 +63,7 @@ public class GameService : IGameService
             pirateChanges.Add(new PirateChange(pirate));
         }
 
+        var isHuman = game.CurrentPlayer is WebHumanPlayer;
         return new StartGameResult
         {
             GameName = request.GameName,
@@ -71,8 +72,10 @@ public class GameService : IGameService
             Map = map,
             MapId = gameSettings.MapId.Value,
             Statistics = _drawService.GetStatistics(game),
-            Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
-            Moves = _drawService.GetAvailableMoves(game)
+            Teams = game.Board.Teams.Select(team => new DrawTeam(team, isHuman)).ToList(),
+            Moves = isHuman
+                ? _drawService.GetAvailableMoves(game)
+                : []
         };
     }
     
@@ -91,7 +94,7 @@ public class GameService : IGameService
                 PirateChanges = [],
                 Changes = [],
                 Statistics = _drawService.GetStatistics(game),
-                Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
+                TeamScores = game.Board.Teams.Select(team => new TeamScore(team)).ToList(),
                 Moves = []
             };
         }
@@ -117,8 +120,10 @@ public class GameService : IGameService
             PirateChanges = _drawService.GetPirateChanges(game.Board, prevBoard),
             Changes = _drawService.GetTileChanges(game.Board, prevBoard),
             Statistics = _drawService.GetStatistics(game),
-            Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
-            Moves = _drawService.GetAvailableMoves(game)
+            TeamScores = game.Board.Teams.Select(team => new TeamScore(team)).ToList(),
+            Moves = game.CurrentPlayer is WebHumanPlayer 
+                ? _drawService.GetAvailableMoves(game) 
+                : []
         };
     }
 }

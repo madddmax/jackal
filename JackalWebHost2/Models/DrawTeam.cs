@@ -2,16 +2,13 @@
 
 namespace JackalWebHost2.Models;
 
-public class DrawTeam(Team team)
+public class DrawTeam(Team team, bool isHuman)
 {
-    public int Id = team.Id;
+    public readonly int Id = team.Id;
     
-    public string Name = team.Name;
+    public readonly string Name = team.Name;
     
-    public bool IsHuman = team.Name == "WebHumanPlayer";
-    
-    [Obsolete("Брать монеты надо из TeamScore")]
-    public int Coins = team.Coins;
+    public readonly bool IsHuman = isHuman;
     
     public DrawPosition Ship = new(team.ShipPosition);
 }

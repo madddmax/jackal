@@ -55,9 +55,8 @@ public class GameHub : Hub
             Teams = result.Teams,
             Moves = result.Moves
         });
-
-        // todo - подумать про пересчет ходов компа в ядре
-        if (!result.Statistics.IsGameOver && (!result.Teams[result.Statistics.CurrentTeamId].IsHuman || result.Moves.Count == 0))
+        
+        if (!result.Statistics.IsGameOver && result.Moves.Count == 0)
         {
             await Move(new TurnGameRequest
             {
@@ -83,12 +82,11 @@ public class GameHub : Hub
             PirateChanges = result.PirateChanges,
             Changes = result.Changes,
             Stats = result.Statistics,
-            TeamScores = result.Teams.Select(t => new TeamScore(t)).ToList(),
+            TeamScores = result.TeamScores,
             Moves = result.Moves
         });
-
-        // todo - подумать про пересчет ходов компа в ядре, тогда можно сразу отдавать TeamScore вместо DrawTeam
-        if (!result.Statistics.IsGameOver && (!result.Teams[result.Statistics.CurrentTeamId].IsHuman || result.Moves.Count == 0))
+        
+        if (!result.Statistics.IsGameOver && result.Moves.Count == 0)
         {
             await Move(new TurnGameRequest
             {
