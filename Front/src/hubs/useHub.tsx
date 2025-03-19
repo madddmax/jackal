@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { showMessage } from '/redux/commonSlice';
 import { debugLog } from '/app/global';
 
-const useHub = (useSockets: boolean, hubConnection?: HubConnection) => {
+const useHub = (enableSockets: boolean, hubConnection?: HubConnection) => {
     const [hubConnectionState, setHubConnectionState] = useState<HubConnectionState>(
         hubConnection?.state ?? HubConnectionState.Disconnected,
     );
@@ -17,7 +17,7 @@ const useHub = (useSockets: boolean, hubConnection?: HubConnection) => {
             setHubConnectionState(HubConnectionState.Disconnected);
             return;
         }
-        if (!useSockets) {
+        if (!enableSockets) {
             hubConnection.stop();
             return;
         }
@@ -42,7 +42,7 @@ const useHub = (useSockets: boolean, hubConnection?: HubConnection) => {
         return () => {
             hubConnection.stop();
         };
-    }, [hubConnection, useSockets]);
+    }, [hubConnection, enableSockets]);
 
     return { hubConnectionState };
 };

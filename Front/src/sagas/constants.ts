@@ -7,9 +7,7 @@ import { setAuth } from '/redux/authSlice';
 import config from '/app/config';
 
 export const sagaActions = {
-    GAME_START: 'GAME_START',
     GAME_START_APPLY_DATA: 'GAME_START_APPLY_DATA',
-    GAME_TURN: 'GAME_TURN',
     GAME_TURN_APPLY_DATA: 'GAME_TURN_APPLY_DATA',
 
     START_ANIMATE: 'START_ANIMATE',

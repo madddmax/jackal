@@ -1,8 +1,3 @@
-export interface GameStartRequest {
-    gameName: string;
-    settings: GameSettings;
-}
-
 export interface GameSettings {
     players?: GamePlayer[];
     mapId?: number;

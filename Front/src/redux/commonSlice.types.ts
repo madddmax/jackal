@@ -1,5 +1,5 @@
 export interface CommonState {
-    useSockets: boolean;
+    enableSockets: boolean;
     message?: MessageInfo;
     messageQueue: MessageInfo[];
 }
