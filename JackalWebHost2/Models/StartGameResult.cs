@@ -1,5 +1,4 @@
-﻿
-using Jackal.Core;
+﻿using Jackal.Core;
 
 namespace JackalWebHost2.Models;
 

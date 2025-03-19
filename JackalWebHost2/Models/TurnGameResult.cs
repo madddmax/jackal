@@ -8,7 +8,7 @@ public class TurnGameResult
     
     public GameStatistics Statistics { get; init; }
     
-    public List<DrawTeam> Teams { get; set; }
+    public List<TeamScore> TeamScores { get; set; }
     
     public List<DrawMove> Moves { get; init; }
 }
