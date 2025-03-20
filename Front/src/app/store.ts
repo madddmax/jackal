@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 
-import authReducer from '../redux/authSlice';
-import commonReducer from '../redux/commonSlice';
-import gameReducer from '../redux/gameSlice';
-import lobbyReducer from '../redux/lobbySlice';
-import saga from '../sagas';
+import authReducer from '../auth/redux/authSlice';
+import commonReducer from '../common/redux/commonSlice';
+import gameReducer from '../game/redux/gameSlice';
+import lobbyReducer from '../netgame/redux/lobbySlice';
+import saga from './sagas';
 
 let sagaMiddleware = createSagaMiddleware();
 
