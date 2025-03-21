@@ -62,8 +62,7 @@ public class GameService : IGameService
         {
             pirateChanges.Add(new PirateChange(pirate));
         }
-
-        var isHuman = game.CurrentPlayer is WebHumanPlayer;
+        
         return new StartGameResult
         {
             GameName = request.GameName,
@@ -72,8 +71,8 @@ public class GameService : IGameService
             Map = map,
             MapId = gameSettings.MapId.Value,
             Statistics = _drawService.GetStatistics(game),
-            Teams = game.Board.Teams.Select(team => new DrawTeam(team, isHuman)).ToList(),
-            Moves = isHuman
+            Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
+            Moves = game.CurrentPlayer is WebHumanPlayer
                 ? _drawService.GetAvailableMoves(game)
                 : []
         };
