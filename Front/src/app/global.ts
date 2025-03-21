@@ -1,7 +1,7 @@
 import { NavigateFunction } from 'react-router-dom';
 import config from './config';
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
-import { GameTurnResponse, PiratePosition } from '/redux/types';
+import { GameTurnResponse, PiratePosition } from '../common/redux.types';
 
 export const uuidGen = () => {
     return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>

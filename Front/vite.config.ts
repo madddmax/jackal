@@ -18,7 +18,10 @@ export default defineConfig(({ mode }) => {
                 '/content': fileURLToPath(new URL('./src/content', import.meta.url)),
                 '/hubs': fileURLToPath(new URL('./src/hubs', import.meta.url)),
                 '/redux': fileURLToPath(new URL('./src/redux', import.meta.url)),
-                '/sagas': fileURLToPath(new URL('./src/sagas', import.meta.url)),
+                '/auth': fileURLToPath(new URL('./src/auth', import.meta.url)),
+                '/common': fileURLToPath(new URL('./src/common', import.meta.url)),
+                '/game': fileURLToPath(new URL('./src/game', import.meta.url)),
+                '/netgame': fileURLToPath(new URL('./src/netgame', import.meta.url)),
             },
         },
     };

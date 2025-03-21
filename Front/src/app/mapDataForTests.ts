@@ -1,4 +1,4 @@
-import { GameMap } from '../redux/types';
+import { GameMap } from '../common/redux.types';
 
 export const getMapData: GameMap = {
     height: 5,
