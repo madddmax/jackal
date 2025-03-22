@@ -24,6 +24,11 @@ public class UserRepositoryInMemory : IUserRepository
             : null;
     }
 
+    public async Task<User?> GetUser(string login, CancellationToken token)
+    {
+        return null;
+    }
+
     public Task<User> CreateUser(string login, CancellationToken token)
     {
         var user = new User

@@ -1,6 +1,7 @@
 using JackalWebHost2.Data.Entities;
 using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace JackalWebHost2.Data.Repositories;
 
@@ -9,14 +10,13 @@ public class UserRepository(JackalDbContext jackalDbContext) : IUserRepository
     public async Task<User?> GetUser(long id, CancellationToken token)
     {
         var userEntity = await jackalDbContext.Users.FindAsync(new object [id], token);
-        if (userEntity == null)
-            return null;
+        return userEntity != null ? ToUser(userEntity) : null;
+    }
 
-        return new User
-        {
-            Id = userEntity.Id,
-            Login = userEntity.Login
-        };
+    public async Task<User?> GetUser(string login, CancellationToken token)
+    {
+        var userEntity = await jackalDbContext.Users.FirstOrDefaultAsync(u => u.Login == login, token);
+        return userEntity != null ? ToUser(userEntity) : null;
     }
 
     public async Task<User> CreateUser(string login, CancellationToken token)
@@ -30,10 +30,13 @@ public class UserRepository(JackalDbContext jackalDbContext) : IUserRepository
         await jackalDbContext.Users.AddAsync(userEntity, token);
         await jackalDbContext.SaveChangesAsync(token);
 
-        return new User
-        {
-            Id = userEntity.Id,
-            Login = userEntity.Login
-        };
+        return ToUser(userEntity);
     }
+
+    private static User ToUser(UserEntity entity) =>
+        new()
+        {
+            Id = entity.Id,
+            Login = entity.Login
+        };
 }

@@ -4,15 +4,8 @@ using JackalWebHost2.Data.Interfaces;
 
 namespace JackalWebHost2.Data.Repositories;
 
-public class GameRepository : IGameRepository
+public class GameRepository(JackalDbContext jackalDbContext) : IGameRepository
 {
-    private readonly JackalDbContext _jackalDbContext;
-    
-    public GameRepository(JackalDbContext jackalDbContext)
-    {
-        _jackalDbContext = jackalDbContext;
-    }
-
     public async Task CreateGame(string gameName, Game game)
     {
         var gameEntity = new GameEntity
@@ -21,7 +14,7 @@ public class GameRepository : IGameRepository
             Created = DateTime.UtcNow
         };
 
-        await _jackalDbContext.Games.AddAsync(gameEntity);
-        await _jackalDbContext.SaveChangesAsync();
+        await jackalDbContext.Games.AddAsync(gameEntity);
+        await jackalDbContext.SaveChangesAsync();
     }
 }

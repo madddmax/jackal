@@ -32,7 +32,9 @@ public class AuthController : Controller
             throw new UserIsAlreadyLoggedInException();
         }
 
-        var user = await _userRepository.CreateUser(request.Login, token);
+        var user = await _userRepository.GetUser(request.Login, token)
+                   ?? await _userRepository.CreateUser(request.Login, token);
+        
         await FastAuthCookieHelper.SignInUser(HttpContext, user);
 
         return new RegisterResponse

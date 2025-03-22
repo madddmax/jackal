@@ -10,6 +10,11 @@ public interface IUserRepository
     Task<User?> GetUser(long id, CancellationToken token);
     
     /// <summary>
+    /// Получить пользователя по логину
+    /// </summary>
+    Task<User?> GetUser(string login, CancellationToken token);
+    
+    /// <summary>
     /// Создать нового пользователя
     /// </summary>
     Task<User> CreateUser(string login, CancellationToken token);
