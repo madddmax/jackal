@@ -4,12 +4,12 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace JackalWebHost2.Data.Repositories;
 
-public class InMemoryLobbyRepository : ILobbyRepository
+public class LobbyRepositoryInMemory : ILobbyRepository
 {
     private readonly IMemoryCache _memoryCache;
     private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
-    public InMemoryLobbyRepository(IMemoryCache memoryCache)
+    public LobbyRepositoryInMemory(IMemoryCache memoryCache)
     {
         _memoryCache = memoryCache;
         _cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(1));

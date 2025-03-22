@@ -7,7 +7,7 @@ public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {
     public RegisterRequestValidator()
     {
-        RuleFor(x => x.UserName)
+        RuleFor(x => x.Login)
             .NotEmpty()
             .MaximumLength(30);
     }

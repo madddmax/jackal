@@ -1,16 +1,17 @@
-﻿using JackalWebHost2.Models;
+﻿using JackalWebHost2.Data.Interfaces;
+using JackalWebHost2.Models;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace JackalWebHost2.Services;
+namespace JackalWebHost2.Data.Repositories;
 
-public class FastUserService : IFastUserService
+public class UserRepositoryInMemory : IUserRepository
 {
     private static long Id;
     
     private readonly IMemoryCache _memoryCache;
     private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
-    public FastUserService(IMemoryCache memoryCache)
+    public UserRepositoryInMemory(IMemoryCache memoryCache)
     {
         _memoryCache = memoryCache;
         _cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
@@ -23,12 +24,17 @@ public class FastUserService : IFastUserService
             : null;
     }
 
-    public Task<User> CreateUser(string userName, CancellationToken token)
+    public async Task<User?> GetUser(string login, CancellationToken token)
+    {
+        return null;
+    }
+
+    public Task<User> CreateUser(string login, CancellationToken token)
     {
         var user = new User
         {
             Id = Interlocked.Increment(ref Id),
-            Name = userName
+            Login = login
         };
 
         _memoryCache.Set(GetKey(user.Id), user, _cacheEntryOptions);

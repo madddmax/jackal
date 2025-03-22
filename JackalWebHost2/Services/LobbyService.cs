@@ -37,7 +37,7 @@ public class LobbyService : ILobbyService
                 [userId] = new()
                 {
                     UserId = userId,
-                    UserName = user.Name,
+                    UserName = user.Login,
                     TeamId = null,
                     LastSeen = _timeProvider.GetUtcNow(),
                     JoinedAt = _timeProvider.GetUtcNow()
@@ -82,7 +82,7 @@ public class LobbyService : ILobbyService
         var lobbyMember = new LobbyMember
         {
             UserId = userId,
-            UserName = user.Name,
+            UserName = user.Login,
             TeamId = null,
             LastSeen = _timeProvider.GetUtcNow(),
             JoinedAt = _timeProvider.GetUtcNow()
