@@ -1,8 +1,8 @@
 ﻿using JackalWebHost2.Models;
 
-namespace JackalWebHost2.Services;
+namespace JackalWebHost2.Data.Interfaces;
 
-public interface IFastUserService
+public interface IUserRepository
 {
     /// <summary>
     /// Получить пользователя по идентификатору

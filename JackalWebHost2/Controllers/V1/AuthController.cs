@@ -1,7 +1,7 @@
 ﻿using JackalWebHost2.Controllers.Models;
+using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Exceptions;
 using JackalWebHost2.Infrastructure.Auth;
-using JackalWebHost2.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,12 +11,12 @@ namespace JackalWebHost2.Controllers.V1;
 [Route("/api/v1/auth")]
 public class AuthController : Controller
 {
-    private readonly IFastUserService _fastUserService;
+    private readonly IUserRepository _userRepository;
     private readonly IUserAuthProvider _userAuthProvider;
 
-    public AuthController(IFastUserService fastUserService, IUserAuthProvider userAuthProvider)
+    public AuthController(IUserRepository userRepository, IUserAuthProvider userAuthProvider)
     {
-        _fastUserService = fastUserService;
+        _userRepository = userRepository;
         _userAuthProvider = userAuthProvider;
     }
     
@@ -32,7 +32,7 @@ public class AuthController : Controller
             throw new UserIsAlreadyLoggedInException();
         }
 
-        var user = await _fastUserService.CreateUser(request.Login, token);
+        var user = await _userRepository.CreateUser(request.Login, token);
         await FastAuthCookieHelper.SignInUser(HttpContext, user);
 
         return new RegisterResponse

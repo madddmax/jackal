@@ -1,16 +1,17 @@
-﻿using JackalWebHost2.Models;
+﻿using JackalWebHost2.Data.Interfaces;
+using JackalWebHost2.Models;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace JackalWebHost2.Services;
+namespace JackalWebHost2.Data.Repositories;
 
-public class FastUserService : IFastUserService
+public class UserRepositoryInMemory : IUserRepository
 {
     private static long Id;
     
     private readonly IMemoryCache _memoryCache;
     private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
-    public FastUserService(IMemoryCache memoryCache)
+    public UserRepositoryInMemory(IMemoryCache memoryCache)
     {
         _memoryCache = memoryCache;
         _cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));

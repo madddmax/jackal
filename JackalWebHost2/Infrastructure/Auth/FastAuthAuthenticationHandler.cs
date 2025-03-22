@@ -1,5 +1,5 @@
 ﻿using System.Text.Encodings.Web;
-using JackalWebHost2.Services;
+using JackalWebHost2.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
@@ -9,18 +9,18 @@ namespace JackalWebHost2.Infrastructure.Auth;
 public class FastAuthAuthenticationHandler : CookieAuthenticationHandler
 {
     private readonly IUserAuthProvider _userAuthProvider;
-    private readonly IFastUserService _fastUserService;
+    private readonly IUserRepository _userRepository;
 
     public FastAuthAuthenticationHandler(
         IOptionsMonitor<CookieAuthenticationOptions> options, 
         ILoggerFactory logger, 
         UrlEncoder encoder, 
         IUserAuthProvider userAuthProvider, 
-        IFastUserService fastUserService) : 
+        IUserRepository userRepository) : 
         base(options, logger, encoder)
     {
         _userAuthProvider = userAuthProvider;
-        _fastUserService = fastUserService;
+        _userRepository = userRepository;
     }
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -58,7 +58,7 @@ public class FastAuthAuthenticationHandler : CookieAuthenticationHandler
             return false;
         }
 
-        var user = await _fastUserService.GetUser(userId, CancellationToken.None);
+        var user = await _userRepository.GetUser(userId, CancellationToken.None);
         if (user == null)
         {
             Logger.LogWarning("User with id {UserId} is not found", userId);

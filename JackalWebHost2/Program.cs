@@ -129,7 +129,7 @@ public class Program
         services.AddScoped<IDrawService, DrawService>();
         services.AddScoped<IMapService, MapService>();
         services.AddScoped<ILobbyService, LobbyService>();
-        services.AddScoped<IFastUserService, FastUserService>();
+        services.AddScoped<IUserRepository, UserRepositoryInMemory>();
 
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         if (!string.IsNullOrEmpty(connectionString))
@@ -144,8 +144,8 @@ public class Program
             services.AddScoped<IGameRepository, GameRepositoryStub>();
         }
         
-        services.AddScoped<IGameStateRepository, InMemoryGameStateRepository>();
-        services.AddScoped<ILobbyRepository, InMemoryLobbyRepository>();
+        services.AddScoped<IGameStateRepository, GameStateRepositoryInMemory>();
+        services.AddScoped<ILobbyRepository, LobbyRepositoryInMemory>();
         
         services.AddScoped<IUserAuthProvider, UserAuthProvider>();
     }
