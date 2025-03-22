@@ -31,4 +31,8 @@
     <ProjectReference Include="..\Jackal.Core\Jackal.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

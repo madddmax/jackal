@@ -1,14 +1,32 @@
 {
   "profiles": {
-    "JackalWebHost2": {
+    "WebApiDev": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5130/index.html",
+      "launchUrl": "http://localhost:5130/swagger/index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5130;https://localhost:17288;"
+      "applicationUrl": "http://localhost:5130;"
+    },
+    "WebApiTest": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:5130/swagger/index.html",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Staging"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5130;"
+    },
+    "WebApiProd": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5130;"
     },
     "Docker": {
       "commandName": "Docker",

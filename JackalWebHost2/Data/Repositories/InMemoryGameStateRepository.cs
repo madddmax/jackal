@@ -4,12 +4,12 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace JackalWebHost2.Data.Repositories;
 
-public class InMemoryGameRepository : IGameRepository
+public class InMemoryGameStateRepository : IGameStateRepository
 {
     private readonly IMemoryCache _memoryCache;
     private readonly MemoryCacheEntryOptions _cacheEntryOptions;
     
-    public InMemoryGameRepository(IMemoryCache memoryCache)
+    public InMemoryGameStateRepository(IMemoryCache memoryCache)
     {
         _memoryCache = memoryCache;
         _cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(1));
