@@ -11,11 +11,11 @@ function Login() {
 
     const [name, setName] = useState<string>();
 
-    const enterLogin = (name: string) => {
+    const enterLogin = (login: string) => {
         dispatch({
             type: sagaActions.AUTH_LOGIN,
             payload: {
-                userName: name,
+                login: login,
             },
         });
     };

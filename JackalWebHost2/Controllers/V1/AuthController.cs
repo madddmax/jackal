@@ -32,7 +32,7 @@ public class AuthController : Controller
             throw new UserIsAlreadyLoggedInException();
         }
 
-        var user = await _fastUserService.CreateUser(request.UserName, token);
+        var user = await _fastUserService.CreateUser(request.Login, token);
         await FastAuthCookieHelper.SignInUser(HttpContext, user);
 
         return new RegisterResponse
@@ -40,7 +40,7 @@ public class AuthController : Controller
             User = new UserModel
             {
                 Id = user.Id,
-                UserName = user.Name
+                Login = user.Login
             }
         };
     }
@@ -62,7 +62,7 @@ public class AuthController : Controller
             User = new UserModel
             {
                 Id = user!.Id,
-                UserName = user.Name
+                Login = user.Login
             }
         };
     }

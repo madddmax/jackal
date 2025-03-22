@@ -145,7 +145,7 @@ export interface CheckMapInfo {
 
 export interface LobbyMember {
     userId?: number;
-    userName: string;
+    login: string;
     teamId?: number;
 }
 

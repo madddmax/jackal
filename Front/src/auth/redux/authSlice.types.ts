@@ -14,5 +14,5 @@ export interface AuthResponse {
 
 export interface UserInfo {
     id: number;
-    userName: string;
+    login: string;
 }

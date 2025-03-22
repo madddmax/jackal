@@ -12,5 +12,5 @@ public interface IFastUserService
     /// <summary>
     /// Создать нового пользователя
     /// </summary>
-    Task<User> CreateUser(string userName, CancellationToken token);
+    Task<User> CreateUser(string login, CancellationToken token);
 }

@@ -23,12 +23,12 @@ public class FastUserService : IFastUserService
             : null;
     }
 
-    public Task<User> CreateUser(string userName, CancellationToken token)
+    public Task<User> CreateUser(string login, CancellationToken token)
     {
         var user = new User
         {
             Id = Interlocked.Increment(ref Id),
-            Name = userName
+            Login = login
         };
 
         _memoryCache.Set(GetKey(user.Id), user, _cacheEntryOptions);
