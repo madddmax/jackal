@@ -4,17 +4,21 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace JackalWebHost2.Data.EntityConfigurations;
 
-public class GameEntityConfiguration : IEntityTypeConfiguration<GameEntity>
+public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 {
-    public void Configure(EntityTypeBuilder<GameEntity> builder)
+    public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
         builder
             .Property(b => b.Id)
             .ValueGeneratedOnAdd();
 
         builder
-            .Property(b => b.Code)
+            .Property(b => b.Login)
             .IsRequired()
-            .HasMaxLength(36);
+            .HasMaxLength(30);
+        
+        builder
+            .HasIndex(b => b.Login)
+            .IsUnique();
     }
 }

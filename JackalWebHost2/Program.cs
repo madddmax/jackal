@@ -129,18 +129,19 @@ public class Program
         services.AddScoped<IDrawService, DrawService>();
         services.AddScoped<IMapService, MapService>();
         services.AddScoped<ILobbyService, LobbyService>();
-        services.AddScoped<IUserRepository, UserRepositoryInMemory>();
 
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         if (!string.IsNullOrEmpty(connectionString))
         {
-            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<JackalDbContext>(options => options.UseNpgsql(connectionString));
             services.AddDatabaseDeveloperPageExceptionFilter();
             
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
         }
         else
         {
+            services.AddScoped<IUserRepository, UserRepositoryInMemory>();
             services.AddScoped<IGameRepository, GameRepositoryStub>();
         }
         

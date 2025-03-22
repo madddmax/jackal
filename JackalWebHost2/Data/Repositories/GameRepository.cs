@@ -6,11 +6,11 @@ namespace JackalWebHost2.Data.Repositories;
 
 public class GameRepository : IGameRepository
 {
-    private readonly ApplicationDbContext _applicationDbContext;
+    private readonly JackalDbContext _jackalDbContext;
     
-    public GameRepository(ApplicationDbContext applicationDbContext)
+    public GameRepository(JackalDbContext jackalDbContext)
     {
-        _applicationDbContext = applicationDbContext;
+        _jackalDbContext = jackalDbContext;
     }
 
     public async Task CreateGame(string gameName, Game game)
@@ -21,7 +21,7 @@ public class GameRepository : IGameRepository
             Created = DateTime.UtcNow
         };
 
-        await _applicationDbContext.Games.AddAsync(gameEntity);
-        await _applicationDbContext.SaveChangesAsync();
+        await _jackalDbContext.Games.AddAsync(gameEntity);
+        await _jackalDbContext.SaveChangesAsync();
     }
 }
