@@ -4,11 +4,12 @@ export interface ConfigAttributes {
     HasDebug: boolean;
 }
 
-// @ts-expect-error get custom debug config from html if needed
-const debugConf = debugConfig;
-let config: ConfigAttributes = debugConf || {
+let config: ConfigAttributes = {
     BaseApi: 'http://localhost:5130/api/',
     HubApi: 'http://localhost:5130/gamehub',
+
+    // BaseApi: 'http://116.203.101.2/api/',
+    // HubApi: 'http://116.203.101.2/gamehub',
     HasDebug: true,
 };
 if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
