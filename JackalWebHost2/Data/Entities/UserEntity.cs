@@ -7,4 +7,6 @@ public class UserEntity
     public string Login { get; set; }
     
     public DateTime Created { get; set; }
+    
+    public virtual List<GameUserEntity> GameUsers { get; set; }
 }

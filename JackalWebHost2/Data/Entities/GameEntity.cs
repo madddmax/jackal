@@ -11,4 +11,6 @@ public class GameEntity
     public DateTime Updated { get; set; }
     
     public int TurnNumber { get; set; }
+    
+    public virtual List<GameUserEntity> GameUsers { get; set; }
 }

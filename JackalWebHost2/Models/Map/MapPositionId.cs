@@ -4,7 +4,7 @@ namespace JackalWebHost2.Models.Map;
 /// Позиция относительно игровой карты,
 /// на фронте определяется по индексу
 /// </summary>
-public enum MapPositionId
+public enum MapPositionId : byte
 {
     Down = 0,
     Left = 1,
