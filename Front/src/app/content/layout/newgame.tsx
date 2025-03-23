@@ -15,13 +15,13 @@ import { GamePlayer, GameSettings } from '../../../game/redux/gameSlice.types';
 import { Constants } from '/app/constants';
 
 const getPlayers = (gamers: string[], mode: number): GamePlayer[] => {
-    if (mode == 1) return [{ id: 0, type: gamers[0], position: Constants.positions[0] }];
+    if (mode == 1) return [{ userId: 0, type: gamers[0], position: Constants.positions[0] }];
     else if (mode == 2)
         return [
-            { id: 0, type: gamers[0], position: Constants.positions[0] },
-            { id: 0, type: gamers[2], position: Constants.positions[2] },
+            { userId: 0, type: gamers[0], position: Constants.positions[0] },
+            { userId: 0, type: gamers[2], position: Constants.positions[2] },
         ];
-    else return gamers.map((it, index) => ({ id: 0, type: it, position: Constants.positions[index] }));
+    else return gamers.map((it, index) => ({ userId: 0, type: it, position: Constants.positions[index] }));
 };
 
 const convertMapId = (val: string | number | undefined) => {

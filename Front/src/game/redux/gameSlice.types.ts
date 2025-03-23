@@ -7,7 +7,7 @@ export interface GameSettings {
 }
 
 export interface GamePlayer {
-    id: number;
+    userId: number;
     type: string;
     position: string;
 }

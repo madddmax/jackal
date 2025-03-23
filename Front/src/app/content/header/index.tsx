@@ -29,8 +29,8 @@ const Header = () => {
                 gameName: uuidGen(),
                 settings: {
                     players: [
-                        { id: 0, type: 'human', position: Constants.positions[0] },
-                        { id: 0, type: 'robot2', position: Constants.positions[2] },
+                        { userId: 0, type: 'human', position: Constants.positions[0] },
+                        { userId: 0, type: 'robot2', position: Constants.positions[2] },
                     ],
                     mapId: userSettings.mapId,
                     mapSize: 11,
