@@ -9,10 +9,13 @@ public class JackalDbContext(DbContextOptions<JackalDbContext> options) : DbCont
     public DbSet<UserEntity> Users { get; set; }
     
     public DbSet<GameEntity> Games { get; set; }
+    
+    public DbSet<GameUserEntity> GameUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new GameEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new GameUserEntityConfiguration());
     }
 }
