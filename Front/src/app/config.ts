@@ -5,8 +5,8 @@ export interface ConfigAttributes {
 }
 
 let config: ConfigAttributes = {
-    BaseApi: import.meta.env.VITE_BASE_API || 'http://localhost:5130/api/',
-    HubApi: import.meta.env.VITE_HUB_API || 'http://localhost:5130/gamehub',
+    BaseApi: process.env.BASE_API || 'http://localhost:5130/api/',
+    HubApi: process.env.HUB_API || 'http://localhost:5130/gamehub',
     HasDebug: true,
 };
 if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
