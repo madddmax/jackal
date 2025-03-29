@@ -7,13 +7,12 @@ import { MdWaterDrop } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { AuthState } from '../../../auth/redux/authSlice.types';
-import { ReduxState } from '../../../common/redux.types';
-import { activateSockets } from '../../../common/redux/commonSlice';
+import { activateSockets, getEnableSockets } from '../../../common/redux/commonSlice';
 import './header.css';
 import config from '/app/config';
 import { Constants } from '/app/constants';
 import { debugLog, hubConnection, uuidGen } from '/app/global';
+import { getAuth } from '/auth/redux/authSlice';
 import { sagaActions } from '/common/sagas';
 import { getUserSettings } from '/game/redux/gameSlice';
 
@@ -21,8 +20,8 @@ const Header = () => {
     const dispatch = useDispatch();
 
     const userSettings = useSelector(getUserSettings);
-    const authInfo = useSelector<ReduxState, AuthState>((state) => state.auth);
-    const enableSockets = useSelector<ReduxState, boolean>((state) => state.common.enableSockets);
+    const authInfo = useSelector(getAuth);
+    const enableSockets = useSelector(getEnableSockets);
 
     const quickStart = () => {
         hubConnection

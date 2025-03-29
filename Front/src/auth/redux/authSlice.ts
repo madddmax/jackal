@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+
 import { AuthState, CheckResponse } from './authSlice.types';
 
 export const authSlice = createSlice({
@@ -12,8 +13,13 @@ export const authSlice = createSlice({
             state.isAuthorised = action.payload.isAuthorised;
         },
     },
+    selectors: {
+        getAuth: (state): AuthState => state,
+    },
 });
 
 export const { setAuth } = authSlice.actions;
+
+export const { getAuth } = authSlice.selectors;
 
 export default authSlice.reducer;

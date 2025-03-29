@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+
 import { CommonState, MessageInfo } from './commonSlice.types';
 
 export const commonSlice = createSlice({
@@ -25,8 +26,14 @@ export const commonSlice = createSlice({
             state.message = undefined;
         },
     },
+    selectors: {
+        getMessage: (state) => state.message,
+        getEnableSockets: (state) => state.enableSockets,
+    },
 });
 
 export const { activateSockets, showMessage, processError, hideError } = commonSlice.actions;
+
+export const { getMessage, getEnableSockets } = commonSlice.selectors;
 
 export default commonSlice.reducer;

@@ -9,6 +9,7 @@ import {
     GamePirate,
     GamePlace,
     GameStartResponse,
+    GameStat,
     GameState,
     GameStateSettings,
     GameStatistics,
@@ -21,7 +22,7 @@ import {
     StorageState,
     TeamState,
 } from '../../common/redux.types';
-import { ScreenSizes } from './gameSlice.types';
+import { ScreenSizes, TeamScores } from './gameSlice.types';
 import { Constants } from '/app/constants';
 import { debugLog, getAnotherRandomValue, getRandomValues, girlsMap } from '/app/global';
 
@@ -63,9 +64,9 @@ export const gameSlice = createSlice({
         },
         initGame: (state, action: PayloadAction<GameStartResponse>) => {
             state.gameSettings.gameName = action.payload.gameName;
-            state.gameMode = action.payload.gameMode;
-            state.tilesPackName = action.payload.tilesPackName;
-            state.mapId = action.payload.mapId;
+            state.gameSettings.gameMode = action.payload.gameMode;
+            state.gameSettings.tilesPackName = action.payload.tilesPackName;
+            state.gameSettings.mapId = action.payload.mapId;
             state.pirates = action.payload.pirates;
             state.lastMoves = [];
             state.highlight_x = 0;
@@ -450,6 +451,18 @@ export const gameSlice = createSlice({
         getGameField: (state, row: number, col: number): FieldState => state.fields[row][col],
         getMapForecasts: (state): string[] | undefined => state.mapForecasts,
         getPirateAutoChange: (state): boolean => state.hasPirateAutoChange,
+        getGameStatistics: (state): GameStat | undefined => state.stat,
+        getTeamScores: (state): TeamScores[] | undefined => {
+            return state.teamScores?.map((it) => {
+                const team = gameSlice.getSelectors().getTeamById(state, it.teamId);
+                return {
+                    teamId: team?.id,
+                    name: team?.name,
+                    backColor: team?.backColor,
+                    coins: it.coins,
+                } as TeamScores;
+            });
+        },
     },
 });
 
@@ -487,6 +500,8 @@ export const {
     getUserSettings,
     getMapForecasts,
     getPirateAutoChange,
+    getGameStatistics,
+    getTeamScores,
 } = gameSlice.selectors;
 
 export default gameSlice.reducer;

@@ -3,20 +3,20 @@ import { Button, Container, Form, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { LobbyInfo, ReduxState } from '../../../common/redux.types';
 import classes from './lobbyCard.module.less';
 import Players from '/app/content/layout/components/players';
 import { PlayersInfo } from '/app/content/layout/components/types';
-import { UserInfo } from '/auth/redux/authSlice.types';
+import { getAuth } from '/auth/redux/authSlice';
 import { sagaActions } from '/common/sagas';
 import { getUserSettings } from '/game/redux/gameSlice';
+import { getLobby } from '/netgame/redux/lobbySlice';
 
 const LobbyCard = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const lobby = useSelector<ReduxState, LobbyInfo | undefined>((state) => state.lobby.lobby);
-    const authInfo = useSelector<ReduxState, UserInfo | undefined>((state) => state.auth.user);
+    const lobby = useSelector(getLobby);
+    const authInfo = useSelector(getAuth);
     const userSettings = useSelector(getUserSettings);
 
     const [players, setPlayers] = useState<PlayersInfo>({
@@ -33,7 +33,7 @@ const LobbyCard = () => {
         };
     }, [dispatch]);
 
-    const isInLobby = authInfo && !!lobby?.lobbyMembers[authInfo?.id];
+    const isInLobby = authInfo.user && !!lobby?.lobbyMembers[authInfo.user.id];
 
     const joinLobby = () => {
         if (!lobby) return;

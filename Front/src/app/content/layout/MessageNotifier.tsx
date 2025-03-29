@@ -1,13 +1,12 @@
 import { Toast, ToastContainer } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { ReduxState } from '../../../common/redux.types';
-import { MessageInfo } from '../../../common/redux/commonSlice.types';
-import { hideError, processError } from '../../../common/redux/commonSlice';
+
+import { getMessage, hideError, processError } from '../../../common/redux/commonSlice';
 
 const MessageNotifier = () => {
     const dispatch = useDispatch();
 
-    const error = useSelector<ReduxState, MessageInfo | undefined>((state) => state.common.message);
+    const error = useSelector(getMessage);
 
     return (
         <ToastContainer className="p-3" position={error?.isError ? 'bottom-end' : 'top-end'} style={{ zIndex: 5 }}>

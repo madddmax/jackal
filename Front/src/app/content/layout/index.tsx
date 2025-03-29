@@ -8,8 +8,8 @@ import MessageNotifier from './MessageNotifier';
 import Newgame from './newgame';
 import { debugLog, hubConnection } from '/app/global';
 import Login from '/auth/content/login';
-import { ReduxState, StorageState } from '/common/redux.types';
-import { showMessage } from '/common/redux/commonSlice';
+import { StorageState } from '/common/redux.types';
+import { getEnableSockets, showMessage } from '/common/redux/commonSlice';
 import { sagaActions } from '/common/sagas';
 import Playground from '/game/content/playground';
 import { initMySettings } from '/game/redux/gameSlice';
@@ -18,7 +18,7 @@ import LobbyJoin from '/netgame/content/lobbyJoin';
 
 const Layout = () => {
     const dispatch = useDispatch();
-    const enableSockets = useSelector<ReduxState, boolean>((state) => state.common.enableSockets);
+    const enableSockets = useSelector(getEnableSockets);
 
     useClientMethod(enableSockets, hubConnection, 'Notify', (text) => {
         dispatch(
