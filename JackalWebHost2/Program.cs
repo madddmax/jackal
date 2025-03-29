@@ -105,7 +105,7 @@ public class Program
                 options.Cookie.Name = "FastAuthCookie";
                 options.Cookie.IsEssential = false;
                 options.Cookie.SameSite = SameSiteMode.Strict;
-                options.Cookie.MaxAge = TimeSpan.FromDays(30);
+                options.Cookie.MaxAge = TimeSpan.FromDays(365);
                 options.SlidingExpiration = true;
                 options.Events.OnRedirectToLogin = _ => Task.CompletedTask;
                 options.Events.OnRedirectToLogout = _ => Task.CompletedTask;
