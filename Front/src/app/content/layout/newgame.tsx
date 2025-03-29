@@ -5,8 +5,13 @@ import Row from 'react-bootstrap/Row';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { ReduxState } from '../../../common/redux.types';
-import { getGameSettings, getUserSettings, saveMySettings, setMapInfo } from '../../../game/redux/gameSlice';
+import {
+    getGameSettings,
+    getMapForecasts,
+    getUserSettings,
+    saveMySettings,
+    setMapForecasts,
+} from '../../../game/redux/gameSlice';
 import { GamePlayer, GameSettings } from '../../../game/redux/gameSlice.types';
 import Players from './components/players';
 import { PlayersInfo } from './components/types';
@@ -38,7 +43,7 @@ function Newgame() {
 
     const { tilesPackNames } = useSelector(getGameSettings);
     const userSettings = useSelector(getUserSettings);
-    const mapInfo = useSelector<ReduxState, string[] | undefined>((state) => state.game.mapInfo);
+    const mapForecasts = useSelector(getMapForecasts);
 
     const [players, setPlayers] = useState<PlayersInfo>({
         mode: userSettings.playersMode || 4,
@@ -65,7 +70,7 @@ function Newgame() {
         });
 
         return () => {
-            dispatch(setMapInfo());
+            dispatch(setMapForecasts());
         };
     }, [dispatch, mapSize, randNumber, tilesPackName]);
 
@@ -146,7 +151,7 @@ function Newgame() {
             <Row className="justify-content-center">
                 <Form className={classes.newgame} onSubmit={(event) => event.preventDefault()}>
                     {/* <h3>Новая игра</h3> */}
-                    <Players players={players} setPlayers={setPlayers} mapInfo={mapInfo} />
+                    <Players players={players} setPlayers={setPlayers} mapInfo={mapForecasts} />
                     <div className="mt-3">
                         <div>
                             <Form.Label>Размер карты: {mapSize}</Form.Label>

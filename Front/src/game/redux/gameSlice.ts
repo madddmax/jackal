@@ -419,8 +419,8 @@ export const gameSlice = createSlice({
         setTilesPackNames: (state, action: PayloadAction<string[]>) => {
             state.gameSettings.tilesPackNames = action.payload;
         },
-        setMapInfo: (state, action: PayloadAction<string[] | undefined>) => {
-            state.mapInfo = action.payload;
+        setMapForecasts: (state, action: PayloadAction<string[] | undefined>) => {
+            state.mapForecasts = action.payload;
         },
     },
     selectors: {
@@ -444,6 +444,7 @@ export const gameSlice = createSlice({
         getUserSettings: (state): StorageState => state.userSettings,
         getGameSettings: (state): GameStateSettings => state.gameSettings,
         getGameField: (state, row: number, col: number): FieldState => state.fields[row][col],
+        getMapForecasts: (state): string[] | undefined => state.mapForecasts,
     },
 });
 
@@ -467,7 +468,7 @@ export const {
     updateLevelCoinsData,
     applyStat,
     setTilesPackNames,
-    setMapInfo,
+    setMapForecasts,
 } = gameSlice.actions;
 
 export const {
@@ -478,6 +479,7 @@ export const {
     getGameField,
     getGameSettings,
     getUserSettings,
+    getMapForecasts,
 } = gameSlice.selectors;
 
 export default gameSlice.reducer;

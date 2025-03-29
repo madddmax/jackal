@@ -15,7 +15,7 @@ export interface GameState {
     gameMode?: string;
     tilesPackName?: string;
     mapId?: number;
-    mapInfo?: string[];
+    mapForecasts?: string[];
     mapSize?: number;
     hasPirateAutoChange: boolean;
 
