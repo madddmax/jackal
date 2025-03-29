@@ -1,6 +1,6 @@
-import { LevelFeature } from '../../../../common/redux.types';
-import Image from 'react-bootstrap/Image';
 import cn from 'classnames';
+import Image from 'react-bootstrap/Image';
+
 import './cell.less';
 
 interface FeaturePhotoProps {

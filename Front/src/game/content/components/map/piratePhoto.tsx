@@ -1,10 +1,11 @@
-import { GamePirate, GameState } from '../../../../common/redux.types';
-import Image from 'react-bootstrap/Image';
 import cn from 'classnames';
+import { memo } from 'react';
+import Image from 'react-bootstrap/Image';
+
 import './cell.less';
 import { debugLog, girlsMap } from '/app/global';
 import store from '/app/store';
-import { memo } from 'react';
+import { GamePirate, GameState } from '/game/types';
 
 interface PiratePhotoProps {
     pirate: GamePirate;

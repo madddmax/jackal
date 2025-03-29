@@ -3,7 +3,6 @@ import { RefObject } from 'react';
 import { useSelector } from 'react-redux';
 import { TooltipRefProps } from 'react-tooltip';
 
-import { AvailableMove, FieldState, GameState } from '../../../../common/redux.types';
 import './cell.less';
 import { CalcTooltipType, TooltipTypes } from './cell.logic';
 import Level from './level';
@@ -11,6 +10,7 @@ import LevelZero from './levelZero';
 import { hubConnection } from '/app/global';
 import store from '/app/store';
 import { getGameField, getGameSettings } from '/game/redux/gameSlice';
+import { AvailableMove, FieldState, GameState } from '/game/types';
 
 interface CellAvailableMove extends AvailableMove {
     img?: string;

@@ -3,8 +3,6 @@ import { memoize } from 'proxy-memoize';
 
 import {
     FieldState,
-    GameCell,
-    GameLevel,
     GameMap,
     GamePirate,
     GamePlace,
@@ -14,17 +12,16 @@ import {
     GameStateSettings,
     GameStatistics,
     GameTeam,
-    LevelFeature,
     PirateChanges,
     PirateChoose,
     PirateMoves,
-    PiratePosition,
     StorageState,
     TeamState,
-} from '../../common/redux.types';
+} from '../types';
 import { ScreenSizes, TeamScores } from './gameSlice.types';
 import { Constants } from '/app/constants';
 import { debugLog, getAnotherRandomValue, getRandomValues, girlsMap } from '/app/global';
+import { PiratePosition } from '/common/redux.types';
 
 export const gameSlice = createSlice({
     name: 'game',

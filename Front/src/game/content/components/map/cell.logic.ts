@@ -1,4 +1,4 @@
-import { FieldState, GameState } from '/common/redux.types';
+import { FieldState, GameState } from '/game/types';
 
 export const TooltipTypes = {
     SkipMove: 'skipmove',
@@ -17,12 +17,12 @@ export interface CalcTooltipTypeProps {
 }
 
 export const CalcTooltipType = ({ row, col, field, state }: CalcTooltipTypeProps): string => {
-    let team = state.teams.find((it) => it.id == state.currentHumanTeamId);
+    const team = state.teams.find((it) => it.id == state.currentHumanTeamId);
     const activePirate = state.pirates?.find((it) => it.id == team?.activePirate);
     const pirateField = activePirate && state.fields[activePirate.position.y][activePirate.position.x];
 
     if (field.levels.length == 1 && activePirate?.position.y === row && activePirate?.position.x === col) {
-        let move = field.availableMoves[0];
+        const move = field.availableMoves[0];
         if (move.isRespawn) return TooltipTypes.Respawn;
         if (field.image?.includes('hole.png')) return TooltipTypes.GroundHole;
         return TooltipTypes.SkipMove;

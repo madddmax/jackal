@@ -5,7 +5,8 @@ import { chooseHumanPirate, getPirateById, getUserSettings } from '../../../redu
 import AnimatePirate from './animatePirate';
 import { girlsMap } from '/app/global';
 import store from '/app/store';
-import { GamePirate, GameState, PiratePosition } from '/common/redux.types';
+import { PiratePosition } from '/common/redux.types';
+import { GamePirate, GameState } from '/game/types';
 
 interface MapPirateProps {
     id: string;

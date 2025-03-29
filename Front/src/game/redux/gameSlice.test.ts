@@ -1,3 +1,4 @@
+import { GamePirate, GameState, GameTeam } from '../types';
 import reducer, {
     applyChanges,
     applyPirateChanges,
@@ -11,10 +12,10 @@ import reducer, {
     removeHumanMoves,
     setCurrentHumanTeam,
 } from './gameSlice';
+import { getMapData } from './mapDataForTests';
 import { Constants } from '/app/constants';
 import { girlsMap } from '/app/global';
-import { getMapData } from '/app/mapDataForTests';
-import { GamePirate, GameState, GameTeam, PiratePosition } from '/common/redux.types';
+import { PiratePosition } from '/common/redux.types';
 
 const testTeamId = 12;
 

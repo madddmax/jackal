@@ -1,7 +1,6 @@
+import { getMapData } from '../../../redux/mapDataForTests';
 import { CalcTooltipType, TooltipTypes } from './cell.logic';
 import { Constants } from '/app/constants';
-import { getMapData } from '/app/mapDataForTests';
-import { GamePirate, GameState, GameTeam } from '/common/redux.types';
 import reducer, {
     highlightHumanMoves,
     initMap,
@@ -9,6 +8,7 @@ import reducer, {
     initTeams,
     setCurrentHumanTeam,
 } from '/game/redux/gameSlice';
+import { GamePirate, GameState, GameTeam } from '/game/types';
 
 const testTeamId = 12;
 

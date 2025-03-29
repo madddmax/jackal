@@ -1,7 +1,8 @@
 import { Animate } from 'react-move';
-import { GamePirate } from '../../../../common/redux.types';
+
 import PiratePhoto from '../map/piratePhoto';
 import { girlsMap } from '/app/global';
+import { GamePirate } from '/game/types';
 
 interface AnimatePirateProps {
     pirate: GamePirate;
@@ -45,7 +46,7 @@ const AnimatePirate = ({
                         style={{
                             top: y,
                             left: x,
-                            zIndex: pirate.isActive ? 10 : mapLevel?.girls?.indexOf(pirate.id)! + 3,
+                            zIndex: pirate.isActive ? 10 : (mapLevel?.girls?.indexOf(pirate.id) || 0) + 3,
                             pointerEvents: isCurrentPlayerGirl ? 'auto' : 'none',
                         }}
                     >

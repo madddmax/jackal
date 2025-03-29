@@ -1,7 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { call, delay, fork, put, select, take, takeEvery } from 'redux-saga/effects';
 
-import { GameStartResponse, GameTurnResponse, TeamState } from '../../common/redux.types';
 import {
     applyChanges,
     applyPirateChanges,
@@ -12,6 +11,7 @@ import {
     initGame,
     removeHumanMoves,
 } from '../redux/gameSlice';
+import { GameStartResponse, GameTurnResponse, TeamState } from '../types';
 import { animateQueue } from '/app/global';
 import { errorsWrapper, sagaActions } from '/common/sagas';
 

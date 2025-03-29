@@ -8,11 +8,11 @@ import MessageNotifier from './MessageNotifier';
 import Newgame from './newgame';
 import { debugLog, hubConnection } from '/app/global';
 import Login from '/auth/content/login';
-import { StorageState } from '/common/redux.types';
 import { getEnableSockets, showMessage } from '/common/redux/commonSlice';
 import { sagaActions } from '/common/sagas';
 import Playground from '/game/content/playground';
 import { initMySettings } from '/game/redux/gameSlice';
+import { StorageState } from '/game/types';
 import LobbyCard from '/netgame/content/lobbyCard';
 import LobbyJoin from '/netgame/content/lobbyJoin';
 
