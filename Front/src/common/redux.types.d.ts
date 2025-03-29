@@ -16,7 +16,6 @@ export interface GameState {
     tilesPackName?: string;
     mapId?: number;
     mapForecasts?: string[];
-    mapSize?: number;
     hasPirateAutoChange: boolean;
 
     gameSettings: GameStateSettings;
@@ -32,6 +31,7 @@ export interface GameState {
 
 export interface GameStateSettings {
     gameName?: string;
+    mapSize?: number;
     cellSize: number;
     pirateSize: number;
 

@@ -66,7 +66,6 @@ export const gameSlice = createSlice({
             state.gameMode = action.payload.gameMode;
             state.tilesPackName = action.payload.tilesPackName;
             state.mapId = action.payload.mapId;
-            state.mapSize = action.payload.map.width;
             state.pirates = action.payload.pirates;
             state.lastMoves = [];
             state.highlight_x = 0;
@@ -103,6 +102,7 @@ export const gameSlice = createSlice({
                 }
                 map.push(row);
             }
+            state.gameSettings.mapSize = action.payload.width;
             state.fields = map;
         },
         initTeams: (state, action: PayloadAction<GameTeam[]>) => {
@@ -139,7 +139,7 @@ export const gameSlice = createSlice({
             const mSize = width > height ? height : width;
 
             if (mSize > 560) {
-                state.gameSettings.cellSize = Math.floor(mSize / state.mapSize! / 10) * 10;
+                state.gameSettings.cellSize = Math.floor(mSize / state.gameSettings.mapSize! / 10) * 10;
             }
             state.gameSettings.pirateSize = state.gameSettings.cellSize * 0.55;
         },

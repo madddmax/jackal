@@ -127,10 +127,10 @@ const testPirates: GamePirate[] = [
 ];
 
 const getState = (pirates: GamePirate[]): GameState => ({
-    mapSize: 5,
     fields: [[]],
     lastMoves: [],
     gameSettings: {
+        mapSize: 5,
         cellSize: 50,
         pirateSize: 15,
         tilesPackNames: [],

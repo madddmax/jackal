@@ -1,18 +1,21 @@
-import { useSelector } from 'react-redux';
 import cn from 'classnames';
-import classes from './controls.module.less';
-import { GameState, ReduxState } from '../../../../common/redux.types';
 import { Alert } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+
+import { GameState, ReduxState } from '../../../../common/redux.types';
+import classes from './controls.module.less';
 import { Constants } from '/app/constants';
+import { getGameSettings } from '/game/redux/gameSlice';
 
 function Controls() {
+    const { gameName, mapSize } = useSelector(getGameSettings);
     const game = useSelector<ReduxState, GameState | undefined>((state) => state.game);
 
     return (
         <>
             <div className={classes.statistic}>
                 <div>
-                    Код игры: <span>{game?.gameName}</span>
+                    Код игры: <span>{gameName}</span>
                 </div>
                 <div>
                     Код карты: <span>{game?.mapId}</span>
@@ -27,7 +30,7 @@ function Controls() {
                     </span>
                 </div>
                 <div>
-                    Размер карты: <span>{game?.mapSize}</span>
+                    Размер карты: <span>{mapSize}</span>
                 </div>
                 <div>
                     Номер хода: <span>{game?.stat?.turnNo}</span>
