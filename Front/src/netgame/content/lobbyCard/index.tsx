@@ -1,13 +1,14 @@
-import { Button, Container, Form, Row } from 'react-bootstrap';
-import classes from './lobbyCard.module.less';
-import { useDispatch, useSelector } from 'react-redux';
-import { LobbyInfo, ReduxState, StorageState } from '../../../common/redux.types';
-import { useNavigate } from 'react-router-dom';
-import { sagaActions } from '/common/sagas';
-import Players from '/app/content/layout/components/players';
 import { useEffect, useState } from 'react';
+import { Button, Container, Form, Row } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import { LobbyInfo, ReduxState, StorageState } from '../../../common/redux.types';
+import classes from './lobbyCard.module.less';
+import Players from '/app/content/layout/components/players';
 import { PlayersInfo } from '/app/content/layout/components/types';
 import { UserInfo } from '/auth/redux/authSlice.types';
+import { sagaActions } from '/common/sagas';
 
 const LobbyCard = () => {
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ const LobbyCard = () => {
         return () => {
             dispatch({ type: sagaActions.LOBBY_STOP_POLLING });
         };
-    }, []);
+    }, [dispatch]);
 
     const isInLobby = authInfo && !!lobby?.lobbyMembers[authInfo?.id];
 

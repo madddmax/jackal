@@ -1,6 +1,6 @@
 import { AuthState } from '../auth/redux/authSlice.types';
-import { CommonState } from './redux/commonSlice.types';
 import { GameSettings } from '../game/redux/gameSlice.types';
+import { CommonState } from './redux/commonSlice.types';
 
 export interface ReduxState {
     auth: AuthState;
@@ -12,17 +12,14 @@ export interface ReduxState {
 export interface GameState {
     stat?: GameStat;
     teamScores?: GameScore[];
-    gameName?: string;
     gameMode?: string;
     tilesPackName?: string;
     mapId?: number;
     mapInfo?: string[];
     mapSize?: number;
-    cellSize: number;
-    pirateSize: number;
     hasPirateAutoChange: boolean;
-    tilesPackNames: string[];
 
+    gameSettings: GameStateSettings;
     userSettings: StorageState;
     fields: FieldState[][];
     pirates?: GamePirate[];
@@ -31,6 +28,14 @@ export interface GameState {
     currentHumanTeamId: number;
     highlight_x: number;
     highlight_y: number;
+}
+
+export interface GameStateSettings {
+    gameName?: string;
+    cellSize: number;
+    pirateSize: number;
+
+    tilesPackNames: string[];
 }
 
 export interface StorageState {
