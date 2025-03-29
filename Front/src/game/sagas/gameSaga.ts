@@ -11,7 +11,7 @@ import {
     initGame,
     removeHumanMoves,
 } from '../redux/gameSlice';
-import { GameStartResponse, GameTurnResponse, TeamState } from '../types';
+import { GameStartResponse, GameTurnResponse, StorageState, TeamState } from '../types';
 import { animateQueue } from '/app/global';
 import { errorsWrapper, sagaActions } from '/common/sagas';
 
@@ -61,7 +61,7 @@ export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
     const result = { data: action.payload };
 
     const currentTeam: TeamState | undefined = yield select(getCurrentTeam);
-    const { speed }: { speed: number } = yield select(getUserSettings);
+    const { gameSpeed: speed }: StorageState = yield select(getUserSettings);
 
     if (!currentTeam!.isHuman) {
         yield put(removeHumanMoves());
