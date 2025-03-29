@@ -427,6 +427,10 @@ export const gameSlice = createSlice({
         getTeamById: (state, teamId: number): TeamState | undefined => state.teams.find((it) => it.id == teamId),
         getCurrentPlayerTeam: (state): TeamState | undefined =>
             state.teams.find((it) => it.id == state.currentHumanTeamId),
+        getCurrentPlayerPirates: (state): GamePirate[] | undefined => {
+            const currentPlayerTeam = gameSlice.getSelectors().getCurrentPlayerTeam(state);
+            return state.pirates?.filter((it) => it.teamId == currentPlayerTeam?.id);
+        },
         getCurrentTeam: (state): TeamState | undefined => state.teams.find((it) => it.id == state.stat?.currentTeamId),
         getPiratesIds: memoize((state): string[] | undefined => state.pirates?.map((it) => it.id)),
         getPirateById: (state, pirateId: string): GamePirate | undefined =>
@@ -445,6 +449,7 @@ export const gameSlice = createSlice({
         getGameSettings: (state): GameStateSettings => state.gameSettings,
         getGameField: (state, row: number, col: number): FieldState => state.fields[row][col],
         getMapForecasts: (state): string[] | undefined => state.mapForecasts,
+        getPirateAutoChange: (state): boolean => state.hasPirateAutoChange,
     },
 });
 
@@ -474,12 +479,14 @@ export const {
 export const {
     getCurrentTeam,
     getCurrentPlayerTeam,
+    getCurrentPlayerPirates,
     getPiratesIds,
     getPirateById,
     getGameField,
     getGameSettings,
     getUserSettings,
     getMapForecasts,
+    getPirateAutoChange,
 } = gameSlice.selectors;
 
 export default gameSlice.reducer;

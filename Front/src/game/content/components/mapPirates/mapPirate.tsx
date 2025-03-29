@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { GamePirate, GameState, PiratePosition, ReduxState } from '../../../../common/redux.types';
-import { chooseHumanPirate, getPirateById } from '../../../redux/gameSlice';
+import { chooseHumanPirate, getPirateById, getUserSettings } from '../../../redux/gameSlice';
 import AnimatePirate from './animatePirate';
 import { girlsMap } from '/app/global';
 import store from '/app/store';
+import { GamePirate, GameState, PiratePosition } from '/common/redux.types';
 
 interface MapPirateProps {
     id: string;
@@ -17,8 +17,8 @@ interface MapPirateProps {
 }
 
 const MapPirate = ({ id, getMarginTop, getMarginLeft, cellSize, mapSize, pirateSize }: MapPirateProps) => {
-    const pirate = useSelector<ReduxState, GamePirate | undefined>((state) => getPirateById(state, id));
-    const speed = useSelector<ReduxState, number>((state) => state.game.userSettings.gameSpeed);
+    const pirate = useSelector<{ game: GameState }, GamePirate | undefined>((state) => getPirateById(state, id));
+    const { gameSpeed: speed } = useSelector(getUserSettings);
     const dispatch = useDispatch();
 
     const onTeamPirateClick = useCallback(

@@ -1,20 +1,22 @@
-import { takeEvery, put, take, call, fork, select, delay } from 'redux-saga/effects';
+import { PayloadAction } from '@reduxjs/toolkit';
+import { call, delay, fork, put, select, take, takeEvery } from 'redux-saga/effects';
+
+import { GameStartResponse, GameTurnResponse, TeamState } from '../../common/redux.types';
 import {
-    highlightHumanMoves,
+    applyChanges,
     applyPirateChanges,
     applyStat,
-    initGame,
     getCurrentTeam,
+    getUserSettings,
+    highlightHumanMoves,
+    initGame,
     removeHumanMoves,
-    applyChanges,
 } from '../redux/gameSlice';
-import { GameStartResponse, GameTurnResponse, ReduxState, TeamState } from '../../common/redux.types';
-import { errorsWrapper, sagaActions } from '/common/sagas';
 import { animateQueue } from '/app/global';
-import { PayloadAction } from '@reduxjs/toolkit';
+import { errorsWrapper, sagaActions } from '/common/sagas';
 
-export function* applyStartData(action: any) {
-    const data: GameStartResponse = action.payload;
+export function* applyStartData(action: { payload: GameStartResponse }) {
+    const data = action.payload;
     yield put(initGame(data));
     yield put(applyStat(data));
     yield put(
@@ -26,10 +28,8 @@ export function* applyStartData(action: any) {
     yield put(highlightHumanMoves({ moves: data.moves }));
 }
 
-export function* applyTurn(action: any) {
-    const result = { data: action.payload };
-
-    animateQueue.push(result.data);
+export function* applyTurn(action: { payload: GameTurnResponse }) {
+    animateQueue.push(action.payload);
     yield put({
         type: sagaActions.START_ANIMATE,
     });
@@ -60,10 +60,10 @@ function* doAnimate() {
 export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
     const result = { data: action.payload };
 
-    const currentTeam: TeamState = yield select((state: ReduxState) => getCurrentTeam(state));
-    const speed: number = yield select((state) => state.game.userSettings.gameSpeed);
+    const currentTeam: TeamState | undefined = yield select(getCurrentTeam);
+    const { speed }: { speed: number } = yield select(getUserSettings);
 
-    if (!currentTeam.isHuman) {
+    if (!currentTeam!.isHuman) {
         yield put(removeHumanMoves());
         if (speed > 0) {
             yield delay(speed * 100);

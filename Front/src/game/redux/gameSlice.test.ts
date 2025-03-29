@@ -169,7 +169,7 @@ describe('redux init tests', () => {
     });
 
     test('Инициализируем карту', () => {
-        const result = reducer(defaultState, initMap(getMapData));
+        const result: GameState = reducer(defaultState, initMap(getMapData));
         expect(result).toHaveProperty('fields');
         expect(result.fields).toHaveLength(5);
         result.fields.forEach((it) => {
