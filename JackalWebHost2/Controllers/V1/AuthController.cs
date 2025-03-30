@@ -12,12 +12,10 @@ namespace JackalWebHost2.Controllers.V1;
 public class AuthController : Controller
 {
     private readonly IUserRepository _userRepository;
-    private readonly IUserAuthProvider _userAuthProvider;
 
-    public AuthController(IUserRepository userRepository, IUserAuthProvider userAuthProvider)
+    public AuthController(IUserRepository userRepository)
     {
         _userRepository = userRepository;
-        _userAuthProvider = userAuthProvider;
     }
     
     /// <summary>
@@ -27,7 +25,7 @@ public class AuthController : Controller
     [HttpPost("register")]
     public async Task<RegisterResponse> Register([FromBody] RegisterRequest request, CancellationToken token)
     {
-        if (_userAuthProvider.TryGetUser(out _))
+        if (HttpContext.User.Identity?.IsAuthenticated == true)
         {
             throw new UserIsAlreadyLoggedInException();
         }
@@ -54,16 +52,18 @@ public class AuthController : Controller
     [HttpPost("check")]
     public async Task<CheckResponse> Check([FromBody] CheckRequest request, CancellationToken token)
     {
-        if (!_userAuthProvider.TryGetUser(out var user))
+        if (HttpContext.User.Identity?.IsAuthenticated == false)
         {
             return new CheckResponse();
         }
 
+        var user = FastAuthCookieHelper.ExtractUser(HttpContext.User);
+        
         return new CheckResponse
         {
             User = new UserModel
             {
-                Id = user!.Id,
+                Id = user.Id,
                 Login = user.Login
             }
         };
