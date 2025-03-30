@@ -1,10 +1,11 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
-import { setMapInfo, setTilesPackNames } from '../redux/gameSlice';
+
 import { CheckMapInfo } from '../../common/redux.types';
+import { setMapForecasts, setTilesPackNames } from '../redux/gameSlice';
+import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
 
 export function* getTilesPackNames() {
-    let result: { data: string[] } = yield call(
+    const result: { data: string[] } = yield call(
         async () =>
             await axiosInstance({
                 url: 'v1/map/tiles-pack-names',
@@ -14,8 +15,8 @@ export function* getTilesPackNames() {
     yield put(setTilesPackNames(result.data));
 }
 
-export function* checkMap(action: any) {
-    let result: { data: CheckMapInfo[] } = yield call(
+export function* checkMap(action: { payload: unknown }) {
+    const result: { data: CheckMapInfo[] } = yield call(
         async () =>
             await axiosInstance({
                 url: 'v1/map/check-landing',
@@ -23,7 +24,7 @@ export function* checkMap(action: any) {
                 params: action.payload,
             }),
     );
-    yield put(setMapInfo(result.data.map((it) => it.difficulty)));
+    yield put(setMapForecasts(result.data.map((it) => it.difficulty)));
 }
 
 export default function* rootSaga() {

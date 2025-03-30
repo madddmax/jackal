@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+
 import { LobbyInfo, LobbyState } from '../../common/redux.types';
 
 export const lobbySlice = createSlice({
@@ -9,8 +10,13 @@ export const lobbySlice = createSlice({
             state.lobby = action.payload;
         },
     },
+    selectors: {
+        getLobby: (state): LobbyInfo | undefined => state.lobby,
+    },
 });
 
 export const { updateLobby } = lobbySlice.actions;
+
+export const { getLobby } = lobbySlice.selectors;
 
 export default lobbySlice.reducer;

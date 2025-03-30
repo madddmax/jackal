@@ -1,15 +1,16 @@
-import { useSelector } from 'react-redux';
-
-import { AvailableMove, FieldState, GameState, ReduxState } from '../../../../common/redux.types';
-import store from '/app/store';
 import cn from 'classnames';
+import { RefObject } from 'react';
+import { useSelector } from 'react-redux';
+import { TooltipRefProps } from 'react-tooltip';
+
 import './cell.less';
+import { CalcTooltipType, TooltipTypes } from './cell.logic';
 import Level from './level';
 import LevelZero from './levelZero';
-import { TooltipRefProps } from 'react-tooltip';
-import { RefObject } from 'react';
 import { hubConnection } from '/app/global';
-import { CalcTooltipType, TooltipTypes } from './cell.logic';
+import store from '/app/store';
+import { getGameField, getGameSettings } from '/game/redux/gameSlice';
+import { AvailableMove, FieldState, GameState } from '/game/types';
 
 interface CellAvailableMove extends AvailableMove {
     img?: string;
@@ -23,16 +24,14 @@ interface CellProps {
 }
 
 function Cell({ row, col, tooltipRef }: CellProps) {
-    const field = useSelector<ReduxState, FieldState>((state) => state.game.fields[row][col]);
-    const cellSize = useSelector<ReduxState, number>((state) => state.game.cellSize);
-    const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
-    const gamename = useSelector<ReduxState, string | undefined>((state) => state.game.gameName);
+    const field = useSelector<{ game: GameState }, FieldState>((state) => getGameField(state, row, col));
+    const { gameName, cellSize, pirateSize } = useSelector(getGameSettings);
     const hasMove = field.availableMoves.length > 0;
 
     const onClick = () => {
         const makeMove = (move: AvailableMove) => {
             hubConnection.send('Move', {
-                gameName: gamename,
+                gameName: gameName,
                 turnNum: move.num,
                 pirateId: move.pirateId,
             });
@@ -42,7 +41,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
             tooltipRef.current?.close();
         };
 
-        let gameState = store.getState().game as GameState;
+        const gameState = store.getState().game as GameState;
         const tooltipType = CalcTooltipType({ row, col, field, state: gameState });
         switch (tooltipType) {
             case TooltipTypes.Respawn:
@@ -64,10 +63,10 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                     ),
                 });
                 break;
-            case TooltipTypes.SomeFields:
-                let moves = [] as CellAvailableMove[];
+            case TooltipTypes.SomeFields: {
+                const moves = [] as CellAvailableMove[];
                 field.availableMoves.forEach((it) => {
-                    let cell = gameState.fields[it.prev!.y][it.prev!.x];
+                    const cell = gameState.fields[it.prev!.y][it.prev!.x];
                     moves.push({
                         ...it,
                         img: cell.image!,
@@ -96,6 +95,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                     ),
                 });
                 break;
+            }
             case TooltipTypes.NoTooltip:
             default:
                 makeMove(field.availableMoves[0]);

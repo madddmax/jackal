@@ -1,20 +1,21 @@
+import { GamePirate, GameState, GameTeam } from '../types';
 import reducer, {
-    setCurrentHumanTeam,
-    chooseHumanPirate,
-    initMap,
-    initTeams,
-    initPhotos,
-    initSizes,
-    initPiratePositions,
-    applyPirateChanges,
-    highlightHumanMoves,
-    removeHumanMoves,
     applyChanges,
+    applyPirateChanges,
+    chooseHumanPirate,
+    highlightHumanMoves,
+    initMap,
+    initPhotos,
+    initPiratePositions,
+    initSizes,
+    initTeams,
+    removeHumanMoves,
+    setCurrentHumanTeam,
 } from './gameSlice';
-import { getMapData } from '/app/mapDataForTests';
-import { GamePirate, GameState, GameTeam, PiratePosition } from '/common/redux.types';
+import { getMapData } from './mapDataForTests';
 import { Constants } from '/app/constants';
 import { girlsMap } from '/app/global';
+import { PiratePosition } from '/common/redux.types';
 
 const testTeamId = 12;
 
@@ -127,12 +128,14 @@ const testPirates: GamePirate[] = [
 ];
 
 const getState = (pirates: GamePirate[]): GameState => ({
-    cellSize: 50,
-    mapSize: 5,
-    pirateSize: 15,
     fields: [[]],
     lastMoves: [],
-    tilesPackNames: [],
+    gameSettings: {
+        mapSize: 5,
+        cellSize: 50,
+        pirateSize: 15,
+        tilesPackNames: [],
+    },
     userSettings: {
         groups: [
             Constants.groupIds.girls,
@@ -167,7 +170,7 @@ describe('redux init tests', () => {
     });
 
     test('Инициализируем карту', () => {
-        const result = reducer(defaultState, initMap(getMapData));
+        const result: GameState = reducer(defaultState, initMap(getMapData));
         expect(result).toHaveProperty('fields');
         expect(result.fields).toHaveLength(5);
         result.fields.forEach((it) => {
@@ -214,9 +217,9 @@ describe('redux init tests', () => {
                 height: 500,
             }),
         );
-        expect(result.cellSize).toEqual(50);
-        expect(result.pirateSize).toBeGreaterThanOrEqual(25);
-        expect(result.pirateSize).toBeLessThanOrEqual(30);
+        expect(result.gameSettings.cellSize).toEqual(50);
+        expect(result.gameSettings.pirateSize).toBeGreaterThanOrEqual(25);
+        expect(result.gameSettings.pirateSize).toBeLessThanOrEqual(30);
         result = reducer(
             defaultState,
             initSizes({
@@ -224,9 +227,9 @@ describe('redux init tests', () => {
                 height: 680,
             }),
         );
-        expect(result.cellSize).toEqual(120);
-        expect(result.pirateSize).toBeGreaterThanOrEqual(60);
-        expect(result.pirateSize).toBeLessThanOrEqual(70);
+        expect(result.gameSettings.cellSize).toEqual(120);
+        expect(result.gameSettings.pirateSize).toBeGreaterThanOrEqual(60);
+        expect(result.gameSettings.pirateSize).toBeLessThanOrEqual(70);
     });
 
     test('Инициализируем словарик с позициями пираток', () => {
@@ -356,7 +359,7 @@ describe('redux basic tests', () => {
     });
 
     test('Меняем активного пирата', () => {
-        let currentState = reducer(previousState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
+        const currentState = reducer(previousState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
         const result = reducer(currentState, chooseHumanPirate({ pirate: '300', withCoinAction: true }));
         expect(result.teams).toContainEqual({
             activePirate: '300',
@@ -379,7 +382,7 @@ describe('redux basic tests', () => {
     });
 
     test('Уходим с клетки, на клетке - никого', () => {
-        let currentState = reducer(previousState, chooseHumanPirate({ pirate: '100', withCoinAction: true }));
+        const currentState = reducer(previousState, chooseHumanPirate({ pirate: '100', withCoinAction: true }));
         const result = reducer(
             currentState,
             applyPirateChanges({

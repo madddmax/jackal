@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux';
-import { PiratePosition, ReduxState } from '../../../../common/redux.types';
-import { girlsMap } from '/app/global';
-import { getPiratesIds } from '../../../redux/gameSlice';
+
+import { getGameSettings, getPiratesIds } from '../../../redux/gameSlice';
 import MapPirate from './mapPirate';
+import { girlsMap } from '/app/global';
+import { PiratePosition } from '/common/redux.types';
 
 interface MapPiratesProps {
     mapSize: number;
@@ -11,7 +12,7 @@ interface MapPiratesProps {
 
 const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
     const piratesIds = useSelector(getPiratesIds);
-    const pirateSize = useSelector<ReduxState, number>((state) => state.game.pirateSize);
+    const { pirateSize } = useSelector(getGameSettings);
 
     const unitSize = cellSize - pirateSize;
 
@@ -21,8 +22,8 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
 
     const getMarginTop = (girl: PiratePosition): number => {
         const position = girlsMap.GetPosition(girl);
-        let levelsCount = position!.levelsCountInCell;
-        let level = position!.level;
+        const levelsCount = position!.levelsCountInCell;
+        const level = position!.level;
 
         if (levelsCount === 1) {
             const addSize = position!.girls!.length > 3 ? cellSize / 10 : 0;
@@ -53,8 +54,8 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
 
     const getMarginLeft = (girl: PiratePosition): number => {
         const position = girlsMap.GetPosition(girl);
-        let levelsCount = position!.levelsCountInCell;
-        let level = position!.level;
+        const levelsCount = position!.levelsCountInCell;
+        const level = position!.level;
 
         if (levelsCount === 1) {
             const addSize = position!.girls!.length > 3 ? cellSize / 10 : 0;

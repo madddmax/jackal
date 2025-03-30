@@ -1,16 +1,15 @@
-import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
-import Pirates from './components/pirates';
-import Map from './components/map';
-import Controls from './components/controls';
-import classes from './playground.module.less';
+import Row from 'react-bootstrap/Row';
 import { useSelector } from 'react-redux';
-import { ReduxState } from '../../common/redux.types';
+
+import Controls from './components/controls';
+import Map from './components/map';
+import Pirates from './components/pirates';
+import classes from './playground.module.less';
+import { getGameSettings } from '/game/redux/gameSlice';
 
 function Playground() {
-    const mapSize = useSelector<ReduxState, number | undefined>((state) => state.game.mapSize);
-    const cellSize = useSelector<ReduxState, number | undefined>((state) => state.game.cellSize);
+    const { cellSize, mapSize } = useSelector(getGameSettings);
 
     return (
         <Row className="justify-content-center gap-1">

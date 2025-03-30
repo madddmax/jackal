@@ -1,27 +1,27 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { sagaActions } from '/common/sagas';
-import './header.css';
-import { Link } from 'react-router-dom';
-import { debugLog, hubConnection, uuidGen } from '/app/global';
-import { ReduxState, StorageState } from '../../../common/redux.types';
-import config from '/app/config';
-import { AuthState } from '../../../auth/redux/authSlice.types';
 import { HiLogin, HiLogout } from 'react-icons/hi';
-import { Constants } from '/app/constants';
 import { ImFire } from 'react-icons/im';
 import { MdWaterDrop } from 'react-icons/md';
-import { activateSockets } from '../../../common/redux/commonSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import { activateSockets, getEnableSockets } from '../../../common/redux/commonSlice';
+import './header.css';
+import config from '/app/config';
+import { Constants } from '/app/constants';
+import { debugLog, hubConnection, uuidGen } from '/app/global';
+import { getAuth } from '/auth/redux/authSlice';
+import { sagaActions } from '/common/sagas';
+import { getUserSettings } from '/game/redux/gameSlice';
 
 const Header = () => {
     const dispatch = useDispatch();
 
-    const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
-    const authInfo = useSelector<ReduxState, AuthState>((state) => state.auth);
-    const enableSockets = useSelector<ReduxState, boolean>((state) => state.common.enableSockets);
+    const userSettings = useSelector(getUserSettings);
+    const authInfo = useSelector(getAuth);
+    const enableSockets = useSelector(getEnableSockets);
 
     const quickStart = () => {
         hubConnection

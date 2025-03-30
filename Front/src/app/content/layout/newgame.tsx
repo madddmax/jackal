@@ -2,17 +2,23 @@ import { useEffect, useState } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import classes from './newgame.module.less';
 import { useDispatch, useSelector } from 'react-redux';
-import { saveMySettings, setMapInfo } from '../../../game/redux/gameSlice';
-import { sagaActions } from '/common/sagas';
 import { useNavigate } from 'react-router-dom';
-import { debugLog, hubConnection, uuidGen } from '/app/global';
-import { ReduxState, StorageState } from '../../../common/redux.types';
+
+import {
+    getGameSettings,
+    getMapForecasts,
+    getUserSettings,
+    saveMySettings,
+    setMapForecasts,
+} from '../../../game/redux/gameSlice';
+import { GamePlayer, GameSettings } from '../../../game/redux/gameSlice.types';
 import Players from './components/players';
 import { PlayersInfo } from './components/types';
-import { GamePlayer, GameSettings } from '../../../game/redux/gameSlice.types';
+import classes from './newgame.module.less';
 import { Constants } from '/app/constants';
+import { debugLog, hubConnection, uuidGen } from '/app/global';
+import { sagaActions } from '/common/sagas';
 
 const getPlayers = (gamers: string[], mode: number): GamePlayer[] => {
     if (mode == 1) return [{ userId: 0, type: gamers[0], position: Constants.positions[0] }];
@@ -26,7 +32,7 @@ const getPlayers = (gamers: string[], mode: number): GamePlayer[] => {
 
 const convertMapId = (val: string | number | undefined) => {
     if (val === undefined) return undefined;
-    let clone = new Int32Array(1);
+    const clone = new Int32Array(1);
     clone[0] = typeof val == 'string' ? Number(val) : val;
     return clone;
 };
@@ -35,9 +41,9 @@ function Newgame() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const tilesPackNames = useSelector<ReduxState, string[]>((state) => state.game.tilesPackNames);
-    const userSettings = useSelector<ReduxState, StorageState>((state) => state.game.userSettings);
-    const mapInfo = useSelector<ReduxState, string[] | undefined>((state) => state.game.mapInfo);
+    const { tilesPackNames } = useSelector(getGameSettings);
+    const userSettings = useSelector(getUserSettings);
+    const mapForecasts = useSelector(getMapForecasts);
 
     const [players, setPlayers] = useState<PlayersInfo>({
         mode: userSettings.playersMode || 4,
@@ -64,9 +70,9 @@ function Newgame() {
         });
 
         return () => {
-            dispatch(setMapInfo());
+            dispatch(setMapForecasts());
         };
-    }, []);
+    }, [dispatch, mapSize, randNumber, tilesPackName]);
 
     const newStart = () => {
         navigate('/');
@@ -92,7 +98,7 @@ function Newgame() {
     };
 
     const changeMapId = () => {
-        let newId = crypto.getRandomValues(new Int32Array(1));
+        const newId = crypto.getRandomValues(new Int32Array(1));
         setRandNumber(newId);
         dispatch({
             type: sagaActions.CHECK_MAP,
@@ -121,7 +127,7 @@ function Newgame() {
         });
     };
 
-    const storeMapId = (event: any) => {
+    const storeMapId = (event: { target: { checked: boolean } }) => {
         setIsStoredMap(event.target.checked);
         saveToLocalStorage(event.target.checked);
     };
@@ -145,7 +151,7 @@ function Newgame() {
             <Row className="justify-content-center">
                 <Form className={classes.newgame} onSubmit={(event) => event.preventDefault()}>
                     {/* <h3>Новая игра</h3> */}
-                    <Players players={players} setPlayers={setPlayers} mapInfo={mapInfo} />
+                    <Players players={players} setPlayers={setPlayers} mapInfo={mapForecasts} />
                     <div className="mt-3">
                         <div>
                             <Form.Label>Размер карты: {mapSize}</Form.Label>

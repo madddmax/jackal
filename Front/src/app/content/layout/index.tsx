@@ -1,23 +1,24 @@
-import { Route, Routes } from 'react-router-dom';
-import Newgame from './newgame';
-import Login from '/auth/content/login';
-import Playground from '/game/content/playground';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ReduxState, StorageState } from '/common/redux.types';
+import { Route, Routes } from 'react-router-dom';
+
+import useClientMethod from '../../hubs/useClientMethod';
+import useHub from '../../hubs/useHub';
+import MessageNotifier from './MessageNotifier';
+import Newgame from './newgame';
+import { debugLog, hubConnection } from '/app/global';
+import Login from '/auth/content/login';
+import { getEnableSockets, showMessage } from '/common/redux/commonSlice';
+import { sagaActions } from '/common/sagas';
+import Playground from '/game/content/playground';
 import { initMySettings } from '/game/redux/gameSlice';
+import { StorageState } from '/game/types';
 import LobbyCard from '/netgame/content/lobbyCard';
 import LobbyJoin from '/netgame/content/lobbyJoin';
-import MessageNotifier from './MessageNotifier';
-import { sagaActions } from '/common/sagas';
-import useHub from '../../hubs/useHub';
-import useClientMethod from '../../hubs/useClientMethod';
-import { showMessage } from '/common/redux/commonSlice';
-import { debugLog, hubConnection } from '/app/global';
 
 const Layout = () => {
     const dispatch = useDispatch();
-    const enableSockets = useSelector<ReduxState, boolean>((state) => state.common.enableSockets);
+    const enableSockets = useSelector(getEnableSockets);
 
     useClientMethod(enableSockets, hubConnection, 'Notify', (text) => {
         dispatch(
@@ -39,9 +40,9 @@ const Layout = () => {
     useHub(enableSockets, hubConnection);
 
     useEffect(() => {
-        let myStateStr = localStorage.getItem('state');
+        const myStateStr = localStorage.getItem('state');
         if (myStateStr) {
-            let myState: StorageState = JSON.parse(myStateStr);
+            const myState: StorageState = JSON.parse(myStateStr);
             if (myState) {
                 dispatch(initMySettings(myState));
             }
@@ -49,7 +50,7 @@ const Layout = () => {
 
         dispatch({ type: sagaActions.GET_TILES_PACK_NAMES, payload: {} });
         dispatch({ type: sagaActions.AUTH_CHECK, payload: {} });
-    }, []);
+    }, [dispatch]);
 
     return (
         <>

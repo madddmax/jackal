@@ -1,6 +1,6 @@
+import { getMapData } from '../../../redux/mapDataForTests';
 import { CalcTooltipType, TooltipTypes } from './cell.logic';
 import { Constants } from '/app/constants';
-import { getMapData } from '/app/mapDataForTests';
 import reducer, {
     highlightHumanMoves,
     initMap,
@@ -8,7 +8,7 @@ import reducer, {
     initTeams,
     setCurrentHumanTeam,
 } from '/game/redux/gameSlice';
-import { GamePirate, GameState, GameTeam } from '/common/redux.types';
+import { GamePirate, GameState, GameTeam } from '/game/types';
 
 const testTeamId = 12;
 
@@ -52,12 +52,14 @@ const testPirates: GamePirate[] = [
 ];
 
 const getState = (pirates: GamePirate[]) => ({
-    cellSize: 50,
-    mapSize: 5,
-    pirateSize: 15,
     fields: [[]],
     lastMoves: [],
-    tilesPackNames: [],
+    gameSettings: {
+        mapSize: 5,
+        cellSize: 50,
+        pirateSize: 15,
+        tilesPackNames: [],
+    },
     userSettings: {
         groups: [
             Constants.groupIds.girls,
