@@ -8,6 +8,7 @@ using JackalWebHost2.Infrastructure;
 using JackalWebHost2.Infrastructure.Auth;
 using JackalWebHost2.Infrastructure.Middleware;
 using JackalWebHost2.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -99,18 +100,16 @@ public class Program
             });
 
         services
-            .AddAuthentication()
-            .AddFastAuthCookie(AuthDefaults.FastAuthScheme, options =>
+            .AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(AuthDefaults.FastAuthScheme, options =>
             {
                 options.Cookie.Name = "FastAuthCookie";
-                options.Cookie.IsEssential = false;
                 options.Cookie.SameSite = SameSiteMode.Strict;
                 options.Cookie.MaxAge = TimeSpan.FromDays(365);
                 options.SlidingExpiration = true;
-                options.Events.OnRedirectToLogin = _ => Task.CompletedTask;
-                options.Events.OnRedirectToLogout = _ => Task.CompletedTask;
-                options.Events.OnRedirectToAccessDenied = _ => Task.CompletedTask;
-                options.Events.OnRedirectToReturnUrl = _ => Task.CompletedTask;
             });
 
         services
@@ -147,7 +146,5 @@ public class Program
         
         services.AddScoped<IGameStateRepository, GameStateRepositoryInMemory>();
         services.AddScoped<ILobbyRepository, LobbyRepositoryInMemory>();
-        
-        services.AddScoped<IUserAuthProvider, UserAuthProvider>();
     }
 }

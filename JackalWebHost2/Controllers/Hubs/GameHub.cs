@@ -1,11 +1,13 @@
 ﻿using Jackal.Core.MapGenerator.TilesPack;
 using JackalWebHost2.Controllers.Models;
+using JackalWebHost2.Infrastructure.Auth;
 using JackalWebHost2.Models;
 using JackalWebHost2.Services;
 using Microsoft.AspNetCore.SignalR;
 
 namespace JackalWebHost2.Controllers.Hubs;
 
+[FastAuth]
 public class GameHub : Hub
 {
     private const string CALLBACK_NOTIFY = "Notify";
@@ -21,13 +23,15 @@ public class GameHub : Hub
 
     public override async Task OnConnectedAsync()
     {
-        await Clients.Caller.SendAsync(CALLBACK_NOTIFY, $"{Context.ConnectionId} вошел в игру");
+        var user = FastAuthCookieHelper.ExtractUser(Context.User);
+        await Clients.Caller.SendAsync(CALLBACK_NOTIFY, $"{user.Login} - {Context.ConnectionId} вошел в игру");
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        await Clients.Others.SendAsync(CALLBACK_NOTIFY, $"{Context.ConnectionId} покинул игру");
+        var user = FastAuthCookieHelper.ExtractUser(Context.User);
+        await Clients.Others.SendAsync(CALLBACK_NOTIFY, $"{user.Login} - {Context.ConnectionId} покинул игру");
         await base.OnDisconnectedAsync(exception);
     }
 
