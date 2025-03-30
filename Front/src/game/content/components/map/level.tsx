@@ -1,6 +1,6 @@
 import CoinPhoto from './coinPhoto';
 import FeaturePhoto from './featurePhoto';
-import { FieldState, GameLevel } from '../../../../common/redux.types';
+import { FieldState } from '/game/types';
 
 interface LevelProps {
     cellSize: number;

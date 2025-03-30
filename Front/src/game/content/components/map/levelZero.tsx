@@ -1,6 +1,5 @@
 import CoinPhoto from './coinPhoto';
 import FeaturePhoto from './featurePhoto';
-import { GameLevel } from '../../../../common/redux.types';
 
 interface LevelZeroProps {
     cellSize: number;
