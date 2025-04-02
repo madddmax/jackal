@@ -24,14 +24,14 @@ public class GameHub : Hub
     public override async Task OnConnectedAsync()
     {
         var user = FastAuthCookieHelper.ExtractUser(Context.User);
-        await Clients.Caller.SendAsync(CALLBACK_NOTIFY, $"{user.Login} - {Context.ConnectionId} вошел в игру");
+        await Clients.Caller.SendAsync(CALLBACK_NOTIFY, $"{user.Login} вошел в игру");
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var user = FastAuthCookieHelper.ExtractUser(Context.User);
-        await Clients.Others.SendAsync(CALLBACK_NOTIFY, $"{user.Login} - {Context.ConnectionId} покинул игру");
+        await Clients.Others.SendAsync(CALLBACK_NOTIFY, $"{user.Login} покинул игру");
         await base.OnDisconnectedAsync(exception);
     }
 

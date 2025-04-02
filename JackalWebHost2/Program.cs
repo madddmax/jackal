@@ -107,7 +107,7 @@ public class Program
             .AddCookie(AuthDefaults.FastAuthScheme, options =>
             {
                 options.Cookie.Name = "FastAuthCookie";
-                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.MaxAge = TimeSpan.FromDays(365);
                 options.SlidingExpiration = true;
             });
