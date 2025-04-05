@@ -1,8 +1,9 @@
 import { HubConnection, HubConnectionState } from '@microsoft/signalr';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { showMessage } from '/common/redux/commonSlice';
+
 import { debugLog } from '/app/global';
+import { showMessage } from '/common/redux/commonSlice';
 
 const useHub = (enableSockets: boolean, hubConnection?: HubConnection) => {
     const [hubConnectionState, setHubConnectionState] = useState<HubConnectionState>(
@@ -42,7 +43,7 @@ const useHub = (enableSockets: boolean, hubConnection?: HubConnection) => {
         return () => {
             hubConnection.stop();
         };
-    }, [hubConnection, enableSockets]);
+    }, [hubConnection, enableSockets, dispatch]);
 
     return { hubConnectionState };
 };

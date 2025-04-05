@@ -39,7 +39,7 @@ interface History {
 export const history: History = {};
 
 export const hubConnection = new HubConnectionBuilder()
-    .withUrl(config.HubApi)
+    .withUrl(config.HubApi, { accessTokenFactory: () => localStorage.auth })
     .withAutomaticReconnect()
     .configureLogging(LogLevel.Information)
     .build();

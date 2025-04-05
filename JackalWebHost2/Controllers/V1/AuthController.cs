@@ -33,15 +33,14 @@ public class AuthController : Controller
         var user = await _userRepository.GetUser(request.Login, token)
                    ?? await _userRepository.CreateUser(request.Login, token);
         
-        await FastAuthCookieHelper.SignInUser(HttpContext, user);
-
         return new RegisterResponse
         {
             User = new UserModel
             {
                 Id = user.Id,
                 Login = user.Login
-            }
+            },
+            Token = await FastAuthJwtBearerHelper.SignInUser(HttpContext, user)
         };
     }
 
@@ -57,7 +56,7 @@ public class AuthController : Controller
             return new CheckResponse();
         }
 
-        var user = FastAuthCookieHelper.ExtractUser(HttpContext.User);
+        var user = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
         
         return new CheckResponse
         {
@@ -68,14 +67,16 @@ public class AuthController : Controller
             }
         };
     }
-    
+
     /// <summary>
     /// Выйти
     /// </summary>
     [HttpPost("logout")]
     public async Task<LogoutResponse> Logout([FromBody] LogoutRequest request, CancellationToken token)
     {
-        await FastAuthCookieHelper.SignOutUser(HttpContext);
+        // TODO: уведомляем сервер о разлогине
+        var user = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
         return new LogoutResponse();
     }
+
 }

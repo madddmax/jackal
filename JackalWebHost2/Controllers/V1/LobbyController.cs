@@ -25,7 +25,7 @@ public class LobbyController : Controller
     {
         // todo Валидировать приходящий null json по всем контроллерам
 
-        var user = FastAuthCookieHelper.ExtractUser(HttpContext.User);
+        var user = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
         var result = await _lobbyService.CreateLobby(user, request.Settings, token);
 
         return new CreateLobbyResponse
@@ -40,7 +40,7 @@ public class LobbyController : Controller
     [HttpPost("join-lobby")]
     public async Task<JoinLobbyResponse> JoinLobby([FromBody] JoinLobbyRequest request, CancellationToken token)
     {
-        var user = FastAuthCookieHelper.ExtractUser(HttpContext.User);
+        var user = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
         var result = await _lobbyService.JoinLobby(request.LobbyId, user, token);
 
         return new JoinLobbyResponse
@@ -55,7 +55,7 @@ public class LobbyController : Controller
     [HttpPost("leave-lobby")]
     public async Task<LeaveLobbyResponse> LeaveLobby([FromBody] LeaveLobbyRequest request, CancellationToken token)
     {
-        var user = FastAuthCookieHelper.ExtractUser(HttpContext.User);
+        var user = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
         await _lobbyService.LeaveLobby(user, token);
         return new LeaveLobbyResponse();
     }
@@ -66,7 +66,7 @@ public class LobbyController : Controller
     [HttpPost("get-lobby")]
     public async Task<GetLobbyResponse> GetLobby([FromBody] GetLobbyRequest request, CancellationToken token)
     {
-        var user = FastAuthCookieHelper.ExtractUser(HttpContext.User);
+        var user = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
         var result = await _lobbyService.GetLobbyInfo(request.LobbyId, user, token);
 
         return new GetLobbyResponse
@@ -81,7 +81,7 @@ public class LobbyController : Controller
     [HttpPost("kick-from-lobby")]
     public async Task<KickFromLobbyResponse> KickPlayer([FromBody] KickFromLobbyRequest request, CancellationToken token)
     {
-        var user = FastAuthCookieHelper.ExtractUser(HttpContext.User);
+        var user = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
         await _lobbyService.KickPlayer(request.LobbyId, user, request.TargetUserId, token);
         return new KickFromLobbyResponse();
     }
@@ -92,7 +92,7 @@ public class LobbyController : Controller
     [HttpPost("assign-team")]
     public async Task<AssignTeamResponse> AssignTeam([FromBody] AssignTeamRequest request, CancellationToken token)
     {
-        var user = FastAuthCookieHelper.ExtractUser(HttpContext.User);
+        var user = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
         await _lobbyService.AssignTeam(request.LobbyId, user, request.UserId, request.TeamId, token);
         return new AssignTeamResponse();
     }
@@ -103,7 +103,7 @@ public class LobbyController : Controller
     [HttpPost("start-game")]
     public async Task<StartGameFromLobbyResponse> StartGame([FromBody] StartGameFromLobbyRequest request, CancellationToken token)
     {
-        var user = FastAuthCookieHelper.ExtractUser(HttpContext.User);
+        var user = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
         var result = await _lobbyService.StartGame(request.LobbyId, user, token);
 
         return new StartGameFromLobbyResponse

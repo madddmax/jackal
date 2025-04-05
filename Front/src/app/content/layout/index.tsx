@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import useClientMethod from '../../hubs/useClientMethod';
 import useHub from '../../hubs/useHub';
-import MessageNotifier from './MessageNotifier';
+import MessageNotifier from './messageNotifier';
 import Newgame from './newgame';
 import { debugLog, hubConnection } from '/app/global';
 import Login from '/auth/content/login';

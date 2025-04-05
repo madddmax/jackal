@@ -8,8 +8,9 @@ using JackalWebHost2.Infrastructure;
 using JackalWebHost2.Infrastructure.Auth;
 using JackalWebHost2.Infrastructure.Middleware;
 using JackalWebHost2.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -102,14 +103,20 @@ public class Program
         services
             .AddAuthentication(options =>
             {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddCookie(AuthDefaults.FastAuthScheme, options =>
+            .AddJwtBearer(AuthDefaults.FastAuthScheme, options =>
             {
-                options.Cookie.Name = "FastAuthCookie";
-                options.Cookie.SameSite = SameSiteMode.Strict;
-                options.Cookie.MaxAge = TimeSpan.FromDays(365);
-                options.SlidingExpiration = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = AuthDefaults.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = AuthDefaults.Audience,
+                    ValidateLifetime = true,
+                    IssuerSigningKey = AuthDefaults.GetSymmetricSecurityKey(),
+                    ValidateIssuerSigningKey = true,
+                };
             });
 
         services

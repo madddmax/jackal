@@ -1,11 +1,13 @@
+import { PayloadAction } from '@reduxjs/toolkit';
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
-import { history } from '/app/global';
-import { AuthResponse, CheckResponse } from '../redux/authSlice.types';
-import { setAuth } from '../redux/authSlice';
 
-export function* authCheck(action: any) {
-    let result: { data: CheckResponse } = yield call(
+import { checkAuth, setAuth } from '../redux/authSlice';
+import { AuthResponse, CheckResponse } from '../redux/authSlice.types';
+import { history } from '/app/global';
+import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
+
+export function* authCheck(action: PayloadAction<unknown>) {
+    const result: { data: CheckResponse } = yield call(
         async () =>
             await axiosInstance({
                 url: 'v1/auth/check',
@@ -13,11 +15,16 @@ export function* authCheck(action: any) {
                 data: action.payload,
             }),
     );
-    yield put(setAuth(result.data));
+    yield put(
+        checkAuth({
+            user: result.data.user,
+            isAuthorised: !!result.data.user,
+        }),
+    );
 }
 
-export function* authLogin(action: any) {
-    let result: { data: AuthResponse } = yield call(
+export function* authLogin(action: { payload: unknown }) {
+    const result: { data: AuthResponse } = yield call(
         async () =>
             await axiosInstance({
                 url: 'v1/auth/register',
@@ -28,13 +35,14 @@ export function* authLogin(action: any) {
     history.navigate && history.navigate('/');
     yield put(
         setAuth({
+            token: result.data.token,
             user: result.data.user,
             isAuthorised: true,
         }),
     );
 }
 
-export function* authLogout(action: any) {
+export function* authLogout(action: { payload: unknown }) {
     yield call(
         async () =>
             await axiosInstance({
