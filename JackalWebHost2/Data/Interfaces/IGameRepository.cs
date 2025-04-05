@@ -4,5 +4,5 @@ namespace JackalWebHost2.Data.Interfaces;
 
 public interface IGameRepository
 {
-    Task CreateGame(string gameName, Game game);
+    Task<long> CreateGame(Game game);
 }

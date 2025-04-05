@@ -5,7 +5,7 @@ namespace JackalWebHost2.Controllers.Models;
 
 public class StartGameResponse
 {
-    public string GameName { get; set; }
+    public long GameId { get; set; }
     
     public GameModeType GameMode { get; set; }
     

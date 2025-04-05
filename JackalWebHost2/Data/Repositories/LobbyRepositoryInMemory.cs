@@ -89,7 +89,7 @@ public class LobbyRepositoryInMemory : ILobbyRepository
         return Task.CompletedTask;
     }
 
-    public Task Close(string lobbyId, DateTimeOffset time, string? gameId, long[]? gameMembers, CancellationToken token)
+    public Task Close(string lobbyId, DateTimeOffset time, long? gameId, long[]? gameMembers, CancellationToken token)
     {
         if (!_memoryCache.TryGetValue<Lobby>(GetLobbyKey(lobbyId), out var lobby) )
         {

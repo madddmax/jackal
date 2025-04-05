@@ -37,7 +37,7 @@ public interface ILobbyRepository
     /// <summary>
     /// Закрыть лобби и проставить идентификатор игры (если есть)
     /// </summary>
-    Task Close(string lobbyId, DateTimeOffset time, string? gameId, long[]? gameMembers, CancellationToken token);
+    Task Close(string lobbyId, DateTimeOffset time, long? gameId, long[]? gameMembers, CancellationToken token);
     
     /// <summary>
     /// Выгнать всех пользователей из лобби

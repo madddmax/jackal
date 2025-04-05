@@ -14,5 +14,5 @@ public class LobbyModel
     
     public int NumberOfPlayers { get; set; }
     
-    public string? GameId { get; set; }
+    public long? GameId { get; set; }
 }

@@ -25,13 +25,13 @@ interface CellProps {
 
 function Cell({ row, col, tooltipRef }: CellProps) {
     const field = useSelector<{ game: GameState }, FieldState>((state) => getGameField(state, row, col));
-    const { gameName, cellSize, pirateSize } = useSelector(getGameSettings);
+    const { gameId, cellSize, pirateSize } = useSelector(getGameSettings);
     const hasMove = field.availableMoves.length > 0;
 
     const onClick = () => {
         const makeMove = (move: AvailableMove) => {
             hubConnection.send('Move', {
-                gameName: gameName,
+                gameId: gameId,
                 turnNum: move.num,
                 pirateId: move.pirateId,
             });

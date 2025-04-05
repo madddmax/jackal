@@ -11,7 +11,7 @@ import { activateSockets, getEnableSockets } from '../../../common/redux/commonS
 import './header.css';
 import config from '/app/config';
 import { Constants } from '/app/constants';
-import { debugLog, hubConnection, uuidGen } from '/app/global';
+import { debugLog, hubConnection } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
 import { sagaActions } from '/common/sagas';
 import { getUserSettings } from '/game/redux/gameSlice';
@@ -26,7 +26,6 @@ const Header = () => {
     const quickStart = () => {
         hubConnection
             .invoke('start', {
-                gameName: uuidGen(),
                 settings: {
                     players: [
                         { userId: 0, type: 'human', position: Constants.positions[0] },
