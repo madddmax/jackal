@@ -1,10 +1,12 @@
+import { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { call, put } from 'redux-saga/effects';
-import { ErrorInfo } from './redux/commonSlice.types';
-import { showMessage } from './redux/commonSlice';
-import { debugLog } from '/app/global';
+
 import { setAuth } from '../auth/redux/authSlice';
+import { showMessage } from './redux/commonSlice';
+import { ErrorInfo } from './redux/commonSlice.types';
 import config from '/app/config';
+import { debugLog } from '/app/global';
 
 export const sagaActions = {
     GAME_START_APPLY_DATA: 'GAME_START_APPLY_DATA',
@@ -27,17 +29,19 @@ export const sagaActions = {
 };
 
 export const axiosInstance = axios.create({
-    withCredentials: true,
     baseURL: config.BaseApi,
+    headers: {
+        Authorization: `Bearer ${localStorage.auth}`,
+    },
 });
 
-export const errorsWrapper = (saga: (action: any) => void) =>
-    function* (action: any) {
+export const errorsWrapper = <T>(saga: (action: PayloadAction<T>) => void) =>
+    function* (action: PayloadAction<T>) {
         try {
             yield call(saga, action);
         } catch (err) {
             if (axios.isAxiosError(err)) {
-                let error = err.response?.data as ErrorInfo;
+                const error = err.response?.data as ErrorInfo;
 
                 debugLog(error, err);
 
