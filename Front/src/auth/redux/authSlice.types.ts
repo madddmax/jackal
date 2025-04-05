@@ -1,6 +1,6 @@
 export interface AuthState {
     user?: UserInfo;
-    isAuthorised: boolean;
+    isAuthorised?: boolean;
 }
 
 export interface AuthInfo {

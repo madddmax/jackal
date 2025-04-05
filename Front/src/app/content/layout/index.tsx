@@ -4,10 +4,12 @@ import { Route, Routes } from 'react-router-dom';
 
 import useClientMethod from '../../hubs/useClientMethod';
 import useHub from '../../hubs/useHub';
-import MessageNotifier from './MessageNotifier';
+import Logon from './logon';
+import MessageNotifier from './messNotifier';
 import Newgame from './newgame';
 import { debugLog, hubConnection } from '/app/global';
 import Login from '/auth/content/login';
+import { getAuth } from '/auth/redux/authSlice';
 import { getEnableSockets, showMessage } from '/common/redux/commonSlice';
 import { sagaActions } from '/common/sagas';
 import Playground from '/game/content/playground';
@@ -19,6 +21,7 @@ import LobbyJoin from '/netgame/content/lobbyJoin';
 const Layout = () => {
     const dispatch = useDispatch();
     const enableSockets = useSelector(getEnableSockets);
+    const auth = useSelector(getAuth);
 
     useClientMethod(enableSockets, hubConnection, 'Notify', (text) => {
         dispatch(
@@ -37,7 +40,7 @@ const Layout = () => {
         debugLog(data);
         dispatch({ type: sagaActions.GAME_TURN_APPLY_DATA, payload: data });
     });
-    useHub(enableSockets, hubConnection);
+    useHub(enableSockets && auth.isAuthorised === true, hubConnection);
 
     useEffect(() => {
         const myStateStr = localStorage.getItem('state');
@@ -61,6 +64,7 @@ const Layout = () => {
                 <Route path="/lobby/:id" element={<LobbyCard />}></Route>
                 <Route path="/" element={<Playground />}></Route>
             </Routes>
+            {auth.isAuthorised === false && <Logon />}
             <MessageNotifier />
         </>
     );
