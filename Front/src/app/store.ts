@@ -7,7 +7,7 @@ import gameReducer from '../game/redux/gameSlice';
 import lobbyReducer from '../netgame/redux/lobbySlice';
 import saga from './sagas';
 
-let sagaMiddleware = createSagaMiddleware();
+const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
     reducer: {
