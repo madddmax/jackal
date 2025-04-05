@@ -58,8 +58,8 @@ public class GameService : IGameService
         var gameRequest = new GameRequest(mapSize, mapGenerator, gamePlayers, gameMode);
         var game = new Game(gameRequest);
 
-        await _gameStateRepository.CreateGame(request.GameName, game);
-        await _gameRepository.CreateGame(request.GameName, game);
+        var gameId = await _gameRepository.CreateGame(game);
+        await _gameStateRepository.CreateGame(gameId, game);
         
         var map = _drawService.Map(game.Board);
 
@@ -71,7 +71,7 @@ public class GameService : IGameService
         
         return new StartGameResult
         {
-            GameName = request.GameName,
+            GameId = gameId,
             GameMode = gameMode,
             Pirates = pirateChanges,
             Map = map,
@@ -86,7 +86,7 @@ public class GameService : IGameService
     
     public async Task<TurnGameResult> MakeGameTurn(TurnGameModel request)
     {
-        var game = await _gameStateRepository.GetGame(request.GameName);
+        var game = await _gameStateRepository.GetGame(request.GameId);
         if (game == null)
         {
             throw new GameNotFoundException();
@@ -117,7 +117,7 @@ public class GameService : IGameService
             game.Board.ShowUnknownTiles();
         }
         
-        await _gameStateRepository.UpdateGame(request.GameName, game);
+        await _gameStateRepository.UpdateGame(request.GameId, game);
         var prevBoard = JsonHelper.DeserializeWithType<Board>(prevBoardStr);
         
         return new TurnGameResult

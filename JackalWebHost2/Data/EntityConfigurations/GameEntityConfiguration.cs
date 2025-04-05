@@ -11,10 +11,5 @@ public class GameEntityConfiguration : IEntityTypeConfiguration<GameEntity>
         builder
             .Property(b => b.Id)
             .ValueGeneratedOnAdd();
-
-        builder
-            .Property(b => b.Code)
-            .IsRequired()
-            .HasMaxLength(36);
     }
 }

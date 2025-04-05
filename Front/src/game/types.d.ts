@@ -23,7 +23,7 @@ export interface GameState {
 }
 
 export interface GameStartResponse extends GameStatistics {
-    gameName: string;
+    gameId: number;
     gameMode?: string;
     tilesPackName: string;
     mapId: number;
@@ -64,7 +64,7 @@ interface GameScore {
 }
 
 export interface GameStateSettings {
-    gameName?: string;
+    gameId?: number;
     gameMode?: string;
     mapId?: number;
     mapSize?: number;

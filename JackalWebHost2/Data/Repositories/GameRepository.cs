@@ -6,15 +6,16 @@ namespace JackalWebHost2.Data.Repositories;
 
 public class GameRepository(JackalDbContext jackalDbContext) : IGameRepository
 {
-    public async Task CreateGame(string gameName, Game game)
+    public async Task<long> CreateGame(Game game)
     {
         var gameEntity = new GameEntity
         {
-            Code = gameName,
             Created = DateTime.UtcNow
         };
 
         await jackalDbContext.Games.AddAsync(gameEntity);
         await jackalDbContext.SaveChangesAsync();
+
+        return gameEntity.Id;
     }
 }

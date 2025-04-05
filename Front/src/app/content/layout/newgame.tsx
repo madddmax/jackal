@@ -17,7 +17,7 @@ import Players from './components/players';
 import { PlayersInfo } from './components/types';
 import classes from './newgame.module.less';
 import { Constants } from '/app/constants';
-import { debugLog, hubConnection, uuidGen } from '/app/global';
+import { debugLog, hubConnection } from '/app/global';
 import { sagaActions } from '/common/sagas';
 
 const getPlayers = (gamers: string[], mode: number): GamePlayer[] => {
@@ -80,7 +80,6 @@ function Newgame() {
 
         hubConnection
             .invoke('start', {
-                gameName: uuidGen(),
                 settings: {
                     players: getPlayers(players.members, players.mode),
                     mapId: randNumber[0],

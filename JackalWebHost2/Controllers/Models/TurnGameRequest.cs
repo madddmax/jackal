@@ -2,7 +2,7 @@
 
 public class TurnGameRequest
 {
-    public string GameName { get; set; }
+    public long GameId { get; set; }
     
     public int? TurnNum { get; set; }
     

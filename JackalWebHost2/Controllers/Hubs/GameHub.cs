@@ -42,14 +42,13 @@ public class GameHub : Hub
     {
         var result = await _gameService.StartGame(new StartGameModel
         {
-            GameName = request.GameName,
             Settings = request.Settings
         });
 
         var packName = TilesPackFactory.CheckName(request.Settings.TilesPackName);
         await Clients.Caller.SendAsync(CALLBACK_GET_START_DATA, new StartGameResponse
         {
-            GameName = result.GameName,
+            GameId = result.GameId,
             GameMode = result.GameMode,
             TilesPackName = packName,
             Pirates = result.Pirates,
@@ -64,7 +63,7 @@ public class GameHub : Hub
         {
             await Move(new TurnGameRequest
             {
-                GameName = request.GameName
+                GameId = result.GameId
             });
         }
     }
@@ -76,7 +75,7 @@ public class GameHub : Hub
     {
         var result = await _gameService.MakeGameTurn(new TurnGameModel
         {
-            GameName = request.GameName,
+            GameId = request.GameId,
             TurnNum = request.TurnNum,
             PirateId = request.PirateId
         });
@@ -94,7 +93,7 @@ public class GameHub : Hub
         {
             await Move(new TurnGameRequest
             {
-                GameName = request.GameName
+                GameId = request.GameId
             });
         }
     }

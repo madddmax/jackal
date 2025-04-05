@@ -15,24 +15,24 @@ public class GameStateRepositoryInMemory : IGameStateRepository
         _cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(1));
     }
     
-    public Task<Game?> GetGame(string gameName)
+    public Task<Game?> GetGame(long gameId)
     {
-        return Task.FromResult(_memoryCache.TryGetValue(GetKey(gameName), out Game? game) && game != null 
+        return Task.FromResult(_memoryCache.TryGetValue(GetKey(gameId), out Game? game) && game != null 
             ? game
             : null);
     }
 
-    public Task CreateGame(string gameName, Game game)
+    public Task CreateGame(long gameId, Game game)
     {
-        _memoryCache.Set(GetKey(gameName), game, _cacheEntryOptions);
+        _memoryCache.Set(GetKey(gameId), game, _cacheEntryOptions);
         return Task.CompletedTask;
     }
 
-    public Task UpdateGame(string gameName, Game game)
+    public Task UpdateGame(long gameId, Game game)
     {
-        _memoryCache.Set(GetKey(gameName), game, _cacheEntryOptions);
+        _memoryCache.Set(GetKey(gameId), game, _cacheEntryOptions);
         return Task.CompletedTask;
     }
 
-    private static string GetKey(string str) => "game:" + str;
+    private static string GetKey(long gameId) => $"game:{gameId}";
 }

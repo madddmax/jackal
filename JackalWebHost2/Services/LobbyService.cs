@@ -115,7 +115,6 @@ public class LobbyService : ILobbyService
         // todo нужно доработать назначение игроков - расставить правильно игроков по позициям
         var game = await _gameService.StartGame(new StartGameModel
         {
-            GameName = Guid.NewGuid().ToString("D"),
             Settings = lobby.GameSettings
         });
 
@@ -125,8 +124,8 @@ public class LobbyService : ILobbyService
             .ToArray();
 
         await _lobbyRepository.RemoveUsersFromLobby(lobbyId, token);
-        await _lobbyRepository.Close(lobbyId, _timeProvider.GetUtcNow(), game.GameName, gameMembers, token);
-        _logger.LogInformation("User {UserId} created game {GameId} from lobby {LobbyId} ", userId, game.GameName, lobbyId);
+        await _lobbyRepository.Close(lobbyId, _timeProvider.GetUtcNow(), game.GameId, gameMembers, token);
+        _logger.LogInformation("User {UserId} created game {GameId} from lobby {LobbyId} ", userId, game.GameId, lobbyId);
         return await _lobbyRepository.GetLobbyInfo(lobbyId, true, token) ?? throw new NotSupportedException("Unexpected NRE");
     }
     
@@ -260,7 +259,7 @@ public class LobbyService : ILobbyService
         if (userLobby.OwnerId == userId)
         {
             await _lobbyRepository.RemoveUsersFromLobby(userLobby.Id, token);
-            await _lobbyRepository.Close(userLobby.Id, _timeProvider.GetUtcNow(), null, null, token);
+            await _lobbyRepository.Close(userLobby.Id, _timeProvider.GetUtcNow(), userLobby.GameId, null, token);
             _logger.LogInformation("User {UserId} closed his lobby {LobbyId} ", userId, userLobby.Id);
             return;
         }

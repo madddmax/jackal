@@ -1,5 +1,4 @@
-﻿using JackalWebHost2.Controllers.Models;
-using JackalWebHost2.Controllers.Models.Lobby;
+﻿using JackalWebHost2.Controllers.Models.Lobby;
 using JackalWebHost2.Models.Lobby;
 
 namespace JackalWebHost2.Controllers.Mappings;

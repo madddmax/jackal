@@ -7,7 +7,7 @@ import { Constants } from '/app/constants';
 import { getGameSettings, getGameStatistics, getTeamScores } from '/game/redux/gameSlice';
 
 function Controls() {
-    const { gameName, mapSize, mapId, tilesPackName, gameMode } = useSelector(getGameSettings);
+    const { gameId, mapSize, mapId, tilesPackName, gameMode } = useSelector(getGameSettings);
     const stat = useSelector(getGameStatistics);
     const teamScores = useSelector(getTeamScores);
 
@@ -15,7 +15,7 @@ function Controls() {
         <>
             <div className={classes.statistic}>
                 <div>
-                    Код игры: <span>{gameName}</span>
+                    ИД игры: <span>{gameId}</span>
                 </div>
                 <div>
                     Код карты: <span>{mapId}</span>

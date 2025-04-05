@@ -60,7 +60,7 @@ export const gameSlice = createSlice({
             Object.assign(state.userSettings, action.payload);
         },
         initGame: (state, action: PayloadAction<GameStartResponse>) => {
-            state.gameSettings.gameName = action.payload.gameName;
+            state.gameSettings.gameId = action.payload.gameId;
             state.gameSettings.gameMode = action.payload.gameMode;
             state.gameSettings.tilesPackName = action.payload.tilesPackName;
             state.gameSettings.mapId = action.payload.mapId;
