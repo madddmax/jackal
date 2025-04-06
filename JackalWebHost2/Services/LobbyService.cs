@@ -95,14 +95,13 @@ public class LobbyService : ILobbyService
 
     public async Task<Lobby> StartGame(string lobbyId, User user, CancellationToken token)
     {
-        var userId = user.Id;
         var lobby = await _lobbyRepository.GetLobbyInfo(lobbyId, false, token);
         if (lobby == null || lobby.ClosedAt != null)
         {
             throw new LobbyNotFoundException();
         }
 
-        if (lobby.OwnerId != userId)
+        if (lobby.OwnerId != user.Id)
         {
             throw new UserIsNotLobbyOwnerException();
         }
@@ -113,10 +112,8 @@ public class LobbyService : ILobbyService
         }
 
         // todo нужно доработать назначение игроков - расставить правильно игроков по позициям
-        var game = await _gameService.StartGame(new StartGameModel
-        {
-            Settings = lobby.GameSettings
-        });
+        var startGameModel = new StartGameModel { Settings = lobby.GameSettings };
+        var game = await _gameService.StartGame(user.Id, startGameModel);
 
         var gameMembers = lobby.LobbyMembers.Values
             .Where(x => x.TeamId != null)
@@ -125,7 +122,7 @@ public class LobbyService : ILobbyService
 
         await _lobbyRepository.RemoveUsersFromLobby(lobbyId, token);
         await _lobbyRepository.Close(lobbyId, _timeProvider.GetUtcNow(), game.GameId, gameMembers, token);
-        _logger.LogInformation("User {UserId} created game {GameId} from lobby {LobbyId} ", userId, game.GameId, lobbyId);
+        _logger.LogInformation("User {UserId} created game {GameId} from lobby {LobbyId} ", user.Id, game.GameId, lobbyId);
         return await _lobbyRepository.GetLobbyInfo(lobbyId, true, token) ?? throw new NotSupportedException("Unexpected NRE");
     }
     
