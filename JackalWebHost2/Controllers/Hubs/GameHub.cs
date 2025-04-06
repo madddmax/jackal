@@ -40,10 +40,9 @@ public class GameHub : Hub
     /// </summary>
     public async Task Start(StartGameRequest request)
     {
-        var result = await _gameService.StartGame(new StartGameModel
-        {
-            Settings = request.Settings
-        });
+        var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
+        var startGameModel = new StartGameModel { Settings = request.Settings };
+        var result = await _gameService.StartGame(user.Id, startGameModel);
 
         var packName = TilesPackFactory.CheckName(request.Settings.TilesPackName);
         await Clients.Caller.SendAsync(CALLBACK_GET_START_DATA, new StartGameResponse
@@ -73,12 +72,14 @@ public class GameHub : Hub
     /// </summary>
     public async Task Move(TurnGameRequest request)
     {
-        var result = await _gameService.MakeGameTurn(new TurnGameModel
+        var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
+        var turnGameModel = new TurnGameModel
         {
             GameId = request.GameId,
             TurnNum = request.TurnNum,
             PirateId = request.PirateId
-        });
+        };
+        var result = await _gameService.MakeGameTurn(user.Id, turnGameModel);
 
         await Clients.Caller.SendAsync(CALLBACK_GET_MOVE_CHANGES, new TurnGameResponse
         {

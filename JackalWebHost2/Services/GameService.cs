@@ -24,10 +24,8 @@ public class GameService : IGameService
         _drawService = drawService;
     }
     
-    public async Task<StartGameResult> StartGame(StartGameModel request)
+    public async Task<StartGameResult> StartGame(long userId, StartGameModel request)
     {
-        // todo validate game name
-        
         GameSettings gameSettings = request.Settings;
         IPlayer[] gamePlayers = new IPlayer[gameSettings.Players.Length];
         int index = 0;
@@ -58,7 +56,7 @@ public class GameService : IGameService
         var gameRequest = new GameRequest(mapSize, mapGenerator, gamePlayers, gameMode);
         var game = new Game(gameRequest);
 
-        var gameId = await _gameRepository.CreateGame(game);
+        var gameId = await _gameRepository.CreateGame(userId, game);
         await _gameStateRepository.CreateGame(gameId, game);
         
         var map = _drawService.Map(game.Board);
@@ -84,7 +82,7 @@ public class GameService : IGameService
         };
     }
     
-    public async Task<TurnGameResult> MakeGameTurn(TurnGameModel request)
+    public async Task<TurnGameResult> MakeGameTurn(long userId, TurnGameModel request)
     {
         var game = await _gameStateRepository.GetGame(request.GameId);
         if (game == null)

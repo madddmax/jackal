@@ -7,7 +7,7 @@ public class GameRepositoryStub : IGameRepository
 {
     private long _gameId;
     
-    public Task<long> CreateGame(Game game)
+    public Task<long> CreateGame(long userId, Game game)
     {
         return Task.FromResult(_gameId++);
     }
