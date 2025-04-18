@@ -1,12 +1,13 @@
 import { HubConnection } from '@microsoft/signalr';
 import { useEffect } from 'react';
+
 import { debugLog } from '/app/global';
 
 const useClientMethod = (
     enableSockets: boolean,
     hubConnection: HubConnection | undefined,
     methodName: string,
-    method: (...args: any[]) => void,
+    method: (...args: unknown[]) => void,
 ) => {
     useEffect(() => {
         debugLog('useClientMethod', methodName, hubConnection);

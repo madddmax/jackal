@@ -1,11 +1,13 @@
+import { PayloadAction } from '@reduxjs/toolkit';
 import { call, delay, fork, put, race, select, take, takeEvery } from 'redux-saga/effects';
-import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
-import { history } from '/app/global';
+
 import { LobbyCreateResponse, LobbyGetResponse, LobbyInfo, LobbyJoinResponse } from '../../common/redux.types';
 import { updateLobby } from '../redux/lobbySlice';
+import { history } from '/app/global';
+import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
 
-export function* lobbyCreate(action: any) {
-    let result: { data: LobbyCreateResponse } = yield call(
+export function* lobbyCreate(action: PayloadAction<{ lobbyId: string }>) {
+    const result: { data: LobbyCreateResponse } = yield call(
         async () =>
             await axiosInstance({
                 url: 'v1/lobby/create-lobby',
@@ -17,8 +19,8 @@ export function* lobbyCreate(action: any) {
     history.navigate && history.navigate('/lobby/' + result.data.lobby.id);
 }
 
-export function* lobbyJoin(action: any) {
-    let result: { data: LobbyJoinResponse } = yield call(
+export function* lobbyJoin(action: PayloadAction<{ lobbyId: string }>) {
+    const result: { data: LobbyJoinResponse } = yield call(
         async () =>
             await axiosInstance({
                 url: 'v1/lobby/join-lobby',
@@ -30,8 +32,8 @@ export function* lobbyJoin(action: any) {
     history.navigate && history.navigate('/lobby/' + result.data.lobby.id);
 }
 
-export function* lobbyGet(action: any) {
-    let result: { data: LobbyGetResponse } = yield call(
+export function* lobbyGet(action: PayloadAction<{ lobbyId: string }>) {
+    const result: { data: LobbyGetResponse } = yield call(
         async () =>
             await axiosInstance({
                 url: 'v1/lobby/get-lobby',

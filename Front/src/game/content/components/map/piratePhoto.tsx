@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import { memo } from 'react';
 import Image from 'react-bootstrap/Image';
 
 import './cell.less';
@@ -70,4 +69,4 @@ const PiratePhoto = ({ pirate, pirateSize, isCurrentPlayerGirl, onTeamPirateClic
         </>
     );
 };
-export default memo(PiratePhoto);
+export default PiratePhoto;
