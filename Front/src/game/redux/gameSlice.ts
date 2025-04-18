@@ -1,27 +1,17 @@
 import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
 import { memoize } from 'proxy-memoize';
 
+import { FieldState, GamePlace, GameState, GameStateSettings, PirateChoose, PirateMoves, StorageState } from '../types';
 import {
-    FieldState,
-    GameMap,
-    GamePirate,
-    GamePlace,
+    GameMapResponse,
+    GamePirateChangesResponse,
     GameStartResponse,
-    GameStat,
-    GameState,
-    GameStateSettings,
-    GameStatistics,
-    GameTeam,
-    PirateChanges,
-    PirateChoose,
-    PirateMoves,
-    StorageState,
-    TeamState,
-} from '../types';
+    GameStatisticsResponse,
+    GameTeamResponse,
+} from '../types/sagaContracts';
 import { ScreenSizes, TeamScores } from './gameSlice.types';
 import { Constants } from '/app/constants';
 import { debugLog, getAnotherRandomValue, getRandomValues, girlsMap } from '/app/global';
-import { PiratePosition } from '/common/redux.types';
 
 export const gameSlice = createSlice({
     name: 'game',
@@ -78,7 +68,7 @@ export const gameSlice = createSlice({
             );
             gameSlice.caseReducers.initPiratePositions(state);
         },
-        initMap: (state, action: PayloadAction<GameMap>) => {
+        initMap: (state, action: PayloadAction<GameMapResponse>) => {
             const map = [];
             let j = 0;
             for (let i = 0; i < action.payload.height; i++) {
@@ -103,7 +93,7 @@ export const gameSlice = createSlice({
             state.gameSettings.mapSize = action.payload.width;
             state.fields = map;
         },
-        initTeams: (state, action: PayloadAction<GameTeam[]>) => {
+        initTeams: (state, action: PayloadAction<GameTeamResponse[]>) => {
             state.teams = action.payload.map((it, idx, arr) => {
                 const grId = arr.length == 2 && idx == 1 ? 2 : idx;
                 return {
@@ -256,7 +246,7 @@ export const gameSlice = createSlice({
             const curCell = state.fields[state.highlight_y][state.highlight_x];
             curCell.highlight = true;
         },
-        applyPirateChanges: (state, action: PayloadAction<PirateChanges>) => {
+        applyPirateChanges: (state, action: PayloadAction<GamePirateChangesResponse>) => {
             const cached = {} as { [id: number]: GameLevel };
             const selectors = gameSlice.getSelectors();
 
@@ -265,7 +255,7 @@ export const gameSlice = createSlice({
                 if (it.isAlive === false) {
                     const place = selectors.getPirateCell(state, it.id);
                     if (place) {
-                        const skull: LevelFeature = {
+                        const skull: GameLevelFeature = {
                             photo: place.cell.image?.includes('arrow') ? 'skull.png' : 'skull_light.png',
                             backgroundColor: 'transparent',
                         };
@@ -397,7 +387,7 @@ export const gameSlice = createSlice({
                 }));
             });
         },
-        updateLevelCoinsData: (state, action: PayloadAction<PiratePosition>) => {
+        updateLevelCoinsData: (state, action: PayloadAction<GamePiratePosition>) => {
             const cell = girlsMap.GetPosition(action.payload);
             const field = state.fields[action.payload.position.y][action.payload.position.x];
             const level = field.levels[action.payload.position.level];
@@ -407,7 +397,7 @@ export const gameSlice = createSlice({
                 ? levelPirates?.find((it) => !it.withCoin)?.id
                 : undefined;
         },
-        applyStat: (state, action: PayloadAction<GameStatistics>) => {
+        applyStat: (state, action: PayloadAction<GameStatisticsResponse>) => {
             state.stat = action.payload.stats;
             state.teamScores = action.payload.teamScores;
 

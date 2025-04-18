@@ -2,7 +2,6 @@ import cn from 'classnames';
 import Image from 'react-bootstrap/Image';
 
 import './pirates.less';
-import { GamePirate } from '/game/types';
 
 interface PirateProps {
     pirate: GamePirate;

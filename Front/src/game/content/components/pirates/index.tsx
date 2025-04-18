@@ -12,7 +12,6 @@ import {
 } from '../../../redux/gameSlice';
 import Pirate from './pirate';
 import './pirates.less';
-import { GamePirate } from '/game/types';
 
 function Pirates() {
     const dispatch = useDispatch();
