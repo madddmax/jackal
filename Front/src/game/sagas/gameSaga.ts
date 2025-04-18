@@ -11,9 +11,11 @@ import {
     initGame,
     removeHumanMoves,
 } from '../redux/gameSlice';
-import { GameStartResponse, GameTurnResponse, StorageState, TeamState } from '../types';
-import { animateQueue } from '/app/global';
+import { StorageState } from '../types';
+import { GameStartResponse, GameTurnResponse } from '../types/sagaContracts';
 import { errorsWrapper, sagaActions } from '/common/sagas';
+
+const animateQueue: GameTurnResponse[] = [];
 
 export function* applyStartData(action: { payload: GameStartResponse }) {
     const data = action.payload;

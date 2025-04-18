@@ -8,11 +8,12 @@ import reducer, {
     initTeams,
     setCurrentHumanTeam,
 } from '/game/redux/gameSlice';
-import { GamePirate, GameState, GameTeam } from '/game/types';
+import { GameState } from '/game/types';
+import { GameTeamResponse } from '/game/types/sagaContracts';
 
 const testTeamId = 12;
 
-const twoTeamsData: GameTeam[] = [
+const twoTeamsData: GameTeamResponse[] = [
     {
         id: 1,
         name: 'girls',

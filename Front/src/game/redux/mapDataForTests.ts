@@ -1,6 +1,6 @@
-import { GameMap } from '../types';
+import { GameMapResponse } from '../types/sagaContracts';
 
-export const getMapData: GameMap = {
+export const getMapData: GameMapResponse = {
     height: 5,
     width: 5,
     changes: [

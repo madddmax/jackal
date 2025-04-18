@@ -1,7 +1,7 @@
-export interface GameMove {
+interface GameMove {
     moveNum: number;
-    from: AcceptableMove;
-    to: AcceptableMove;
+    from: GameMovePosition;
+    to: GameMovePosition;
     prev?: {
         x: number;
         y: number;
@@ -10,7 +10,7 @@ export interface GameMove {
     withRespawn: boolean;
 }
 
-interface AcceptableMove {
+interface GameMovePosition {
     pirateIds: string[];
     level: number;
     x: number;

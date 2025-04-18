@@ -2,8 +2,6 @@ import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { NavigateFunction } from 'react-router-dom';
 
 import config from './config';
-import { PiratePosition } from '/common/redux.types';
-import { GameTurnResponse } from '/game/types';
 
 export const uuidGen = () => {
     return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
@@ -50,8 +48,6 @@ export const hubConnection = new HubConnectionBuilder()
     .configureLogging(LogLevel.Information)
     .build();
 
-export const animateQueue: GameTurnResponse[] = [];
-
 export interface GirlsLevel {
     level: number;
     levelsCountInCell: number;
@@ -60,9 +56,9 @@ export interface GirlsLevel {
 
 export interface GirlsPositions {
     Map: { [id: number]: GirlsLevel };
-    AddPosition: (it: PiratePosition, levelsCount: number) => void;
-    RemovePosition: (it: PiratePosition) => void;
-    GetPosition: (it: PiratePosition) => GirlsLevel | undefined;
+    AddPosition: (it: GamePiratePosition, levelsCount: number) => void;
+    RemovePosition: (it: GamePiratePosition) => void;
+    GetPosition: (it: GamePiratePosition) => GirlsLevel | undefined;
     ScrollGirls: (pos: GirlsLevel) => void;
 }
 
@@ -70,7 +66,7 @@ export interface GirlsPositions {
 // для корректного их смещения относительно друг друга
 export const girlsMap: GirlsPositions = {
     Map: {},
-    AddPosition: function (it: PiratePosition, levelsCount: number) {
+    AddPosition: function (it: GamePiratePosition, levelsCount: number) {
         const cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
         const level = this.Map[cachedId];
         if (!level) {
@@ -87,7 +83,7 @@ export const girlsMap: GirlsPositions = {
             }
         }
     },
-    RemovePosition: function (it: PiratePosition) {
+    RemovePosition: function (it: GamePiratePosition) {
         const cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
         const girlsLevel = this.Map[cachedId];
         if (girlsLevel?.girls != undefined) {
@@ -95,7 +91,7 @@ export const girlsMap: GirlsPositions = {
             if (girlsLevel.girls.length == 0) delete this.Map[cachedId];
         }
     },
-    GetPosition: function (it: PiratePosition): GirlsLevel | undefined {
+    GetPosition: function (it: GamePiratePosition): GirlsLevel | undefined {
         const cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
         return this.Map[cachedId];
     },

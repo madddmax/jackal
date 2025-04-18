@@ -1,4 +1,5 @@
-import { GamePirate, GameState, GameTeam } from '../types';
+import { GameState } from '../types';
+import { GameTeamResponse } from '../types/sagaContracts';
 import reducer, {
     applyChanges,
     applyPirateChanges,
@@ -15,11 +16,10 @@ import reducer, {
 import { getMapData } from './mapDataForTests';
 import { Constants } from '/app/constants';
 import { girlsMap } from '/app/global';
-import { PiratePosition } from '/common/redux.types';
 
 const testTeamId = 12;
 
-const twoTeamsData: GameTeam[] = [
+const twoTeamsData: GameTeamResponse[] = [
     {
         id: 5,
         name: 'girls',
@@ -42,7 +42,7 @@ const twoTeamsData: GameTeam[] = [
     },
 ];
 
-const fourTeamsData: GameTeam[] = [
+const fourTeamsData: GameTeamResponse[] = [
     {
         id: 5,
         name: 'girls',
@@ -85,7 +85,7 @@ const fourTeamsData: GameTeam[] = [
     },
 ];
 
-const getPirates = (data: PiratePosition[]): GamePirate[] => {
+const getPirates = (data: GamePiratePosition[]): GamePirate[] => {
     return data.map((it) => ({
         id: it.id,
         teamId: testTeamId,

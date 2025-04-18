@@ -1,11 +1,10 @@
 import cn from 'classnames';
-import { memo } from 'react';
 import Image from 'react-bootstrap/Image';
 
 import './cell.less';
 import { debugLog, girlsMap } from '/app/global';
 import store from '/app/store';
-import { GamePirate, GameState } from '/game/types';
+import { GameState } from '/game/types';
 
 interface PiratePhotoProps {
     pirate: GamePirate;
@@ -70,4 +69,4 @@ const PiratePhoto = ({ pirate, pirateSize, isCurrentPlayerGirl, onTeamPirateClic
         </>
     );
 };
-export default memo(PiratePhoto);
+export default PiratePhoto;

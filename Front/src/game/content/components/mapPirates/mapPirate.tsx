@@ -5,14 +5,13 @@ import { chooseHumanPirate, getPirateById, getUserSettings } from '../../../redu
 import AnimatePirate from './animatePirate';
 import { girlsMap } from '/app/global';
 import store from '/app/store';
-import { PiratePosition } from '/common/redux.types';
-import { GamePirate, GameState } from '/game/types';
+import { GameState } from '/game/types';
 
 interface MapPirateProps {
     id: string;
     pirateSize: number;
-    getMarginTop: (girl: PiratePosition) => number;
-    getMarginLeft: (girl: PiratePosition) => number;
+    getMarginTop: (girl: GamePiratePosition) => number;
+    getMarginLeft: (girl: GamePiratePosition) => number;
     mapSize: number;
     cellSize: number;
 }

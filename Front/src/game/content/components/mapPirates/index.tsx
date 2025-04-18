@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { getGameSettings, getPiratesIds } from '../../../redux/gameSlice';
 import MapPirate from './mapPirate';
 import { girlsMap } from '/app/global';
-import { PiratePosition } from '/common/redux.types';
 
 interface MapPiratesProps {
     mapSize: number;
@@ -20,7 +19,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
     const xAddSize = (mul_x_times - 1) * 5;
     const xUnitSize = cellSize - pirateSize / 2;
 
-    const getMarginTop = (girl: PiratePosition): number => {
+    const getMarginTop = (girl: GamePiratePosition): number => {
         const position = girlsMap.GetPosition(girl);
         const levelsCount = position!.levelsCountInCell;
         const level = position!.level;
@@ -52,7 +51,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
         return 0;
     };
 
-    const getMarginLeft = (girl: PiratePosition): number => {
+    const getMarginLeft = (girl: GamePiratePosition): number => {
         const position = girlsMap.GetPosition(girl);
         const levelsCount = position!.levelsCountInCell;
         const level = position!.level;

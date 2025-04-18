@@ -50,12 +50,3 @@ export interface LobbyMember {
     login: string;
     teamId?: number;
 }
-
-export interface PiratePosition {
-    id: string;
-    position: {
-        level: number;
-        x: number;
-        y: number;
-    };
-}

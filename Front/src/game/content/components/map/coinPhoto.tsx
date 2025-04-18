@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux';
+
 import { chooseHumanPirate } from '../../../redux/gameSlice';
 
 interface CoinPhotoProps {
@@ -13,7 +14,7 @@ const CoinPhoto = ({ coinCount, piratesWithCoins, freeCoinGirlId, pirateSize }: 
 
     if (piratesWithCoins === coinCount) return <div />;
 
-    let text = coinCount - (piratesWithCoins || 0);
+    const text = coinCount - (piratesWithCoins || 0);
     const coinSize = pirateSize * 0.6;
 
     const onClick = (girlId: string) => {
