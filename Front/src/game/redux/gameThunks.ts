@@ -1,6 +1,7 @@
 import { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
-import { GameStartResponse, GameState, GameTurnResponse } from '../types';
+import { GameState } from '../types';
+import { GameStartResponse, GameTurnResponse } from '../types/sagaContracts';
 import { applyChanges, applyPirateChanges, applyStat, highlightHumanMoves, initGame, initMap } from './gameSlice';
 import { girlsMap } from '/app/global';
 

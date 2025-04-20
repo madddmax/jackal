@@ -4,7 +4,7 @@ import Image from 'react-bootstrap/Image';
 import './cell.less';
 
 interface FeaturePhotoProps {
-    feature: LevelFeature;
+    feature: GameLevelFeature;
     featureSize: number;
     hasClick?: boolean;
 }

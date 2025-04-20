@@ -11,10 +11,10 @@ interface GameLevel {
     coins: number;
     piratesWithCoinsCount?: number;
     freeCoinGirlId?: string;
-    features?: LevelFeature[];
+    features?: GameLevelFeature[];
 }
 
-interface LevelFeature {
+interface GameLevelFeature {
     backgroundColor: string;
     photo: string;
 }

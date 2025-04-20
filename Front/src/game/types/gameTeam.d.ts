@@ -1,15 +1,4 @@
-export interface GameTeam {
-    id: number;
-    name: string;
-    coins: number;
-    isHuman: boolean;
-    ship: {
-        x: number;
-        y: number;
-    };
-}
-
-export interface TeamState {
+interface TeamState {
     id: number;
     activePirate: string;
     name: string;

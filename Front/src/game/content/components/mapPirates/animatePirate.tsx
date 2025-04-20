@@ -1,8 +1,7 @@
 import { Animate } from 'react-move';
 
-import PiratePhoto from '../map/piratePhoto';
+import { PiratePhotoMemoized } from './piratePhotoMemoized';
 import { girlsMap } from '/app/global';
-import { GamePirate } from '/game/types';
 
 interface AnimatePirateProps {
     pirate: GamePirate;
@@ -50,7 +49,7 @@ const AnimatePirate = ({
                             pointerEvents: isCurrentPlayerGirl ? 'auto' : 'none',
                         }}
                     >
-                        <PiratePhoto
+                        <PiratePhotoMemoized
                             pirate={pirate}
                             pirateSize={pirateSize}
                             isCurrentPlayerGirl={isCurrentPlayerGirl}
