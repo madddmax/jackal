@@ -73,8 +73,8 @@ const Header = () => {
                         <Nav.Link as={Link} to="/newgame">
                             Новая игра
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/joinlobby">
-                            Лобби
+                        <Nav.Link as={Link} to="/netgame">
+                            Сетевая игра
                         </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>

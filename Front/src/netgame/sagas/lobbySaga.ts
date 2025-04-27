@@ -1,8 +1,15 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { call, delay, fork, put, race, select, take, takeEvery } from 'redux-saga/effects';
+//import { call, delay, fork, put, race, select, take, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 
-import { LobbyCreateResponse, LobbyGetResponse, LobbyInfo, LobbyJoinResponse } from '../../common/redux.types';
-import { updateLobby } from '../redux/lobbySlice';
+//import { LobbyCreateResponse, LobbyGetResponse, LobbyInfo, LobbyJoinResponse, NetgameListResponse } from '../../common/redux.types';
+import {
+    LobbyCreateResponse,
+    LobbyGetResponse,
+    LobbyJoinResponse,
+    NetgameListResponse,
+} from '../../common/redux.types';
+import { applyGamesList, updateLobby } from '../redux/lobbySlice';
 import { history } from '/app/global';
 import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
 
@@ -45,31 +52,37 @@ export function* lobbyGet(action: PayloadAction<{ lobbyId: string }>) {
     yield put({ type: sagaActions.LOBBY_DO_POLLING });
 }
 
-function* lobbyPolling() {
-    yield delay(3000);
-    const lobby: LobbyInfo = yield select((state) => state.lobby.lobby);
-    if (!lobby) {
-        yield put({ type: sagaActions.LOBBY_STOP_POLLING });
-        return;
-    }
+// function* lobbyPolling() {
+//     yield delay(3000);
+//     const lobby: LobbyInfo = yield select((state) => state.lobby.lobby);
+//     if (!lobby) {
+//         yield put({ type: sagaActions.LOBBY_STOP_POLLING });
+//         return;
+//     }
 
-    yield put({
-        type: sagaActions.LOBBY_GET,
-        payload: {
-            lobbyId: lobby.id,
-        },
-    });
-}
+//     yield put({
+//         type: sagaActions.LOBBY_GET,
+//         payload: {
+//             lobbyId: lobby.id,
+//         },
+//     });
+// }
 
-function* watchLobbyPolling() {
-    while (true) {
-        yield take([sagaActions.LOBBY_DO_POLLING]);
-        yield race([call(lobbyPolling), take(sagaActions.LOBBY_STOP_POLLING)]);
-    }
+// function* watchLobbyPolling() {
+//     while (true) {
+//         yield take([sagaActions.LOBBY_DO_POLLING]);
+//         yield race([call(lobbyPolling), take(sagaActions.LOBBY_STOP_POLLING)]);
+//     }
+// }
+
+export function* applyNetGamesData(action: { payload: NetgameListResponse }) {
+    const data = action.payload;
+    yield put(applyGamesList(data));
 }
 
 export default function* rootSaga() {
-    yield fork(watchLobbyPolling), yield takeEvery(sagaActions.LOBBY_CREATE, errorsWrapper(lobbyCreate));
+    // yield fork(watchLobbyPolling), yield takeEvery(sagaActions.LOBBY_CREATE, errorsWrapper(lobbyCreate));
     yield takeEvery(sagaActions.LOBBY_JOIN, errorsWrapper(lobbyJoin));
     yield takeEvery(sagaActions.LOBBY_GET, errorsWrapper(lobbyGet));
+    yield takeEvery(sagaActions.NET_GAMES_APPLY_DATA, errorsWrapper(applyNetGamesData));
 }
