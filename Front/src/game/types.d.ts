@@ -61,11 +61,11 @@ export interface AvailableMove {
     };
 }
 
-export interface PirateMoves {
+export interface HighlightHumanMovesActionProps {
     moves?: GameMove[];
 }
 
-export interface PirateChoose {
+export interface ChooseHumanPirateActionProps {
     pirate: string;
     withCoinAction: bool;
 }

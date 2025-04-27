@@ -73,7 +73,7 @@ export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
     }
 
     yield put(applyStat(result.data));
-    yield put(applyChanges(result.data.changes));
+    yield put(applyChanges({ changes: result.data.changes }));
     yield put(
         applyPirateChanges({
             moves: result.data.moves,

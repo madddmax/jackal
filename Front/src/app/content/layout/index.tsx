@@ -15,6 +15,7 @@ import { sagaActions } from '/common/sagas';
 import Playground from '/game/content/playground';
 import { initMySettings } from '/game/redux/gameSlice';
 import { StorageState } from '/game/types';
+import GameList from '/netgame/content/gameList';
 import LobbyCard from '/netgame/content/lobbyCard';
 import LobbyJoin from '/netgame/content/lobbyJoin';
 
@@ -61,6 +62,7 @@ const Layout = () => {
                 <Route path="/newgame" element={<Newgame />}></Route>
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/joinlobby" element={<LobbyJoin />}></Route>
+                <Route path="/netgame" element={<GameList />}></Route>
                 <Route path="/lobby/:id" element={<LobbyCard />}></Route>
                 <Route path="/" element={<Playground />}></Route>
             </Routes>

@@ -27,7 +27,7 @@ export const applyMoveChanges =
     (data: GameTurnResponse): ThunkAction<void, GameState, unknown, UnknownAction> =>
     async (dispatch) => {
         dispatch(applyStat(data));
-        dispatch(applyChanges(data.changes));
+        dispatch(applyChanges({ changes: data.changes }));
         dispatch(
             applyPirateChanges({
                 moves: data.moves,

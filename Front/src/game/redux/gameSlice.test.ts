@@ -511,19 +511,21 @@ describe('redux logic tests', () => {
     test('Производим изменения на карте', () => {
         const result = reducer(
             previousState,
-            applyChanges([
-                {
-                    backgroundImageSrc: '/fields/forest.png',
-                    rotate: 2,
-                    levels: [
-                        { level: 0, coins: 0 },
-                        { level: 1, coins: 0 },
-                        { level: 2, coins: 0 },
-                    ],
-                    x: 2,
-                    y: 4,
-                },
-            ]),
+            applyChanges({
+                changes: [
+                    {
+                        backgroundImageSrc: '/fields/forest.png',
+                        rotate: 2,
+                        levels: [
+                            { level: 0, coins: 0 },
+                            { level: 1, coins: 0 },
+                            { level: 2, coins: 0 },
+                        ],
+                        x: 2,
+                        y: 4,
+                    },
+                ],
+            }),
         );
 
         expect(result.fields[4][2].levels[0]).toEqual({

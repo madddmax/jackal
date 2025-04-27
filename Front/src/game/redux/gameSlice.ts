@@ -1,8 +1,17 @@
 import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
 import { memoize } from 'proxy-memoize';
 
-import { FieldState, GamePlace, GameState, GameStateSettings, PirateChoose, PirateMoves, StorageState } from '../types';
 import {
+    ChooseHumanPirateActionProps,
+    FieldState,
+    GamePlace,
+    GameState,
+    GameStateSettings,
+    HighlightHumanMovesActionProps,
+    StorageState,
+} from '../types';
+import {
+    GameMapChangesResponse,
     GameMapResponse,
     GamePirateChangesResponse,
     GameStartResponse,
@@ -146,7 +155,7 @@ export const gameSlice = createSlice({
         setPirateAutoChange: (state, action: PayloadAction<boolean>) => {
             state.hasPirateAutoChange = action.payload;
         },
-        chooseHumanPirate: (state, action: PayloadAction<PirateChoose>) => {
+        chooseHumanPirate: (state, action: PayloadAction<ChooseHumanPirateActionProps>) => {
             const selectors = gameSlice.getSelectors();
             const pirate = selectors.getPirateById(state, action.payload.pirate)!;
             const currentPlayerTeam = selectors.getCurrentPlayerTeam(state)!;
@@ -174,7 +183,7 @@ export const gameSlice = createSlice({
                 gameSlice.caseReducers.highlightHumanMoves(state, highlightHumanMoves({}));
             }
         },
-        highlightHumanMoves: (state, action: PayloadAction<PirateMoves>) => {
+        highlightHumanMoves: (state, action: PayloadAction<HighlightHumanMovesActionProps>) => {
             const selectors = gameSlice.getSelectors();
             const currentTeam = selectors.getCurrentTeam(state)!;
             if (!currentTeam?.isHuman) return;
@@ -370,8 +379,8 @@ export const gameSlice = createSlice({
                 });
             }
         },
-        applyChanges: (state, action: PayloadAction<GameCell[]>) => {
-            action.payload.forEach((it) => {
+        applyChanges: (state, action: PayloadAction<GameMapChangesResponse>) => {
+            action.payload.changes.forEach((it) => {
                 const cell = state.fields[it.y][it.x];
                 if (cell.image != it.backgroundImageSrc) {
                     cell.image = it.backgroundImageSrc;

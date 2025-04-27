@@ -1,11 +1,3 @@
-interface GameCell {
-    backgroundImageSrc: string;
-    rotate: number;
-    levels: GameLevel[];
-    x: number;
-    y: number;
-}
-
 interface GameLevel {
     level: number;
     coins: number;

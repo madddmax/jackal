@@ -3,7 +3,16 @@ import { GameSettings } from '../game/redux/gameSlice.types';
 import { CommonState } from './redux/commonSlice.types';
 
 export interface LobbyState {
+    gamelist: GameInfo[];
     lobby?: LobbyInfo;
+}
+
+export interface GameInfo {
+    id: string;
+}
+
+export interface NetgameListResponse {
+    games: string[];
 }
 
 export interface LobbyCreateResponse {
