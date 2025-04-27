@@ -12,18 +12,30 @@ export interface GameStartResponse {
 }
 
 export interface GameTurnResponse {
+    changes: CellDiffResponse[];
     pirates: GamePirate[];
     pirateChanges: PirateDiffResponse[];
-    changes: GameCell[];
     moves: GameMove[];
     stats: GameStat;
     teamScores?: GameScore[];
 }
 
 export interface GameMapResponse {
-    changes: GameCell[];
+    changes: CellDiffResponse[];
     height: number;
     width: number;
+}
+
+export interface GameMapChangesResponse {
+    changes: CellDiffResponse[];
+}
+
+interface CellDiffResponse {
+    backgroundImageSrc: string;
+    rotate: number;
+    levels: GameLevel[];
+    x: number;
+    y: number;
 }
 
 export interface GameTeamResponse {
