@@ -5,6 +5,21 @@ namespace JackalWebHost2.Data.Interfaces;
 public interface IGameStateRepository
 {
     /// <summary>
+    /// Флаг наличия изменений в активных играх
+    /// </summary>
+    bool HasGamesChanges();
+
+    /// <summary>
+    /// Сброс флага наличия изменений в активных играх
+    /// </summary>
+    void ResetGamesChanges();
+
+    /// <summary>
+    /// Получить ключи всех активных игр
+    /// </summary>
+    IList<long> GetAllKeys();
+
+    /// <summary>
     /// Получить состояние игры
     /// </summary>
     Task<Game?> GetGame(long gameId);
