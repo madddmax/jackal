@@ -15,6 +15,10 @@ public class TwoTileMapGenerator(
     private readonly ThreeTileMapGenerator _mapGenerator =
         new(firstTileParams, secondTileParams, secondTileParams, totalCoins);
 
+    public int MapId => _mapGenerator.MapId;
+    
+    public string TilesPackName => _mapGenerator.TilesPackName;
+    
     public int TotalCoins => _mapGenerator.TotalCoins;
 
     public Tile GetNext(Position position) => _mapGenerator.GetNext(position);
