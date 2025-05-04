@@ -41,6 +41,10 @@ const Layout = () => {
         debugLog(data);
         dispatch({ type: sagaActions.GAME_TURN_APPLY_DATA, payload: data });
     });
+    useClientMethod(enableSockets, hubConnection, 'GetActiveGames', (data) => {
+        debugLog(data);
+        dispatch({ type: sagaActions.NET_GAMES_APPLY_DATA, payload: data });
+    });
     useHub(enableSockets && auth.isAuthorised === true, hubConnection);
 
     useEffect(() => {
