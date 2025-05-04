@@ -12,7 +12,7 @@ export const lobbySlice = createSlice({
             state.lobby = action.payload;
         },
         applyGamesList: (state, action: PayloadAction<NetgameListResponse>) => {
-            state.gamelist = action.payload.games.map((it) => ({ id: it }));
+            state.gamelist = action.payload.gamesKeys.map((it) => ({ id: it }));
         },
     },
     selectors: {

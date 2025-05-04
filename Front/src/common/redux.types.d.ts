@@ -8,11 +8,11 @@ export interface LobbyState {
 }
 
 export interface GameInfo {
-    id: string;
+    id: number;
 }
 
 export interface NetgameListResponse {
-    games: string[];
+    gamesKeys: number[];
 }
 
 export interface LobbyCreateResponse {
