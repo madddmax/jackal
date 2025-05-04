@@ -1,4 +1,5 @@
 ﻿using Jackal.Core;
+using JackalWebHost2.Data.Entities;
 
 namespace JackalWebHost2.Data.Interfaces;
 
@@ -17,7 +18,13 @@ public interface IGameStateRepository
     /// <summary>
     /// Получить ключи всех активных игр
     /// </summary>
+    [Obsolete("Заменить на GetGamesEntries")]
     IList<long> GetAllKeys();
+
+    /// <summary>
+    /// Получить описание всех активных игр
+    /// </summary>
+    IList<GameCacheEntry> GetGamesEntries();
 
     /// <summary>
     /// Получить состояние игры
