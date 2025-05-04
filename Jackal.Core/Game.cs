@@ -13,6 +13,7 @@ public record GameRequest(
     // данные по карте todo подумать об объединении
     int MapSize,
     IMapGenerator MapGenerator,
+    
     // данные по игрокам
     IPlayer[] Players,
     GameModeType GameMode = GameModeType.FreeForAll,
@@ -39,20 +40,20 @@ public class Game
     private readonly List<IGameAction> _actions;
 
     /// <summary>
-    /// ИД игры
-    /// </summary>
-    public readonly Guid GameId = Guid.NewGuid();
-
-    /// <summary>
     /// Режим игры
     /// </summary>
     public readonly GameModeType GameMode;
     
     /// <summary>
+    /// Рэндом для выбора игровых сообщений
+    /// </summary>
+    public readonly int MessagesKitRandom = new Random().Next();
+    
+    /// <summary>
     /// Индекс набора игровых сообщений
     /// </summary>
     [JsonIgnore]
-    private int MessagesKitIndex => Math.Abs(GameId.GetHashCode() % GameMessages.Kit.Length);
+    private int MessagesKitIndex => Math.Abs(MessagesKitRandom % GameMessages.Kit.Length);
 
     /// <summary>
     /// Игровое сообщение
@@ -91,7 +92,6 @@ public class Game
             {
                 AvailableMoves = _availableMoves.ToArray(),
                 Board = Board,
-                GameId = GameId,
                 TurnNumber = TurnNo,
                 TeamId = CurrentTeamId
             };
