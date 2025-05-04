@@ -1,5 +1,7 @@
 ﻿using Jackal.Core.MapGenerator.TilesPack;
 using JackalWebHost2.Controllers.Models;
+using JackalWebHost2.Controllers.Models.Services;
+using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Infrastructure.Auth;
 using JackalWebHost2.Models;
 using JackalWebHost2.Services;
@@ -13,18 +15,25 @@ public class GameHub : Hub
     private const string CALLBACK_NOTIFY = "Notify";
     private const string CALLBACK_GET_START_DATA = "GetStartData";
     private const string CALLBACK_GET_MOVE_CHANGES = "GetMoveChanges";
+    private const string CALLBACK_GET_ACTIVE_GAMES = "GetActiveGames";
 
     private readonly IGameService _gameService;
+    private readonly IGameStateRepository _gameStateRepository;
 
-    public GameHub(IGameService gameService)
+    public GameHub(IGameService gameService, IGameStateRepository gameStateRepository)
     {
         _gameService = gameService;
+        _gameStateRepository = gameStateRepository;
     }
 
     public override async Task OnConnectedAsync()
     {
         var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
         await Clients.Caller.SendAsync(CALLBACK_NOTIFY, $"{user.Login} вошел в игру");
+        await Clients.Caller.SendAsync(CALLBACK_GET_ACTIVE_GAMES, new AllActiveGamesResponse
+        {
+            GamesKeys = _gameStateRepository.GetAllKeys()
+        });
         await base.OnConnectedAsync();
     }
 
@@ -57,7 +66,16 @@ public class GameHub : Hub
             Teams = result.Teams,
             Moves = result.Moves
         });
-        
+
+        if (_gameStateRepository.HasGamesChanges())
+        {
+            await Clients.All.SendAsync(CALLBACK_GET_ACTIVE_GAMES, new AllActiveGamesResponse
+            {
+                GamesKeys = _gameStateRepository.GetAllKeys()
+            });
+            _gameStateRepository.ResetGamesChanges();
+        }
+
         if (!result.Statistics.IsGameOver && result.Moves.Count == 0)
         {
             await Move(new TurnGameRequest

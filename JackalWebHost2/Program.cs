@@ -146,6 +146,8 @@ public class Program
             .AddValidatorsFromAssemblyContaining<Program>()
             .AddFluentValidationAutoValidation();
 
+        services.AddHostedService<ActiveGamesPollingService>();
+
         services.AddScoped<IGameService, GameService>();
         services.AddScoped<IDrawService, DrawService>();
         services.AddScoped<IMapService, MapService>();
@@ -165,8 +167,8 @@ public class Program
             services.AddScoped<IUserRepository, UserRepositoryInMemory>();
             services.AddScoped<IGameRepository, GameRepositoryStub>();
         }
-        
-        services.AddScoped<IGameStateRepository, GameStateRepositoryInMemory>();
+
+        services.AddSingleton<IGameStateRepository, GameStateRepositoryInMemory>();
         services.AddScoped<ILobbyRepository, LobbyRepositoryInMemory>();
     }
 }
