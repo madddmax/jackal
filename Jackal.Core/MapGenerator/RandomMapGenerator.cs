@@ -11,13 +11,20 @@ public class RandomMapGenerator : IMapGenerator
     private readonly Random _rand;
     private readonly Dictionary<Position,Tile> _tiles;
 
+    public int MapId { get; }
+    
+    public string TilesPackName { get; }
+    
     public int TotalCoins { get; private set; }
     
     public RandomMapGenerator(int mapId, int mapSize, string? tilesPackName = null)
     {
+        MapId = mapId;
         _rand = new Random(mapId + 5000000);
-
+        
+        TilesPackName = TilesPackFactory.CheckName(tilesPackName);
         var pack = TilesPackFactory.Create(tilesPackName);
+        
         var selectedTiles = PullOut(_rand, mapSize, pack);
         var shuffledTiles = Shuffle(selectedTiles);
         

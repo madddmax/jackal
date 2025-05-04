@@ -24,6 +24,38 @@ public class GameService : IGameService
         _drawService = drawService;
     }
     
+    public async Task<LoadGameResult> LoadGame(long userId, long gameId)
+    {
+        var game = await _gameStateRepository.GetGame(gameId);
+        if (game == null)
+        {
+            throw new GameNotFoundException();
+        }
+        
+        var map = _drawService.Map(game.Board);
+
+        List<PirateChange> pirateChanges = [];
+        foreach (var pirate in game.Board.AllPirates)
+        {
+            pirateChanges.Add(new PirateChange(pirate));
+        }
+        
+        return new LoadGameResult
+        {
+            GameId = gameId,
+            GameMode = game.GameMode,
+            TilesPackName = game.Board.Generator.TilesPackName,
+            Pirates = pirateChanges,
+            Map = map,
+            MapId = game.Board.Generator.MapId,
+            Statistics = _drawService.GetStatistics(game),
+            Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
+            Moves = game.CurrentPlayer is WebHumanPlayer
+                ? _drawService.GetAvailableMoves(game)
+                : []
+        };
+    }
+    
     public async Task<StartGameResult> StartGame(long userId, StartGameModel request)
     {
         GameSettings gameSettings = request.Settings;

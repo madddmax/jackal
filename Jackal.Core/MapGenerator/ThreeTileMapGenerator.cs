@@ -17,6 +17,10 @@ public class ThreeTileMapGenerator(
 {
     private readonly Dictionary<Position, Tile> _tiles = new();
 
+    public int MapId => 777;
+
+    public string TilesPackName => "unit-test";
+    
     public int TotalCoins => totalCoins;
 
     public Tile GetNext(Position position)

@@ -4,13 +4,22 @@ import { useNavigate } from 'react-router-dom';
 
 import classes from './gamelist.module.less';
 import { getGames } from '/netgame/redux/lobbySlice';
+import { debugLog, hubConnection } from '/app/global';
 
 const GameList = () => {
     const navigate = useNavigate();
     const list = useSelector(getGames);
 
-    const enterLobby = () => {
+    const loadGame = (gameId: number) => {
         navigate('/');
+
+        hubConnection
+            .invoke('load', {
+                gameId: gameId,
+            })
+            .catch((err) => {
+                debugLog(err);
+            });
     };
 
     return (
@@ -27,7 +36,7 @@ const GameList = () => {
                                             className="float-end"
                                             variant="outline-primary"
                                             type="submit"
-                                            onClick={() => enterLobby()}
+                                            onClick={() => loadGame(it.id)}
                                         >
                                             Войти
                                         </Button>

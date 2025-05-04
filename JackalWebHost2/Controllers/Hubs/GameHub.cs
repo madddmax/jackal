@@ -13,6 +13,7 @@ namespace JackalWebHost2.Controllers.Hubs;
 public class GameHub : Hub
 {
     private const string CALLBACK_NOTIFY = "Notify";
+    private const string CALLBACK_LOAD_GAME_DATA = "LoadGameData";
     private const string CALLBACK_GET_START_DATA = "GetStartData";
     private const string CALLBACK_GET_MOVE_CHANGES = "GetMoveChanges";
     private const string CALLBACK_GET_ACTIVE_GAMES = "GetActiveGames";
@@ -44,6 +45,36 @@ public class GameHub : Hub
         await base.OnDisconnectedAsync(exception);
     }
 
+    /// <summary>
+    /// Загрузка существующей игры
+    /// </summary>
+    public async Task Load(LoadGameRequest request)
+    {
+        var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
+        var result = await _gameService.LoadGame(user.Id, request.GameId);
+        
+        await Clients.Caller.SendAsync(CALLBACK_LOAD_GAME_DATA, new LoadGameResponse
+        {
+            GameId = result.GameId,
+            GameMode = result.GameMode,
+            TilesPackName = result.TilesPackName,
+            Pirates = result.Pirates,
+            Map = result.Map,
+            MapId = result.MapId,
+            Stats = result.Statistics,
+            Teams = result.Teams,
+            Moves = result.Moves
+        });
+
+        if (!result.Statistics.IsGameOver && result.Moves.Count == 0)
+        {
+            await Move(new TurnGameRequest
+            {
+                GameId = result.GameId
+            });
+        }
+    }
+    
     /// <summary>
     /// Старт новой игры
     /// </summary>

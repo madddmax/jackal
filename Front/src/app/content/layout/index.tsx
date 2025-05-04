@@ -33,6 +33,10 @@ const Layout = () => {
             }),
         );
     });
+    useClientMethod(enableSockets, hubConnection, 'LoadGameData', (data) => {
+        debugLog(data);
+        dispatch({ type: sagaActions.GAME_START_APPLY_DATA, payload: data });
+    });
     useClientMethod(enableSockets, hubConnection, 'GetStartData', (data) => {
         debugLog(data);
         dispatch({ type: sagaActions.GAME_START_APPLY_DATA, payload: data });

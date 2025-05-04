@@ -5,6 +5,16 @@ namespace Jackal.Core.MapGenerator;
 public interface IMapGenerator
 {
     /// <summary>
+    /// ИД карты, по нему генерируется расположение клеток
+    /// </summary>
+    public int MapId { get; }
+
+    /// <summary>
+    /// Название игрового набора клеток
+    /// </summary>
+    public string TilesPackName { get; }
+    
+    /// <summary>
     /// Всего золота на карте
     /// </summary>
     int TotalCoins { get; }
