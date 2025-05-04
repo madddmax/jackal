@@ -8,16 +8,16 @@ namespace JackalWebHost2.Data.Repositories;
 
 public class GameStateRepositoryInMemory : IGameStateRepository
 {
-    private readonly IMemoryCache _memoryCache;
+    private readonly IMemoryCache _gamesMemoryCache;
     private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
     private bool _hasChanges;
-    private readonly ConcurrentDictionary<object, GameCacheEntry> _statEntries;
+    private readonly ConcurrentDictionary<long, GameCacheEntry> _gamesEntries;
 
     public GameStateRepositoryInMemory()
     {
-        _statEntries = new ConcurrentDictionary<object, GameCacheEntry>();
-        _memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
+        _gamesEntries = new ConcurrentDictionary<long, GameCacheEntry>();
+        _gamesMemoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
         _cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromHours(1))
             .RegisterPostEvictionCallback(callback: EvictionCallback);
@@ -25,24 +25,26 @@ public class GameStateRepositoryInMemory : IGameStateRepository
 
     private void EvictionCallback(object? key, object? value, EvictionReason reason, object? state)
     {
-        if (reason == EvictionReason.None || reason == EvictionReason.Replaced)
+        if (key is not long gameId)
         {
             return;
         }
-
-        if (key is string { Length: > 5 } gameId)
+        
+        if (reason is EvictionReason.None or EvictionReason.Replaced)
         {
-            if (_statEntries.TryRemove(gameId.Substring(5), out var val))
-            {
-                _hasChanges = true;
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("/*****************************************************/");
-            Console.WriteLine("/*  EvictionCallback: Cache with key {0} has expired.  */", key);
-            Console.WriteLine("/*****************************************************/");
-            Console.WriteLine();
+            return;
         }
+        
+        if (_gamesEntries.TryRemove(gameId, out _))
+        {
+            _hasChanges = true;
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("/*****************************************************/");
+        Console.WriteLine("/*  EvictionCallback: Cache with key {0} has expired.  */", key);
+        Console.WriteLine("/*****************************************************/");
+        Console.WriteLine();
     }
 
     public bool HasGamesChanges()
@@ -57,20 +59,20 @@ public class GameStateRepositoryInMemory : IGameStateRepository
 
     public IList<long> GetAllKeys()
     {
-        return _statEntries.Values.Select(it => it.GameId).ToList();
+        return _gamesEntries.Values.Select(it => it.GameId).ToList();
     }
 
     public Task<Game?> GetGame(long gameId)
     {
-        return Task.FromResult(_memoryCache.TryGetValue(GetKey(gameId), out Game? game) && game != null 
+        return Task.FromResult(_gamesMemoryCache.TryGetValue(gameId, out Game? game) && game != null 
             ? game
             : null);
     }
 
     public Task CreateGame(long gameId, Game game)
     {
-        _memoryCache.Set(GetKey(gameId), game, _cacheEntryOptions);
-        if (_statEntries.TryAdd(gameId, new GameCacheEntry { GameId = gameId }))
+        _gamesMemoryCache.Set(gameId, game, _cacheEntryOptions);
+        if (_gamesEntries.TryAdd(gameId, new GameCacheEntry { GameId = gameId }))
         {
             _hasChanges = true;
         }
@@ -79,12 +81,9 @@ public class GameStateRepositoryInMemory : IGameStateRepository
 
     public Task UpdateGame(long gameId, Game game)
     {
-        _memoryCache.Set(GetKey(gameId), game, _cacheEntryOptions);
+        _gamesMemoryCache.Set(gameId, game, _cacheEntryOptions);
         return Task.CompletedTask;
     }
-
-    private static string GetKey(long gameId) => $"game:{gameId}";
-
 
     private class GameCacheEntry
     {
