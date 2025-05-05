@@ -18,16 +18,24 @@ import { PlayersInfo } from './components/types';
 import classes from './newgame.module.less';
 import { Constants } from '/app/constants';
 import { debugLog, hubConnection } from '/app/global';
+import { getAuth } from '/auth/redux/authSlice';
 import { sagaActions } from '/common/sagas';
 
-const getPlayers = (gamers: string[], mode: number): GamePlayer[] => {
-    if (mode == 1) return [{ userId: 0, type: gamers[0], position: Constants.positions[0] }];
+const convertPlayers = (data: PlayersInfo): GamePlayer[] => {
+    const { users, members, mode } = data;
+    if (mode == 1)
+        return [{ userId: members[0] === 'human' ? users[0] : 0, type: members[0], position: Constants.positions[0] }];
     else if (mode == 2)
         return [
-            { userId: 0, type: gamers[0], position: Constants.positions[0] },
-            { userId: 0, type: gamers[2], position: Constants.positions[2] },
+            { userId: members[0] === 'human' ? users[0] : 0, type: members[0], position: Constants.positions[0] },
+            { userId: members[2] === 'human' ? users[0] : 0, type: members[2], position: Constants.positions[2] },
         ];
-    else return gamers.map((it, index) => ({ userId: 0, type: it, position: Constants.positions[index] }));
+    else
+        return members.map((it, index) => ({
+            userId: it === 'human' ? users[index] : 0,
+            type: it,
+            position: Constants.positions[index],
+        }));
 };
 
 const convertMapId = (val: string | number | undefined) => {
@@ -37,16 +45,18 @@ const convertMapId = (val: string | number | undefined) => {
     return clone;
 };
 
-function Newgame() {
+const Newgame = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const { tilesPackNames } = useSelector(getGameSettings);
     const userSettings = useSelector(getUserSettings);
     const mapForecasts = useSelector(getMapForecasts);
+    const authInfo = useSelector(getAuth);
 
     const [players, setPlayers] = useState<PlayersInfo>({
         mode: userSettings.playersMode || 4,
+        users: [authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0],
         members: userSettings.players || ['human', 'robot2', 'robot', 'robot2'],
         groups: userSettings.groups,
     });
@@ -81,7 +91,7 @@ function Newgame() {
         hubConnection
             .invoke('start', {
                 settings: {
-                    players: getPlayers(players.members, players.mode),
+                    players: convertPlayers(players),
                     mapId: randNumber[0],
                     mapSize,
                     tilesPackName,
@@ -114,7 +124,7 @@ function Newgame() {
             type: sagaActions.LOBBY_CREATE,
             payload: {
                 settings: {
-                    players: getPlayers(players.members, players.mode),
+                    players: convertPlayers(players),
                     mapId: randNumber[0],
                     mapSize,
                     gameMode:
@@ -216,6 +226,6 @@ function Newgame() {
             </Row>
         </Container>
     );
-}
+};
 
 export default Newgame;

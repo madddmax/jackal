@@ -28,7 +28,7 @@ const Header = () => {
             .invoke('start', {
                 settings: {
                     players: [
-                        { userId: 0, type: 'human', position: Constants.positions[0] },
+                        { userId: authInfo.user?.id ?? 0, type: 'human', position: Constants.positions[0] },
                         { userId: 0, type: 'robot2', position: Constants.positions[2] },
                     ],
                     mapId: userSettings.mapId,
