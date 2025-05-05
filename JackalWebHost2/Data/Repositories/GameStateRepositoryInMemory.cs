@@ -1,7 +1,9 @@
 ﻿using System.Collections.Concurrent;
 using Jackal.Core;
+using JackalWebHost2.Data.Entities;
 using JackalWebHost2.Data.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Options;
 
 namespace JackalWebHost2.Data.Repositories;
@@ -39,12 +41,6 @@ public class GameStateRepositoryInMemory : IGameStateRepository
         {
             _hasChanges = true;
         }
-
-        Console.WriteLine();
-        Console.WriteLine("/*****************************************************/");
-        Console.WriteLine("/*  EvictionCallback: Cache with key {0} has expired.  */", key);
-        Console.WriteLine("/*****************************************************/");
-        Console.WriteLine();
     }
 
     public bool HasGamesChanges()
@@ -57,9 +53,15 @@ public class GameStateRepositoryInMemory : IGameStateRepository
         _hasChanges = false;
     }
 
+    [Obsolete("Заменить на GetGamesEntries")]
     public IList<long> GetAllKeys()
     {
         return _gamesEntries.Values.Select(it => it.GameId).ToList();
+    }
+
+    public IList<GameCacheEntry> GetGamesEntries()
+    {
+        return _gamesEntries.Values.ToList();
     }
 
     public Task<Game?> GetGame(long gameId)
@@ -72,7 +74,11 @@ public class GameStateRepositoryInMemory : IGameStateRepository
     public Task CreateGame(long gameId, Game game)
     {
         _gamesMemoryCache.Set(gameId, game, _cacheEntryOptions);
-        if (_gamesEntries.TryAdd(gameId, new GameCacheEntry { GameId = gameId }))
+        if (_gamesEntries.TryAdd(gameId, new GameCacheEntry
+            {
+                GameId = gameId,
+                TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            }))
         {
             _hasChanges = true;
         }
@@ -82,11 +88,16 @@ public class GameStateRepositoryInMemory : IGameStateRepository
     public Task UpdateGame(long gameId, Game game)
     {
         _gamesMemoryCache.Set(gameId, game, _cacheEntryOptions);
-        return Task.CompletedTask;
-    }
+        if (game.IsGameOver)
+        {
+            _gamesEntries.TryRemove(gameId, out _);
+        }
+        else if (_gamesEntries.TryGetValue(gameId, out GameCacheEntry? entry))
+        {
+            entry.TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        }
+        _hasChanges = true;
 
-    private class GameCacheEntry
-    {
-        public long GameId { get; init; }
+        return Task.CompletedTask;
     }
 }

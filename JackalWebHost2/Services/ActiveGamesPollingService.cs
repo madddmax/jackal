@@ -25,17 +25,15 @@ namespace JackalWebHost2.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                Console.WriteLine("PollingService start execute");
-
                 if (_gameStateRepository.HasGamesChanges())
                 {
                     using var scope = _services.CreateScope();
                     var gameHubContext = scope.ServiceProvider.GetRequiredService<IHubContext<GameHub>>();
                     var currentValue = new AllActiveGamesResponse
                     {
-                        GamesKeys = _gameStateRepository.GetAllKeys()
+                        GamesKeys = _gameStateRepository.GetAllKeys(),
+                        GamesEntries = _gameStateRepository.GetGamesEntries()
                     };
-                    Console.WriteLine("PollingService SendAsync");
                     await gameHubContext.Clients.All.SendAsync(CALLBACK_GET_ACTIVE_GAMES, currentValue, stoppingToken);
                     _gameStateRepository.ResetGamesChanges();
                 }

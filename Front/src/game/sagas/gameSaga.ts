@@ -87,8 +87,21 @@ export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
     }
 }
 
+export function* applyLookingData(action: { payload: GameStartResponse }) {
+    const data = action.payload;
+    yield put(initGame(data));
+    yield put(applyStat(data));
+    yield put(
+        applyPirateChanges({
+            moves: data.moves,
+            changes: data.pirates,
+        }),
+    );
+}
+
 export default function* rootSaga() {
     yield takeEvery(sagaActions.GAME_START_APPLY_DATA, errorsWrapper(applyStartData));
     yield takeEvery(sagaActions.GAME_TURN_APPLY_DATA, errorsWrapper(applyTurn));
+    yield takeEvery(sagaActions.GAME_START_LOOKING_DATA, errorsWrapper(applyLookingData));
     yield fork(watchAnimation);
 }
