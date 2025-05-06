@@ -40,6 +40,7 @@ interface CellDiffResponse {
 
 export interface GameTeamResponse {
     id: number;
+    isCurrentUser?: boolean; // TODO: это поле вычисляемое на фронте
     name: string;
     coins: number;
     isHuman: boolean;

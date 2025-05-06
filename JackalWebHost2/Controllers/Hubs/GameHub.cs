@@ -53,7 +53,8 @@ public class GameHub : Hub
     {
         var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
         var result = await _gameService.LoadGame(user.Id, request.GameId);
-        
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(result.GameId));
         await Clients.Caller.SendAsync(CALLBACK_LOAD_GAME_DATA, new LoadGameResponse
         {
             GameId = result.GameId,
@@ -85,12 +86,12 @@ public class GameHub : Hub
         var startGameModel = new StartGameModel { Settings = request.Settings };
         var result = await _gameService.StartGame(user.Id, startGameModel);
 
-        var packName = TilesPackFactory.CheckName(request.Settings.TilesPackName);
-        await Clients.Caller.SendAsync(CALLBACK_GET_START_DATA, new StartGameResponse
+        await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(result.GameId));
+        await Clients.Group(GetGroupName(result.GameId)).SendAsync(CALLBACK_GET_START_DATA, new StartGameResponse
         {
             GameId = result.GameId,
             GameMode = result.GameMode,
-            TilesPackName = packName,
+            TilesPackName = TilesPackFactory.CheckName(request.Settings.TilesPackName),
             Pirates = result.Pirates,
             Map = result.Map,
             MapId = result.MapId,
@@ -132,7 +133,8 @@ public class GameHub : Hub
         };
         var result = await _gameService.MakeGameTurn(user.Id, turnGameModel);
 
-        await Clients.Caller.SendAsync(CALLBACK_GET_MOVE_CHANGES, new TurnGameResponse
+        await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(request.GameId));
+        await Clients.Group(GetGroupName(request.GameId)).SendAsync(CALLBACK_GET_MOVE_CHANGES, new TurnGameResponse
         {
             PirateChanges = result.PirateChanges,
             Changes = result.Changes,
@@ -148,5 +150,11 @@ public class GameHub : Hub
                 GameId = request.GameId
             });
         }
+    }
+
+
+    private string GetGroupName(long gameId)
+    {
+        return $"grp{gameId}";
     }
 }

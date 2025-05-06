@@ -19,6 +19,9 @@ const animateQueue: GameTurnResponse[] = [];
 
 export function* applyStartData(action: { payload: GameStartResponse }) {
     const data = action.payload;
+    data.teams.forEach((it) => {
+        if (it.isHuman) it.isCurrentUser = true;
+    });
     yield put(initGame(data));
     yield put(applyStat(data));
     yield put(
