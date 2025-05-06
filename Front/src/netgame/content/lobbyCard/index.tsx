@@ -21,6 +21,7 @@ const LobbyCard = () => {
 
     const [players, setPlayers] = useState<PlayersInfo>({
         mode: 4,
+        users: [authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0],
         members: ['human', 'human', 'human', 'human'],
         groups: userSettings.groups,
     });
