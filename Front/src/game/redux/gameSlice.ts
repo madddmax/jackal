@@ -107,6 +107,7 @@ export const gameSlice = createSlice({
                 const grId = arr.length == 2 && idx == 1 ? 2 : idx;
                 return {
                     id: it.id,
+                    isCurrentUser: it.isCurrentUser,
                     activePirate: '',
                     backColor: Constants.teamColors[idx] ?? '',
                     name: it.name,
@@ -186,7 +187,7 @@ export const gameSlice = createSlice({
         highlightHumanMoves: (state, action: PayloadAction<HighlightHumanMovesActionProps>) => {
             const selectors = gameSlice.getSelectors();
             const currentTeam = selectors.getCurrentTeam(state)!;
-            if (!currentTeam?.isHuman) return;
+            if (!currentTeam?.isCurrentUser) return;
 
             // undraw previous moves
             state.lastMoves.forEach((move) => {

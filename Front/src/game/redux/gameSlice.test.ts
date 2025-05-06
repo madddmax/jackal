@@ -32,6 +32,7 @@ const twoTeamsData: GameTeamResponse[] = [
     },
     {
         id: testTeamId,
+        isCurrentUser: true,
         name: 'boys',
         isHuman: true,
         coins: 0,
@@ -372,6 +373,7 @@ describe('redux basic tests', () => {
             name: 'boys',
             id: testTeamId,
             isHuman: true,
+            isCurrentUser: true,
         });
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);

@@ -1,5 +1,6 @@
 interface TeamState {
     id: number;
+    isCurrentUser?: boolean;
     activePirate: string;
     name: string;
     backColor: string;

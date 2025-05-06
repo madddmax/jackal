@@ -29,6 +29,7 @@ const twoTeamsData: GameTeamResponse[] = [
         name: 'boys',
         coins: 0,
         isHuman: true,
+        isCurrentUser: true,
         ship: {
             x: 5,
             y: 10,
