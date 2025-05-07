@@ -9,10 +9,17 @@ export interface LobbyState {
 
 export interface GameInfo {
     id: number;
+    timeStamp: number;
 }
 
-export interface NetgameListResponse {
-    gamesKeys: number[];
+export interface NetGameListResponse {
+    gamesEntries: NetGameEntryResponse[];
+}
+
+export interface NetGameEntryResponse {
+    gameId: number;
+    creatorId: number;
+    timeStamp: number;
 }
 
 export interface LobbyCreateResponse {

@@ -2,12 +2,12 @@ import { PayloadAction } from '@reduxjs/toolkit';
 //import { call, delay, fork, put, race, select, take, takeEvery } from 'redux-saga/effects';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
-//import { LobbyCreateResponse, LobbyGetResponse, LobbyInfo, LobbyJoinResponse, NetgameListResponse } from '../../common/redux.types';
+//import { LobbyCreateResponse, LobbyGetResponse, LobbyInfo, LobbyJoinResponse, NetGameListResponse } from '../../common/redux.types';
 import {
     LobbyCreateResponse,
     LobbyGetResponse,
     LobbyJoinResponse,
-    NetgameListResponse,
+    NetGameListResponse,
 } from '../../common/redux.types';
 import { applyGamesList, updateLobby } from '../redux/lobbySlice';
 import { history } from '/app/global';
@@ -75,7 +75,7 @@ export function* lobbyGet(action: PayloadAction<{ lobbyId: string }>) {
 //     }
 // }
 
-export function* applyNetGamesData(action: { payload: NetgameListResponse }) {
+export function* applyNetGamesData(action: { payload: NetGameListResponse }) {
     const data = action.payload;
     yield put(applyGamesList(data));
 }
