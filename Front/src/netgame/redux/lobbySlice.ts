@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { GameInfo, LobbyInfo, LobbyState, NetgameListResponse } from '../../common/redux.types';
+import { GameInfo, LobbyInfo, LobbyState, NetGameListResponse } from '../../common/redux.types';
 
 export const lobbySlice = createSlice({
     name: 'lobby',
@@ -11,8 +11,11 @@ export const lobbySlice = createSlice({
         updateLobby: (state, action: PayloadAction<LobbyInfo>) => {
             state.lobby = action.payload;
         },
-        applyGamesList: (state, action: PayloadAction<NetgameListResponse>) => {
-            state.gamelist = action.payload.gamesKeys.map((it) => ({ id: it }));
+        applyGamesList: (state, action: PayloadAction<NetGameListResponse>) => {
+            state.gamelist = action.payload.gamesEntries.map((it) => ({
+                id: it.gameId,
+                timeStamp: it.timeStamp,
+            }));
         },
     },
     selectors: {
