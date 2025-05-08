@@ -81,7 +81,7 @@ public class TestGame
         
         // помещаем корабль противника сверху на противоположный берег
         var shipPosition = new Position((Board.MapSize - 1) / 2, Board.MapSize - 1);
-        var enemyTeam = new Team(enemyTeamId, "Test enemy team", shipPosition, [])
+        var enemyTeam = new Team(enemyTeamId, "Test enemy team", 0, shipPosition, [])
         {
             Coins = coins,
             EnemyTeamIds = [0]

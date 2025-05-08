@@ -56,7 +56,7 @@ public class GameService : IGameService
         };
     }
     
-    public async Task<StartGameResult> StartGame(long userId, StartGameModel request)
+    public async Task<StartGameResult> StartGame(User user, StartGameModel request)
     {
         GameSettings gameSettings = request.Settings;
         IPlayer[] gamePlayers = new IPlayer[gameSettings.Players.Length];
@@ -88,8 +88,8 @@ public class GameService : IGameService
         var gameRequest = new GameRequest(mapSize, mapGenerator, gamePlayers, gameMode);
         var game = new Game(gameRequest);
 
-        var gameId = await _gameRepository.CreateGame(userId, game);
-        await _gameStateRepository.CreateGame(gameId, game);
+        var gameId = await _gameRepository.CreateGame(user.Id, game);
+        await _gameStateRepository.CreateGame(user, gameId, game);
         
         var map = _drawService.Map(game.Board);
 

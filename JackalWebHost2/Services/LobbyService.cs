@@ -113,7 +113,7 @@ public class LobbyService : ILobbyService
 
         // todo нужно доработать назначение игроков - расставить правильно игроков по позициям
         var startGameModel = new StartGameModel { Settings = lobby.GameSettings };
-        var game = await _gameService.StartGame(user.Id, startGameModel);
+        var game = await _gameService.StartGame(user, startGameModel);
 
         var gameMembers = lobby.LobbyMembers.Values
             .Where(x => x.TeamId != null)

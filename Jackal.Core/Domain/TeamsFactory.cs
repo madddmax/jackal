@@ -12,21 +12,21 @@ public static class TeamsFactory
         switch (players.Length)
         {
             case 1:
-                teams[0] = new Team(0, players[0].GetType().Name, (request.MapSize - 1) / 2, 0, request.PiratesPerPlayer);
+                teams[0] = new Team(0, players[0], (request.MapSize - 1) / 2, 0, request.PiratesPerPlayer);
                 teams[0].EnemyTeamIds = [];
                 break;
             case 2:
-                teams[0] = new Team(0, players[0].GetType().Name, (request.MapSize - 1) / 2, 0, request.PiratesPerPlayer);
+                teams[0] = new Team(0, players[0], (request.MapSize - 1) / 2, 0, request.PiratesPerPlayer);
                 teams[0].EnemyTeamIds = [1];
                 
-                teams[1] = new Team(1, players[1].GetType().Name, (request.MapSize - 1) / 2, (request.MapSize - 1), request.PiratesPerPlayer);
+                teams[1] = new Team(1, players[1], (request.MapSize - 1) / 2, (request.MapSize - 1), request.PiratesPerPlayer);
                 teams[1].EnemyTeamIds = [0];
                 break;
             case 4:
-                teams[0] = new Team(0, players[0].GetType().Name, (request.MapSize - 1) / 2, 0, request.PiratesPerPlayer);
-                teams[1] = new Team(1, players[1].GetType().Name, 0, (request.MapSize - 1) / 2, request.PiratesPerPlayer);
-                teams[2] = new Team(2, players[2].GetType().Name, (request.MapSize - 1) / 2, (request.MapSize- 1), request.PiratesPerPlayer);
-                teams[3] = new Team(3, players[3].GetType().Name, (request.MapSize - 1), (request.MapSize - 1) / 2, request.PiratesPerPlayer);
+                teams[0] = new Team(0, players[0], (request.MapSize - 1) / 2, 0, request.PiratesPerPlayer);
+                teams[1] = new Team(1, players[1], 0, (request.MapSize - 1) / 2, request.PiratesPerPlayer);
+                teams[2] = new Team(2, players[2], (request.MapSize - 1) / 2, (request.MapSize- 1), request.PiratesPerPlayer);
+                teams[3] = new Team(3, players[3], (request.MapSize - 1), (request.MapSize - 1) / 2, request.PiratesPerPlayer);
 
                 if (request.GameMode == GameModeType.TwoPlayersInTeam)
                 {

@@ -2,6 +2,7 @@
 using Jackal.Core;
 using JackalWebHost2.Data.Entities;
 using JackalWebHost2.Data.Interfaces;
+using JackalWebHost2.Models;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Options;
@@ -71,12 +72,17 @@ public class GameStateRepositoryInMemory : IGameStateRepository
             : null);
     }
 
-    public Task CreateGame(long gameId, Game game)
+    public Task CreateGame(User user, long gameId, Game game)
     {
         _gamesMemoryCache.Set(gameId, game, _cacheEntryOptions);
         if (_gamesEntries.TryAdd(gameId, new GameCacheEntry
             {
                 GameId = gameId,
+                Creator = new GameCacheEntryCreator
+                {
+                    Id = user.Id,
+                    Name = user.Login
+                },
                 TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             }))
         {
