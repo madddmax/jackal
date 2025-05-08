@@ -4,6 +4,8 @@ namespace Jackal.Core.Players;
 
 public interface IPlayer
 {
+    long UserId { get; }
+    
     void OnNewGame();
 
     /// <summary>

@@ -1,7 +1,6 @@
-using Jackal.Core.Domain;
 using Newtonsoft.Json;
 
-namespace Jackal.Core;
+namespace Jackal.Core.Domain;
 
 public class Map(int mapSize)
 {

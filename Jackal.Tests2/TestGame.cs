@@ -48,7 +48,7 @@ public class TestGame
     public TestGame(IMapGenerator generator, int mapSize = 5, int piratesPerPlayer = 1)
     {
         var gameRequest = new GameRequest(
-            mapSize, generator, [new WebHumanPlayer()], GameModeType.FreeForAll, piratesPerPlayer
+            mapSize, generator, [new WebHumanPlayer(1)], GameModeType.FreeForAll, piratesPerPlayer
         );
         _testGame = new Game(gameRequest);
     }

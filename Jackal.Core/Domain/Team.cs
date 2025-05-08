@@ -1,4 +1,6 @@
-﻿namespace Jackal.Core.Domain;
+﻿using Newtonsoft.Json;
+
+namespace Jackal.Core.Domain;
 
 /// <summary>
 /// Команда пиратов
@@ -40,11 +42,25 @@ public record Team
     /// </summary>
     public int Coins;
 
+    [JsonConstructor]
     public Team(int id, string name, Position shipPosition, Pirate[] pirates)
     {
         Id = id;
         Name = name;
         ShipPosition = shipPosition;
         Pirates = pirates;
+    }
+    
+    public Team(int id, string name, int x, int y, int piratesPerPlayer)
+    {
+        Id = id;
+        Name = name;
+        ShipPosition = new Position(x, y);
+        
+        Pirates = new Pirate[piratesPerPlayer];
+        for (int i = 0; i < Pirates.Length; i++)
+        {
+            Pirates[i] = new Pirate(id, new TilePosition(ShipPosition), PirateType.Usual);
+        }
     }
 }
