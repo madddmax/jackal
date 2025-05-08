@@ -48,7 +48,7 @@ public class TestGame
     public TestGame(IMapGenerator generator, int mapSize = 5, int piratesPerPlayer = 1)
     {
         var gameRequest = new GameRequest(
-            mapSize, generator, [new WebHumanPlayer()], GameModeType.FreeForAll, piratesPerPlayer
+            mapSize, generator, [new WebHumanPlayer(1)], GameModeType.FreeForAll, piratesPerPlayer
         );
         _testGame = new Game(gameRequest);
     }
@@ -81,7 +81,7 @@ public class TestGame
         
         // помещаем корабль противника сверху на противоположный берег
         var shipPosition = new Position((Board.MapSize - 1) / 2, Board.MapSize - 1);
-        var enemyTeam = new Team(enemyTeamId, "Test enemy team", shipPosition, [])
+        var enemyTeam = new Team(enemyTeamId, "Test enemy team", 0, shipPosition, [])
         {
             Coins = coins,
             EnemyTeamIds = [0]

@@ -84,7 +84,7 @@ public class GameHub : Hub
     {
         var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
         var startGameModel = new StartGameModel { Settings = request.Settings };
-        var result = await _gameService.StartGame(user.Id, startGameModel);
+        var result = await _gameService.StartGame(user, startGameModel);
 
         await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(result.GameId));
         await Clients.Group(GetGroupName(result.GameId)).SendAsync(CALLBACK_GET_START_DATA, new StartGameResponse

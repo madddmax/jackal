@@ -2,10 +2,12 @@
 
 namespace Jackal.Core.Players;
 
-public class WebHumanPlayer : IPlayer
+public class WebHumanPlayer(long userId) : IPlayer
 {
     private int _moveNum;
     private Guid? _pirateId;
+
+    public long UserId { get; } = userId;
 
     public void OnNewGame()
     {

@@ -6,6 +6,8 @@ public class RandomPlayer : IPlayer
 {
     private Random Rnd;
 
+    public long UserId => 0;
+    
     public void OnNewGame()
     {
         Rnd = new Random(42);

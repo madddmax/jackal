@@ -12,7 +12,7 @@ public interface IGameService
     /// <summary>
     /// Запуск игры
     /// </summary>
-    Task<StartGameResult> StartGame(long userId, StartGameModel request);
+    Task<StartGameResult> StartGame(User userId, StartGameModel request);
 
     /// <summary>
     /// Ход игры

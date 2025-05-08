@@ -1,5 +1,6 @@
 ﻿using Jackal.Core;
 using JackalWebHost2.Data.Entities;
+using JackalWebHost2.Models;
 
 namespace JackalWebHost2.Data.Interfaces;
 
@@ -34,7 +35,7 @@ public interface IGameStateRepository
     /// <summary>
     /// Создать новое игровое состояние
     /// </summary>
-    Task CreateGame(long gameId, Game game);
+    Task CreateGame(User user, long gameId, Game game);
 
     /// <summary>
     /// Обновить состояние игры

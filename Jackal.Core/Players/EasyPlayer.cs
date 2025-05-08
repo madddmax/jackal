@@ -8,7 +8,9 @@ namespace Jackal.Core.Players;
 public class EasyPlayer : IPlayer
 {
     private Random _rnd = new();
-        
+
+    public long UserId => 0;
+    
     public void OnNewGame()
     {
         _rnd = new Random(1);
