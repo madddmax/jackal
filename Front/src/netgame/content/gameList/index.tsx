@@ -36,7 +36,8 @@ const GameList = () => {
                                 return (
                                     <ListGroup.Item key={`lobby-${it.id}`}>
                                         <span style={{ paddingRight: 10 }}>{it.id}</span>
-                                        {dayjs(it.timeStamp * 1000).fromNow()}
+                                        <span style={{ paddingRight: 10 }}>{dayjs(it.timeStamp * 1000).fromNow()}</span>
+                                        <span style={{ paddingRight: 10 }}>{it.creator.name}</span>
                                         <Button
                                             className="float-end"
                                             variant="outline-primary"

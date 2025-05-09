@@ -24,6 +24,7 @@ const twoTeamsData: GameTeamResponse[] = [
         id: 5,
         name: 'girls',
         coins: 0,
+        userId: 0,
         isHuman: false,
         ship: {
             x: 5,
@@ -34,6 +35,7 @@ const twoTeamsData: GameTeamResponse[] = [
         id: testTeamId,
         isCurrentUser: true,
         name: 'boys',
+        userId: 2,
         isHuman: true,
         coins: 0,
         ship: {
@@ -47,6 +49,7 @@ const fourTeamsData: GameTeamResponse[] = [
     {
         id: 5,
         name: 'girls',
+        userId: 0,
         isHuman: false,
         coins: 0,
         ship: {
@@ -57,6 +60,7 @@ const fourTeamsData: GameTeamResponse[] = [
     {
         id: testTeamId,
         name: 'boys',
+        userId: 2,
         isHuman: true,
         coins: 0,
         ship: {
@@ -67,6 +71,7 @@ const fourTeamsData: GameTeamResponse[] = [
     {
         id: 7,
         name: 'cats',
+        userId: 0,
         isHuman: false,
         coins: 0,
         ship: {
@@ -77,6 +82,7 @@ const fourTeamsData: GameTeamResponse[] = [
     {
         id: 8,
         name: 'dogs',
+        userId: 0,
         isHuman: false,
         coins: 0,
         ship: {

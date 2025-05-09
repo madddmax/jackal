@@ -9,6 +9,10 @@ export interface LobbyState {
 
 export interface GameInfo {
     id: number;
+    creator: {
+        id: number;
+        name: string;
+    };
     timeStamp: number;
 }
 
@@ -19,6 +23,10 @@ export interface NetGameListResponse {
 export interface NetGameEntryResponse {
     gameId: number;
     creatorId: number;
+    creator: {
+        id: number;
+        name: string;
+    };
     timeStamp: number;
 }
 

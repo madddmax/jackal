@@ -14,6 +14,7 @@ export const lobbySlice = createSlice({
         applyGamesList: (state, action: PayloadAction<NetGameListResponse>) => {
             state.gamelist = action.payload.gamesEntries.map((it) => ({
                 id: it.gameId,
+                creator: it.creator,
                 timeStamp: it.timeStamp,
             }));
         },

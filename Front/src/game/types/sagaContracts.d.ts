@@ -44,6 +44,7 @@ export interface GameTeamResponse {
     name: string;
     coins: number;
     isHuman: boolean;
+    userId: number;
     ship: {
         x: number;
         y: number;

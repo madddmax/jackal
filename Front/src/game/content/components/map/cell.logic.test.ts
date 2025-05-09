@@ -18,6 +18,7 @@ const twoTeamsData: GameTeamResponse[] = [
         id: 1,
         name: 'girls',
         coins: 0,
+        userId: 0,
         isHuman: false,
         ship: {
             x: 5,
@@ -28,6 +29,7 @@ const twoTeamsData: GameTeamResponse[] = [
         id: testTeamId,
         name: 'boys',
         coins: 0,
+        userId: 2,
         isHuman: true,
         isCurrentUser: true,
         ship: {

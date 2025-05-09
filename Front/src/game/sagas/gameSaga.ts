@@ -13,14 +13,17 @@ import {
 } from '../redux/gameSlice';
 import { StorageState } from '../types';
 import { GameStartResponse, GameTurnResponse } from '../types/sagaContracts';
+import { getAuth } from '/auth/redux/authSlice';
+import { AuthState } from '/auth/redux/authSlice.types';
 import { errorsWrapper, sagaActions } from '/common/sagas';
 
 const animateQueue: GameTurnResponse[] = [];
 
 export function* applyStartData(action: { payload: GameStartResponse }) {
     const data = action.payload;
+    const auth: AuthState = yield select(getAuth);
     data.teams.forEach((it) => {
-        if (it.isHuman) it.isCurrentUser = true;
+        if (it.userId === auth.user?.id) it.isCurrentUser = true;
     });
     yield put(initGame(data));
     yield put(applyStat(data));
@@ -92,6 +95,10 @@ export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
 
 export function* applyLookingData(action: { payload: GameStartResponse }) {
     const data = action.payload;
+    const auth: AuthState = yield select(getAuth);
+    data.teams.forEach((it) => {
+        if (it.userId === auth.user?.id) it.isCurrentUser = true;
+    });
     yield put(initGame(data));
     yield put(applyStat(data));
     yield put(
@@ -100,6 +107,7 @@ export function* applyLookingData(action: { payload: GameStartResponse }) {
             changes: data.pirates,
         }),
     );
+    yield put(highlightHumanMoves({ moves: data.moves }));
 }
 
 export default function* rootSaga() {
