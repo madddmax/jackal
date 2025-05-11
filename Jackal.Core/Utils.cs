@@ -51,51 +51,16 @@ public static class Utils
 
     public static IEnumerable<T> GetPermutation<T>(int index, T[] array) where T : class
     {
-        int N = array.Length;
-        if (N == 1)
+        int length = array.Length;
+        if (length == 1)
             return array;
-        int permutationsCount = Factorial(N);
+
+        int permutationsCount = Factorial(length);
         index %= permutationsCount;
-        var t = array[index/(permutationsCount/N)];
-        return new T[] {t}.Concat(GetPermutation<T>(index%(permutationsCount/N), array.Where(x => !x.Equals(t)).ToArray()));
-    }
-
-    public static T Min<T>(this IEnumerable<T> source, Comparison<T> comparison)
-    {
-        if (source == null) throw new ArgumentNullException("source");
-        if (comparison == null) throw new ArgumentNullException("comparison");
-
-        bool hasValue = false;
-        T value = default(T);
-        foreach (T x in source)
-        {
-            if (hasValue)
-            {
-                if (comparison(x, value) < 0)
-                    value = x;
-            }
-            else
-            {
-                value = x;
-                hasValue = true;
-            }
-        }
-        if (hasValue) return value;
-        throw new ArgumentException("source");
-    }
-
-    public static IEnumerable<T> WhereEqualMin<T>(this IEnumerable<T> source, Comparison<T> comparison)
-    {
-        var enumerable = source as IList<T> ?? source.ToList();
-        var min = enumerable.Min(comparison);
-        return enumerable.Where(x => comparison(x, min) == 0);
-    }
-        
-    public static int Distance(Position pos1, Position pos2)
-    {
-        int deltaX = Math.Abs(pos1.X - pos2.X);
-        int deltaY = Math.Abs(pos1.Y - pos2.Y);
-        int totalDelta = Math.Max(deltaX, deltaY);
-        return totalDelta;
+        var t = array[index / (permutationsCount / length)];
+        return new T[] { t }.Concat(GetPermutation<T>(
+            index % (permutationsCount / length),
+            array.Where(x => !x.Equals(t)).ToArray())
+        );
     }
 }
