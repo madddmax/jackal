@@ -5,20 +5,17 @@ using Jackal.Core.Domain;
 
 namespace Jackal.Core.Players;
 
-public class EasyPlayer : IPlayer
+/// <summary>
+/// Игрок простой бот - выбирает ход алгоритмом бей-неси,
+/// рассчет дистанции упрощен через манхэттенское расстояние
+/// </summary>
+public class EasyBotPlayer : IPlayer
 {
     private Random _rnd = new();
-
-    public long UserId => 0;
     
     public void OnNewGame()
     {
         _rnd = new Random(1);
-    }
-
-    public void SetHumanMove(int moveNum, Guid? pirateId)
-    {
-        throw new NotImplementedException();
     }
 
     public (int moveNum, Guid? pirateId) OnMove(GameState gameState)

@@ -48,7 +48,7 @@ public class TestGame
     public TestGame(IMapGenerator generator, int mapSize = 5, int piratesPerPlayer = 1)
     {
         var gameRequest = new GameRequest(
-            mapSize, generator, [new WebHumanPlayer(1)], GameModeType.FreeForAll, piratesPerPlayer
+            mapSize, generator, [new HumanPlayer(1)], GameModeType.FreeForAll, piratesPerPlayer
         );
         _testGame = new Game(gameRequest);
     }
@@ -123,9 +123,13 @@ public class TestGame
     /// выбирает первый доступный ход,
     /// если ход всего один то сделает его
     /// </summary>
-    public void Turn()
+    public void Turn(int moveNum = 0)
     {
-        _testGame.CurrentPlayer.SetHumanMove(0, null);
+        if (_testGame.CurrentPlayer is IHumanPlayer humanPlayer)
+        {
+            humanPlayer.SetMove(moveNum, null);
+        }
+        
         _testGame.Turn();
     }
     
@@ -140,9 +144,7 @@ public class TestGame
         var position = new TilePosition(x, y);
         var moves = _testGame.GetAvailableMoves();
         var moveNum = moves.FindIndex(a => a.To == position && a.WithCoin == withCoin);
-        
-        _testGame.CurrentPlayer.SetHumanMove(moveNum, null);
-        _testGame.Turn();
+        Turn(moveNum);
     }
     
     /// <summary>
@@ -156,8 +158,6 @@ public class TestGame
     {
         var moves = _testGame.GetAvailableMoves();
         var moveNum = moves.FindIndex(a => a.From == from && a.To == to);
-        
-        _testGame.CurrentPlayer.SetHumanMove(moveNum, null);
-        _testGame.Turn();
+        Turn(moveNum);
     }
 }

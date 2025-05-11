@@ -50,7 +50,7 @@ public class GameService : IGameService
             MapId = game.Board.Generator.MapId,
             Statistics = _drawService.GetStatistics(game),
             Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
-            Moves = game.CurrentPlayer is WebHumanPlayer
+            Moves = game.CurrentPlayer is HumanPlayer
                 ? _drawService.GetAvailableMoves(game)
                 : []
         };
@@ -67,8 +67,8 @@ public class GameService : IGameService
             gamePlayers[index++] = player.Type switch
             {
                 PlayerType.Robot => new RandomPlayer(),
-                PlayerType.Human => new WebHumanPlayer(player.UserId),
-                _ => new EasyPlayer()
+                PlayerType.Human => new HumanPlayer(player.UserId),
+                _ => new EasyBotPlayer()
             };
         }
 
@@ -108,7 +108,7 @@ public class GameService : IGameService
             MapId = gameSettings.MapId.Value,
             Statistics = _drawService.GetStatistics(game),
             Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
-            Moves = game.CurrentPlayer is WebHumanPlayer
+            Moves = game.CurrentPlayer is HumanPlayer
                 ? _drawService.GetAvailableMoves(game)
                 : []
         };
@@ -136,9 +136,9 @@ public class GameService : IGameService
         
         var prevBoardStr = JsonHelper.SerializeWithType(game.Board);
             
-        if (game.CurrentPlayer is WebHumanPlayer && request.TurnNum.HasValue)
+        if (game.CurrentPlayer is IHumanPlayer humanPlayer && request.TurnNum.HasValue)
         {
-            game.CurrentPlayer.SetHumanMove(request.TurnNum.Value, request.PirateId);
+            humanPlayer.SetMove(request.TurnNum.Value, request.PirateId);
         }
 
         game.Turn();
@@ -156,7 +156,7 @@ public class GameService : IGameService
             Changes = _drawService.GetTileChanges(game.Board, prevBoard),
             Statistics = _drawService.GetStatistics(game),
             TeamScores = game.Board.Teams.Select(team => new TeamScore(team)).ToList(),
-            Moves = game.CurrentPlayer is WebHumanPlayer 
+            Moves = game.CurrentPlayer is HumanPlayer 
                 ? _drawService.GetAvailableMoves(game) 
                 : []
         };
