@@ -21,7 +21,7 @@ public class GameOverTests
         
         // Assert - все пираты (один) застряли в дыре, карта не открыта = конец игры
         Assert.True(game.IsGameOver);
-        Assert.Equal("Победа WebHumanPlayer путём конца всех пиратов!", game.GameMessage);
+        Assert.Equal("Победа HumanPlayer путём конца всех пиратов!", game.GameMessage);
         Assert.Equal(1, game.TurnNo);
     }
     
@@ -46,7 +46,7 @@ public class GameOverTests
         
         // Assert - один игрок, вся карта открыта, золота нет = конец игры
         Assert.True(game.IsGameOver);
-        Assert.Equal("Победа WebHumanPlayer путём исследования карты!", game.GameMessage);
+        Assert.Equal("Победа HumanPlayer путём исследования карты!", game.GameMessage);
         Assert.Equal(1, game.TurnNo);
     }
     
@@ -94,7 +94,7 @@ public class GameOverTests
         
         // Assert - два игрока, карта не открыта, перенесли большую часть золота (всё золото) = конец игры
         Assert.True(game.IsGameOver);
-        Assert.Equal("Победа WebHumanPlayer путём доминирования по золоту!", game.GameMessage);
+        Assert.Equal("Победа HumanPlayer путём доминирования по золоту!", game.GameMessage);
         Assert.Equal(2, game.TurnNo);
     }
     
@@ -174,7 +174,7 @@ public class GameOverTests
         
         // Assert - два игрока, карта не открыта, перенесли большую часть золота = конец игры
         Assert.True(game.IsGameOver);
-        Assert.Equal("Победа WebHumanPlayer путём доминирования по золоту!", game.GameMessage);
+        Assert.Equal("Победа HumanPlayer путём доминирования по золоту!", game.GameMessage);
         Assert.Equal(7, game.TurnNo);
     }
 }
