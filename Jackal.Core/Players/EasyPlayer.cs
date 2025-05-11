@@ -16,11 +16,6 @@ public class EasyPlayer : IPlayer
         _rnd = new Random(1);
     }
 
-    public void SetHumanMove(int moveNum, Guid? pirateId)
-    {
-        throw new NotImplementedException();
-    }
-
     public (int moveNum, Guid? pirateId) OnMove(GameState gameState)
     {
         int teamId = gameState.TeamId;

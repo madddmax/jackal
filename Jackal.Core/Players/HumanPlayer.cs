@@ -2,7 +2,7 @@
 
 namespace Jackal.Core.Players;
 
-public class HumanPlayer(long userId) : IPlayer
+public class HumanPlayer(long userId) : IHumanPlayer, IPlayer
 {
     private int _moveNum;
     private Guid? _pirateId;
@@ -15,7 +15,7 @@ public class HumanPlayer(long userId) : IPlayer
         _pirateId = null;
     }
 
-    public void SetHumanMove(int moveNum, Guid? pirateId)
+    public void SetMove(int moveNum, Guid? pirateId)
     {
         _moveNum = moveNum;
         _pirateId = pirateId;

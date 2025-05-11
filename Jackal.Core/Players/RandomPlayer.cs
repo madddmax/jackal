@@ -13,11 +13,6 @@ public class RandomPlayer : IPlayer
         Rnd = new Random(42);
     }
 
-    public void SetHumanMove(int moveNum, Guid? pirateId)
-    {
-        throw new NotImplementedException();
-    }
-
     public (int moveNum, Guid? pirateId) OnMove(GameState gameState)
     {
         return (Rnd.Next(gameState.AvailableMoves.Length), null);

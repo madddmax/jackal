@@ -136,9 +136,9 @@ public class GameService : IGameService
         
         var prevBoardStr = JsonHelper.SerializeWithType(game.Board);
             
-        if (game.CurrentPlayer is HumanPlayer && request.TurnNum.HasValue)
+        if (game.CurrentPlayer is IHumanPlayer humanPlayer && request.TurnNum.HasValue)
         {
-            game.CurrentPlayer.SetHumanMove(request.TurnNum.Value, request.PirateId);
+            humanPlayer.SetMove(request.TurnNum.Value, request.PirateId);
         }
 
         game.Turn();
