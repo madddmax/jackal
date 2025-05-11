@@ -59,7 +59,7 @@ public class RandomMapGenerator : IMapGenerator
                 case TileType.Cannibal:
                     // выбираем воскрешающий форт к людоеду
                     random = false;
-                    selectedIndex = index - 1;
+                    selectedIndex = index > 0 ? index - 1 : 0;
                     break;
                 case TileType.RespawnFort:
                     // выбираем людоеда к воскрешающему форту
