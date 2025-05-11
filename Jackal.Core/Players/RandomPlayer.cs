@@ -2,19 +2,20 @@
 
 namespace Jackal.Core.Players;
 
+/// <summary>
+/// Игрок рэндом - выбирает ход случайным образом
+/// </summary>
 public class RandomPlayer : IPlayer
 {
-    private Random Rnd;
-
-    public long UserId => 0;
+    private Random _rnd = new();
     
     public void OnNewGame()
     {
-        Rnd = new Random(42);
+        _rnd = new Random(42);
     }
 
     public (int moveNum, Guid? pirateId) OnMove(GameState gameState)
     {
-        return (Rnd.Next(gameState.AvailableMoves.Length), null);
+        return (_rnd.Next(gameState.AvailableMoves.Length), null);
     }
 }

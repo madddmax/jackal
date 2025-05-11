@@ -23,10 +23,10 @@ internal static class Program
         [
             [
                 new RandomPlayer(),
-                new EasyPlayer()
+                new EasyBotPlayer()
             ],
             [
-                new EasyPlayer(),
+                new EasyBotPlayer(),
                 new RandomPlayer()
             ]
         ];
