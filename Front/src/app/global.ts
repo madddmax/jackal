@@ -1,4 +1,5 @@
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import dayjs from 'dayjs';
 import { NavigateFunction } from 'react-router-dom';
 
 import config from './config';
@@ -30,6 +31,29 @@ export const getAnotherRandomValue = (min: number, max: number, except: number[]
         num = Math.floor(Math.random() * (max - min + 1) + min);
     }
     return num;
+};
+
+export interface fromNowStruct {
+    value: number;
+    unit: string;
+    color: string;
+}
+
+export const fromNow = (ts: number) => {
+    let inSec = Math.abs(dayjs(ts * 1000).diff(new Date(), 's'));
+    if (inSec < 60) {
+        return {
+            value: inSec,
+            unit: 'с',
+            color: 'green',
+        };
+    }
+    inSec = Math.ceil(inSec / 60);
+    return {
+        value: inSec,
+        unit: 'м',
+        color: inSec < 3 ? 'orange' : 'red',
+    };
 };
 
 export const debugLog = (message?: unknown, ...optionalParams: unknown[]) => {
