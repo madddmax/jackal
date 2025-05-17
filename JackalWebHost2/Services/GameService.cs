@@ -68,7 +68,7 @@ public class GameService : IGameService
             {
                 PlayerType.Robot => new RandomPlayer(),
                 PlayerType.Human => new HumanPlayer(player.UserId),
-                _ => new EasyBotPlayer()
+                _ => new EasyPlayer()
             };
         }
 
