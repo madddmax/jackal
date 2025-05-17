@@ -67,8 +67,10 @@ public class GameService : IGameService
             gamePlayers[index++] = player.Type switch
             {
                 PlayerType.Robot => new RandomPlayer(),
+                PlayerType.Robot2 => new EasyPlayer(),
+                PlayerType.Robot3 => new OakioPlayer(),
                 PlayerType.Human => new HumanPlayer(player.UserId),
-                _ => new EasyPlayer()
+                _ => throw new PlayerNotFoundException()
             };
         }
 

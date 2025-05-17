@@ -21,6 +21,7 @@ const Players = ({ players, setPlayers, mapInfo }: PlayersProps) => {
         const clone = [...players.members];
         if (clone[pos] === 'human') clone[pos] = 'robot';
         else if (clone[pos] === 'robot') clone[pos] = 'robot2';
+        else if (clone[pos] === 'robot2') clone[pos] = 'robot3';
         else clone[pos] = 'human';
         setPlayers({
             ...players,

@@ -13,4 +13,5 @@ public static class ErrorCodes
     public const string UserIsAlreadyLoggedIn = "UserIsAlreadyLoggedIn";
     public const string UserIsNotFound = "UserIsNotFound";
     public const string TeamIsNotFound = "TeamIsNotFound";
+    public const string PlayerNotFound = "PlayerNotFound";
 }
