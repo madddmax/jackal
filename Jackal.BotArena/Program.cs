@@ -13,89 +13,76 @@ namespace Jackal.BotArena;
 internal static class Program
 {
     /// <summary>
-    /// Игровая статистика
+    /// Количество запускаемых игр
     /// </summary>
-    private class GameStat
-    {
-        /// <summary>
-        /// Количество побед, когда в конце игры золота оказалось больше.
-        /// В случае равенства по золоту, победа присуждается обеим командам.
-        /// </summary>
-        public int TotalWin { get; set; }
-        
-        /// <summary>
-        /// Суммарное количество добытых монет за все игры
-        /// </summary>
-        public int TotalCoins { get; set; }
-        
-        /// <summary>
-        /// Количество проведенных игр
-        /// </summary>
-        public int GamesCount { get; set; }
+    private const int ArenaGamesCount = 100;
 
-        /// <summary>
-        /// Среднее количество побед за все игры
-        /// </summary>
-        public double AverageWin => (double)TotalWin / GamesCount;
-        
-        /// <summary>
-        /// Среднее количество добытых монет за все игры
-        /// </summary>
-        public double AverageCoins => (double)TotalCoins / GamesCount;
-    }
-
+    /// <summary>
+    /// Размер карты
+    /// </summary>
+    private const int MapSize = 13;
+    
+    /// <summary>
+    /// Комбинации игроков ботов и их позиций (зависит от порядка)
+    /// </summary>
+    private static readonly IPlayer[][] CombinationOfPlayers =
+    [
+        [
+            new EasyPlayer(),
+            new RandomPlayer()
+        ],
+        [
+            new RandomPlayer(),
+            new EasyPlayer(),
+        ],
+        [
+            new EasyPlayer(),
+            new OakioPlayer(),
+        ],
+        [
+            new OakioPlayer(),
+            new EasyPlayer()
+        ]
+    ];
+    
     /// <summary>
     /// Статистика по каждому игроку боту
     /// </summary>
     private static readonly Dictionary<string, GameStat> BotStat = new();
-    
-    private static void Main(string[] args)
+
+    private static void Main()
     {
-        IPlayer[][] combinationOfPlayers =
-        [
-            [
-                new EasyPlayer(),
-                new RandomPlayer()
-            ],
-            [
-                new RandomPlayer(),
-                new EasyPlayer(),
-            ],
-            [
-                new EasyPlayer(),
-                new OakioPlayer(),
-            ],
-            [
-                new OakioPlayer(),
-                new EasyPlayer()
-            ]
-        ];
-
-        int totalGamesCount = 100;
         int gameNumber = 0;
-        
-        while (gameNumber < totalGamesCount)
-        {
-            var mapId = new Random().Next();
-            var mapSize = 13;
-            var randomMap = new RandomMapGenerator(mapId, mapSize);
-            
-            foreach (var players in combinationOfPlayers)
-            {
-                var gameRequest = new GameRequest(mapSize, randomMap, players);
-                var game = new Game(gameRequest);
-                
-                while (game.IsGameOver == false)
-                {
-                    game.Turn();
-                }
 
-                CalcStat(game);
-                gameNumber++;
+        var timeElapsed = StopwatchMeter.GetElapsed(() =>
+        {
+            while (gameNumber < ArenaGamesCount)
+            {
+                var mapId = new Random().Next();
+                var randomMap = new RandomMapGenerator(mapId, MapSize);
+
+                foreach (var players in CombinationOfPlayers)
+                {
+                    var gameRequest = new GameRequest(MapSize, randomMap, players);
+                    var game = new Game(gameRequest);
+
+                    while (game.IsGameOver == false)
+                    {
+                        game.Turn();
+                    }
+
+                    CalcStat(game);
+                    
+                    gameNumber++;
+                    if (gameNumber == ArenaGamesCount)
+                    {
+                        break;
+                    }
+                }
             }
-        }
-        
-        ShowStat(gameNumber);
+        });
+
+        ShowStat(gameNumber, timeElapsed);
     }
 
     private static void CalcStat(Game game)
@@ -111,12 +98,13 @@ internal static class Program
             stat.TotalWin += team.Coins == maxCoins ? 1 : 0;
             stat.TotalCoins += team.Coins;
             stat.GamesCount += 1;
+            stat.TotalTurns += game.TurnNo / game.Board.Teams.Length;
         }
     }
 
-    private static void ShowStat(int gameNumber)
+    private static void ShowStat(int gamesCount, TimeSpan timeElapsed)
     {
-        Console.WriteLine($"Total games count = {gameNumber}");
+        Console.WriteLine($"Arena games count = {gamesCount} | Time elapsed {timeElapsed}");
         var orderedBotStat = BotStat.OrderByDescending(p => p.Value.AverageWin);
         foreach (var (botName, gameStat) in orderedBotStat)
         {
@@ -125,8 +113,10 @@ internal static class Program
                 $"Games count = {gameStat.GamesCount} | " +
                 $"Average win = {gameStat.AverageWin:P} | " +
                 $"Average coins = {gameStat.AverageCoins:F} | " +
+                $"Average turns = {gameStat.AverageTurns} | " +
                 $"Total win = {gameStat.TotalWin} | " +
-                $"Total coins = {gameStat.TotalCoins}"
+                $"Total coins = {gameStat.TotalCoins} | " +
+                $"Total turns = {gameStat.TotalTurns}"
             );
         }
     }
