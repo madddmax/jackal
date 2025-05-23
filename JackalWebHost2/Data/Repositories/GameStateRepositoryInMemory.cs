@@ -54,12 +54,6 @@ public class GameStateRepositoryInMemory : IGameStateRepository
         _hasChanges = false;
     }
 
-    [Obsolete("Заменить на GetGamesEntries")]
-    public IList<long> GetAllKeys()
-    {
-        return _gamesEntries.Values.Select(it => it.GameId).ToList();
-    }
-
     public IList<GameCacheEntry> GetGamesEntries()
     {
         return _gamesEntries.Values.ToList();

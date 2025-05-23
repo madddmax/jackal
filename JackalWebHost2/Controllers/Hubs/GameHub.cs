@@ -33,7 +33,6 @@ public class GameHub : Hub
         await Clients.Caller.SendAsync(CALLBACK_NOTIFY, $"{user.Login} вошел в игру");
         await Clients.Caller.SendAsync(CALLBACK_GET_ACTIVE_GAMES, new AllActiveGamesResponse
         {
-            GamesKeys = _gameStateRepository.GetAllKeys(),
             GamesEntries = _gameStateRepository.GetGamesEntries()
         });
         await base.OnConnectedAsync();
@@ -104,7 +103,6 @@ public class GameHub : Hub
         {
             await Clients.All.SendAsync(CALLBACK_GET_ACTIVE_GAMES, new AllActiveGamesResponse
             {
-                GamesKeys = _gameStateRepository.GetAllKeys(),
                 GamesEntries = _gameStateRepository.GetGamesEntries()
             });
             _gameStateRepository.ResetGamesChanges();

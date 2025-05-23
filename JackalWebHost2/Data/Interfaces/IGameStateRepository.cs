@@ -17,12 +17,6 @@ public interface IGameStateRepository
     void ResetGamesChanges();
 
     /// <summary>
-    /// Получить ключи всех активных игр
-    /// </summary>
-    [Obsolete("Заменить на GetGamesEntries")]
-    IList<long> GetAllKeys();
-
-    /// <summary>
     /// Получить описание всех активных игр
     /// </summary>
     IList<GameCacheEntry> GetGamesEntries();

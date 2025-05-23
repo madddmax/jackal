@@ -31,7 +31,6 @@ namespace JackalWebHost2.Services
                     var gameHubContext = scope.ServiceProvider.GetRequiredService<IHubContext<GameHub>>();
                     var currentValue = new AllActiveGamesResponse
                     {
-                        GamesKeys = _gameStateRepository.GetAllKeys(),
                         GamesEntries = _gameStateRepository.GetGamesEntries()
                     };
                     await gameHubContext.Clients.All.SendAsync(CALLBACK_GET_ACTIVE_GAMES, currentValue, stoppingToken);
