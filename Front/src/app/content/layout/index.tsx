@@ -7,12 +7,14 @@ import useHub from '../../hubs/useHub';
 import Logon from './logon';
 import MessageNotifier from './messNotifier';
 import Newgame from './newgame';
-import { debugLog, hubConnection } from '/app/global';
+import { hubConnection } from '/app/global';
+import useClientMethods from '/app/hubs/useClientMethods';
 import Login from '/auth/content/login';
 import { getAuth } from '/auth/redux/authSlice';
 import { getEnableSockets, showMessage } from '/common/redux/commonSlice';
 import { sagaActions } from '/common/sagas';
 import Playground from '/game/content/playground';
+import gameHub from '/game/hub/gameHub';
 import { initMySettings } from '/game/redux/gameSlice';
 import { StorageState } from '/game/types';
 import GameList from '/netgame/content/gameList';
@@ -33,22 +35,7 @@ const Layout = () => {
             }),
         );
     });
-    useClientMethod(enableSockets, hubConnection, 'LoadGameData', (data) => {
-        debugLog(data);
-        dispatch({ type: sagaActions.GAME_START_LOOKING_DATA, payload: data });
-    });
-    useClientMethod(enableSockets, hubConnection, 'GetStartData', (data) => {
-        debugLog(data);
-        dispatch({ type: sagaActions.GAME_START_APPLY_DATA, payload: data });
-    });
-    useClientMethod(enableSockets, hubConnection, 'GetMoveChanges', (data) => {
-        debugLog(data);
-        dispatch({ type: sagaActions.GAME_TURN_APPLY_DATA, payload: data });
-    });
-    useClientMethod(enableSockets, hubConnection, 'GetActiveGames', (data) => {
-        debugLog(data);
-        dispatch({ type: sagaActions.NET_GAMES_APPLY_DATA, payload: data });
-    });
+    useClientMethods(enableSockets, hubConnection, dispatch, gameHub.getEventHandlers);
     useHub(enableSockets && auth.isAuthorised === true, hubConnection);
 
     useEffect(() => {

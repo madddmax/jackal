@@ -17,9 +17,9 @@ import Players from './components/players';
 import { PlayersInfo } from './components/types';
 import classes from './newgame.module.less';
 import { Constants } from '/app/constants';
-import { debugLog, hubConnection } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
 import { sagaActions } from '/common/sagas';
+import gameHub from '/game/hub/gameHub';
 
 const convertPlayers = (data: PlayersInfo): GamePlayer[] => {
     const { users, members, mode } = data;
@@ -88,22 +88,13 @@ const Newgame = () => {
         navigate('/');
         saveToLocalStorage(isStoredMap);
 
-        hubConnection
-            .invoke('start', {
-                settings: {
-                    players: convertPlayers(players),
-                    mapId: randNumber[0],
-                    mapSize,
-                    tilesPackName,
-                    gameMode:
-                        players.mode == 8
-                            ? Constants.gameModeTypes.TwoPlayersInTeam
-                            : Constants.gameModeTypes.FreeForAll,
-                },
-            })
-            .catch((err) => {
-                debugLog(err);
-            });
+        gameHub.startGame({
+            players: convertPlayers(players),
+            mapId: randNumber[0],
+            mapSize,
+            tilesPackName,
+            gameMode: players.mode == 8 ? Constants.gameModeTypes.TwoPlayersInTeam : Constants.gameModeTypes.FreeForAll,
+        });
     };
 
     const changeMapId = () => {

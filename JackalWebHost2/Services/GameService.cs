@@ -10,12 +10,12 @@ namespace JackalWebHost2.Services;
 
 public class GameService : IGameService
 {
-    private readonly IGameStateRepository _gameStateRepository;
+    private readonly IStateRepository<Game> _gameStateRepository;
     private readonly IGameRepository _gameRepository;
     private readonly IDrawService _drawService;
     
     public GameService(
-        IGameStateRepository gameStateRepository, 
+        IStateRepository<Game> gameStateRepository, 
         IGameRepository gameRepository,
         IDrawService drawService)
     {
@@ -26,7 +26,7 @@ public class GameService : IGameService
     
     public async Task<LoadGameResult> LoadGame(long userId, long gameId)
     {
-        var game = await _gameStateRepository.GetGame(gameId);
+        var game = _gameStateRepository.GetObject(gameId);
         if (game == null)
         {
             throw new GameNotFoundException();
@@ -91,7 +91,7 @@ public class GameService : IGameService
         var game = new Game(gameRequest);
 
         var gameId = await _gameRepository.CreateGame(user.Id, game);
-        await _gameStateRepository.CreateGame(user, gameId, game);
+        _gameStateRepository.CreateObject(user, gameId, game);
         
         var map = _drawService.Map(game.Board);
 
@@ -118,7 +118,7 @@ public class GameService : IGameService
     
     public async Task<TurnGameResult> MakeGameTurn(long userId, TurnGameModel request)
     {
-        var game = await _gameStateRepository.GetGame(request.GameId);
+        var game = _gameStateRepository.GetObject(request.GameId);
         if (game == null)
         {
             throw new GameNotFoundException();
@@ -149,7 +149,7 @@ public class GameService : IGameService
             game.Board.ShowUnknownTiles();
         }
         
-        await _gameStateRepository.UpdateGame(request.GameId, game);
+        _gameStateRepository.UpdateObject(request.GameId, game);
         var prevBoard = JsonHelper.DeserializeWithType<Board>(prevBoardStr);
         
         return new TurnGameResult

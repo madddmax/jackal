@@ -1,14 +1,15 @@
 import cn from 'classnames';
 import { RefObject } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { TooltipRefProps } from 'react-tooltip';
 
 import './cell.less';
 import { CalcTooltipType, TooltipTypes } from './cell.logic';
 import Level from './level';
 import LevelZero from './levelZero';
-import { hubConnection } from '/app/global';
 import store from '/app/store';
+import { showMessage } from '/common/redux/commonSlice';
+import gameHub from '/game/hub/gameHub';
 import { getGameField, getGameSettings } from '/game/redux/gameSlice';
 import { AvailableMove, FieldState, GameState } from '/game/types';
 
@@ -28,9 +29,23 @@ function Cell({ row, col, tooltipRef }: CellProps) {
     const { gameId, cellSize, pirateSize } = useSelector(getGameSettings);
     const hasMove = field.availableMoves.length > 0;
 
+    const dispatch = useDispatch();
+
     const onClick = () => {
+        if (gameId == undefined) {
+            dispatch(
+                showMessage({
+                    isError: true,
+                    errorCode: 'HasNoGameId',
+                    messageText: 'Не найден ключ игры',
+                }),
+            );
+
+            return;
+        }
+
         const makeMove = (move: AvailableMove) => {
-            hubConnection.send('Move', {
+            gameHub.makeGameMove({
                 gameId: gameId,
                 turnNum: move.num,
                 pirateId: move.pirateId,
