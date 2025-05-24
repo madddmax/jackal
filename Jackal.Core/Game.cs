@@ -20,7 +20,7 @@ public record GameRequest(
     int PiratesPerPlayer = 3
 );
 
-public class Game
+public class Game : ICompletable
 {
     private readonly IPlayer[] _players;
 
@@ -205,6 +205,8 @@ public class Game
     /// Конец игры
     /// </summary>
     public bool IsGameOver { get; private set; }
+
+    public bool IsCompleted => IsGameOver;
 
     /// <summary>
     /// Текущий ход - определяет какая команда ходит

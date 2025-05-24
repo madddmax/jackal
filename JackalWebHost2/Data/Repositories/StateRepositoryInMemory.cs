@@ -4,23 +4,22 @@ using JackalWebHost2.Data.Entities;
 using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Models;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Options;
 
 namespace JackalWebHost2.Data.Repositories;
 
-public class GameStateRepositoryInMemory : IGameStateRepository
+public class StateRepositoryInMemory<T> : IStateRepository<T> where T : class, ICompletable
 {
-    private readonly IMemoryCache _gamesMemoryCache;
+    private readonly IMemoryCache _memoryCache;
     private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
     private bool _hasChanges;
-    private readonly ConcurrentDictionary<long, GameCacheEntry> _gamesEntries;
+    private readonly ConcurrentDictionary<long, CacheEntry> _entries;
 
-    public GameStateRepositoryInMemory()
+    public StateRepositoryInMemory()
     {
-        _gamesEntries = new ConcurrentDictionary<long, GameCacheEntry>();
-        _gamesMemoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
+        _entries = new ConcurrentDictionary<long, CacheEntry>();
+        _memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
         _cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromHours(1))
             .RegisterPostEvictionCallback(callback: EvictionCallback);
@@ -38,41 +37,39 @@ public class GameStateRepositoryInMemory : IGameStateRepository
             return;
         }
         
-        if (_gamesEntries.TryRemove(gameId, out _))
+        if (_entries.TryRemove(gameId, out _))
         {
             _hasChanges = true;
         }
     }
 
-    public bool HasGamesChanges()
+    public bool HasChanges()
     {
         return _hasChanges;
     }
 
-    public void ResetGamesChanges()
+    public void ResetChanges()
     {
         _hasChanges = false;
     }
 
-    public IList<GameCacheEntry> GetGamesEntries()
+    public IList<CacheEntry> GetEntries()
     {
-        return _gamesEntries.Values.ToList();
+        return _entries.Values.ToList();
     }
 
-    public Task<Game?> GetGame(long gameId)
+    public T? GetObject(long objectId)
     {
-        return Task.FromResult(_gamesMemoryCache.TryGetValue(gameId, out Game? game) && game != null 
-            ? game
-            : null);
+        return _memoryCache.TryGetValue(objectId, out T? value) ? value : null;
     }
 
-    public Task CreateGame(User user, long gameId, Game game)
+    public void CreateObject(User user, long objectId, T value)
     {
-        _gamesMemoryCache.Set(gameId, game, _cacheEntryOptions);
-        if (_gamesEntries.TryAdd(gameId, new GameCacheEntry
+        _memoryCache.Set(objectId, value, _cacheEntryOptions);
+        if (_entries.TryAdd(objectId, new CacheEntry
             {
-                GameId = gameId,
-                Creator = new GameCacheEntryCreator
+                ObjectId = objectId,
+                Creator = new CacheEntryCreator
                 {
                     Id = user.Id,
                     Name = user.Login
@@ -82,22 +79,19 @@ public class GameStateRepositoryInMemory : IGameStateRepository
         {
             _hasChanges = true;
         }
-        return Task.CompletedTask;
     }
 
-    public Task UpdateGame(long gameId, Game game)
+    public void UpdateObject(long objectId, T value)
     {
-        _gamesMemoryCache.Set(gameId, game, _cacheEntryOptions);
-        if (game.IsGameOver)
+        _memoryCache.Set(objectId, value, _cacheEntryOptions);
+        if (value.IsCompleted)
         {
-            _gamesEntries.TryRemove(gameId, out _);
+            _entries.TryRemove(objectId, out _);
         }
-        else if (_gamesEntries.TryGetValue(gameId, out GameCacheEntry? entry))
+        else if (_entries.TryGetValue(objectId, out CacheEntry? entry))
         {
             entry.TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
         _hasChanges = true;
-
-        return Task.CompletedTask;
     }
 }

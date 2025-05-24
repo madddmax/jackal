@@ -32,7 +32,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
     const dispatch = useDispatch();
 
     const onClick = () => {
-        if (!gameId) {
+        if (gameId == undefined) {
             dispatch(
                 showMessage({
                     isError: true,
