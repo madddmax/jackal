@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Jackal.Core;
 using JackalWebHost2.Controllers.Hubs;
 using JackalWebHost2.Data;
 using JackalWebHost2.Data.Interfaces;
@@ -168,7 +169,7 @@ public class Program
             services.AddScoped<IGameRepository, GameRepositoryStub>();
         }
 
-        services.AddSingleton<IGameStateRepository, GameStateRepositoryInMemory>();
+        services.AddSingleton<IStateRepository<Game>, StateRepositoryInMemory<Game>>();
         services.AddScoped<ILobbyRepository, LobbyRepositoryInMemory>();
     }
 }

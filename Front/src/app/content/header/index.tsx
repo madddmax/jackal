@@ -11,9 +11,9 @@ import { activateSockets, getEnableSockets } from '../../../common/redux/commonS
 import './header.css';
 import config from '/app/config';
 import { Constants } from '/app/constants';
-import { debugLog, hubConnection } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
 import { sagaActions } from '/common/sagas';
+import gameHub from '/game/hub/gameHub';
 import { getUserSettings } from '/game/redux/gameSlice';
 
 const Header = () => {
@@ -24,21 +24,15 @@ const Header = () => {
     const enableSockets = useSelector(getEnableSockets);
 
     const quickStart = () => {
-        hubConnection
-            .invoke('start', {
-                settings: {
-                    players: [
-                        { userId: authInfo.user?.id ?? 0, type: 'human', position: Constants.positions[0] },
-                        { userId: 0, type: 'robot2', position: Constants.positions[2] },
-                    ],
-                    mapId: userSettings.mapId,
-                    mapSize: 11,
-                    tilesPackName: userSettings.tilesPackName,
-                },
-            })
-            .catch((err) => {
-                debugLog(err);
-            });
+        gameHub.startGame({
+            players: [
+                { userId: authInfo.user?.id ?? 0, type: 'human', position: Constants.positions[0] },
+                { userId: 0, type: 'robot2', position: Constants.positions[2] },
+            ],
+            mapId: userSettings.mapId,
+            mapSize: 11,
+            tilesPackName: userSettings.tilesPackName,
+        });
     };
 
     const doLogout = () =>

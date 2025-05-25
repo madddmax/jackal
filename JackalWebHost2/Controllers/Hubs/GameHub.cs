@@ -1,6 +1,8 @@
-﻿using Jackal.Core.MapGenerator.TilesPack;
+﻿using Jackal.Core;
+using Jackal.Core.MapGenerator.TilesPack;
 using JackalWebHost2.Controllers.Models;
 using JackalWebHost2.Controllers.Models.Services;
+using JackalWebHost2.Data.Entities;
 using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Infrastructure.Auth;
 using JackalWebHost2.Models;
@@ -19,9 +21,9 @@ public class GameHub : Hub
     private const string CALLBACK_GET_ACTIVE_GAMES = "GetActiveGames";
 
     private readonly IGameService _gameService;
-    private readonly IGameStateRepository _gameStateRepository;
+    private readonly IStateRepository<Game> _gameStateRepository;
 
-    public GameHub(IGameService gameService, IGameStateRepository gameStateRepository)
+    public GameHub(IGameService gameService, IStateRepository<Game> gameStateRepository)
     {
         _gameService = gameService;
         _gameStateRepository = gameStateRepository;
@@ -33,8 +35,7 @@ public class GameHub : Hub
         await Clients.Caller.SendAsync(CALLBACK_NOTIFY, $"{user.Login} вошел в игру");
         await Clients.Caller.SendAsync(CALLBACK_GET_ACTIVE_GAMES, new AllActiveGamesResponse
         {
-            GamesKeys = _gameStateRepository.GetAllKeys(),
-            GamesEntries = _gameStateRepository.GetGamesEntries()
+            GamesEntries = _gameStateRepository.GetEntries().Select(ToActiveGame).ToList()
         });
         await base.OnConnectedAsync();
     }
@@ -100,14 +101,13 @@ public class GameHub : Hub
             Moves = result.Moves
         });
 
-        if (_gameStateRepository.HasGamesChanges())
+        if (_gameStateRepository.HasChanges())
         {
             await Clients.All.SendAsync(CALLBACK_GET_ACTIVE_GAMES, new AllActiveGamesResponse
             {
-                GamesKeys = _gameStateRepository.GetAllKeys(),
-                GamesEntries = _gameStateRepository.GetGamesEntries()
+                GamesEntries = _gameStateRepository.GetEntries().Select(ToActiveGame).ToList()
             });
-            _gameStateRepository.ResetGamesChanges();
+            _gameStateRepository.ResetChanges();
         }
 
         if (!result.Statistics.IsGameOver && result.Moves.Count == 0)
@@ -156,5 +156,15 @@ public class GameHub : Hub
     private string GetGroupName(long gameId)
     {
         return $"grp{gameId}";
+    }
+
+    private ActiveGameInfo ToActiveGame(CacheEntry entry)
+    {
+        return new ActiveGameInfo
+        {
+            GameId = entry.ObjectId,
+            Creator = entry.Creator,
+            TimeStamp = entry.TimeStamp
+        };
     }
 }

@@ -22,7 +22,6 @@ export interface NetGameListResponse {
 
 export interface NetGameEntryResponse {
     gameId: number;
-    creatorId: number;
     creator: {
         id: number;
         name: string;

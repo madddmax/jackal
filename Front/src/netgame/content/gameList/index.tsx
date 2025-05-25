@@ -6,8 +6,9 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import classes from './gamelist.module.less';
-import { debugLog, fromNow, hubConnection } from '/app/global';
+import { fromNow } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
+import gameHub from '/game/hub/gameHub';
 import { getGames } from '/netgame/redux/lobbySlice';
 
 const GameList = () => {
@@ -17,14 +18,7 @@ const GameList = () => {
 
     const loadGame = (gameId: number) => {
         navigate('/');
-
-        hubConnection
-            .invoke('load', {
-                gameId: gameId,
-            })
-            .catch((err) => {
-                debugLog(err);
-            });
+        gameHub.loadGame(gameId);
     };
 
     return (

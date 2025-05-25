@@ -84,17 +84,12 @@ export const gameSlice = createSlice({
                 const row: FieldState[] = [];
                 for (let col = 0; col < action.payload.width; col++) {
                     const change = action.payload.changes[j];
-                    if (!change.backgroundImageSrc) {
-                        row.push({
-                            levels: change.levels,
-                            availableMoves: [],
-                        });
-                    } else
-                        row.push({
-                            image: change.backgroundImageSrc,
-                            levels: change.levels,
-                            availableMoves: [],
-                        });
+                    row.push({
+                        image: change.backgroundImageSrc,
+                        rotate: change.rotate,
+                        levels: change.levels,
+                        availableMoves: [],
+                    });
                     j++;
                 }
                 map.push(row);
