@@ -1,6 +1,7 @@
 ﻿using Jackal.Core;
 using Jackal.Core.MapGenerator.TilesPack;
 using JackalWebHost2.Controllers.Models;
+using JackalWebHost2.Controllers.Models.Game;
 using JackalWebHost2.Controllers.Models.Services;
 using JackalWebHost2.Data.Entities;
 using JackalWebHost2.Data.Interfaces;
@@ -20,13 +21,24 @@ public class GameHub : Hub
     private const string CALLBACK_GET_MOVE_CHANGES = "GetMoveChanges";
     private const string CALLBACK_GET_ACTIVE_GAMES = "GetActiveGames";
 
+    private const string CALLBACK_GET_NET_GAME_DATA = "GetNetGameData";
+    private const string CALLBACK_GET_ACTIVE_NET_GAMES = "GetActiveNetGames";
+
     private readonly IGameService _gameService;
     private readonly IStateRepository<Game> _gameStateRepository;
+    private readonly IStateRepository<NetGameSettings> _netgameStateRepository;
+    private readonly Random _random;
 
-    public GameHub(IGameService gameService, IStateRepository<Game> gameStateRepository)
+    
+    public GameHub(
+        IGameService gameService, 
+        IStateRepository<Game> gameStateRepository,
+        IStateRepository<NetGameSettings> netgameStateRepository)
     {
         _gameService = gameService;
         _gameStateRepository = gameStateRepository;
+        _netgameStateRepository = netgameStateRepository;
+        _random = new Random(DateTime.Now.Millisecond);
     }
 
     public override async Task OnConnectedAsync()
@@ -36,6 +48,10 @@ public class GameHub : Hub
         await Clients.Caller.SendAsync(CALLBACK_GET_ACTIVE_GAMES, new AllActiveGamesResponse
         {
             GamesEntries = _gameStateRepository.GetEntries().Select(ToActiveGame).ToList()
+        });
+        await Clients.Caller.SendAsync(CALLBACK_GET_ACTIVE_NET_GAMES, new AllActiveGamesResponse
+        {
+            GamesEntries = _netgameStateRepository.GetEntries().Select(ToActiveGame).ToList()
         });
         await base.OnConnectedAsync();
     }
@@ -101,14 +117,11 @@ public class GameHub : Hub
             Moves = result.Moves
         });
 
-        if (_gameStateRepository.HasChanges())
+        await Clients.All.SendAsync(CALLBACK_GET_ACTIVE_GAMES, new AllActiveGamesResponse
         {
-            await Clients.All.SendAsync(CALLBACK_GET_ACTIVE_GAMES, new AllActiveGamesResponse
-            {
-                GamesEntries = _gameStateRepository.GetEntries().Select(ToActiveGame).ToList()
-            });
-            _gameStateRepository.ResetChanges();
-        }
+            GamesEntries = _gameStateRepository.GetEntries().Select(ToActiveGame).ToList()
+        });
+        _gameStateRepository.ResetChanges();
 
         if (!result.Statistics.IsGameOver && result.Moves.Count == 0)
         {
@@ -152,6 +165,104 @@ public class GameHub : Hub
         }
     }
 
+
+    /// <summary>
+    /// Старт новой сетевой игры
+    /// </summary>
+    public async Task NetStart(NetGameRequest request)
+    {
+        var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
+        var netGame = new NetGameSettings
+        {
+            Id = _random.NextInt64(1, 100_000_000),
+            CreatorId = user.Id,
+            Users = new HashSet<long>{user.Id},
+            Settings = request.Settings
+        };
+        _netgameStateRepository.CreateObject(user, netGame.Id, netGame);
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, GetNetGroupName(netGame.Id));
+        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, new NetGameResponse
+        {
+            Id = netGame.Id,
+            Settings = netGame.Settings,
+            Viewers = netGame.Users
+        });
+
+        await Clients.All.SendAsync(CALLBACK_GET_ACTIVE_NET_GAMES, new AllActiveGamesResponse
+        {
+            GamesEntries = _netgameStateRepository.GetEntries().Select(ToActiveGame).ToList()
+        });
+        _netgameStateRepository.ResetChanges();
+    }
+
+
+    /// <summary>
+    /// Изменение сетевой игры
+    /// </summary>
+    public async Task NetUpdate(NetGameRequest request)
+    {
+        var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
+        var netGame = _netgameStateRepository.GetObject(request.Id);
+        if (netGame?.CreatorId != user.Id) return;
+
+        netGame.Settings = request.Settings;
+        _netgameStateRepository.UpdateObject(netGame.Id, netGame);
+
+        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, new NetGameResponse
+        {
+            Id = netGame.Id,
+            Settings = netGame.Settings,
+            Viewers = netGame.Users
+        });
+     }
+
+    /// <summary>
+    /// Присоединиться к сетевой игре
+    /// </summary>
+    public async Task NetJoin(NetUserRequest request)
+    {
+        var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
+        var netGame = _netgameStateRepository.GetObject(request.Id);
+        if (netGame == null) return;
+
+        netGame.Users.Add(user.Id);
+        _netgameStateRepository.UpdateObject(netGame.Id, netGame);
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, GetNetGroupName(netGame.Id));
+        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, new NetGameResponse
+        {
+            Id = netGame.Id,
+            Settings = netGame.Settings,
+            Viewers = netGame.Users
+        });
+    }
+
+    /// <summary>
+    /// Покинуть сетевую игру
+    /// </summary>
+    public async Task NetLeave(NetUserRequest request)
+    {
+        var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
+        var netGame = _netgameStateRepository.GetObject(request.Id);
+        if (netGame == null) return;
+
+        netGame.Users.Remove(user.Id);
+        _netgameStateRepository.UpdateObject(netGame.Id, netGame);
+
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetNetGroupName(netGame.Id));
+        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, new NetGameResponse
+        {
+            Id = netGame.Id,
+            Settings = netGame.Settings,
+            Viewers = netGame.Users
+        });
+    }
+
+    private string GetNetGroupName(long netGameId)
+    {
+        return $"netgrp{netGameId}";
+    }
 
     private string GetGroupName(long gameId)
     {
