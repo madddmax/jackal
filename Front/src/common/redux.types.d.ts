@@ -1,9 +1,10 @@
 import { AuthState } from '../auth/redux/authSlice.types';
-import { GameSettings } from '../game/redux/gameSlice.types';
+import { GameSettings } from '../game/types/hubContracts';
 import { CommonState } from './redux/commonSlice.types';
 
 export interface LobbyState {
     gamelist: GameInfo[];
+    netgamelist: GameInfo[];
     lobby?: LobbyInfo;
 }
 
