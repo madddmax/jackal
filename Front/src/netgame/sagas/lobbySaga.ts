@@ -9,7 +9,7 @@ import {
     LobbyJoinResponse,
     NetGameListResponse,
 } from '../../common/redux.types';
-import { applyGamesList, updateLobby } from '../redux/lobbySlice';
+import { applyGamesList, applyNetGamesList, updateLobby } from '../redux/lobbySlice';
 import { history } from '/app/global';
 import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
 
@@ -75,14 +75,20 @@ export function* lobbyGet(action: PayloadAction<{ lobbyId: string }>) {
 //     }
 // }
 
-export function* applyNetGamesData(action: { payload: NetGameListResponse }) {
+export function* applyActiveGamesData(action: { payload: NetGameListResponse }) {
     const data = action.payload;
     yield put(applyGamesList(data));
+}
+
+export function* applyNetGamesData(action: { payload: NetGameListResponse }) {
+    const data = action.payload;
+    yield put(applyNetGamesList(data));
 }
 
 export default function* rootSaga() {
     // yield fork(watchLobbyPolling), yield takeEvery(sagaActions.LOBBY_CREATE, errorsWrapper(lobbyCreate));
     yield takeEvery(sagaActions.LOBBY_JOIN, errorsWrapper(lobbyJoin));
     yield takeEvery(sagaActions.LOBBY_GET, errorsWrapper(lobbyGet));
+    yield takeEvery(sagaActions.ACTIVE_GAMES_APPLY_DATA, errorsWrapper(applyActiveGamesData));
     yield takeEvery(sagaActions.NET_GAMES_APPLY_DATA, errorsWrapper(applyNetGamesData));
 }

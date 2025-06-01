@@ -6,6 +6,7 @@ export const lobbySlice = createSlice({
     name: 'lobby',
     initialState: {
         gamelist: [],
+        netgamelist: [],
     } satisfies LobbyState as LobbyState,
     reducers: {
         updateLobby: (state, action: PayloadAction<LobbyInfo>) => {
@@ -18,15 +19,23 @@ export const lobbySlice = createSlice({
                 timeStamp: it.timeStamp,
             }));
         },
+        applyNetGamesList: (state, action: PayloadAction<NetGameListResponse>) => {
+            state.netgamelist = action.payload.gamesEntries.map((it) => ({
+                id: it.gameId,
+                creator: it.creator,
+                timeStamp: it.timeStamp,
+            }));
+        },
     },
     selectors: {
         getLobby: (state): LobbyInfo | undefined => state.lobby,
         getGames: (state): GameInfo[] => state.gamelist,
+        getNetGames: (state): GameInfo[] => state.netgamelist,
     },
 });
 
-export const { updateLobby, applyGamesList } = lobbySlice.actions;
+export const { updateLobby, applyGamesList, applyNetGamesList } = lobbySlice.actions;
 
-export const { getLobby, getGames } = lobbySlice.selectors;
+export const { getLobby, getGames, getNetGames } = lobbySlice.selectors;
 
 export default lobbySlice.reducer;

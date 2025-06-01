@@ -17,6 +17,7 @@ import Playground from '/game/content/playground';
 import gameHub from '/game/hub/gameHub';
 import { initMySettings } from '/game/redux/gameSlice';
 import { StorageState } from '/game/types';
+import NetGameCreate from '/netgame/content/gameCreate';
 import GameList from '/netgame/content/gameList';
 import LobbyCard from '/netgame/content/lobbyCard';
 import LobbyJoin from '/netgame/content/lobbyJoin';
@@ -58,6 +59,7 @@ const Layout = () => {
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/joinlobby" element={<LobbyJoin />}></Route>
                 <Route path="/netgame" element={<GameList />}></Route>
+                <Route path="/netcreate" element={<NetGameCreate />}></Route>
                 <Route path="/lobby/:id" element={<LobbyCard />}></Route>
                 <Route path="/" element={<Playground />}></Route>
             </Routes>
