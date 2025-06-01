@@ -20,7 +20,7 @@ import {
 } from '../types/sagaContracts';
 import { ScreenSizes, TeamScores } from './gameSlice.types';
 import { Constants } from '/app/constants';
-import { debugLog, getAnotherRandomValue, getRandomValues, girlsMap } from '/app/global';
+import { debugLog, getAnotherRandomValue, girlsMap } from '/app/global';
 
 export const gameSlice = createSlice({
     name: 'game',
@@ -114,13 +114,37 @@ export const gameSlice = createSlice({
         },
         initPhotos: (state) => {
             state.teams.forEach((team) => {
-                const teamPiratesCount = state.pirates?.filter((it) => it.teamId == team.id).length;
-                const arr = getRandomValues(1, team.group.photoMaxId, teamPiratesCount ?? 0);
                 state.pirates
                     ?.filter((it) => it.teamId == team.id)
-                    .forEach((it, index) => {
-                        it.photo = `${team.group.id}/pirate_${arr[index]}${team.group.extension || '.png'}`;
-                        it.photoId = arr[index];
+                    .forEach((it) => {
+                        let pname;
+                        let pnumber;
+                        let extension = '.png';
+
+                        if (it.type == Constants.pirateTypes.BenGunn) {
+                            pname = 'commonganns/gann';
+                            pnumber = getAnotherRandomValue(
+                                1,
+                                Constants.commonGannMaxId,
+                                state.pirates
+                                    ?.filter((pr) => pr.type == Constants.pirateTypes.BenGunn)
+                                    .map((pr) => pr.photoId ?? 0) ?? [],
+                            );
+                        } else if (it.type == Constants.pirateTypes.Friday) {
+                            pname = 'commonfridays/friday';
+                            pnumber = getAnotherRandomValue(1, Constants.commonFridayMaxId, []);
+                        } else {
+                            pname = `${team.group.id}/pirate`;
+                            pnumber = getAnotherRandomValue(
+                                1,
+                                team.group.photoMaxId,
+                                state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ?? [],
+                            );
+                            extension = team.group.extension || '.png';
+                        }
+
+                        it.photo = `${pname}_${pnumber}${extension}`;
+                        it.photoId = pnumber;
                         it.groupId = team.group.id;
                         it.backgroundColor = team.backColor;
                     });
