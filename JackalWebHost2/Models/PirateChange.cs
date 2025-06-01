@@ -1,4 +1,3 @@
-using Jackal.Core;
 using Jackal.Core.Domain;
 
 namespace JackalWebHost2.Models;
@@ -13,11 +12,11 @@ public class PirateChange(Pirate pirate)
     
     public LevelPosition Position = new(pirate.Position);
     
-    public bool? IsAlive;
+    public bool? IsAlive = null;
     
-    public bool? IsDrunk;
+    public bool? IsDrunk = pirate.IsDrunk;
     
-    public bool? IsInTrap;
+    public bool? IsInTrap = pirate.IsInTrap;
     
-    public bool? IsInHole;
+    public bool? IsInHole = pirate.IsInHole;
 }
