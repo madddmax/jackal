@@ -6,12 +6,15 @@ namespace Jackal.Core.Players;
 /// Игрок человек - выбирает ход через Web UI
 /// </summary>
 /// <param name="userId">ИД пользователя</param>
-public class HumanPlayer(long userId) : IHumanPlayer, IPlayer
+/// <param name="name">Имя игрока</param>
+public class HumanPlayer(long userId, string name) : IHumanPlayer, IPlayer
 {
     private int _moveNum;
     private Guid? _pirateId;
 
     public long UserId { get; } = userId;
+
+    public string Name { get; } = name;
 
     public void OnNewGame()
     {
