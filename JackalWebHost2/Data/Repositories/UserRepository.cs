@@ -9,7 +9,7 @@ public class UserRepository(JackalDbContext jackalDbContext) : IUserRepository
 {
     public async Task<User?> GetUser(long id, CancellationToken token)
     {
-        var userEntity = await jackalDbContext.Users.FindAsync(new object [id], token);
+        var userEntity = await jackalDbContext.Users.FindAsync([id], token);
         return userEntity != null ? ToUser(userEntity) : null;
     }
 

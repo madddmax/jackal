@@ -14,7 +14,7 @@ public class JsonHelperTests
     {
         // Arrange
         const int mapSize = 5;
-        IPlayer[] players = [new HumanPlayer(1)];
+        IPlayer[] players = [new HumanPlayer(1, "HumanPlayer")];
         var randomMap = new RandomMapGenerator(1, mapSize);
         var gameRequest = new GameRequest(mapSize, randomMap, players, GameModeType.TwoPlayersInTeam, 1);
         var board = new Board(gameRequest);

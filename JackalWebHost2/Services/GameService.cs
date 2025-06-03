@@ -12,15 +12,18 @@ public class GameService : IGameService
 {
     private readonly IStateRepository<Game> _gameStateRepository;
     private readonly IGameRepository _gameRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IDrawService _drawService;
     
     public GameService(
         IStateRepository<Game> gameStateRepository, 
         IGameRepository gameRepository,
+        IUserRepository userRepository,
         IDrawService drawService)
     {
         _gameStateRepository = gameStateRepository;
         _gameRepository = gameRepository;
+        _userRepository = userRepository;
         _drawService = drawService;
     }
     
@@ -64,12 +67,20 @@ public class GameService : IGameService
 
         foreach (var player in gameSettings.Players)
         {
+            User? userPlayer = null;
+            if (player.Type == PlayerType.Human)
+            {
+                userPlayer = await _userRepository.GetUser(player.UserId, CancellationToken.None);
+            }
+            
             gamePlayers[index++] = player.Type switch
             {
                 PlayerType.Robot => new RandomPlayer(),
                 PlayerType.Robot2 => new EasyPlayer(),
                 PlayerType.Robot3 => new OakioPlayer(),
-                PlayerType.Human => new HumanPlayer(player.UserId),
+                PlayerType.Human => userPlayer != null 
+                    ? new HumanPlayer(userPlayer.Id, userPlayer.Login) 
+                    : throw new PlayerNotFoundException(),
                 _ => throw new PlayerNotFoundException()
             };
         }

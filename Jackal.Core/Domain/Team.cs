@@ -61,9 +61,18 @@ public record Team
     public Team(int id, IPlayer player, int x, int y, int piratesPerPlayer)
     {
         Id = id;
-        Name = player.GetType().Name;
-        UserId = player is IHumanPlayer humanPlayer ? humanPlayer.UserId : 0;
         ShipPosition = new Position(x, y);
+        
+        if (player is IHumanPlayer humanPlayer)
+        {
+            UserId = humanPlayer.UserId;
+            Name = humanPlayer.Name;
+        }
+        else
+        {
+            UserId = 0;
+            Name = player.GetType().Name;
+        }
         
         Pirates = new Pirate[piratesPerPlayer];
         for (int i = 0; i < Pirates.Length; i++)

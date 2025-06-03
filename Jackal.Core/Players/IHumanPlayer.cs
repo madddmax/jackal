@@ -13,6 +13,11 @@ public interface IHumanPlayer
     long UserId { get; }
     
     /// <summary>
+    /// Имя игрока
+    /// </summary>
+    string Name { get; }
+    
+    /// <summary>
     /// Выбор хода для человека
     /// </summary>
     /// <param name="moveNum">Номер хода из доступных ходов</param>
