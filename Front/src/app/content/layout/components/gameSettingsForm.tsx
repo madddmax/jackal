@@ -1,120 +1,100 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
 import classes from '../newgame.module.less';
 import Players from './players';
 import { PlayersInfo } from './types';
-import { Constants } from '/app/constants';
-import { getAuth } from '/auth/redux/authSlice';
 import { sagaActions } from '/common/sagas';
-import { getGameSettings, getMapForecasts, getUserSettings, setMapForecasts } from '/game/redux/gameSlice';
-import { GamePlayer, GameSettingsExt } from '/game/types/hubContracts';
-
-const convertPlayers = (data: PlayersInfo): GamePlayer[] => {
-    const { users, members, mode } = data;
-    if (mode == 1)
-        return [{ userId: members[0] === 'human' ? users[0] : 0, type: members[0], position: Constants.positions[0] }];
-    else if (mode == 2)
-        return [
-            { userId: members[0] === 'human' ? users[0] : 0, type: members[0], position: Constants.positions[0] },
-            { userId: members[2] === 'human' ? users[0] : 0, type: members[2], position: Constants.positions[2] },
-        ];
-    else
-        return members.map((it, index) => ({
-            userId: it === 'human' ? users[index] : 0,
-            type: it,
-            position: Constants.positions[index],
-        }));
-};
-
-const convertMapId = (val: string | number | undefined) => {
-    if (val === undefined) return undefined;
-    const clone = new Int32Array(1);
-    clone[0] = typeof val == 'string' ? Number(val) : val;
-    return clone;
-};
+import { getGameSettings, getMapForecasts, setMapForecasts } from '/game/redux/gameSlice';
+import { GameSettingsFormData } from '/game/types/hubContracts';
 
 interface GameSettingsFormProps {
-    isNet?: boolean;
-    onChange: (data: GameSettingsExt) => void;
+    isNetStyle?: boolean;
+    gameSettingsData: GameSettingsFormData;
+    setGameSettingsData: (data: GameSettingsFormData) => void;
     children: React.ReactElement;
 }
 
-const GameSettingsForm = ({ isNet, onChange, children }: GameSettingsFormProps) => {
+const GameSettingsForm = ({ isNetStyle, gameSettingsData, setGameSettingsData, children }: GameSettingsFormProps) => {
     const dispatch = useDispatch();
 
-    const userSettings = useSelector(getUserSettings);
     const { tilesPackNames } = useSelector(getGameSettings);
     const mapForecasts = useSelector(getMapForecasts);
-    const authInfo = useSelector(getAuth);
 
-    const [players, setPlayers] = useState<PlayersInfo>({
-        mode: userSettings.playersMode || 4,
-        users: [authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0],
-        members: userSettings.players || ['human', 'robot2', 'robot', 'robot2'],
-        groups: userSettings.groups,
-    });
-
-    const [mapSize, setMapSize] = useState(userSettings.mapSize || 11);
-    const [tilesPackName, setTilesPackName] = useState<string | undefined>(userSettings.tilesPackName);
-    const [isStoredMap, setIsStoredMap] = useState(userSettings.mapId != undefined);
-
-    const [randNumber, setRandNumber] = useState(
-        convertMapId(userSettings.mapId) || crypto.getRandomValues(new Int32Array(1)),
-    );
+    if (!gameSettingsData.mapId) gameSettingsData.mapId = crypto.getRandomValues(new Int32Array(1))[0];
 
     useEffect(() => {
         dispatch({
             type: sagaActions.CHECK_MAP,
             payload: {
-                mapId: randNumber[0],
-                mapSize,
-                tilesPackName,
+                mapId: gameSettingsData.mapId,
+                mapSize: gameSettingsData.mapSize,
+                tilesPackName: gameSettingsData.tilesPackName,
             },
         });
 
         return () => {
             dispatch(setMapForecasts());
         };
-    }, [dispatch, mapSize, randNumber, tilesPackName]);
+    }, [dispatch, gameSettingsData.mapId, gameSettingsData.mapSize, gameSettingsData.tilesPackName]);
 
-    onChange({
-        groups: players.groups,
-        mapSize,
-        players: convertPlayers(players),
-        members: players.members,
-        isStoredMap: isStoredMap,
-        mapId: randNumber[0],
-        tilesPackName,
-        gameMode: players.mode == 8 ? Constants.gameModeTypes.TwoPlayersInTeam : Constants.gameModeTypes.FreeForAll,
-    });
+    const setPlayers = (data: PlayersInfo) => {
+        setGameSettingsData({
+            ...gameSettingsData,
+            players: data,
+        });
+    };
 
-    const changeMapId = () => {
-        const newId = crypto.getRandomValues(new Int32Array(1));
-        setRandNumber(newId);
+    const setMapSize = (data: number) => {
+        setGameSettingsData({
+            ...gameSettingsData,
+            mapSize: data,
+        });
+    };
+
+    const setTilesPackName = (data: string) => {
+        setGameSettingsData({
+            ...gameSettingsData,
+            tilesPackName: data,
+        });
+    };
+
+    const setMapId = (data: number) => {
+        setGameSettingsData({
+            ...gameSettingsData,
+            mapId: data,
+        });
         dispatch({
             type: sagaActions.CHECK_MAP,
             payload: {
-                mapId: newId[0],
-                mapSize,
-                tilesPackName,
+                mapId: data,
+                mapSize: gameSettingsData.mapSize,
+                tilesPackName: gameSettingsData.tilesPackName,
             },
         });
     };
 
+    const changeMapId = () => {
+        const newId = crypto.getRandomValues(new Int32Array(1));
+        setMapId(newId[0]);
+    };
+
     const storeMapId = (event: { target: { checked: boolean } }) => {
-        setIsStoredMap(event.target.checked);
+        setGameSettingsData({
+            ...gameSettingsData,
+            isStoredMap: event.target.checked,
+        });
     };
 
     return (
-        <Form className={isNet ? classes.netgame : classes.newgame} onSubmit={(event) => event.preventDefault()}>
-            <Players players={players} setPlayers={setPlayers} mapInfo={mapForecasts} />
+        <Form className={isNetStyle ? classes.netgame : classes.newgame} onSubmit={(event) => event.preventDefault()}>
+            <Players players={gameSettingsData.players} setPlayers={setPlayers} mapInfo={mapForecasts} />
             <div className="mt-3">
                 <div>
-                    <Form.Label>Размер карты: {mapSize}</Form.Label>
+                    <Form.Label>Размер карты: {gameSettingsData.mapSize}</Form.Label>
                     <Form.Range
-                        value={mapSize}
+                        value={gameSettingsData.mapSize}
                         min={5}
                         max={13}
                         step={2}
@@ -129,7 +109,7 @@ const GameSettingsForm = ({ isNet, onChange, children }: GameSettingsFormProps) 
                     <Form.Label>Игровой набор</Form.Label>
                     <Form.Select
                         name="tilesPackName"
-                        value={tilesPackName}
+                        value={gameSettingsData.tilesPackName}
                         onChange={(event) => {
                             setTilesPackName(event.target.value);
                         }}
@@ -147,9 +127,9 @@ const GameSettingsForm = ({ isNet, onChange, children }: GameSettingsFormProps) 
                         type="text"
                         name="mapcode"
                         placeholder="Введите код"
-                        value={randNumber[0]}
+                        value={gameSettingsData.mapId}
                         onChange={(event) => {
-                            setRandNumber(convertMapId(event.target.value)!);
+                            if (event.target.value) setMapId(Number(event.target.value));
                         }}
                     />
                     <Button variant="outline-secondary" onClick={changeMapId}>
@@ -158,7 +138,12 @@ const GameSettingsForm = ({ isNet, onChange, children }: GameSettingsFormProps) 
                 </InputGroup>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Запоминать код карты" checked={isStoredMap} onChange={storeMapId} />
+                <Form.Check
+                    type="checkbox"
+                    label="Запоминать код карты"
+                    checked={gameSettingsData.isStoredMap}
+                    onChange={storeMapId}
+                />
             </Form.Group>
             {children}
         </Form>

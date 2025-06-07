@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -6,22 +7,37 @@ import { useNavigate } from 'react-router-dom';
 
 import { getUserSettings, saveMySettings } from '../../../game/redux/gameSlice';
 import GameSettingsForm from './components/gameSettingsForm';
-import { Constants } from '/app/constants';
+import { convertToSettings } from '/app/global';
+import { getAuth } from '/auth/redux/authSlice';
 import gameHub from '/game/hub/gameHub';
-import { GameSettingsExt } from '/game/types/hubContracts';
+import { GameSettingsFormData } from '/game/types/hubContracts';
 
 const Newgame = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const authInfo = useSelector(getAuth);
     const userSettings = useSelector(getUserSettings);
+
+    const [formData, setFormData] = useState<GameSettingsFormData>({
+        players: {
+            mode: userSettings.playersMode || 4,
+            users: [authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0],
+            members: userSettings.players || ['human', 'robot2', 'robot', 'robot2'],
+            groups: userSettings.groups,
+        },
+        mapId: userSettings.mapId,
+        mapSize: userSettings.mapSize || 11,
+        tilesPackName: userSettings.tilesPackName,
+        isStoredMap: userSettings.mapId != undefined,
+    });
 
     const newStart = () => {
         navigate('/');
         saveToLocalStorage();
 
         if (formData) {
-            gameHub.startGame(formData);
+            gameHub.startGame(convertToSettings(formData));
         }
     };
 
@@ -29,7 +45,7 @@ const Newgame = () => {
         navigate('/netcreate');
 
         if (formData) {
-            gameHub.netCreate(formData);
+            gameHub.netCreate(convertToSettings(formData));
         }
     };
 
@@ -38,11 +54,10 @@ const Newgame = () => {
             dispatch(
                 saveMySettings({
                     ...userSettings,
-                    groups: formData.groups,
+                    groups: formData.players.groups,
                     mapSize: formData.mapSize,
-                    players: formData.members,
-                    playersMode:
-                        formData.gameMode === Constants.gameModeTypes.TwoPlayersInTeam ? 8 : formData.players.length,
+                    players: formData.players.members,
+                    playersMode: formData.players.mode,
                     mapId: formData.isStoredMap ? formData.mapId : undefined,
                     tilesPackName: formData.tilesPackName,
                 }),
@@ -50,18 +65,17 @@ const Newgame = () => {
         }
     };
 
-    let formData: GameSettingsExt | undefined;
-    const getFormData = (data: GameSettingsExt) => {
+    const setGameFormData = (data: GameSettingsFormData) => {
         if (formData?.isStoredMap != data.isStoredMap) {
             saveToLocalStorage();
         }
-        formData = data;
+        setFormData(data);
     };
 
     return (
         <Container>
             <Row className="justify-content-center">
-                <GameSettingsForm onChange={getFormData}>
+                <GameSettingsForm gameSettingsData={formData} setGameSettingsData={setGameFormData}>
                     <>
                         <Button variant="primary" type="submit" onClick={newStart}>
                             Начать
