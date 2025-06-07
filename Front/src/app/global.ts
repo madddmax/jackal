@@ -3,6 +3,9 @@ import dayjs from 'dayjs';
 import { NavigateFunction } from 'react-router-dom';
 
 import config from './config';
+import { Constants } from './constants';
+import { PlayersInfo } from './content/layout/components/types';
+import { GamePlayer, GameSettings, GameSettingsFormData } from '/game/types/hubContracts';
 
 export const uuidGen = () => {
     return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
@@ -124,4 +127,36 @@ export const girlsMap: GirlsPositions = {
             pos.girls.push(pos.girls.shift()!);
         }
     },
+};
+
+const convertPlayers = (data: PlayersInfo): GamePlayer[] => {
+    const { users, members, mode } = data;
+    if (mode == 1)
+        return [{ userId: members[0] === 'human' ? users[0] : 0, type: members[0], position: Constants.positions[0] }];
+    else if (mode == 2)
+        return [
+            { userId: members[0] === 'human' ? users[0] : 0, type: members[0], position: Constants.positions[0] },
+            { userId: members[2] === 'human' ? users[0] : 0, type: members[2], position: Constants.positions[2] },
+        ];
+    else
+        return members.map((it, index) => ({
+            userId: it === 'human' ? users[index] : 0,
+            type: it,
+            position: Constants.positions[index],
+        }));
+};
+
+export const convertToSettings = (data: GameSettingsFormData): GameSettings => ({
+    players: convertPlayers(data.players),
+    mapId: data.mapId,
+    mapSize: data.mapSize,
+    tilesPackName: data.tilesPackName,
+    gameMode: data.players.mode == 8 ? Constants.gameModeTypes.TwoPlayersInTeam : Constants.gameModeTypes.FreeForAll,
+});
+
+export const convertToMembers = (data: GamePlayer[], defaults: string[]): string[] => {
+    if (data.length == 1) return data.map((it) => it.type.toLocaleLowerCase()).concat(defaults.slice(1));
+    if (data.length == 2) {
+        return [data[0].type.toLocaleLowerCase(), defaults[1], data[1].type.toLocaleLowerCase(), defaults[3]];
+    } else return data.map((it) => it.type.toLocaleLowerCase());
 };

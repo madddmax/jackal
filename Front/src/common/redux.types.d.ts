@@ -5,6 +5,7 @@ import { CommonState } from './redux/commonSlice.types';
 export interface LobbyState {
     gamelist: GameInfo[];
     netgamelist: GameInfo[];
+    netGame?: NetGameInfo;
     lobby?: LobbyInfo;
 }
 
@@ -15,6 +16,12 @@ export interface GameInfo {
         name: string;
     };
     timeStamp: number;
+}
+
+export interface NetGameInfo {
+    id: number;
+    settings: GameSettings;
+    viewers: number[];
 }
 
 export interface NetGameListResponse {

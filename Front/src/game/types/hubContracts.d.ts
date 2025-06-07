@@ -1,12 +1,16 @@
+import { PlayersInfo } from '/app/content/layout/components/types';
+
 export interface makeGameMoveRequestProps {
     gameId: number;
     turnNum: number;
     pirateId: string;
 }
 
-export interface GameSettingsExt extends GameSettings {
-    groups: string[];
-    members: string[];
+export interface GameSettingsFormData {
+    players: PlayersInfo;
+    mapId?: number;
+    mapSize: number;
+    tilesPackName?: string;
     isStoredMap: boolean;
 }
 

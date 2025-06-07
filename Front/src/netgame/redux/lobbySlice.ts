@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { GameInfo, LobbyInfo, LobbyState, NetGameListResponse } from '../../common/redux.types';
+import { GameInfo, LobbyInfo, LobbyState, NetGameInfo, NetGameListResponse } from '../../common/redux.types';
 
 export const lobbySlice = createSlice({
     name: 'lobby',
@@ -26,16 +26,20 @@ export const lobbySlice = createSlice({
                 timeStamp: it.timeStamp,
             }));
         },
+        applyNetGame: (state, action: PayloadAction<NetGameInfo>) => {
+            state.netGame = action.payload;
+        },
     },
     selectors: {
         getLobby: (state): LobbyInfo | undefined => state.lobby,
         getGames: (state): GameInfo[] => state.gamelist,
         getNetGames: (state): GameInfo[] => state.netgamelist,
+        getNetGame: (state): NetGameInfo | undefined => state.netGame,
     },
 });
 
-export const { updateLobby, applyGamesList, applyNetGamesList } = lobbySlice.actions;
+export const { updateLobby, applyGamesList, applyNetGamesList, applyNetGame } = lobbySlice.actions;
 
-export const { getLobby, getGames, getNetGames } = lobbySlice.selectors;
+export const { getLobby, getGames, getNetGames, getNetGame } = lobbySlice.selectors;
 
 export default lobbySlice.reducer;
