@@ -11,5 +11,10 @@ public class GameEntityConfiguration : IEntityTypeConfiguration<GameEntity>
         builder
             .Property(b => b.Id)
             .ValueGeneratedOnAdd();
+        
+        builder
+            .HasOne(b => b.CreatorUser)
+            .WithMany(b => b.Games)
+            .HasForeignKey(g => g.CreatorUserId);
     }
 }

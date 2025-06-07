@@ -8,5 +8,7 @@ public class UserEntity
     
     public DateTime Created { get; set; }
     
-    public virtual List<GameUserEntity> GameUsers { get; set; }
+    public virtual List<GameEntity> Games { get; set; }
+    
+    public virtual List<GamePlayerEntity> GamePlayers { get; set; }
 }
