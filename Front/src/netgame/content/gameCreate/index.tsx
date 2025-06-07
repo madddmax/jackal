@@ -27,7 +27,7 @@ const NetGameCreate = () => {
     //     }
     // };
 
-    const saveToLocalStorage = (hasStoredMapCode: boolean = true) => {
+    const saveToLocalStorage = () => {
         if (formData) {
             dispatch(
                 saveMySettings({
@@ -37,7 +37,7 @@ const NetGameCreate = () => {
                     players: formData.players.map((it) => it.type),
                     playersMode:
                         formData.gameMode === Constants.gameModeTypes.TwoPlayersInTeam ? 8 : formData.players.length,
-                    mapId: hasStoredMapCode ? formData.mapId : undefined,
+                    mapId: formData.isStoredMap ? formData.mapId : undefined,
                     tilesPackName: formData.tilesPackName,
                 }),
             );
@@ -45,12 +45,17 @@ const NetGameCreate = () => {
     };
 
     let formData: GameSettingsExt | undefined;
-    const getFormData = (data: GameSettingsExt) => (formData = data);
+    const getFormData = (data: GameSettingsExt) => {
+        if (formData?.isStoredMap != data.isStoredMap) {
+            saveToLocalStorage();
+        }
+        formData = data;
+    };
 
     return (
         <Container>
             <Row className="justify-content-center">
-                <GameSettingsForm isNet onChange={getFormData} saveToLocalStorage={saveToLocalStorage}>
+                <GameSettingsForm isNet onChange={getFormData}>
                     <Button variant="primary" type="submit" onClick={newStart}>
                         Начать
                     </Button>

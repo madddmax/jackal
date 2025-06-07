@@ -38,11 +38,10 @@ const convertMapId = (val: string | number | undefined) => {
 interface GameSettingsFormProps {
     isNet?: boolean;
     onChange: (data: GameSettingsExt) => void;
-    saveToLocalStorage: (hasStoredMapCode: boolean) => void;
     children: React.ReactElement;
 }
 
-const GameSettingsForm = ({ isNet, onChange, saveToLocalStorage, children }: GameSettingsFormProps) => {
+const GameSettingsForm = ({ isNet, onChange, children }: GameSettingsFormProps) => {
     const dispatch = useDispatch();
 
     const userSettings = useSelector(getUserSettings);
@@ -106,7 +105,6 @@ const GameSettingsForm = ({ isNet, onChange, saveToLocalStorage, children }: Gam
 
     const storeMapId = (event: { target: { checked: boolean } }) => {
         setIsStoredMap(event.target.checked);
-        saveToLocalStorage(event.target.checked);
     };
 
     return (
