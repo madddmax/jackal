@@ -15,7 +15,10 @@ public class UserRepository(JackalDbContext jackalDbContext) : IUserRepository
 
     public async Task<User?> GetUser(string login, CancellationToken token)
     {
-        var userEntity = await jackalDbContext.Users.FirstOrDefaultAsync(u => u.Login == login, token);
+        var userEntity = await jackalDbContext.Users.FirstOrDefaultAsync(
+            u => u.Login.ToLower() == login.ToLower(),
+            token
+        );
         return userEntity != null ? ToUser(userEntity) : null;
     }
 
