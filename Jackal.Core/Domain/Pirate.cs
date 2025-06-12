@@ -27,7 +27,7 @@ public record Pirate(int TeamId, TilePosition Position, PirateType Type)
     /// Номер хода с которого пират поддался пьянству,
     /// наша команда категорически не одобряет пьянство
     /// </summary>
-    public int? DrunkSinceTurnNo;
+    public int? DrunkSinceTurnNumber;
 
     /// <summary>
     /// Попал в ловушку
@@ -59,7 +59,7 @@ public record Pirate(int TeamId, TilePosition Position, PirateType Type)
         IsInTrap = false;
         IsInHole = false;
         IsDrunk = false;
-        DrunkSinceTurnNo = null;
+        DrunkSinceTurnNumber = null;
     }
     
     public virtual bool Equals(Pirate? other)

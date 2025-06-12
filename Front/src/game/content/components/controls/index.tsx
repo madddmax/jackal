@@ -31,7 +31,7 @@ function Controls() {
                     Размер карты: <span>{mapSize}</span>
                 </div>
                 <div>
-                    Номер хода: <span>{stat?.turnNo}</span>
+                    Номер хода: <span>{stat?.turnNumber}</span>
                 </div>
                 <div className={cn(classes.teams, 'container')}>
                     {teamScores?.map((it) => (

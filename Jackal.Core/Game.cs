@@ -113,9 +113,9 @@ public class Game : ICompletable
         if (NeedSubTurnPirate == null)
         {
             //также протрезвляем всех пиратов, которые начали бухать раньше текущего хода
-            foreach (Pirate pirate in Board.Teams[CurrentTeamId].Pirates.Where(x => x.IsDrunk && x.DrunkSinceTurnNo < TurnNumber))
+            foreach (Pirate pirate in Board.Teams[CurrentTeamId].Pirates.Where(x => x.IsDrunk && x.DrunkSinceTurnNumber < TurnNumber))
             {
-                pirate.DrunkSinceTurnNo = null;
+                pirate.DrunkSinceTurnNumber = null;
                 pirate.IsDrunk = false;
             }
 
@@ -217,7 +217,7 @@ public class Game : ICompletable
     /// Последний ход когда производилось действие:
     /// открытие новой клетки или перенос монеты 
     /// </summary>
-    public int LastActionTurnNo { get; internal set; }
+    public int LastActionTurnNumber { get; internal set; }
 
     /// <summary>
     /// ИД команды которая ходит
@@ -350,7 +350,7 @@ public class Game : ICompletable
         }
             
         // защита от яичинга (ходов без открытия клеток или переноса монет)
-        if (TurnNumber - 50 * _players.Length > LastActionTurnNo)
+        if (TurnNumber - 50 * _players.Length > LastActionTurnNumber)
         {
             return (true, "яичинга");
         }

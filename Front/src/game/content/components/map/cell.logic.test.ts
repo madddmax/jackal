@@ -77,7 +77,7 @@ const getState = (pirates: GamePirate[]) => ({
         gameSpeed: 0,
     },
     stat: {
-        turnNo: 1,
+        turnNumber: 1,
         currentTeamId: testTeamId,
         isGameOver: false,
         gameMessage: '',
