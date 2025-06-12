@@ -13,6 +13,10 @@ public class GameEntityConfiguration : IEntityTypeConfiguration<GameEntity>
             .ValueGeneratedOnAdd();
         
         builder
+            .Property(b => b.TilesPackName)
+            .HasMaxLength(30);
+        
+        builder
             .HasOne(b => b.CreatorUser)
             .WithMany(b => b.Games)
             .HasForeignKey(g => g.CreatorUserId);
