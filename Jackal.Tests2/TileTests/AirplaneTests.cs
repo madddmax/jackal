@@ -35,7 +35,7 @@ public class AirplaneTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(0, game.TurnNo);
+        Assert.Equal(0, game.TurnNumber);
     }
     
     [Fact]
@@ -67,7 +67,7 @@ public class AirplaneTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(0, game.TurnNo);
+        Assert.Equal(0, game.TurnNumber);
     }
     
     // TODO-TEST AirplaneThenNextAirplaneThenPrevAirplane_GetAvailableMoves_ReturnAroundFirstAirplaneTiles()
@@ -103,7 +103,7 @@ public class AirplaneTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(0, game.TurnNo);
+        Assert.Equal(0, game.TurnNumber);
     }
     
     [Fact]
@@ -137,7 +137,7 @@ public class AirplaneTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(0, game.TurnNo);
+        Assert.Equal(0, game.TurnNumber);
     }
     
     [Fact]
@@ -164,7 +164,7 @@ public class AirplaneTests
         Assert.Empty(game.Board.AllPirates);
         Assert.NotNull(game.Board.DeadPirates);
         Assert.Single(game.Board.DeadPirates);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -191,7 +191,7 @@ public class AirplaneTests
         Assert.Empty(game.Board.AllPirates);
         Assert.NotNull(game.Board.DeadPirates);
         Assert.Single(game.Board.DeadPirates);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -224,7 +224,7 @@ public class AirplaneTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -263,6 +263,6 @@ public class AirplaneTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
 }

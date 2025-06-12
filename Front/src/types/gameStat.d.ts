@@ -1,5 +1,5 @@
 interface GameStat {
-    turnNo: number;
+    turnNumber: number;
     currentTeamId: number;
     isGameOver: boolean;
     gameMessage: string;

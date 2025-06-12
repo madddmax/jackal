@@ -34,7 +34,7 @@ public class JungleTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -61,7 +61,7 @@ public class JungleTests
         // Assert - доступно 4 хода без монеты на соседние клетки из цента карты
         Assert.Equal(4, moves.Count);
         Assert.True(moves.All(m => !m.WithCoin));
-        Assert.Equal(2, game.TurnNo);
+        Assert.Equal(2, game.TurnNumber);
     }
     
     [Fact]
@@ -97,6 +97,6 @@ public class JungleTests
         var enemyPirate = game.Board.Teams[1].Pirates[0];
         Assert.Equal(new TilePosition(2, 1), enemyPirate.Position);
 
-        Assert.Equal(3, game.TurnNo);
+        Assert.Equal(3, game.TurnNumber);
     }
 }

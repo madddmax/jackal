@@ -26,7 +26,7 @@ public class SpinningTests
         Assert.Single(moves);
         Assert.Equal(new TilePosition(2, 1, 1), moves.First().From);
         Assert.Equal(new TilePosition(2, 1, 0), moves.First().To);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -58,7 +58,7 @@ public class SpinningTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(2, game.TurnNo);
+        Assert.Equal(2, game.TurnNumber);
     }
     
     [Fact]
@@ -93,7 +93,7 @@ public class SpinningTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(5, game.TurnNo);
+        Assert.Equal(5, game.TurnNumber);
     }
     
     [Fact]
@@ -121,7 +121,7 @@ public class SpinningTests
         Assert.Single(moves);
         Assert.Equal(new TilePosition(2, 2), moves.Single().From);
         Assert.Equal(new TilePosition(2, 1, 1), moves.Single().To);
-        Assert.Equal(2, game.TurnNo);
+        Assert.Equal(2, game.TurnNumber);
     }
     
     [Fact]
@@ -156,7 +156,7 @@ public class SpinningTests
         Assert.Equal(game.Board.Teams[1].ShipPosition, enemyPirate.Position.Position);
         Assert.Equal(new Position(2, 4), enemyPirate.Position.Position);
 
-        Assert.Equal(2, game.TurnNo);
+        Assert.Equal(2, game.TurnNumber);
     }
     
     [Fact]
@@ -187,7 +187,7 @@ public class SpinningTests
         Assert.Equal(new TilePosition(2, 1, 1), withoutCoin.From);
         Assert.Equal(new TilePosition(2, 1, 0), withoutCoin.To);
         
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
 
     [Fact]
@@ -217,7 +217,7 @@ public class SpinningTests
         Assert.Equal(new TilePosition(2, 1, 1), withoutCoin.From);
         Assert.Equal(new TilePosition(2, 1, 0), withoutCoin.To);
         
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -248,7 +248,7 @@ public class SpinningTests
         // Assert - доступно 4 хода без монеты на соседние клетки из цента карты
         Assert.Equal(4, moves.Count);
         Assert.True(moves.All(m => !m.WithCoin));
-        Assert.Equal(3, game.TurnNo);
+        Assert.Equal(3, game.TurnNumber);
     }
     
     [Fact]
@@ -279,6 +279,6 @@ public class SpinningTests
         // Assert - доступно 4 хода без монеты на соседние клетки из цента карты и 1 ход с монетой на джунгли-вертушку
         Assert.Equal(5, moves.Count);
         Assert.Single(moves, m => m.WithCoin);
-        Assert.Equal(3, game.TurnNo);
+        Assert.Equal(3, game.TurnNumber);
     }
 }

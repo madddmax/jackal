@@ -38,21 +38,21 @@ internal class MovingWithCoinAction(TilePosition from, TilePosition to, TilePosi
                 allyTeam.Coins++;
             
             game.CoinsOnMap--;
-            game.LastActionTurnNo = game.TurnNo;
+            game.LastActionTurnNumber = game.TurnNumber;
         }
         else if (targetTile.Type == TileType.Water)
         {
             // монета в воде - тонет
             game.CoinsOnMap--;
             game.LostCoins++;
-            game.LastActionTurnNo = game.TurnNo;
+            game.LastActionTurnNumber = game.TurnNumber;
         }
         else if (targetTile.Type == TileType.Cannibal)
         {
             // монета на людоеде - пропадает т.к. Пятница не реализован
             game.CoinsOnMap--;
             game.LostCoins++;
-            game.LastActionTurnNo = game.TurnNo;
+            game.LastActionTurnNumber = game.TurnNumber;
         }
         else
         {

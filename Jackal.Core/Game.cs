@@ -92,7 +92,7 @@ public class Game : ICompletable
             {
                 AvailableMoves = _availableMoves.ToArray(),
                 Board = Board,
-                TurnNumber = TurnNo,
+                TurnNumber = TurnNumber,
                 TeamId = CurrentTeamId
             };
             var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
@@ -113,13 +113,13 @@ public class Game : ICompletable
         if (NeedSubTurnPirate == null)
         {
             //также протрезвляем всех пиратов, которые начали бухать раньше текущего хода
-            foreach (Pirate pirate in Board.Teams[CurrentTeamId].Pirates.Where(x => x.IsDrunk && x.DrunkSinceTurnNo < TurnNo))
+            foreach (Pirate pirate in Board.Teams[CurrentTeamId].Pirates.Where(x => x.IsDrunk && x.DrunkSinceTurnNumber < TurnNumber))
             {
-                pirate.DrunkSinceTurnNo = null;
+                pirate.DrunkSinceTurnNumber = null;
                 pirate.IsDrunk = false;
             }
 
-            TurnNo++;
+            TurnNumber++;
             SubTurn.Clear();
         }
 
@@ -137,7 +137,7 @@ public class Game : ICompletable
         else
         {
             var gameMessages = GameMessages.Kit[MessagesKitIndex];
-            GameMessage = gameMessages[TurnNo / _players.Length % gameMessages.Length];
+            GameMessage = gameMessages[TurnNumber / _players.Length % gameMessages.Length];
         }
     }
 
@@ -211,18 +211,18 @@ public class Game : ICompletable
     /// <summary>
     /// Текущий ход - определяет какая команда ходит
     /// </summary>
-    public int TurnNo { get; private set; }
+    public int TurnNumber { get; private set; }
         
     /// <summary>
     /// Последний ход когда производилось действие:
     /// открытие новой клетки или перенос монеты 
     /// </summary>
-    public int LastActionTurnNo { get; internal set; }
+    public int LastActionTurnNumber { get; internal set; }
 
     /// <summary>
     /// ИД команды которая ходит
     /// </summary>
-    public int CurrentTeamId => TurnNo % _players.Length;
+    public int CurrentTeamId => TurnNumber % _players.Length;
 
     /// <summary>
     /// Игрок который ходит
@@ -350,7 +350,7 @@ public class Game : ICompletable
         }
             
         // защита от яичинга (ходов без открытия клеток или переноса монет)
-        if (TurnNo - 50 * _players.Length > LastActionTurnNo)
+        if (TurnNumber - 50 * _players.Length > LastActionTurnNumber)
         {
             return (true, "яичинга");
         }

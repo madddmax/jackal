@@ -27,7 +27,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         if (targetTile.Type == TileType.Unknown)
         {
             targetTile = board.OpenTile(To.Position);
-            game.LastActionTurnNo = game.TurnNo;
+            game.LastActionTurnNumber = game.TurnNumber;
             game.CoinsOnMap += targetTile.Type.CoinsCount();
             newTile = true;
         }
@@ -269,7 +269,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         {
             case TileType.RumBarrel:
                 // проводим пьянку для пирата
-                pirate.DrunkSinceTurnNo = game.TurnNo;
+                pirate.DrunkSinceTurnNumber = game.TurnNumber;
                 pirate.IsDrunk = true;
                 break;
             case TileType.Trap:

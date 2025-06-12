@@ -74,7 +74,7 @@ public class DrawService : IDrawService
     public GameStatistics GetStatistics(Game game) =>
         new()
         {
-            TurnNo = game.TurnNo,
+            TurnNumber = game.TurnNumber,
             IsGameOver = game.IsGameOver,
             GameMessage = game.GameMessage,
             CurrentTeamId = game.CurrentTeamId

@@ -25,7 +25,7 @@ public class HoleTests
         
         // Assert - не доступно ни одного хода, т.к. застряли в дыре
         Assert.Empty(moves);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -56,7 +56,7 @@ public class HoleTests
         
         // Assert - не доступно ни одного хода, т.к. оба пирата застряли в дыре
         Assert.Empty(moves);
-        Assert.Equal(4, game.TurnNo);
+        Assert.Equal(4, game.TurnNumber);
     }
     
     [Fact]
@@ -87,7 +87,7 @@ public class HoleTests
         
         // Assert - доступны новые ходы
         Assert.True(moves.Count > 0);
-        Assert.Equal(4, game.TurnNo);
+        Assert.Equal(4, game.TurnNumber);
     }
     
     [Fact]
@@ -141,7 +141,7 @@ public class HoleTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(6, game.TurnNo);
+        Assert.Equal(6, game.TurnNumber);
     }
     
     [Fact]
@@ -181,6 +181,6 @@ public class HoleTests
         
         // Assert - оказываемся на другой дыре
         Assert.NotEqual(waitMove.From, moves.First().From);
-        Assert.Equal(3, game.TurnNo);
+        Assert.Equal(3, game.TurnNumber);
     }
 }
