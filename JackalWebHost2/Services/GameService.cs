@@ -159,7 +159,8 @@ public class GameService : IGameService
         {
             game.Board.ShowUnknownTiles();
         }
-        
+
+        await _gameRepository.UpdateGame(request.GameId, game);
         _gameStateRepository.UpdateObject(request.GameId, game);
         var prevBoard = JsonHelper.DeserializeWithType<Board>(prevBoardStr);
         

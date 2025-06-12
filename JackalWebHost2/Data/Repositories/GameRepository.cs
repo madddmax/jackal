@@ -1,6 +1,7 @@
 using Jackal.Core;
 using JackalWebHost2.Data.Entities;
 using JackalWebHost2.Data.Interfaces;
+using JackalWebHost2.Exceptions;
 using JackalWebHost2.Models.Map;
 
 namespace JackalWebHost2.Data.Repositories;
@@ -32,5 +33,17 @@ public class GameRepository(JackalDbContext jackalDbContext) : IGameRepository
         await jackalDbContext.SaveChangesAsync();
 
         return gameEntity.Id;
+    }
+    
+    public async Task UpdateGame(long gameId, Game game)
+    {
+        var gameEntity = await jackalDbContext.Games.FindAsync([gameId]);
+        if (gameEntity == null)
+            throw new GameNotFoundException();
+
+        gameEntity.Updated = DateTime.UtcNow;
+        gameEntity.TurnNumber = game.TurnNumber;
+        
+        await jackalDbContext.SaveChangesAsync();
     }
 }

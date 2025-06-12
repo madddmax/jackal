@@ -11,4 +11,9 @@ public class GameRepositoryStub : IGameRepository
     {
         return Task.FromResult(_gameId++);
     }
+    
+    public Task UpdateGame(long gameId, Game game)
+    {
+        return Task.CompletedTask;
+    }
 }
