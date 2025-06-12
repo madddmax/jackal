@@ -98,7 +98,7 @@ internal static class Program
             stat.TotalWin += team.Coins == maxCoins ? 1 : 0;
             stat.TotalCoins += team.Coins;
             stat.GamesCount += 1;
-            stat.TotalTurns += game.TurnNo / game.Board.Teams.Length;
+            stat.TotalTurns += game.TurnNumber / game.Board.Teams.Length;
         }
     }
 

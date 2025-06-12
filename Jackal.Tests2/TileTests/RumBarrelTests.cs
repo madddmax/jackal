@@ -31,7 +31,7 @@ public class RumBarrelTests
         Assert.False(ownPirate.IsActive);
         Assert.True(ownPirate.IsDrunk);
         
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -63,7 +63,7 @@ public class RumBarrelTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(2, game.TurnNo);
+        Assert.Equal(2, game.TurnNumber);
     }
     
     [Fact]
@@ -88,6 +88,6 @@ public class RumBarrelTests
         
         // Assert - не доступно ни одного хода, т.к. напились на бочке с ромом
         Assert.Empty(moves);
-        Assert.Equal(3, game.TurnNo);
+        Assert.Equal(3, game.TurnNumber);
     }
 }

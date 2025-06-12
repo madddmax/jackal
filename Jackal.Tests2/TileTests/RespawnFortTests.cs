@@ -33,7 +33,7 @@ public class RespawnFortTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -53,7 +53,7 @@ public class RespawnFortTests
         Assert.Equal(2, game.Board.AllPirates.Count);
         Assert.Equal(0, game.Board.AllPirates[0].TeamId);
         Assert.Equal(0, game.Board.AllPirates[1].TeamId);
-        Assert.Equal(2, game.TurnNo);
+        Assert.Equal(2, game.TurnNumber);
     }
     
     [Fact]
@@ -77,7 +77,7 @@ public class RespawnFortTests
         Assert.Equal(0, game.Board.AllPirates[0].TeamId);
         Assert.Equal(0, game.Board.AllPirates[1].TeamId);
         Assert.Equal(0, game.Board.AllPirates[2].TeamId);
-        Assert.Equal(3, game.TurnNo);
+        Assert.Equal(3, game.TurnNumber);
     }
     
     [Fact]
@@ -110,7 +110,7 @@ public class RespawnFortTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(3, game.TurnNo);
+        Assert.Equal(3, game.TurnNumber);
     }
     
     [Fact]
@@ -141,7 +141,7 @@ public class RespawnFortTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -172,7 +172,7 @@ public class RespawnFortTests
         Assert.Equal(0, game.Board.AllPirates[1].TeamId);
         Assert.Equal(0, game.Board.AllPirates[2].TeamId);
         Assert.Equal(0, game.Board.AllPirates[3].TeamId);
-        Assert.Equal(4, game.TurnNo);
+        Assert.Equal(4, game.TurnNumber);
     }
     
     [Fact]
@@ -206,7 +206,7 @@ public class RespawnFortTests
             moves.Select(m => m.To)
         );
         Assert.Single(moves.Where(m => m.WithRespawn));
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -250,6 +250,6 @@ public class RespawnFortTests
             moves.Select(m => m.To)
         );
         Assert.Empty(moves.Where(m => m.WithRespawn));
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
 }

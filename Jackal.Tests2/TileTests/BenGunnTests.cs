@@ -31,7 +31,7 @@ public class BenGunnTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -48,7 +48,7 @@ public class BenGunnTests
         Assert.Equal(2, game.Board.AllPirates.Count);
         Assert.Single(game.Board.AllPirates.Where(p => p.Type == PirateType.Usual));
         Assert.Single(game.Board.AllPirates.Where(p => p.Type == PirateType.BenGunn));
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -71,7 +71,7 @@ public class BenGunnTests
         Assert.Equal(2, game.Board.AllPirates.Count);
         Assert.Single(game.Board.AllPirates.Where(p => p.Type == PirateType.Usual));
         Assert.Single(game.Board.AllPirates.Where(p => p.Type == PirateType.BenGunn));
-        Assert.Equal(3, game.TurnNo);
+        Assert.Equal(3, game.TurnNumber);
     }
     
     [Fact]
@@ -96,6 +96,6 @@ public class BenGunnTests
         // Assert - пиратов не прибавилось: 1 обычный
         Assert.Single(game.Board.AllPirates);
         Assert.Single(game.Board.AllPirates.Where(p => p.Type == PirateType.Usual));
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
 }

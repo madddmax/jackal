@@ -34,7 +34,7 @@ public class LighthouseTests
         
         // тип хода - открытие клетки с маяка
         Assert.True(moves.All(m => m.WithLighthouse));
-        Assert.Equal(0, game.TurnNo);
+        Assert.Equal(0, game.TurnNumber);
     }
     
     [Fact]
@@ -58,7 +58,7 @@ public class LighthouseTests
         
         // Assert - все поле открыто, золота нет = конец игры
         Assert.True(game.IsGameOver);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -101,7 +101,7 @@ public class LighthouseTests
         
         // Все поле открыто, золото есть = игра продолжается
         Assert.False(game.IsGameOver);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -148,6 +148,6 @@ public class LighthouseTests
         
         // тип хода - обычный
         Assert.True(moves.All(m => m.Type == MoveType.Usual));
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
 }

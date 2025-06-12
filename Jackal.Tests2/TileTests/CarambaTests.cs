@@ -34,7 +34,7 @@ public class CarambaTests
         Assert.Equal(game.Board.Teams[1].ShipPosition, enemyPirate.Position.Position);
         Assert.Equal(new Position(2, 4), enemyPirate.Position.Position);
 
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -64,7 +64,7 @@ public class CarambaTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(2, game.TurnNo);
+        Assert.Equal(2, game.TurnNumber);
     }
     
     [Fact]
@@ -98,6 +98,6 @@ public class CarambaTests
         Assert.Equal(game.Board.Teams[1].ShipPosition, enemyPirate.Position.Position);
         Assert.Equal(new Position(2, 4), enemyPirate.Position.Position);
 
-        Assert.Equal(0, game.TurnNo);
+        Assert.Equal(0, game.TurnNumber);
     }
 }

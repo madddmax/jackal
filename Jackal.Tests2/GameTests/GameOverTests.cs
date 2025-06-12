@@ -22,7 +22,7 @@ public class GameOverTests
         // Assert - все пираты (один) застряли в дыре, карта не открыта = конец игры
         Assert.True(game.IsGameOver);
         Assert.Equal("Победа HumanPlayer путём конца всех пиратов!", game.GameMessage);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -47,7 +47,7 @@ public class GameOverTests
         // Assert - один игрок, вся карта открыта, золота нет = конец игры
         Assert.True(game.IsGameOver);
         Assert.Equal("Победа HumanPlayer путём исследования карты!", game.GameMessage);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -70,7 +70,7 @@ public class GameOverTests
         
         // Assert - один игрок, карта не открыта, перенесли большую часть золота (всё золото) <> конец игры
         Assert.False(game.IsGameOver);
-        Assert.Equal(2, game.TurnNo);
+        Assert.Equal(2, game.TurnNumber);
     }
     
     [Fact]
@@ -95,7 +95,7 @@ public class GameOverTests
         // Assert - два игрока, карта не открыта, перенесли большую часть золота (всё золото) = конец игры
         Assert.True(game.IsGameOver);
         Assert.Equal("Победа HumanPlayer путём доминирования по золоту!", game.GameMessage);
-        Assert.Equal(2, game.TurnNo);
+        Assert.Equal(2, game.TurnNumber);
     }
     
     [Fact]
@@ -132,7 +132,7 @@ public class GameOverTests
         // Assert - два игрока, карта открыта, перенесли равные части золота = конец игры
         Assert.True(game.IsGameOver);
         Assert.Equal("Победа дружбы путём исследования карты!", game.GameMessage);
-        Assert.Equal(4, game.TurnNo);
+        Assert.Equal(4, game.TurnNumber);
     }
     
     [Fact]
@@ -175,6 +175,6 @@ public class GameOverTests
         // Assert - два игрока, карта не открыта, перенесли большую часть золота = конец игры
         Assert.True(game.IsGameOver);
         Assert.Equal("Победа HumanPlayer путём доминирования по золоту!", game.GameMessage);
-        Assert.Equal(7, game.TurnNo);
+        Assert.Equal(7, game.TurnNumber);
     }
 }

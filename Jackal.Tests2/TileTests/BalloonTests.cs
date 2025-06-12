@@ -19,7 +19,7 @@ public class BalloonTests
         // Assert - пират находится на нашем корабле
         Assert.Single(game.Board.AllPirates);
         Assert.Equal(new TilePosition(2, 0), game.Board.AllPirates[0].Position);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -38,6 +38,6 @@ public class BalloonTests
         // Assert - пират находится на нашем корабле
         Assert.Single(game.Board.AllPirates);
         Assert.Equal(new TilePosition(2, 0), game.Board.AllPirates[0].Position);
-        Assert.Equal(2, game.TurnNo);
+        Assert.Equal(2, game.TurnNumber);
     }
 }

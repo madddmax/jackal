@@ -26,7 +26,7 @@ public class TestGame
     /// <summary>
     /// Текущий ход - определяет какая команда ходит
     /// </summary>
-    public int TurnNo => _testGame.TurnNo;
+    public int TurnNumber => _testGame.TurnNumber;
 
     /// <summary>
     /// Конец игры

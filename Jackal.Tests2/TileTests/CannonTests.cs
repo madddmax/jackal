@@ -33,7 +33,7 @@ public class CannonTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -53,7 +53,7 @@ public class CannonTests
         Assert.NotNull(game.Board.DeadPirates);
         Assert.Single(game.Board.DeadPirates);
         Assert.Equal(0, game.Board.DeadPirates.Single().TeamId);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -81,7 +81,7 @@ public class CannonTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -101,7 +101,7 @@ public class CannonTests
         Assert.NotNull(game.Board.DeadPirates);
         Assert.Single(game.Board.DeadPirates);
         Assert.Equal(1, game.Board.DeadPirates.Single().TeamId);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
     
     [Fact]
@@ -121,7 +121,7 @@ public class CannonTests
         Assert.Single(moves);
         Assert.Equal(new TilePosition(2, 0), moves.Single().From);
         Assert.Equal(new TilePosition(2, 1), moves.Single().To);
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
  
     [Fact]
@@ -144,7 +144,7 @@ public class CannonTests
         Assert.Single(moves);
         Assert.Equal(new TilePosition(2, 0), moves.Single().From);
         Assert.Equal(new TilePosition(2, 1), moves.Single().To);
-        Assert.Equal(2, game.TurnNo);
+        Assert.Equal(2, game.TurnNumber);
     }
     
     [Fact]
@@ -172,6 +172,6 @@ public class CannonTests
             },
             moves.Select(m => m.To)
         );
-        Assert.Equal(1, game.TurnNo);
+        Assert.Equal(1, game.TurnNumber);
     }
 }
