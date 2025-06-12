@@ -129,25 +129,25 @@ export const girlsMap: GirlsPositions = {
     },
 };
 
-const convertPlayers = (data: PlayersInfo): GamePlayer[] => {
-    const { users, members, mode } = data;
-    if (mode == 1)
-        return [{ userId: members[0] === 'human' ? users[0] : 0, type: members[0], position: Constants.positions[0] }];
+const convertToPlayers = (data: PlayersInfo): GamePlayer[] => {
+    const { mode, gamers } = data;
+
+    if (mode == 1) return [{ userId: gamers[0].userId, type: gamers[0].type, position: Constants.positions[0] }];
     else if (mode == 2)
         return [
-            { userId: members[0] === 'human' ? users[0] : 0, type: members[0], position: Constants.positions[0] },
-            { userId: members[2] === 'human' ? users[0] : 0, type: members[2], position: Constants.positions[2] },
+            { userId: gamers[0].userId, type: gamers[0].type, position: Constants.positions[0] },
+            { userId: gamers[2].userId, type: gamers[2].type, position: Constants.positions[2] },
         ];
     else
-        return members.map((it, index) => ({
-            userId: it === 'human' ? users[index] : 0,
-            type: it,
+        return gamers.map((it, index) => ({
+            userId: it.userId,
+            type: it.type,
             position: Constants.positions[index],
         }));
 };
 
 export const convertToSettings = (data: GameSettingsFormData): GameSettings => ({
-    players: convertPlayers(data.players),
+    players: convertToPlayers(data.players),
     mapId: data.mapId,
     mapSize: data.mapSize,
     tilesPackName: data.tilesPackName,

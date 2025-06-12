@@ -89,7 +89,12 @@ const GameSettingsForm = ({ isNetStyle, gameSettingsData, setGameSettingsData, c
 
     return (
         <Form className={isNetStyle ? classes.netgame : classes.newgame} onSubmit={(event) => event.preventDefault()}>
-            <Players players={gameSettingsData.players} setPlayers={setPlayers} mapInfo={mapForecasts} />
+            <Players
+                players={gameSettingsData.players}
+                gamers={gameSettingsData.gamers}
+                setPlayers={setPlayers}
+                mapInfo={mapForecasts}
+            />
             <div className="mt-3">
                 <div>
                     <Form.Label>Размер карты: {gameSettingsData.mapSize}</Form.Label>

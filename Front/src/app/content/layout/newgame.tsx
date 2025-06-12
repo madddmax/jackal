@@ -19,13 +19,25 @@ const Newgame = () => {
     const authInfo = useSelector(getAuth);
     const userSettings = useSelector(getUserSettings);
 
+    let counter = 0;
+    const gamers = [
+        { id: counter++, type: 'human', userId: authInfo.user?.id ?? 0 },
+        { id: counter++, type: 'robot', userId: 0 },
+        { id: counter++, type: 'robot2', userId: 0 },
+        { id: counter++, type: 'robot3', userId: 0 },
+    ];
+
     const [formData, setFormData] = useState<GameSettingsFormData>({
         players: {
             mode: userSettings.playersMode || 4,
             users: [authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0],
             members: userSettings.players || ['human', 'robot2', 'robot', 'robot2'],
+            gamers: (userSettings.players || ['human', 'robot2', 'robot', 'robot2']).map(
+                (it) => gamers.find((gm) => gm.type === it) ?? gamers[0],
+            ),
             groups: userSettings.groups,
         },
+        gamers,
         mapId: userSettings.mapId,
         mapSize: userSettings.mapSize || 11,
         tilesPackName: userSettings.tilesPackName,

@@ -1,31 +1,31 @@
 import cn from 'classnames';
-import classes from './players.module.less';
-import Player from './player';
-import { Constants } from '/app/constants';
-import { PlayersInfo } from '../types';
 import { useState } from 'react';
+
+import { PlayerInfo, PlayersInfo } from '../types';
+import Player from './player';
+import classes from './players.module.less';
+import { Constants } from '/app/constants';
 
 const convertGroups = (grps: string[]) => grps.map((gr) => Constants.groups.findIndex((it) => it.id == gr) || 0);
 const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.groups[num].id);
 
 interface PlayersProps {
     players: PlayersInfo;
+    gamers: PlayerInfo[];
     setPlayers: (data: PlayersInfo) => void;
     mapInfo?: string[];
 }
 
-const Players = ({ players, setPlayers, mapInfo }: PlayersProps) => {
+const Players = ({ players, gamers, setPlayers, mapInfo }: PlayersProps) => {
     const [grps, setGrps] = useState<number[]>(convertGroups(players.groups));
 
-    const changePlayer = (pos: number) => {
-        const clone = [...players.members];
-        if (clone[pos] === 'human') clone[pos] = 'robot';
-        else if (clone[pos] === 'robot') clone[pos] = 'robot2';
-        else if (clone[pos] === 'robot2') clone[pos] = 'robot3';
-        else clone[pos] = 'human';
+    const changeGamer = (pos: number) => {
+        const clone = [...players.gamers];
+        if (clone[pos].id + 1 >= gamers.length) clone[pos] = gamers[0];
+        else clone[pos] = gamers.find((it) => it.id === clone[pos].id + 1) ?? gamers[0];
         setPlayers({
             ...players,
-            members: clone,
+            gamers: clone,
         });
     };
 
@@ -57,8 +57,8 @@ const Players = ({ players, setPlayers, mapInfo }: PlayersProps) => {
     return (
         <div className={cn(classes.settings, 'mx-auto')}>
             {players &&
-                players.members &&
-                players.members.map((_, index) => {
+                players.gamers &&
+                players.gamers.map((gamer, index) => {
                     if (players.mode < 4 && (index == 1 || index == 3)) {
                         return null;
                     }
@@ -70,10 +70,11 @@ const Players = ({ players, setPlayers, mapInfo }: PlayersProps) => {
                         <Player
                             key={`player-pos-${index}`}
                             position={index}
-                            type={players.members[index]}
+                            type={gamer.type}
+                            userName={gamer.userId > 0 ? gamer.userId.toString() : undefined}
                             group={grps[index]}
                             posInfo={mapInfo && mapInfo[index]}
-                            changePlayer={() => changePlayer(index)}
+                            changePlayer={() => changeGamer(index)}
                             changeGroup={() => changeGroup(index)}
                         />
                     );

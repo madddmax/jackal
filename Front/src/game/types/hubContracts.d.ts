@@ -1,4 +1,4 @@
-import { PlayersInfo } from '/app/content/layout/components/types';
+import { PlayerInfo, PlayersInfo } from '/app/content/layout/components/types';
 
 export interface makeGameMoveRequestProps {
     gameId: number;
@@ -8,6 +8,7 @@ export interface makeGameMoveRequestProps {
 
 export interface GameSettingsFormData {
     players: PlayersInfo;
+    gamers: PlayerInfo[];
     mapId?: number;
     mapSize: number;
     tilesPackName?: string;

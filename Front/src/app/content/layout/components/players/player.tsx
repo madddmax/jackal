@@ -1,17 +1,19 @@
-import { Constants } from '/app/constants';
-import classes from './players.module.less';
 import Image from 'react-bootstrap/Image';
+
+import classes from './players.module.less';
+import { Constants } from '/app/constants';
 
 interface PlayerProps {
     position: number;
     type: string;
+    userName?: string;
     group: number;
     posInfo?: string;
     changePlayer: () => void;
     changeGroup: () => void;
 }
 
-const Player = ({ position, type, group, posInfo, changePlayer, changeGroup }: PlayerProps) => {
+const Player = ({ position, type, userName, group, posInfo, changePlayer, changeGroup }: PlayerProps) => {
     const getUrlByPlayer = (type: string) => {
         if (type === 'human') return '/pictures/human.png';
         else if (type === 'robot') return '/pictures/robot.png';
@@ -47,6 +49,7 @@ const Player = ({ position, type, group, posInfo, changePlayer, changeGroup }: P
                 alt={Constants.groups[group].id}
                 onClick={changeGroup}
             />
+            {userName && <div className={classes.userName}>{userName}</div>}
             {posInfo && <div>{posInfo}</div>}
         </div>
     );

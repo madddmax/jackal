@@ -23,6 +23,7 @@ const LobbyCard = () => {
         mode: 4,
         users: [authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0],
         members: ['human', 'human', 'human', 'human'],
+        gamers: [{ id: 0, type: 'human', userId: 0 }],
         groups: userSettings.groups,
     });
 
@@ -77,7 +78,7 @@ const LobbyCard = () => {
                                 <Form.Label>Участники:</Form.Label>
                                 {lobby.lobbyMembers && Object.keys(lobby.lobbyMembers).map((key) => <div>{key}</div>)}
                             </Form.Group>
-                            <Players players={players} setPlayers={setPlayers} />
+                            <Players players={players} gamers={players.gamers} setPlayers={setPlayers} />
                         </>
                     )}
                     {!isInLobby && (
