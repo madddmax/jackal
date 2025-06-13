@@ -56,10 +56,10 @@ const Layout = () => {
         <>
             <Routes>
                 <Route path="/newgame" element={<Newgame />}></Route>
+                <Route path="/newpublic" element={<NetGameCreate />}></Route>
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/joinlobby" element={<LobbyJoin />}></Route>
                 <Route path="/netgame" element={<GameList />}></Route>
-                <Route path="/netcreate" element={<NetGameCreate />}></Route>
                 <Route path="/lobby/:id" element={<LobbyCard />}></Route>
                 <Route path="/" element={<Playground />}></Route>
             </Routes>

@@ -54,7 +54,7 @@ const Newgame = () => {
     };
 
     const createNetGame = () => {
-        navigate('/netcreate');
+        navigate('/newpublic');
 
         if (formData) {
             gameHub.netCreate(convertToSettings(formData));
@@ -93,7 +93,7 @@ const Newgame = () => {
                             Начать
                         </Button>
                         <Button className="float-end" variant="outline-primary" type="submit" onClick={createNetGame}>
-                            Создать сетевую игру
+                            Пригласить участников
                         </Button>
                     </>
                 </GameSettingsForm>
