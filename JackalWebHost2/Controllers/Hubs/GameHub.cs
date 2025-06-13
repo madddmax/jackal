@@ -93,7 +93,7 @@ public class GameHub : Hub
             });
         }
     }
-    
+
     /// <summary>
     /// Старт новой игры
     /// </summary>
@@ -131,6 +131,45 @@ public class GameHub : Hub
             });
         }
     }
+
+    /// <summary>
+    /// Старт новой игры
+    /// </summary>
+    public async Task StartPublic(NetGameRequest request)
+    {
+        var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
+        var netGame = _netgameStateRepository.GetObject(request.Id);
+        if (netGame?.CreatorId != user.Id) return;
+
+        var startGameModel = new StartGameModel { Settings = request.Settings };
+        var result = await _gameService.StartGame(user, startGameModel);
+
+        netGame.GameId = result.GameId;
+        _netgameStateRepository.UpdateObject(netGame.Id, netGame);
+
+        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, new NetGameResponse
+        {
+            Id = netGame.Id,
+            GameId = result.GameId,
+            Settings = netGame.Settings,
+            Viewers = netGame.Users
+        });
+
+        // скрываем завершённую сетевую игру
+        await Clients.All.SendAsync(CALLBACK_GET_ACTIVE_NET_GAMES, new AllActiveGamesResponse
+        {
+            GamesEntries = _netgameStateRepository.GetEntries().Select(ToActiveGame).ToList()
+        });
+        _netgameStateRepository.ResetChanges();
+
+        // показываем новую публичную игру
+        await Clients.All.SendAsync(CALLBACK_GET_ACTIVE_GAMES, new AllActiveGamesResponse
+        {
+            GamesEntries = _gameStateRepository.GetEntries().Select(ToActiveGame).ToList()
+        });
+        _gameStateRepository.ResetChanges();
+    }
+
 
     /// <summary>
     /// Ход игры
