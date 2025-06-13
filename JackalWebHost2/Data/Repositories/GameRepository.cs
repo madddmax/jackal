@@ -53,10 +53,15 @@ public class GameRepository(JackalDbContext jackalDbContext) : IGameRepository
         gameEntity.Updated = DateTime.UtcNow;
         gameEntity.TurnNumber = game.TurnNumber;
         gameEntity.GameOver = game.IsGameOver;
+
+        var maxCoins = game.IsGameOver
+            ? game.Board.Teams.Max(x => x.Coins)
+            : 0;
         
         foreach (var playerEntity in gameEntity.GamePlayers)
         {
             playerEntity.Coins = game.Board.Teams[playerEntity.TeamId].Coins;
+            playerEntity.Winner = game.IsGameOver && playerEntity.Coins == maxCoins;
         }
         
         await jackalDbContext.SaveChangesAsync();

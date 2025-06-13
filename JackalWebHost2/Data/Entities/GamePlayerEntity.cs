@@ -37,6 +37,11 @@ public class GamePlayerEntity
     /// </summary>
     public int Coins { get; set; }
     
+    /// <summary>
+    /// Победитель игры
+    /// </summary>
+    public bool Winner { get; set; }
+    
     public virtual GameEntity Game { get; set; }
     
     public virtual UserEntity User { get; set; }

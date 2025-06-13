@@ -9,15 +9,8 @@ namespace JackalWebHost2.Controllers.V1;
 
 [FastAuth]
 [Route("/api/v1/auth")]
-public class AuthController : Controller
+public class AuthController(IUserRepository userRepository) : Controller
 {
-    private readonly IUserRepository _userRepository;
-
-    public AuthController(IUserRepository userRepository)
-    {
-        _userRepository = userRepository;
-    }
-    
     /// <summary>
     /// Зарегистрироваться (без авторизации)
     /// </summary>
@@ -30,8 +23,8 @@ public class AuthController : Controller
             throw new UserIsAlreadyLoggedInException();
         }
 
-        var user = await _userRepository.GetUser(request.Login, token)
-                   ?? await _userRepository.CreateUser(request.Login, token);
+        var user = await userRepository.GetUser(request.Login, token)
+                   ?? await userRepository.CreateUser(request.Login, token);
         
         return new RegisterResponse
         {
@@ -78,5 +71,4 @@ public class AuthController : Controller
         var user = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
         return new LogoutResponse();
     }
-
 }
