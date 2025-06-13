@@ -9,7 +9,7 @@ import { Constants } from '/app/constants';
 const convertGroups = (grps: string[]) => grps.map((gr) => Constants.groups.findIndex((it) => it.id == gr) || 0);
 const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.groups[num].id);
 
-interface PlayersProps {
+export interface PlayersProps {
     players: PlayersInfo;
     gamers: PlayerInfo[];
     setPlayers: (data: PlayersInfo) => void;

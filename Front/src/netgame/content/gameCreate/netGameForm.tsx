@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Constants } from '/app/constants';
 import GameSettingsForm from '/app/content/layout/components/gameSettingsForm';
 import { PlayerInfo } from '/app/content/layout/components/types';
-import { convertToMembers, convertToSettings } from '/app/global';
+import { convertToGamers, convertToMembers, convertToSettings, convertToUsers } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
 import { NetGameInfo } from '/common/redux.types';
 import gameHub from '/game/hub/gameHub';
@@ -61,11 +61,18 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
                 netGame.settings.players,
                 userSettings.players || ['human', 'robot2', 'robot', 'robot2'],
             ),
-            users: netGame.settings.players.map((it) => it.userId),
-            gamers: netGame.settings.players.map((it) =>
-                it.userId > 0
-                    ? (gamers.find((gm) => gm.userId === it.userId) ?? gamers[0])
-                    : (gamers.find((gm) => gm.type === it.type.toLocaleLowerCase()) ?? gamers[0]),
+            users: convertToUsers(netGame.settings.players, [
+                authInfo.user?.id ?? 0,
+                authInfo.user?.id ?? 0,
+                authInfo.user?.id ?? 0,
+                authInfo.user?.id ?? 0,
+            ]),
+            gamers: convertToGamers(
+                netGame.settings.players,
+                gamers,
+                (userSettings.players || ['human', 'robot2', 'robot', 'robot2']).map(
+                    (it) => gamers.find((gm) => gm.type === it) ?? gamers[0],
+                ),
             ),
             groups: groups,
         },
