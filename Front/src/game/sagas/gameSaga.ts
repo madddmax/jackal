@@ -71,8 +71,8 @@ export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
     const currentTeam: TeamState | undefined = yield select(getCurrentTeam);
     const { gameSpeed: speed }: StorageState = yield select(getUserSettings);
 
-    if (!currentTeam!.isHuman) {
-        yield put(removeHumanMoves());
+    yield put(removeHumanMoves());
+    if (!currentTeam!.isCurrentUser) {
         if (speed > 0) {
             yield delay(speed * 100);
         }
