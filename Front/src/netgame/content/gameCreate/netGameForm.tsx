@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+
+// import { useNavigate } from 'react-router-dom';
 
 import { Constants } from '/app/constants';
 import GameSettingsForm from '/app/content/layout/components/gameSettingsForm';
@@ -19,7 +20,7 @@ export interface NetGameFormProps {
 }
 
 const NetGameForm = ({ netGame }: NetGameFormProps) => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const authInfo = useSelector(getAuth);
     const userSettings = useSelector(getUserSettings);
@@ -28,10 +29,8 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
     const [groups, setGroups] = useState<string[]>(userSettings.groups);
 
     const newNetStart = () => {
-        navigate('/');
-        if (formData) {
-            gameHub.startGame(convertToSettings(formData));
-        }
+        // navigate('/');
+        gameHub.startGame(convertToSettings(formData));
     };
 
     // const createNetGame = () => {

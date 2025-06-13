@@ -13,6 +13,7 @@ import {
 } from '../redux/gameSlice';
 import { StorageState } from '../types';
 import { GameStartResponse, GameTurnResponse } from '../types/sagaContracts';
+import { history } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
 import { AuthState } from '/auth/redux/authSlice.types';
 import { errorsWrapper, sagaActions } from '/common/sagas';
@@ -34,6 +35,7 @@ export function* applyStartData(action: { payload: GameStartResponse }) {
         }),
     );
     yield put(highlightHumanMoves({ moves: data.moves }));
+    history.navigate && history.navigate('/');
 }
 
 export function* applyTurn(action: { payload: GameTurnResponse }) {
@@ -108,6 +110,7 @@ export function* applyLookingData(action: { payload: GameStartResponse }) {
         }),
     );
     yield put(highlightHumanMoves({ moves: data.moves }));
+    history.navigate && history.navigate('/');
 }
 
 export default function* rootSaga() {

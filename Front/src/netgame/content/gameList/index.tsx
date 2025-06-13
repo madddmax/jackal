@@ -23,7 +23,7 @@ const GameList = () => {
     };
 
     const loadGame = (gameId: number) => {
-        navigate('/');
+        // navigate('/');
         gameHub.loadGame(gameId);
     };
 
