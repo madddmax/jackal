@@ -1,9 +1,9 @@
 namespace Jackal.BotArena;
 
 /// <summary>
-/// Игровая статистика
+/// Статистика игрока
 /// </summary>
-public class GameStat
+public class GamePlayerStat
 {
     /// <summary>
     /// Количество побед, когда в конце игры золота оказалось больше.

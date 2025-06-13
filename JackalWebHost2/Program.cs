@@ -163,11 +163,13 @@ public class Program
             
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<IGamePlayerRepository, GamePlayerRepository>();
         }
         else
         {
             services.AddScoped<IUserRepository, UserRepositoryInMemory>();
             services.AddScoped<IGameRepository, GameRepositoryStub>();
+            services.AddScoped<IGamePlayerRepository, GamePlayerRepositoryStub>();
         }
 
         services.AddSingleton<IStateRepository<Game>, StateRepositoryInMemory<Game>>();

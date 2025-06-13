@@ -48,7 +48,7 @@ internal static class Program
     /// <summary>
     /// Статистика по каждому игроку боту
     /// </summary>
-    private static readonly Dictionary<string, GameStat> BotStat = new();
+    private static readonly Dictionary<string, GamePlayerStat> BotStat = new();
 
     private static void Main()
     {
@@ -92,7 +92,7 @@ internal static class Program
         {
             if (!BotStat.TryGetValue(team.Name, out var stat))
             {
-                stat = new GameStat();
+                stat = new GamePlayerStat();
                 BotStat.Add(team.Name, stat);
             }
             stat.TotalWin += team.Coins == maxCoins ? 1 : 0;
@@ -106,17 +106,17 @@ internal static class Program
     {
         Console.WriteLine($"Arena games count = {gamesCount} | Time elapsed {timeElapsed}");
         var orderedBotStat = BotStat.OrderByDescending(p => p.Value.AverageWin);
-        foreach (var (botName, gameStat) in orderedBotStat)
+        foreach (var (botName, gamePlayerStat) in orderedBotStat)
         {
             Console.WriteLine(
                 $"Bot name = {botName} | " +
-                $"Games count = {gameStat.GamesCount} | " +
-                $"Average win = {gameStat.AverageWin:P} | " +
-                $"Average coins = {gameStat.AverageCoins:F} | " +
-                $"Average turns = {gameStat.AverageTurns} | " +
-                $"Total win = {gameStat.TotalWin} | " +
-                $"Total coins = {gameStat.TotalCoins} | " +
-                $"Total turns = {gameStat.TotalTurns}"
+                $"Games count = {gamePlayerStat.GamesCount} | " +
+                $"Average win = {gamePlayerStat.AverageWin:P} | " +
+                $"Average coins = {gamePlayerStat.AverageCoins:F} | " +
+                $"Average turns = {gamePlayerStat.AverageTurns} | " +
+                $"Total win = {gamePlayerStat.TotalWin} | " +
+                $"Total coins = {gamePlayerStat.TotalCoins} | " +
+                $"Total turns = {gamePlayerStat.TotalTurns}"
             );
         }
     }
