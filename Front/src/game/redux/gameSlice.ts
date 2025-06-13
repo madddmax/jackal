@@ -138,7 +138,8 @@ export const gameSlice = createSlice({
                             pnumber = getAnotherRandomValue(
                                 1,
                                 team.group.photoMaxId,
-                                state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ?? [],
+                                state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ??
+                                    [],
                             );
                             extension = team.group.extension || '.png';
                         }
@@ -168,7 +169,7 @@ export const gameSlice = createSlice({
         },
         setCurrentHumanTeam: (state) => {
             const currentTeam = gameSlice.getSelectors().getCurrentTeam(state);
-            if (currentTeam?.isHuman && currentTeam.id !== state.currentHumanTeamId) {
+            if (currentTeam?.isCurrentUser && currentTeam.id !== state.currentHumanTeamId) {
                 state.currentHumanTeamId = currentTeam.id;
             }
         },
@@ -366,7 +367,7 @@ export const gameSlice = createSlice({
 
             debugLog(current(state.teams));
             const currentTeam = selectors.getCurrentTeam(state)!;
-            if (currentTeam.isHuman) {
+            if (currentTeam.isCurrentUser) {
                 const girls = [] as string[];
                 action.payload.moves
                     .filter((move) => move.withCoin)

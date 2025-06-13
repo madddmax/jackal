@@ -18,12 +18,12 @@ const GameList = () => {
     const auth = useSelector(getAuth);
 
     const continueNet = (gameId: number) => {
-        navigate('/netcreate');
+        navigate('/newpublic');
         gameHub.netJoin(gameId);
     };
 
     const loadGame = (gameId: number) => {
-        navigate('/');
+        // navigate('/');
         gameHub.loadGame(gameId);
     };
 

@@ -45,40 +45,34 @@ const Newgame = () => {
     });
 
     const newStart = () => {
-        navigate('/');
+        // navigate('/');
         saveToLocalStorage();
 
-        if (formData) {
-            gameHub.startGame(convertToSettings(formData));
-        }
+        gameHub.startGame(convertToSettings(formData));
     };
 
     const createNetGame = () => {
-        navigate('/netcreate');
+        navigate('/newpublic');
 
-        if (formData) {
-            gameHub.netCreate(convertToSettings(formData));
-        }
+        gameHub.netCreate(convertToSettings(formData));
     };
 
     const saveToLocalStorage = () => {
-        if (formData) {
-            dispatch(
-                saveMySettings({
-                    ...userSettings,
-                    groups: formData.players.groups,
-                    mapSize: formData.mapSize,
-                    players: formData.players.members,
-                    playersMode: formData.players.mode,
-                    mapId: formData.isStoredMap ? formData.mapId : undefined,
-                    tilesPackName: formData.tilesPackName,
-                }),
-            );
-        }
+        dispatch(
+            saveMySettings({
+                ...userSettings,
+                groups: formData.players.groups,
+                mapSize: formData.mapSize,
+                players: formData.players.members,
+                playersMode: formData.players.mode,
+                mapId: formData.isStoredMap ? formData.mapId : undefined,
+                tilesPackName: formData.tilesPackName,
+            }),
+        );
     };
 
     const setGameFormData = (data: GameSettingsFormData) => {
-        if (formData?.isStoredMap != data.isStoredMap) {
+        if (formData.isStoredMap != data.isStoredMap) {
             saveToLocalStorage();
         }
         setFormData(data);
@@ -93,7 +87,7 @@ const Newgame = () => {
                             Начать
                         </Button>
                         <Button className="float-end" variant="outline-primary" type="submit" onClick={createNetGame}>
-                            Создать сетевую игру
+                            Пригласить участников
                         </Button>
                     </>
                 </GameSettingsForm>

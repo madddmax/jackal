@@ -13,6 +13,7 @@ import {
 } from '../redux/gameSlice';
 import { StorageState } from '../types';
 import { GameStartResponse, GameTurnResponse } from '../types/sagaContracts';
+import { history } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
 import { AuthState } from '/auth/redux/authSlice.types';
 import { errorsWrapper, sagaActions } from '/common/sagas';
@@ -34,6 +35,7 @@ export function* applyStartData(action: { payload: GameStartResponse }) {
         }),
     );
     yield put(highlightHumanMoves({ moves: data.moves }));
+    history.navigate && history.navigate('/');
 }
 
 export function* applyTurn(action: { payload: GameTurnResponse }) {
@@ -71,8 +73,8 @@ export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
     const currentTeam: TeamState | undefined = yield select(getCurrentTeam);
     const { gameSpeed: speed }: StorageState = yield select(getUserSettings);
 
-    if (!currentTeam!.isHuman) {
-        yield put(removeHumanMoves());
+    yield put(removeHumanMoves());
+    if (!currentTeam!.isCurrentUser) {
         if (speed > 0) {
             yield delay(speed * 100);
         }
@@ -108,6 +110,7 @@ export function* applyLookingData(action: { payload: GameStartResponse }) {
         }),
     );
     yield put(highlightHumanMoves({ moves: data.moves }));
+    history.navigate && history.navigate('/');
 }
 
 export default function* rootSaga() {

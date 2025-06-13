@@ -9,14 +9,14 @@ import { sagaActions } from '/common/sagas';
 import { getGameSettings, getMapForecasts, setMapForecasts } from '/game/redux/gameSlice';
 import { GameSettingsFormData } from '/game/types/hubContracts';
 
-interface GameSettingsFormProps {
-    isNetStyle?: boolean;
+export interface GameSettingsFormProps {
+    isPublic?: boolean;
     gameSettingsData: GameSettingsFormData;
     setGameSettingsData: (data: GameSettingsFormData) => void;
     children: React.ReactElement;
 }
 
-const GameSettingsForm = ({ isNetStyle, gameSettingsData, setGameSettingsData, children }: GameSettingsFormProps) => {
+const GameSettingsForm = ({ isPublic, gameSettingsData, setGameSettingsData, children }: GameSettingsFormProps) => {
     const dispatch = useDispatch();
 
     const { tilesPackNames } = useSelector(getGameSettings);
@@ -88,13 +88,20 @@ const GameSettingsForm = ({ isNetStyle, gameSettingsData, setGameSettingsData, c
     };
 
     return (
-        <Form className={isNetStyle ? classes.netgame : classes.newgame} onSubmit={(event) => event.preventDefault()}>
+        <Form className={classes.newgame} onSubmit={(event) => event.preventDefault()}>
             <Players
                 players={gameSettingsData.players}
                 gamers={gameSettingsData.gamers}
                 setPlayers={setPlayers}
                 mapInfo={mapForecasts}
             />
+            <div className="mt-3">
+                {isPublic ? (
+                    <div className="badge rounded-pill bg-warning text-dark">Публичная игра</div>
+                ) : (
+                    <div className="badge rounded-pill bg-success">Частная игра</div>
+                )}
+            </div>
             <div className="mt-3">
                 <div>
                     <Form.Label>Размер карты: {gameSettingsData.mapSize}</Form.Label>

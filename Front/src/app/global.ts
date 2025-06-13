@@ -4,7 +4,7 @@ import { NavigateFunction } from 'react-router-dom';
 
 import config from './config';
 import { Constants } from './constants';
-import { PlayersInfo } from './content/layout/components/types';
+import { PlayerInfo, PlayersInfo } from './content/layout/components/types';
 import { GamePlayer, GameSettings, GameSettingsFormData } from '/game/types/hubContracts';
 
 export const uuidGen = () => {
@@ -159,4 +159,24 @@ export const convertToMembers = (data: GamePlayer[], defaults: string[]): string
     if (data.length == 2) {
         return [data[0].type.toLocaleLowerCase(), defaults[1], data[1].type.toLocaleLowerCase(), defaults[3]];
     } else return data.map((it) => it.type.toLocaleLowerCase());
+};
+
+export const convertToUsers = (data: GamePlayer[], defaults: number[]): number[] => {
+    if (data.length == 1) return data.map((it) => it.userId).concat(defaults.slice(1));
+    if (data.length == 2) {
+        return [data[0].userId, defaults[1], data[1].userId, defaults[3]];
+    } else return data.map((it) => it.userId);
+};
+
+export const convertToGamers = (data: GamePlayer[], gamers: PlayerInfo[], defaults: PlayerInfo[]): PlayerInfo[] => {
+    if (data.length == 1) return data.map((it) => getGamerByPlayer(it, gamers)).concat(defaults.slice(1));
+    if (data.length == 2) {
+        return [getGamerByPlayer(data[0], gamers), defaults[1], getGamerByPlayer(data[1], gamers), defaults[3]];
+    } else return data.map((it) => getGamerByPlayer(it, gamers));
+};
+
+const getGamerByPlayer = (man: GamePlayer, gamers: PlayerInfo[]) => {
+    return man.userId > 0
+        ? (gamers.find((gm) => gm.userId === man.userId) ?? gamers[0])
+        : (gamers.find((gm) => gm.type === man.type.toLocaleLowerCase()) ?? gamers[0]);
 };
