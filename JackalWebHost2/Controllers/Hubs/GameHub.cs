@@ -147,13 +147,7 @@ public class GameHub : Hub
         netGame.GameId = result.GameId;
         _netgameStateRepository.UpdateObject(netGame.Id, netGame);
 
-        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, new NetGameResponse
-        {
-            Id = netGame.Id,
-            GameId = result.GameId,
-            Settings = netGame.Settings,
-            Viewers = netGame.Users
-        });
+        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, ToNetGameResponse(netGame, result.GameId));
 
         // скрываем завершённую сетевую игру
         await Clients.All.SendAsync(CALLBACK_GET_ACTIVE_NET_GAMES, new AllActiveGamesResponse
@@ -221,12 +215,7 @@ public class GameHub : Hub
         _netgameStateRepository.CreateObject(user, netGame.Id, netGame);
 
         await Groups.AddToGroupAsync(Context.ConnectionId, GetNetGroupName(netGame.Id));
-        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, new NetGameResponse
-        {
-            Id = netGame.Id,
-            Settings = netGame.Settings,
-            Viewers = netGame.Users
-        });
+        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, ToNetGameResponse(netGame));
 
         await Clients.All.SendAsync(CALLBACK_GET_ACTIVE_NET_GAMES, new AllActiveGamesResponse
         {
@@ -248,12 +237,7 @@ public class GameHub : Hub
         netGame.Settings = request.Settings;
         _netgameStateRepository.UpdateObject(netGame.Id, netGame);
 
-        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, new NetGameResponse
-        {
-            Id = netGame.Id,
-            Settings = netGame.Settings,
-            Viewers = netGame.Users
-        });
+        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, ToNetGameResponse(netGame));
      }
 
     /// <summary>
@@ -269,12 +253,7 @@ public class GameHub : Hub
         _netgameStateRepository.UpdateObject(netGame.Id, netGame);
 
         await Groups.AddToGroupAsync(Context.ConnectionId, GetNetGroupName(netGame.Id));
-        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, new NetGameResponse
-        {
-            Id = netGame.Id,
-            Settings = netGame.Settings,
-            Viewers = netGame.Users
-        });
+        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, ToNetGameResponse(netGame));
     }
 
     /// <summary>
@@ -290,12 +269,7 @@ public class GameHub : Hub
         _netgameStateRepository.UpdateObject(netGame.Id, netGame);
 
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetNetGroupName(netGame.Id));
-        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, new NetGameResponse
-        {
-            Id = netGame.Id,
-            Settings = netGame.Settings,
-            Viewers = netGame.Users
-        });
+        await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, ToNetGameResponse(netGame));
     }
 
     private string GetNetGroupName(long netGameId)
@@ -315,6 +289,18 @@ public class GameHub : Hub
             GameId = entry.ObjectId,
             Creator = entry.Creator,
             TimeStamp = entry.TimeStamp
+        };
+    }
+
+    private NetGameResponse ToNetGameResponse(NetGameSettings netGame, long? gameId = null)
+    {
+        return new NetGameResponse
+        {
+            Id = netGame.Id,
+            CreatorId = netGame.CreatorId,
+            GameId = gameId,
+            Settings = netGame.Settings,
+            Viewers = netGame.Users
         };
     }
 }
