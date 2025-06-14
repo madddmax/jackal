@@ -4,13 +4,15 @@
     {
         public long ObjectId { get; init; }
 
-        public CacheEntryCreator Creator { get; init; } = new CacheEntryCreator{ Name = "Неизвестно" };
+        public CacheEntryUser Creator { get; init; } = new CacheEntryUser { Name = "Неизвестно" };
+
+        public CacheEntryUser[]? Players { get; set; }
 
         public long TimeStamp { get; set; }
     }
 
 
-    public class CacheEntryCreator
+    public class CacheEntryUser
     {
         public long Id { get; init; }
 

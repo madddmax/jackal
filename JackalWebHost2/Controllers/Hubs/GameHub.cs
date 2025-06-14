@@ -212,7 +212,7 @@ public class GameHub : Hub
             Users = new HashSet<long>{user.Id},
             Settings = request.Settings
         };
-        _netgameStateRepository.CreateObject(user, netGame.Id, netGame);
+        _netgameStateRepository.CreateObject(user, netGame.Id, netGame, netGame.Users);
 
         await Groups.AddToGroupAsync(Context.ConnectionId, GetNetGroupName(netGame.Id));
         await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, ToNetGameResponse(netGame));
@@ -250,7 +250,7 @@ public class GameHub : Hub
         if (netGame == null) return;
 
         netGame.Users.Add(user.Id);
-        _netgameStateRepository.UpdateObject(netGame.Id, netGame);
+        _netgameStateRepository.UpdateObject(netGame.Id, netGame, netGame.Users);
 
         await Groups.AddToGroupAsync(Context.ConnectionId, GetNetGroupName(netGame.Id));
         await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, ToNetGameResponse(netGame));
@@ -266,7 +266,7 @@ public class GameHub : Hub
         if (netGame == null) return;
 
         netGame.Users.Remove(user.Id);
-        _netgameStateRepository.UpdateObject(netGame.Id, netGame);
+        _netgameStateRepository.UpdateObject(netGame.Id, netGame, netGame.Users);
 
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetNetGroupName(netGame.Id));
         await Clients.Group(GetNetGroupName(netGame.Id)).SendAsync(CALLBACK_GET_NET_GAME_DATA, ToNetGameResponse(netGame));
@@ -288,6 +288,7 @@ public class GameHub : Hub
         {
             GameId = entry.ObjectId,
             Creator = entry.Creator,
+            Players = entry.Players,
             TimeStamp = entry.TimeStamp
         };
     }
