@@ -11,7 +11,9 @@ namespace JackalWebHost2.Controllers.Models.Services
     {
         public long GameId { get; set; }
 
-        public CacheEntryCreator? Creator { get; set; }
+        public CacheEntryUser? Creator { get; set; }
+
+        public CacheEntryUser[]? Players { get; set; }
 
         public long TimeStamp { get; set; }
     }

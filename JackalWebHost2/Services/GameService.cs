@@ -102,7 +102,8 @@ public class GameService : IGameService
         var game = new Game(gameRequest);
 
         var gameId = await _gameRepository.CreateGame(user.Id, game);
-        _gameStateRepository.CreateObject(user, gameId, game);
+        _gameStateRepository.CreateObject(user, gameId, game, 
+            gameSettings.Players.Where(it => it.UserId > 0).Select(it => it.UserId).Distinct().ToHashSet());
         
         var map = _drawService.Map(game.Board);
 

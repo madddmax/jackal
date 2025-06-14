@@ -13,6 +13,7 @@ import {
 import { applyGamesList, applyNetGame, applyNetGamesList, updateLobby } from '../redux/lobbySlice';
 import { history } from '/app/global';
 import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
+import gameHub from '/game/hub/gameHub';
 
 export function* lobbyCreate(action: PayloadAction<{ lobbyId: string }>) {
     const result: { data: LobbyCreateResponse } = yield call(
@@ -89,6 +90,9 @@ export function* applyNetGamesData(action: { payload: NetGameListResponse }) {
 export function* applyNetGameData(action: { payload: NetGameInfo }) {
     const data = action.payload;
     yield put(applyNetGame(data));
+    if (data.gameId) {
+        gameHub.loadGame(data.gameId);
+    }
 }
 
 export default function* rootSaga() {

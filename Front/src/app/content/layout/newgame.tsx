@@ -45,9 +45,7 @@ const Newgame = () => {
     });
 
     const newStart = () => {
-        // navigate('/');
         saveToLocalStorage();
-
         gameHub.startGame(convertToSettings(formData));
     };
 

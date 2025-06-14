@@ -23,7 +23,6 @@ const GameList = () => {
     };
 
     const loadGame = (gameId: number) => {
-        // navigate('/');
         gameHub.loadGame(gameId);
     };
 
@@ -34,7 +33,10 @@ const GameList = () => {
                     <ListGroup>
                         {list &&
                             list.map((it) => (
-                                <GameListItem key={`game-${it.id}`} info={it}>
+                                <GameListItem
+                                    key={`game-${it.id}`}
+                                    info={{ id: it.id, creatorName: it.creator.name, timeStamp: it.timeStamp }}
+                                >
                                     <Button
                                         className="float-end"
                                         variant="outline-primary"
@@ -69,7 +71,10 @@ const GameList = () => {
                     <ListGroup>
                         {netList &&
                             netList.map((it) => (
-                                <GameListItem key={`netgame-${it.id}`} info={it}>
+                                <GameListItem
+                                    key={`netgame-${it.id}`}
+                                    info={{ creatorName: it.creator.name, timeStamp: it.timeStamp }}
+                                >
                                     <Button
                                         className="float-end"
                                         variant="outline-primary"

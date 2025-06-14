@@ -18,8 +18,15 @@ export interface GameInfo {
     timeStamp: number;
 }
 
+export interface DisplayedGameInfo {
+    id?: number;
+    creatorName: string;
+    timeStamp: number;
+}
+
 export interface NetGameInfo {
     id: number;
+    gameId?: number;
     settings: GameSettings;
     viewers: number[];
 }

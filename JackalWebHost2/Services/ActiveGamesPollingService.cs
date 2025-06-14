@@ -49,6 +49,7 @@ namespace JackalWebHost2.Services
             {
                 GameId = entry.ObjectId,
                 Creator = entry.Creator,
+                Players = entry.Players,
                 TimeStamp = entry.TimeStamp
             };
         }
