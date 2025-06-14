@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -11,9 +11,17 @@ import { convertToGamers, convertToMembers, convertToSettings, convertToUsers } 
 import { getAuth } from '/auth/redux/authSlice';
 import { NetGameInfo } from '/common/redux.types';
 import gameHub from '/game/hub/gameHub';
-import { getUserSettings } from '/game/redux/gameSlice';
+import { getUserSettings, saveMySettings } from '/game/redux/gameSlice';
 import { GameSettingsFormData } from '/game/types/hubContracts';
 import { getNetGames } from '/netgame/redux/lobbySlice';
+
+const isEqualsLists = (sList: string[], rList: string[]): boolean => {
+    if (sList.length !== rList.length) return false;
+    for (let i = 0; i < sList.length; i++) {
+        if (sList[i] !== rList[i]) return false;
+    }
+    return true;
+};
 
 export interface NetGameFormProps {
     netGame: NetGameInfo;
@@ -21,6 +29,7 @@ export interface NetGameFormProps {
 
 const NetGameForm = ({ netGame }: NetGameFormProps) => {
     // const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const authInfo = useSelector(getAuth);
     const userSettings = useSelector(getUserSettings);
@@ -83,11 +92,23 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
     };
 
     const setFormData = (data: GameSettingsFormData) => {
-        setGroups(data.players.groups);
+        if (!isEqualsLists(groups, data.players.groups)) {
+            saveToLocalStorage(data.players.groups);
+            setGroups(data.players.groups);
+        }
         const curGame = netGames.find((it) => it.id === netGame?.id);
         if (authInfo.user?.id === curGame?.creator.id) {
             gameHub.netChange(netGame?.id, convertToSettings(data));
         }
+    };
+
+    const saveToLocalStorage = (grps: string[]) => {
+        dispatch(
+            saveMySettings({
+                ...userSettings,
+                groups: grps,
+            }),
+        );
     };
 
     return (
