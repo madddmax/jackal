@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
-// import { useNavigate } from 'react-router-dom';
-
 import { Constants } from '/app/constants';
 import GameSettingsForm from '/app/content/layout/components/gameSettingsForm';
 import { PlayerInfo } from '/app/content/layout/components/types';
@@ -28,7 +26,6 @@ export interface NetGameFormProps {
 }
 
 const NetGameForm = ({ netGame }: NetGameFormProps) => {
-    // const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const authInfo = useSelector(getAuth);
@@ -38,17 +35,8 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
     const [groups, setGroups] = useState<string[]>(userSettings.groups);
 
     const newNetStart = () => {
-        // navigate('/');
         gameHub.startPublicGame(netGame.id, convertToSettings(formData));
     };
-
-    // const createNetGame = () => {
-    //     navigate('/newpublic');
-
-    //     if (formData) {
-    //         gameHub.netCreate(formData);
-    //     }
-    // };
 
     let counter = 0;
     const gamers: PlayerInfo[] = netGame.viewers
