@@ -30,7 +30,7 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
 
     const newNetStart = () => {
         // navigate('/');
-        gameHub.startGame(convertToSettings(formData));
+        gameHub.startPublicGame(netGame.id, convertToSettings(formData));
     };
 
     // const createNetGame = () => {

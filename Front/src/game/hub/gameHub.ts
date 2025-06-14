@@ -8,22 +8,27 @@ const gameHub = {
             debugLog(err);
         });
     },
+    startPublicGame: (id: number, settings: GameSettings) => {
+        hubConnection.invoke('startPublic', { id, settings }).catch((err) => {
+            debugLog(err);
+        });
+    },
     loadGame: (gameId: number) => {
         hubConnection.invoke('load', { gameId }).catch((err) => {
             debugLog(err);
         });
     },
     makeGameMove: (payload: makeGameMoveRequestProps) => {
-        hubConnection.send('Move', payload);
+        hubConnection.send('move', payload);
     },
     netCreate: (settings: GameSettings) => {
-        hubConnection.send('NetStart', { settings });
+        hubConnection.send('netStart', { settings });
     },
     netChange: (id: number, settings: GameSettings) => {
-        hubConnection.send('NetUpdate', { id, settings });
+        hubConnection.send('netUpdate', { id, settings });
     },
     netJoin: (id: number) => {
-        hubConnection.send('NetJoin', { id });
+        hubConnection.send('netJoin', { id });
     },
     getEventHandlers: [
         { name: 'GetStartData', sagaAction: sagaActions.GAME_START_APPLY_DATA },

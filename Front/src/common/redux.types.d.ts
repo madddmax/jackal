@@ -20,6 +20,7 @@ export interface GameInfo {
 
 export interface NetGameInfo {
     id: number;
+    gameId?: number;
     settings: GameSettings;
     viewers: number[];
 }
