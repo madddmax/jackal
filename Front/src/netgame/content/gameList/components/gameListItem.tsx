@@ -3,15 +3,15 @@ import { BsArrowCounterclockwise } from 'react-icons/bs';
 
 import classes from '../gamelist.module.less';
 import { fromNow } from '/app/global';
-import { GameInfo } from '/common/redux.types';
+import { DisplayedGameInfo } from '/common/redux.types';
 
 interface GameListItemProps {
     key: string;
-    info: GameInfo;
+    info: DisplayedGameInfo;
     children: React.ReactElement;
 }
 
-const GameListItem = ({ key, info: { id, creator, timeStamp }, children }: GameListItemProps) => {
+const GameListItem = ({ key, info: { id, creatorName, timeStamp }, children }: GameListItemProps) => {
     const timeData = fromNow(timeStamp);
 
     return (
@@ -23,7 +23,7 @@ const GameListItem = ({ key, info: { id, creator, timeStamp }, children }: GameL
                 alignItems: 'center',
             }}
         >
-            <span>{id}</span>
+            {id && <span>{id}</span>}
             <span>
                 <BsArrowCounterclockwise size={48} color={timeData.color} style={{ verticalAlign: 'middle' }} />
                 <span
@@ -38,7 +38,7 @@ const GameListItem = ({ key, info: { id, creator, timeStamp }, children }: GameL
                 </span>
             </span>
 
-            <span style={{ flexGrow: 2 }}>{creator.name}</span>
+            <span style={{ flexGrow: 2 }}>{creatorName}</span>
             {children}
         </ListGroup.Item>
     );
