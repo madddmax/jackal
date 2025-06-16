@@ -7,11 +7,11 @@ import GameSettingsForm from '/app/content/layout/components/gameSettingsForm';
 import { PlayerInfo } from '/app/content/layout/components/types';
 import { convertToGamers, convertToMembers, convertToSettings, convertToUsers } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
-import { NetGameInfo } from '/common/redux.types';
 import gameHub from '/game/hub/gameHub';
 import { getUserSettings, saveMySettings } from '/game/redux/gameSlice';
 import { GameSettingsFormData } from '/game/types/hubContracts';
 import { getNetGames } from '/netgame/redux/lobbySlice';
+import { NetGameInfo } from '/netgame/redux/lobbySlice.types';
 
 const isEqualsLists = (sList: string[], rList: string[]): boolean => {
     if (sList.length !== rList.length) return false;
@@ -101,9 +101,13 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
 
     return (
         <GameSettingsForm isPublic gameSettingsData={formData} setGameSettingsData={setFormData}>
-            <Button variant="primary" type="submit" onClick={newNetStart}>
-                Начать
-            </Button>
+            <>
+                {netGame.isCreator && (
+                    <Button variant="primary" type="submit" onClick={newNetStart}>
+                        Начать
+                    </Button>
+                )}
+            </>
         </GameSettingsForm>
     );
 };

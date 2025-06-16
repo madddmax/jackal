@@ -7,7 +7,7 @@ import {
     LobbyCreateResponse,
     LobbyGetResponse,
     LobbyJoinResponse,
-    NetGameInfo,
+    NetGameInfoResponse,
     NetGameListResponse,
 } from '../../common/redux.types';
 import { applyGamesList, applyNetGame, applyNetGamesList, updateLobby } from '../redux/lobbySlice';
@@ -91,9 +91,10 @@ export function* applyNetGamesData(action: { payload: NetGameListResponse }) {
     yield put(applyNetGamesList({ currentUserId: auth.user?.id, gamesEntries: data.gamesEntries }));
 }
 
-export function* applyNetGameData(action: { payload: NetGameInfo }) {
+export function* applyNetGameData(action: { payload: NetGameInfoResponse }) {
+    const auth: AuthState = yield select(getAuth);
     const data = action.payload;
-    yield put(applyNetGame(data));
+    yield put(applyNetGame({ currentUserId: auth.user?.id, gameInfo: data }));
     if (data.gameId) {
         gameHub.loadGame(data.gameId);
     }

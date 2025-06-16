@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { GameInfo, LobbyInfo, LobbyState, NetGameInfo } from '../../common/redux.types';
-import { LobbyGamesEntriesList } from './lobbySlice.types';
+import { GameInfo, LobbyInfo } from '../../common/redux.types';
+import { LobbyGameInfo, LobbyGamesEntriesList, LobbyState, NetGameInfo } from './lobbySlice.types';
 
 export const lobbySlice = createSlice({
     name: 'lobby',
@@ -31,8 +31,11 @@ export const lobbySlice = createSlice({
                 timeStamp: it.timeStamp,
             }));
         },
-        applyNetGame: (state, action: PayloadAction<NetGameInfo>) => {
-            state.netGame = action.payload;
+        applyNetGame: (state, action: PayloadAction<LobbyGameInfo>) => {
+            state.netGame = {
+                ...action.payload.gameInfo,
+                isCreator: action.payload.gameInfo.creatorId === action.payload.currentUserId,
+            };
         },
     },
     selectors: {
