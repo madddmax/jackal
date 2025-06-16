@@ -11,12 +11,19 @@ import { GameSettingsFormData } from '/game/types/hubContracts';
 
 export interface GameSettingsFormProps {
     isPublic?: boolean;
+    isEditGroupsOnly?: boolean;
     gameSettingsData: GameSettingsFormData;
     setGameSettingsData: (data: GameSettingsFormData) => void;
     children: React.ReactElement;
 }
 
-const GameSettingsForm = ({ isPublic, gameSettingsData, setGameSettingsData, children }: GameSettingsFormProps) => {
+const GameSettingsForm = ({
+    isPublic,
+    isEditGroupsOnly,
+    gameSettingsData,
+    setGameSettingsData,
+    children,
+}: GameSettingsFormProps) => {
     const dispatch = useDispatch();
 
     const { tilesPackNames } = useSelector(getGameSettings);
@@ -106,6 +113,7 @@ const GameSettingsForm = ({ isPublic, gameSettingsData, setGameSettingsData, chi
                 <div>
                     <Form.Label>Размер карты: {gameSettingsData.mapSize}</Form.Label>
                     <Form.Range
+                        disabled={isEditGroupsOnly}
                         value={gameSettingsData.mapSize}
                         min={5}
                         max={13}
@@ -120,6 +128,7 @@ const GameSettingsForm = ({ isPublic, gameSettingsData, setGameSettingsData, chi
                 <Form.Group className="mb-3" controlId="formBasicSelect">
                     <Form.Label>Игровой набор</Form.Label>
                     <Form.Select
+                        disabled={isEditGroupsOnly}
                         name="tilesPackName"
                         value={gameSettingsData.tilesPackName}
                         onChange={(event) => {
@@ -138,13 +147,14 @@ const GameSettingsForm = ({ isPublic, gameSettingsData, setGameSettingsData, chi
                     <Form.Control
                         type="text"
                         name="mapcode"
+                        disabled={isEditGroupsOnly}
                         placeholder="Введите код"
                         value={gameSettingsData.mapId}
                         onChange={(event) => {
                             if (event.target.value) setMapId(Number(event.target.value));
                         }}
                     />
-                    <Button variant="outline-secondary" onClick={changeMapId}>
+                    <Button variant="outline-secondary" disabled={isEditGroupsOnly} onClick={changeMapId}>
                         Поменять
                     </Button>
                 </InputGroup>
@@ -152,6 +162,7 @@ const GameSettingsForm = ({ isPublic, gameSettingsData, setGameSettingsData, chi
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
                 <Form.Check
                     type="checkbox"
+                    disabled={isEditGroupsOnly}
                     label="Запоминать код карты"
                     checked={gameSettingsData.isStoredMap}
                     onChange={storeMapId}

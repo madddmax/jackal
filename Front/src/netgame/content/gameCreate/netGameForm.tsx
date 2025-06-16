@@ -100,7 +100,12 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
     };
 
     return (
-        <GameSettingsForm isPublic gameSettingsData={formData} setGameSettingsData={setFormData}>
+        <GameSettingsForm
+            isPublic
+            isEditGroupsOnly={!netGame.isCreator}
+            gameSettingsData={formData}
+            setGameSettingsData={setFormData}
+        >
             <>
                 {netGame.isCreator && (
                     <Button variant="primary" type="submit" onClick={newNetStart}>
