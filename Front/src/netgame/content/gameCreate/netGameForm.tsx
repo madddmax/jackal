@@ -85,7 +85,7 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
             setGroups(data.players.groups);
         }
         const curGame = netGames.find((it) => it.id === netGame?.id);
-        if (authInfo.user?.id === curGame?.creator.id) {
+        if (curGame?.isCreator) {
             gameHub.netChange(netGame?.id, convertToSettings(data));
         }
     };

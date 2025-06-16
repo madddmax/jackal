@@ -11,10 +11,9 @@ export interface LobbyState {
 
 export interface GameInfo {
     id: number;
-    creator: {
-        id: number;
-        name: string;
-    };
+    creatorName: string;
+    isCreator: boolean;
+    isPlayer: boolean;
     timeStamp: number;
 }
 
@@ -41,6 +40,11 @@ export interface NetGameEntryResponse {
         id: number;
         name: string;
     };
+    players: [
+        {
+            id: number;
+        },
+    ];
     timeStamp: number;
 }
 

@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 
 import GameListItem from './components/gameListItem';
 import classes from './gamelist.module.less';
-import { getAuth } from '/auth/redux/authSlice';
 import gameHub from '/game/hub/gameHub';
 import { getGames, getNetGames } from '/netgame/redux/lobbySlice';
 
@@ -15,7 +14,6 @@ const GameList = () => {
     const navigate = useNavigate();
     const list = useSelector(getGames);
     const netList = useSelector(getNetGames);
-    const auth = useSelector(getAuth);
 
     const continueNet = (gameId: number) => {
         navigate('/newpublic');
@@ -35,7 +33,7 @@ const GameList = () => {
                             list.map((it) => (
                                 <GameListItem
                                     key={`game-${it.id}`}
-                                    info={{ id: it.id, creatorName: it.creator.name, timeStamp: it.timeStamp }}
+                                    info={{ id: it.id, creatorName: it.creatorName, timeStamp: it.timeStamp }}
                                 >
                                     <Button
                                         className="float-end"
@@ -43,7 +41,7 @@ const GameList = () => {
                                         type="submit"
                                         onClick={() => loadGame(it.id)}
                                     >
-                                        {it.creator.id === auth.user?.id ? (
+                                        {it.isCreator || it.isPlayer ? (
                                             <>
                                                 <VscDebugContinueSmall
                                                     size={20}
@@ -73,7 +71,7 @@ const GameList = () => {
                             netList.map((it) => (
                                 <GameListItem
                                     key={`netgame-${it.id}`}
-                                    info={{ creatorName: it.creator.name, timeStamp: it.timeStamp }}
+                                    info={{ creatorName: it.creatorName, timeStamp: it.timeStamp }}
                                 >
                                     <Button
                                         className="float-end"
@@ -81,7 +79,7 @@ const GameList = () => {
                                         type="submit"
                                         onClick={() => continueNet(it.id)}
                                     >
-                                        {it.creator.id === auth.user?.id ? (
+                                        {it.isCreator && (
                                             <>
                                                 <VscDebugContinueSmall
                                                     size={20}
@@ -89,7 +87,17 @@ const GameList = () => {
                                                 />
                                                 Продолжить
                                             </>
-                                        ) : (
+                                        )}
+                                        {!it.isCreator && it.isPlayer && (
+                                            <>
+                                                <PiEyesThin
+                                                    size={20}
+                                                    style={{ verticalAlign: 'bottom', marginRight: 3 }}
+                                                />
+                                                Смотреть
+                                            </>
+                                        )}
+                                        {!it.isCreator && !it.isPlayer && (
                                             <>
                                                 <TbArrowsJoin
                                                     size={20}
