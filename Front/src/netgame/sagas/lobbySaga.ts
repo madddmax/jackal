@@ -1,17 +1,19 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 //import { call, delay, fork, put, race, select, take, takeEvery } from 'redux-saga/effects';
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
 
 //import { LobbyCreateResponse, LobbyGetResponse, LobbyInfo, LobbyJoinResponse, NetGameListResponse } from '../../common/redux.types';
 import {
     LobbyCreateResponse,
     LobbyGetResponse,
     LobbyJoinResponse,
-    NetGameInfo,
+    NetGameInfoResponse,
     NetGameListResponse,
 } from '../../common/redux.types';
 import { applyGamesList, applyNetGame, applyNetGamesList, updateLobby } from '../redux/lobbySlice';
 import { history } from '/app/global';
+import { getAuth } from '/auth/redux/authSlice';
+import { AuthState } from '/auth/redux/authSlice.types';
 import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
 import gameHub from '/game/hub/gameHub';
 
@@ -78,18 +80,21 @@ export function* lobbyGet(action: PayloadAction<{ lobbyId: string }>) {
 // }
 
 export function* applyActiveGamesData(action: { payload: NetGameListResponse }) {
+    const auth: AuthState = yield select(getAuth);
     const data = action.payload;
-    yield put(applyGamesList(data));
+    yield put(applyGamesList({ currentUserId: auth.user?.id, gamesEntries: data.gamesEntries }));
 }
 
 export function* applyNetGamesData(action: { payload: NetGameListResponse }) {
+    const auth: AuthState = yield select(getAuth);
     const data = action.payload;
-    yield put(applyNetGamesList(data));
+    yield put(applyNetGamesList({ currentUserId: auth.user?.id, gamesEntries: data.gamesEntries }));
 }
 
-export function* applyNetGameData(action: { payload: NetGameInfo }) {
+export function* applyNetGameData(action: { payload: NetGameInfoResponse }) {
+    const auth: AuthState = yield select(getAuth);
     const data = action.payload;
-    yield put(applyNetGame(data));
+    yield put(applyNetGame({ currentUserId: auth.user?.id, gameInfo: data }));
     if (data.gameId) {
         gameHub.loadGame(data.gameId);
     }

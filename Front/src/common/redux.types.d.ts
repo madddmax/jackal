@@ -2,19 +2,11 @@ import { AuthState } from '../auth/redux/authSlice.types';
 import { GameSettings } from '../game/types/hubContracts';
 import { CommonState } from './redux/commonSlice.types';
 
-export interface LobbyState {
-    gamelist: GameInfo[];
-    netgamelist: GameInfo[];
-    netGame?: NetGameInfo;
-    lobby?: LobbyInfo;
-}
-
 export interface GameInfo {
     id: number;
-    creator: {
-        id: number;
-        name: string;
-    };
+    creatorName: string;
+    isCreator: boolean;
+    isPlayer: boolean;
     timeStamp: number;
 }
 
@@ -24,9 +16,10 @@ export interface DisplayedGameInfo {
     timeStamp: number;
 }
 
-export interface NetGameInfo {
+export interface NetGameInfoResponse {
     id: number;
     gameId?: number;
+    creatorId: number;
     settings: GameSettings;
     viewers: number[];
 }
@@ -41,6 +34,11 @@ export interface NetGameEntryResponse {
         id: number;
         name: string;
     };
+    players: [
+        {
+            id: number;
+        },
+    ];
     timeStamp: number;
 }
 

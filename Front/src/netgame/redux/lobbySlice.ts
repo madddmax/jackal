@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { GameInfo, LobbyInfo, LobbyState, NetGameInfo, NetGameListResponse } from '../../common/redux.types';
+import { GameInfo, LobbyInfo } from '../../common/redux.types';
+import { LobbyGameInfo, LobbyGamesEntriesList, LobbyState, NetGameInfo } from './lobbySlice.types';
 
 export const lobbySlice = createSlice({
     name: 'lobby',
@@ -12,22 +13,29 @@ export const lobbySlice = createSlice({
         updateLobby: (state, action: PayloadAction<LobbyInfo>) => {
             state.lobby = action.payload;
         },
-        applyGamesList: (state, action: PayloadAction<NetGameListResponse>) => {
+        applyGamesList: (state, action: PayloadAction<LobbyGamesEntriesList>) => {
             state.gamelist = action.payload.gamesEntries.map((it) => ({
                 id: it.gameId,
-                creator: it.creator,
+                creatorName: it.creator.name,
+                isCreator: it.creator.id === action.payload.currentUserId,
+                isPlayer: it.players.some((it) => it.id === action.payload.currentUserId),
                 timeStamp: it.timeStamp,
             }));
         },
-        applyNetGamesList: (state, action: PayloadAction<NetGameListResponse>) => {
+        applyNetGamesList: (state, action: PayloadAction<LobbyGamesEntriesList>) => {
             state.netgamelist = action.payload.gamesEntries.map((it) => ({
                 id: it.gameId,
-                creator: it.creator,
+                creatorName: it.creator.name,
+                isCreator: it.creator.id === action.payload.currentUserId,
+                isPlayer: it.players.some((it) => it.id === action.payload.currentUserId),
                 timeStamp: it.timeStamp,
             }));
         },
-        applyNetGame: (state, action: PayloadAction<NetGameInfo>) => {
-            state.netGame = action.payload;
+        applyNetGame: (state, action: PayloadAction<LobbyGameInfo>) => {
+            state.netGame = {
+                ...action.payload.gameInfo,
+                isCreator: action.payload.gameInfo.creatorId === action.payload.currentUserId,
+            };
         },
     },
     selectors: {
