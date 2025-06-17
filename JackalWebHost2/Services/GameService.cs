@@ -135,7 +135,7 @@ public class GameService : IGameService
         {
             throw new GameNotFoundException();
         }
-
+        
         if (game.IsGameOver)
         {
             return new TurnGameResult
@@ -150,9 +150,17 @@ public class GameService : IGameService
         
         var prevBoardStr = JsonHelper.SerializeWithType(game.Board);
             
-        if (game.CurrentPlayer is IHumanPlayer humanPlayer && request.TurnNum.HasValue)
+        if (game.CurrentPlayer is IHumanPlayer humanPlayer)
         {
-            humanPlayer.SetMove(request.TurnNum.Value, request.PirateId);
+            if (humanPlayer.UserId != userId)
+            {
+                throw new PlayerNotFoundException();
+            }
+
+            if (request.TurnNum.HasValue)
+            {
+                humanPlayer.SetMove(request.TurnNum.Value, request.PirateId);
+            }
         }
 
         game.Turn();
