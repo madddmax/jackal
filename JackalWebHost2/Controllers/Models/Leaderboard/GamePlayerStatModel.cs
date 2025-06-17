@@ -19,7 +19,22 @@ public class GamePlayerStatModel
     public int TotalWin { get; set; }
         
     /// <summary>
-    /// Суммарное количество добытых монет за выйгранные игры
+    /// Суммарное количество добытых монет за все игры
     /// </summary>
-    public int TotalWinCoins { get; set; }
+    public int TotalCoins { get; set; }
+        
+    /// <summary>
+    /// Количество проведенных игр
+    /// </summary>
+    public int GamesCount { get; set; }
+
+    /// <summary>
+    /// Среднее количество побед за все игры
+    /// </summary>
+    public double AverageWin => (double)TotalWin / GamesCount;
+        
+    /// <summary>
+    /// Среднее количество добытых монет за все игры
+    /// </summary>
+    public double AverageCoins => (double)TotalCoins / GamesCount;
 }

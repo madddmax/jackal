@@ -9,13 +9,14 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
     public async Task<List<GamePlayerStatModel>> GetLeaderboard()
     {
         var bestWinningPlayers = await jackalDbContext.GamePlayers
-            .Where(p => p.Winner)
+            .Where(p => p.UserId != null)
             .GroupBy(p => p.PlayerName)
             .Select(g => new
             {
                 PlayerName = g.Key,
-                TotalWin = g.Count(),
-                TotalWinCoins = g.Sum(x => x.Coins)
+                TotalWin = g.Count(x => x.Winner),
+                TotalCoins = g.Sum(x => x.Coins),
+                GamesCount = g.Count()
             })
             .OrderByDescending(g => g.TotalWin)
             .ToListAsync();
@@ -26,7 +27,8 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
                 Number = number++,
                 PlayerName = g.PlayerName,
                 TotalWin = g.TotalWin,
-                TotalWinCoins = g.TotalWinCoins
+                TotalCoins = g.TotalCoins,
+                GamesCount = g.GamesCount
             })
             .ToList();
     }

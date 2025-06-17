@@ -126,6 +126,7 @@ const GameList = () => {
                                 <th>Логин</th>
                                 <th>Победы</th>
                                 <th>Монеты</th>
+                                <th>Игры</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -135,7 +136,8 @@ const GameList = () => {
                                         <td>{it.number}</td>
                                         <td>{it.playerName}</td>
                                         <td>{it.totalWin}</td>
-                                        <td>{it.totalWinCoins}</td>
+                                        <td>{it.totalCoins}</td>
+                                        <td>{it.gamesCount}</td>
                                     </tr>
                                 ))}
                         </tbody>

@@ -13,7 +13,7 @@ public class LeaderboardController(IGamePlayerRepository gamePlayerRepository) :
     /// Таблица лидеров
     /// </summary>
     [HttpGet]
-    public async Task<LeaderboardResponse> TilesPackNames()
+    public async Task<LeaderboardResponse> GetLeaderboard()
     {
         return new LeaderboardResponse
         {
