@@ -19,6 +19,7 @@ export const lobbySlice = createSlice({
                 creatorName: it.creator.name,
                 isCreator: it.creator.id === action.payload.currentUserId,
                 isPlayer: it.players.some((it) => it.id === action.payload.currentUserId),
+                isPublic: it.players.length > 1,
                 timeStamp: it.timeStamp,
             }));
         },
@@ -28,6 +29,7 @@ export const lobbySlice = createSlice({
                 creatorName: it.creator.name,
                 isCreator: it.creator.id === action.payload.currentUserId,
                 isPlayer: it.players.some((it) => it.id === action.payload.currentUserId),
+                isPublic: true,
                 timeStamp: it.timeStamp,
             }));
         },

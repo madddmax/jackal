@@ -33,7 +33,10 @@ const GameList = () => {
                             list.map((it) => (
                                 <GameListItem
                                     key={`game-${it.id}`}
-                                    info={{ id: it.id, creatorName: it.creatorName, timeStamp: it.timeStamp }}
+                                    id={it.id}
+                                    isPublic={it.isPublic}
+                                    creatorName={it.creatorName}
+                                    timeStamp={it.timeStamp}
                                 >
                                     <Button
                                         className="float-end"
@@ -71,7 +74,8 @@ const GameList = () => {
                             netList.map((it) => (
                                 <GameListItem
                                     key={`netgame-${it.id}`}
-                                    info={{ creatorName: it.creatorName, timeStamp: it.timeStamp }}
+                                    creatorName={it.creatorName}
+                                    timeStamp={it.timeStamp}
                                 >
                                     <Button
                                         className="float-end"
@@ -111,6 +115,9 @@ const GameList = () => {
                             ))}
                     </ListGroup>
                 </div>
+            </Row>
+            <Row className="justify-content-center">
+                <div className={classes.liderboard}></div>
             </Row>
         </Container>
     );

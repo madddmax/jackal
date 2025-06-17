@@ -7,12 +7,7 @@ export interface GameInfo {
     creatorName: string;
     isCreator: boolean;
     isPlayer: boolean;
-    timeStamp: number;
-}
-
-export interface DisplayedGameInfo {
-    id?: number;
-    creatorName: string;
+    isPublic: boolean;
     timeStamp: number;
 }
 
