@@ -1,4 +1,4 @@
-import { Button, Container, ListGroup, Row } from 'react-bootstrap';
+import { Button, Container, ListGroup, Row, Table } from 'react-bootstrap';
 import { PiEyesThin } from 'react-icons/pi';
 import { TbArrowsJoin } from 'react-icons/tb';
 import { VscDebugContinueSmall } from 'react-icons/vsc';
@@ -8,12 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import GameListItem from './components/gameListItem';
 import classes from './gamelist.module.less';
 import gameHub from '/game/hub/gameHub';
-import { getGames, getNetGames } from '/netgame/redux/lobbySlice';
+import { getGames, getLeaderBoard, getNetGames } from '/netgame/redux/lobbySlice';
 
 const GameList = () => {
     const navigate = useNavigate();
     const list = useSelector(getGames);
     const netList = useSelector(getNetGames);
+    const leaders = useSelector(getLeaderBoard);
 
     const continueNet = (gameId: number) => {
         navigate('/newpublic');
@@ -33,7 +34,10 @@ const GameList = () => {
                             list.map((it) => (
                                 <GameListItem
                                     key={`game-${it.id}`}
-                                    info={{ id: it.id, creatorName: it.creatorName, timeStamp: it.timeStamp }}
+                                    id={it.id}
+                                    isPublic={it.isPublic}
+                                    creatorName={it.creatorName}
+                                    timeStamp={it.timeStamp}
                                 >
                                     <Button
                                         className="float-end"
@@ -71,7 +75,8 @@ const GameList = () => {
                             netList.map((it) => (
                                 <GameListItem
                                     key={`netgame-${it.id}`}
-                                    info={{ creatorName: it.creatorName, timeStamp: it.timeStamp }}
+                                    creatorName={it.creatorName}
+                                    timeStamp={it.timeStamp}
                                 >
                                     <Button
                                         className="float-end"
@@ -110,6 +115,31 @@ const GameList = () => {
                                 </GameListItem>
                             ))}
                     </ListGroup>
+                </div>
+            </Row>
+            <Row className="justify-content-center">
+                <div className={classes.leaderboard}>
+                    <Table striped>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Логин</th>
+                                <th>Победы</th>
+                                <th>Монеты</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {leaders &&
+                                leaders.map((it) => (
+                                    <tr key={`leader_${it.number}`}>
+                                        <td>{it.number}</td>
+                                        <td>{it.playerName}</td>
+                                        <td>{it.totalWin}</td>
+                                        <td>{it.totalWinCoins}</td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </Table>
                 </div>
             </Row>
         </Container>

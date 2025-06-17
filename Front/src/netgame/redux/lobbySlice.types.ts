@@ -1,3 +1,4 @@
+import { LeaderBoardItemResponse } from '../types/sagaContracts';
 import { GameInfo, LobbyInfo, NetGameEntryResponse, NetGameInfoResponse } from '/common/redux.types';
 import { GameSettings } from '/game/types/hubContracts';
 
@@ -6,6 +7,7 @@ export interface LobbyState {
     netgamelist: GameInfo[];
     netGame?: NetGameInfo;
     lobby?: LobbyInfo;
+    leaderBoard?: LeaderBoardItemResponse[];
 }
 
 export interface LobbyGamesEntriesList {
