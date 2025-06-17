@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { GameInfo, LobbyInfo } from '../../common/redux.types';
+import { LeaderBoardItemResponse } from '../types/sagaContracts';
 import { LobbyGameInfo, LobbyGamesEntriesList, LobbyState, NetGameInfo } from './lobbySlice.types';
 
 export const lobbySlice = createSlice({
@@ -12,6 +13,9 @@ export const lobbySlice = createSlice({
     reducers: {
         updateLobby: (state, action: PayloadAction<LobbyInfo>) => {
             state.lobby = action.payload;
+        },
+        applyLeaderBoard: (state, action: PayloadAction<LeaderBoardItemResponse[]>) => {
+            state.leaderBoard = action.payload;
         },
         applyGamesList: (state, action: PayloadAction<LobbyGamesEntriesList>) => {
             state.gamelist = action.payload.gamesEntries.map((it) => ({
@@ -42,14 +46,15 @@ export const lobbySlice = createSlice({
     },
     selectors: {
         getLobby: (state): LobbyInfo | undefined => state.lobby,
+        getLeaderBoard: (state): LeaderBoardItemResponse[] | undefined => state.leaderBoard,
         getGames: (state): GameInfo[] => state.gamelist,
         getNetGames: (state): GameInfo[] => state.netgamelist,
         getNetGame: (state): NetGameInfo | undefined => state.netGame,
     },
 });
 
-export const { updateLobby, applyGamesList, applyNetGamesList, applyNetGame } = lobbySlice.actions;
+export const { applyLeaderBoard, updateLobby, applyGamesList, applyNetGamesList, applyNetGame } = lobbySlice.actions;
 
-export const { getLobby, getGames, getNetGames, getNetGame } = lobbySlice.selectors;
+export const { getLobby, getLeaderBoard, getGames, getNetGames, getNetGame } = lobbySlice.selectors;
 
 export default lobbySlice.reducer;
