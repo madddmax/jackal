@@ -18,6 +18,7 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
                 TotalCoins = g.Sum(x => x.Coins),
                 GamesCount = g.Count()
             })
+            .Where(g => g.TotalWin > 0)
             .OrderByDescending(g => g.TotalWin)
             .ToListAsync();
 
