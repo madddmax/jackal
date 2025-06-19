@@ -22,6 +22,12 @@ public class UserRepository(JackalDbContext jackalDbContext) : IUserRepository
         return userEntity != null ? ToUser(userEntity) : null;
     }
 
+    public async Task<IList<User>> GetUsers(long[] ids, CancellationToken token)
+    {
+        var users = await jackalDbContext.Users.Where(u => ids.Contains(u.Id)).ToListAsync(token);
+        return users.Select(ToUser).ToList();
+    }
+
     public async Task<User> CreateUser(string login, CancellationToken token)
     {
         var userEntity = new UserEntity

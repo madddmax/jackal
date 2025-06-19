@@ -8,7 +8,9 @@ public interface IUserRepository
     /// Получить пользователя по идентификатору
     /// </summary>
     Task<User?> GetUser(long id, CancellationToken token);
-    
+
+    Task<IList<User>> GetUsers(long[] ids, CancellationToken token);
+
     /// <summary>
     /// Получить пользователя по логину
     /// </summary>

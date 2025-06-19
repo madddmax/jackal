@@ -81,7 +81,10 @@ public class Program
             });
 
         services
-            .AddSwaggerGen()
+            .AddSwaggerGen(opt =>
+            {
+                opt.AddSignalRSwaggerGen();
+            })
             .AddMemoryCache()
             .AddCors(options =>
             {

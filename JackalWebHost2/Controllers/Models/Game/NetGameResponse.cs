@@ -13,6 +13,9 @@ namespace JackalWebHost2.Controllers.Models.Game
         public GameSettings? Settings { get; set; }
 
         [NotNull]
-        public HashSet<long>? Viewers { get; set; }
+        public long[]? Viewers { get; set; }
+
+        [NotNull]
+        public HashSet<User>? Users { get; set; }
     }
 }

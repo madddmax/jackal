@@ -9,10 +9,12 @@ using JackalWebHost2.Infrastructure.Auth;
 using JackalWebHost2.Models;
 using JackalWebHost2.Services;
 using Microsoft.AspNetCore.SignalR;
+using SignalRSwaggerGen.Attributes;
 
 namespace JackalWebHost2.Controllers.Hubs;
 
 [FastAuth]
+[SignalRHub]
 public class GameHub : Hub
 {
     private const string CALLBACK_NOTIFY = "Notify";
@@ -29,7 +31,7 @@ public class GameHub : Hub
     private readonly IStateRepository<NetGameSettings> _netgameStateRepository;
     private readonly Random _random;
 
-    
+
     public GameHub(
         IGameService gameService, 
         IStateRepository<Game> gameStateRepository,
@@ -205,11 +207,9 @@ public class GameHub : Hub
     public async Task NetStart(NetGameRequest request)
     {
         var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
-        var netGame = new NetGameSettings
+        var netGame = new NetGameSettings(user)
         {
             Id = _random.NextInt64(1, 100_000_000),
-            CreatorId = user.Id,
-            Users = new HashSet<long>{user.Id},
             Settings = request.Settings
         };
         _netgameStateRepository.CreateObject(user, netGame.Id, netGame, netGame.Users);
@@ -249,7 +249,7 @@ public class GameHub : Hub
         var netGame = _netgameStateRepository.GetObject(request.Id);
         if (netGame == null) return;
 
-        netGame.Users.Add(user.Id);
+        netGame.Users.Add(user);
         _netgameStateRepository.UpdateObject(netGame.Id, netGame, netGame.Users);
 
         await Groups.AddToGroupAsync(Context.ConnectionId, GetNetGroupName(netGame.Id));
@@ -265,7 +265,7 @@ public class GameHub : Hub
         var netGame = _netgameStateRepository.GetObject(request.Id);
         if (netGame == null) return;
 
-        netGame.Users.Remove(user.Id);
+        netGame.Users.Remove(user);
         _netgameStateRepository.UpdateObject(netGame.Id, netGame, netGame.Users);
 
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetNetGroupName(netGame.Id));
@@ -301,7 +301,8 @@ public class GameHub : Hub
             CreatorId = netGame.CreatorId,
             GameId = gameId,
             Settings = netGame.Settings,
-            Viewers = netGame.Users
+            Viewers = netGame.Users.Select(it => it.Id).ToArray(),
+            Users = netGame.Users
         };
     }
 }
