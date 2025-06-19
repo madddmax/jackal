@@ -9,10 +9,12 @@ using JackalWebHost2.Infrastructure.Auth;
 using JackalWebHost2.Models;
 using JackalWebHost2.Services;
 using Microsoft.AspNetCore.SignalR;
+using SignalRSwaggerGen.Attributes;
 
 namespace JackalWebHost2.Controllers.Hubs;
 
 [FastAuth]
+[SignalRHub]
 public class GameHub : Hub
 {
     private const string CALLBACK_NOTIFY = "Notify";
@@ -29,7 +31,7 @@ public class GameHub : Hub
     private readonly IStateRepository<NetGameSettings> _netgameStateRepository;
     private readonly Random _random;
 
-    
+
     public GameHub(
         IGameService gameService, 
         IStateRepository<Game> gameStateRepository,
