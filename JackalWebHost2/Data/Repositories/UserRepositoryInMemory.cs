@@ -24,6 +24,17 @@ public class UserRepositoryInMemory : IUserRepository
             : null;
     }
 
+    public async Task<IList<User>> GetUsers(long[] ids, CancellationToken token)
+    {
+        var list = new List<User>();
+        foreach (var id in ids)
+        {
+            var user = await GetUser(id, token);
+            if (user != null) list.Add(user);
+        }
+        return list;
+    }
+
     public async Task<User?> GetUser(string login, CancellationToken token)
     {
         return null;

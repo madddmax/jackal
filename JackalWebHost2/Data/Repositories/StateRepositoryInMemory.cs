@@ -95,7 +95,7 @@ public class StateRepositoryInMemory<T> : IStateRepository<T> where T : class, I
         _hasChanges = true;
     }
 
-    public void CreateObject(User user, long objectId, T value, HashSet<long> players)
+    public void CreateObject(User user, long objectId, T value, HashSet<User> players)
     {
         _memoryCache.Set(objectId, value, _cacheEntryOptions);
         if (_entries.TryAdd(objectId, new CacheEntry
@@ -106,7 +106,7 @@ public class StateRepositoryInMemory<T> : IStateRepository<T> where T : class, I
                     Id = user.Id,
                     Name = user.Login
                 },
-                Players = players.Select(it => new CacheEntryUser{ Id = it }).ToArray(),
+                Players = players.Select(it => new CacheEntryUser{ Id = it.Id, Name = it.Login }).ToArray(),
                 TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             }))
         {
@@ -114,7 +114,7 @@ public class StateRepositoryInMemory<T> : IStateRepository<T> where T : class, I
         }
     }
 
-    public void UpdateObject(long objectId, T value, HashSet<long>? players)
+    public void UpdateObject(long objectId, T value, HashSet<User>? players)
     {
         _memoryCache.Set(objectId, value, _cacheEntryOptions);
         if (value.IsCompleted)
@@ -123,7 +123,7 @@ public class StateRepositoryInMemory<T> : IStateRepository<T> where T : class, I
         }
         else if (_entries.TryGetValue(objectId, out CacheEntry? entry))
         {
-            if (players?.Count > 0) entry.Players = players.Select(it => new CacheEntryUser { Id = it }).ToArray();
+            if (players?.Count > 0) entry.Players = players.Select(it => new CacheEntryUser { Id = it.Id, Name = it.Login }).ToArray();
             entry.TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
         _hasChanges = true;
