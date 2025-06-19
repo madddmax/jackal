@@ -39,12 +39,12 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
     };
 
     let counter = 0;
-    const gamers: PlayerInfo[] = netGame.viewers
-        .map((it) => ({ id: counter++, type: 'human', userId: it }))
+    const gamers: PlayerInfo[] = netGame.users
+        .map((it) => ({ id: counter++, type: 'human', userId: it.id, userName: it.login }) as PlayerInfo)
         .concat([
-            { id: counter++, type: 'robot', userId: 0 },
-            { id: counter++, type: 'robot2', userId: 0 },
-            { id: counter++, type: 'robot3', userId: 0 },
+            { id: counter++, type: 'robot', userId: 0 } as PlayerInfo,
+            { id: counter++, type: 'robot2', userId: 0 } as PlayerInfo,
+            { id: counter++, type: 'robot3', userId: 0 } as PlayerInfo,
         ]);
 
     const formData: GameSettingsFormData = {
@@ -101,6 +101,8 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
 
     return (
         <GameSettingsForm
+            id={netGame.id}
+            viewers={netGame.users}
             isPublic
             isEditGroupsOnly={!netGame.isCreator}
             gameSettingsData={formData}
