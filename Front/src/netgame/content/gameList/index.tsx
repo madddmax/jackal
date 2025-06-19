@@ -25,6 +25,8 @@ const GameList = () => {
         gameHub.loadGame(gameId);
     };
 
+    let ratingNumber = 1;
+
     return (
         <Container>
             <Row className="justify-content-center">
@@ -127,17 +129,19 @@ const GameList = () => {
                                 <th>Победы</th>
                                 <th>Монеты</th>
                                 <th>Игры</th>
+                                <th>Рейтинг</th>
                             </tr>
                         </thead>
                         <tbody>
                             {leaders &&
                                 leaders.map((it) => (
-                                    <tr key={`leader_${it.number}`}>
-                                        <td>{it.number}</td>
+                                    <tr key={`leader_${ratingNumber}`}>
+                                        <td>{ratingNumber++}</td>
                                         <td>{it.playerName}</td>
                                         <td>{it.totalWin}</td>
                                         <td>{it.totalCoins}</td>
                                         <td>{it.gamesCount}</td>
+                                        <td>{it.rating}</td>
                                     </tr>
                                 ))}
                         </tbody>

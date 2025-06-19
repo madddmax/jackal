@@ -19,18 +19,16 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
                 GamesCount = g.Count()
             })
             .Where(g => g.TotalWin > 0)
-            .OrderByDescending(g => g.TotalWin)
             .ToListAsync();
-
-        var number = 1;
+        
         return bestWinningPlayers.Select(g => new GamePlayerStatModel
             {
-                Number = number++,
                 PlayerName = g.PlayerName,
                 TotalWin = g.TotalWin,
                 TotalCoins = g.TotalCoins,
                 GamesCount = g.GamesCount
             })
+            .OrderByDescending(g => g.Rating)
             .ToList();
     }
 }
