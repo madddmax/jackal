@@ -3,11 +3,6 @@ namespace JackalWebHost2.Controllers.Models.Leaderboard;
 public class GamePlayerStatModel
 {
     /// <summary>
-    /// Номер позиции
-    /// </summary>
-    public int Number { get; set; }
-    
-    /// <summary>
     /// Имя пользователя или бота
     /// </summary>
     public string PlayerName { get; set; }
@@ -37,4 +32,9 @@ public class GamePlayerStatModel
     /// Среднее количество добытых монет за все игры
     /// </summary>
     public double AverageCoins => (double)TotalCoins / GamesCount;
+
+    /// <summary>
+    /// Рейтинг по формуле от Артёма
+    /// </summary>
+    public int Rating => (int)(AverageWin * Math.Log(GamesCount) * 100);
 }
