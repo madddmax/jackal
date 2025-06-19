@@ -1,4 +1,5 @@
 import { LeaderBoardItemResponse } from '../types/sagaContracts';
+import { UserInfo } from '/auth/redux/authSlice.types';
 import { GameInfo, LobbyInfo, NetGameEntryResponse, NetGameInfoResponse } from '/common/redux.types';
 import { GameSettings } from '/game/types/hubContracts';
 
@@ -26,4 +27,5 @@ export interface NetGameInfo {
     isCreator: boolean;
     settings: GameSettings;
     viewers: number[];
+    users: UserInfo[];
 }

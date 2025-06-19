@@ -5,11 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import classes from '../newgame.module.less';
 import Players from './players';
 import { PlayersInfo } from './types';
+import { UserInfo } from '/auth/redux/authSlice.types';
 import { sagaActions } from '/common/sagas';
 import { getGameSettings, getMapForecasts, setMapForecasts } from '/game/redux/gameSlice';
 import { GameSettingsFormData } from '/game/types/hubContracts';
 
 export interface GameSettingsFormProps {
+    id?: number;
+    viewers?: UserInfo[];
     isPublic?: boolean;
     isEditGroupsOnly?: boolean;
     gameSettingsData: GameSettingsFormData;
@@ -18,6 +21,8 @@ export interface GameSettingsFormProps {
 }
 
 const GameSettingsForm = ({
+    id,
+    viewers,
     isPublic,
     isEditGroupsOnly,
     gameSettingsData,
@@ -96,6 +101,27 @@ const GameSettingsForm = ({
 
     return (
         <Form className={classes.newgame} onSubmit={(event) => event.preventDefault()}>
+            {isPublic && (
+                <>
+                    <div className="mt-3">
+                        <Form.Label>
+                            № публичной игры: <span className="fw-bold">{id}</span>
+                        </Form.Label>
+                    </div>
+                    <div className="mt-3 mb-3">
+                        <Form.Label>
+                            Участники:{' '}
+                            {viewers &&
+                                viewers.map((it) => (
+                                    <div className="badge bg-primary me-1">
+                                        {it.login}
+                                        <div className="ms-1 badge bg-light text-dark">{it.id}</div>
+                                    </div>
+                                ))}
+                        </Form.Label>
+                    </div>
+                </>
+            )}
             <Players
                 players={gameSettingsData.players}
                 gamers={gameSettingsData.gamers}

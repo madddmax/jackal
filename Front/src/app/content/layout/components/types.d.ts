@@ -10,4 +10,5 @@ export interface PlayerInfo {
     id: number;
     type: string;
     userId: number;
+    userName?: string;
 }

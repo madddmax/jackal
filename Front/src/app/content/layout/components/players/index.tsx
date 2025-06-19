@@ -71,7 +71,7 @@ const Players = ({ players, gamers, setPlayers, mapInfo }: PlayersProps) => {
                             key={`player-pos-${index}`}
                             position={index}
                             type={gamer.type}
-                            userName={gamer.userId > 0 ? gamer.userId.toString() : undefined}
+                            userName={gamer.userId > 0 ? gamer.userName : undefined}
                             group={grps[index]}
                             posInfo={mapInfo && mapInfo[index]}
                             changePlayer={() => changeGamer(index)}
