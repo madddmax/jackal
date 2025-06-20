@@ -1,8 +1,8 @@
 import { Container, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 
+import { getNetGame } from '../../redux/lobbySlice';
 import NetGameForm from './netGameForm';
-import { getNetGame } from '/netgame/redux/lobbySlice';
 
 const NetGameCreate = () => {
     const netGame = useSelector(getNetGame);

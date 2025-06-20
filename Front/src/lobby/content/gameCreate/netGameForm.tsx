@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { getNetGames } from '../../redux/lobbySlice';
+import { NetGameInfo } from '../../redux/lobbySlice.types';
 import { Constants } from '/app/constants';
 import GameSettingsForm from '/app/content/layout/components/gameSettingsForm';
 import { PlayerInfo } from '/app/content/layout/components/types';
@@ -10,8 +12,6 @@ import { getAuth } from '/auth/redux/authSlice';
 import gameHub from '/game/hub/gameHub';
 import { getUserSettings, saveMySettings } from '/game/redux/gameSlice';
 import { GameSettingsFormData } from '/game/types/hubContracts';
-import { getNetGames } from '/netgame/redux/lobbySlice';
-import { NetGameInfo } from '/netgame/redux/lobbySlice.types';
 
 const isEqualsLists = (sList: string[], rList: string[]): boolean => {
     if (sList.length !== rList.length) return false;

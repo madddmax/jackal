@@ -1,8 +1,9 @@
 import { fork } from 'redux-saga/effects';
+
 import authSaga from '/auth/sagas/authSaga';
-import gameSaga from '/game/sagas/gameSaga';
 import gameFeaturesSaga from '/game/sagas/gameFeaturesSaga';
-import lobbySaga from '/netgame/sagas/lobbySaga';
+import gameSaga from '/game/sagas/gameSaga';
+import lobbySaga from '/lobby/sagas/lobbySaga';
 
 export default function* rootSaga() {
     yield fork(authSaga);

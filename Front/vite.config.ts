@@ -29,7 +29,7 @@ export default defineConfig(({ mode }) => {
                 '/auth': fileURLToPath(new URL('./src/auth', import.meta.url)),
                 '/common': fileURLToPath(new URL('./src/common', import.meta.url)),
                 '/game': fileURLToPath(new URL('./src/game', import.meta.url)),
-                '/netgame': fileURLToPath(new URL('./src/netgame', import.meta.url)),
+                '/lobby': fileURLToPath(new URL('./src/lobby', import.meta.url)),
             },
         },
     };
