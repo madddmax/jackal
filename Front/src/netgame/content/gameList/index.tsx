@@ -126,10 +126,10 @@ const GameList = () => {
                             <tr>
                                 <th>#</th>
                                 <th>Логин</th>
-                                <th>Победы</th>
-                                <th>Монеты</th>
-                                <th>Игры</th>
                                 <th>Рейтинг</th>
+                                <th>Победы</th>
+                                <th>Игры</th>
+                                <th>Монеты</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -138,10 +138,10 @@ const GameList = () => {
                                     <tr key={`leader_${ratingNumber}`}>
                                         <td>{ratingNumber++}</td>
                                         <td>{it.playerName}</td>
-                                        <td>{it.totalWin}</td>
-                                        <td>{it.totalCoins}</td>
-                                        <td>{it.gamesCount}</td>
                                         <td>{it.rating}</td>
+                                        <td>{it.totalWin}</td>
+                                        <td>{it.gamesCount}</td>
+                                        <td>{it.totalCoins}</td>
                                     </tr>
                                 ))}
                         </tbody>
