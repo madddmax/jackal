@@ -19,7 +19,6 @@ import { initMySettings } from '/game/redux/gameSlice';
 import { StorageState } from '/game/types';
 import NetGameCreate from '/lobby/content/gameCreate';
 import GameList from '/lobby/content/gameList';
-import LobbyCard from '/lobby/content/lobbyCard';
 
 const Layout = () => {
     const dispatch = useDispatch();
@@ -59,7 +58,6 @@ const Layout = () => {
                 <Route path="/newpublic" element={<NetGameCreate />}></Route>
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/netgame" element={<GameList />}></Route>
-                <Route path="/lobby/:id" element={<LobbyCard />}></Route>
                 <Route path="/" element={<Playground />}></Route>
             </Routes>
             {auth.isAuthorised === false && <Logon />}

@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { AuthInfo, AuthState } from './authSlice.types';
+import { AuthState } from '../types/auth';
+import { AuthInfo } from '../types/authSlice';
 import { axiosInstance } from '/common/sagas';
 
 export const authSlice = createSlice({

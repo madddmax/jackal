@@ -2,11 +2,11 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import { checkAuth, setAuth } from '../redux/authSlice';
-import { AuthResponse, CheckResponse } from '../redux/authSlice.types';
+import { AuthLoginRequest, AuthResponse, CheckResponse } from '../types/authSaga';
 import { history } from '/app/global';
 import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
 
-export function* authCheck(action: PayloadAction<unknown>) {
+export function* authCheck(action: PayloadAction<object>) {
     const result: { data: CheckResponse } = yield call(
         async () =>
             await axiosInstance({
@@ -23,7 +23,7 @@ export function* authCheck(action: PayloadAction<unknown>) {
     );
 }
 
-export function* authLogin(action: { payload: unknown }) {
+export function* authLogin(action: { payload: AuthLoginRequest }) {
     const result: { data: AuthResponse } = yield call(
         async () =>
             await axiosInstance({
@@ -42,7 +42,7 @@ export function* authLogin(action: { payload: unknown }) {
     );
 }
 
-export function* authLogout(action: { payload: unknown }) {
+export function* authLogout(action: { payload: object }) {
     yield call(
         async () =>
             await axiosInstance({
