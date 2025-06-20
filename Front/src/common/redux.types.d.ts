@@ -1,4 +1,4 @@
-import { AuthState } from '../auth/redux/authSlice.types';
+import { AuthState, UserInfo } from '../auth/redux/authSlice.types';
 import { GameSettings } from '../game/types/hubContracts';
 import { CommonState } from './redux/commonSlice.types';
 
@@ -17,6 +17,7 @@ export interface NetGameInfoResponse {
     creatorId: number;
     settings: GameSettings;
     viewers: number[];
+    users: UserInfo[];
 }
 
 export interface NetGameListResponse {

@@ -103,12 +103,12 @@ const GameSettingsForm = ({
         <Form className={classes.newgame} onSubmit={(event) => event.preventDefault()}>
             {isPublic && (
                 <>
-                    <div className="mt-3">
+                    <div>
                         <Form.Label>
                             № публичной игры: <span className="fw-bold">{id}</span>
                         </Form.Label>
                     </div>
-                    <div className="mt-3 mb-3">
+                    <div className="mb-4">
                         <Form.Label>
                             Участники:{' '}
                             {viewers &&

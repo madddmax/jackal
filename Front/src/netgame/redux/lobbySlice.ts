@@ -41,7 +41,6 @@ export const lobbySlice = createSlice({
             state.netGame = {
                 ...action.payload.gameInfo,
                 isCreator: action.payload.gameInfo.creatorId === action.payload.currentUserId,
-                users: []
             };
         },
     },

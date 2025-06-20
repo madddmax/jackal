@@ -26,11 +26,12 @@ const GameListItem = ({ key, id, isPublic, creatorName, timeStamp, children }: G
             }}
         >
             {id && <span>{id}</span>}
-            {isPublic ? (
-                <div className="badge rounded-pill bg-warning text-dark">П</div>
-            ) : (
-                <div className="badge rounded-pill bg-success">Ч</div>
-            )}
+            {isPublic !== undefined &&
+                (isPublic ? (
+                    <div className="badge rounded-pill bg-warning text-dark">П</div>
+                ) : (
+                    <div className="badge rounded-pill bg-success">Ч</div>
+                ))}
             <span>
                 <BsArrowCounterclockwise size={48} color={timeData.color} style={{ verticalAlign: 'middle' }} />
                 <span
