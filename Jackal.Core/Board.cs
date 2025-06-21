@@ -136,6 +136,7 @@ public class Board
             
             var usualMove = AvailableMoveFactory.UsualMove(task.Source, newPosition, source);
             var coinMove = AvailableMoveFactory.CoinMove(task.Source, newPosition, source);
+            var bigCoinMove = AvailableMoveFactory.BigCoinMove(task.Source, newPosition, source);
                 
             // проверяем, что на этой клетке
             var newPositionTile = Map[newPosition.Position];
@@ -160,6 +161,9 @@ public class Board
                         
                         if (Map[task.Source].Coins > 0)
                             goodTargets.Add(coinMove);
+                        
+                        if (Map[task.Source].BigCoins > 0)
+                            goodTargets.Add(bigCoinMove);
                     }
                     else if (sourceTile.Type == TileType.Water)
                     {
@@ -173,6 +177,9 @@ public class Board
 
                         if (Map[task.Source].Coins > 0)
                             goodTargets.Add(coinMove);
+                        
+                        if (Map[task.Source].BigCoins > 0)
+                            goodTargets.Add(bigCoinMove);
                     }
 
                     break;
@@ -212,6 +219,12 @@ public class Board
                         newPositionTileLevel.HasNoEnemy(ourTeam.EnemyTeamIds))
                     {
                         goodTargets.Add(coinMove);
+                    }
+                    
+                    if (Map[task.Source].BigCoins > 0 && 
+                        newPositionTileLevel.HasNoEnemy(ourTeam.EnemyTeamIds))
+                    {
+                        goodTargets.Add(bigCoinMove);
                     }
                     break;
             }
@@ -338,6 +351,7 @@ public class Board
             // перемещение клеток землетрясением
             rez = AllTiles(x =>
                     x.Coins == 0 &&
+                    x.BigCoins == 0 &&
                     x.Type != TileType.Water &&
                     !x.Levels.SelectMany(l => l.Pirates).Any() &&
                     (x.Position != prev.Position || subTurn.QuakePhase == 2)

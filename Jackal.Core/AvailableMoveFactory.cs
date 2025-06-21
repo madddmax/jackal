@@ -37,4 +37,13 @@ public static class AvailableMoveFactory
             MoveType = MoveType.WithCoin
         };
     }
+    
+    public static AvailableMove BigCoinMove(TilePosition from, TilePosition to, TilePosition prev)
+    {
+        var movingWithCoin = new MovingWithBigCoinAction(from, to, prev);
+        return new AvailableMove(from, to, movingWithCoin)
+        {
+            MoveType = MoveType.WithBigCoin
+        };
+    }
 }

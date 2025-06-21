@@ -52,6 +52,9 @@ public record Tile
         
 	[JsonIgnore]
 	public int Coins => Levels[0].Coins;
+	
+	[JsonIgnore]
+	public int BigCoins => Levels[0].BigCoins;
 
 	[JsonIgnore]
 	public int? OccupationTeamId => Levels[0].OccupationTeamId;

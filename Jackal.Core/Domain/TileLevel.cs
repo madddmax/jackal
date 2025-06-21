@@ -9,6 +9,9 @@ public record TileLevel(TilePosition Position)
 {
     [JsonProperty]
     public int Coins;
+    
+    [JsonProperty]
+    public int BigCoins;
 
     [JsonProperty]
     public readonly TilePosition Position = Position;
@@ -27,6 +30,7 @@ public record TileLevel(TilePosition Position)
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
         return Coins == other.Coins && 
+               BigCoins == other.BigCoins &&
                Position.Equals(other.Position) && 
                Pirates.SequenceEqual(other.Pirates);
     }

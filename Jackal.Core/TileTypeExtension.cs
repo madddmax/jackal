@@ -14,4 +14,11 @@ public static class TileTypeExtension
             TileType.Chest5 => 5,
             _ => 0
         };
+    
+    public static int BigCoinsCount(this TileType source) =>
+        source switch
+        {
+            TileType.BigCoin => 1,
+            _ => 0
+        };
 }

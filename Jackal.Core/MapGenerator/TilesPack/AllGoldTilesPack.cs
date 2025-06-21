@@ -17,7 +17,7 @@ public class AllGoldTilesPack : ITilesPack
         AllTiles = new TileParams[117];
         for (var index = 0; index < AllTiles.Length; index++)
         {
-            AllTiles[index] = new TileParams(TileType.Chest1);
+            AllTiles[index] = new TileParams(TileType.BigCoin);
         }
     }
 }

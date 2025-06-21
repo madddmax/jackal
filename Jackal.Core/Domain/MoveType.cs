@@ -28,5 +28,10 @@ public enum MoveType
     /// <summary>
     /// Выбор клетки для разлома
     /// </summary>
-    WithQuake = 4
+    WithQuake = 4,
+    
+    /// <summary>
+    /// Перенос большой монеты
+    /// </summary>
+    WithBigCoin = 5
 };

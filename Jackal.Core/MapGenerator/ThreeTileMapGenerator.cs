@@ -37,11 +37,9 @@ public class ThreeTileMapGenerator(
             tileParams.Position = position;
 
             var tile = new Tile(tileParams);
-            if (tile.Type.CoinsCount() > 0)
-            {
-                tile.Levels[0].Coins = tile.Type.CoinsCount();
-            }
-
+            tile.Levels[0].Coins = tile.Type.CoinsCount();
+            tile.Levels[0].BigCoins = tile.Type.BigCoinsCount();
+            
             _tiles[position] = tile;
         }
 
@@ -60,8 +58,10 @@ public class ThreeTileMapGenerator(
 
         _tiles[from] = new Tile(from, toTile);
         _tiles[from].Levels[0].Coins = toTile.Coins;
+        _tiles[from].Levels[0].BigCoins = toTile.BigCoins;
 
         _tiles[to] = new Tile(to, fromTile);
         _tiles[to].Levels[0].Coins = fromTile.Coins;
+        _tiles[to].Levels[0].BigCoins = fromTile.BigCoins;
     }
 }

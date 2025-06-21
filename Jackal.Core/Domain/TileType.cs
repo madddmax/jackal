@@ -28,5 +28,6 @@ public enum TileType
     Caramba,
     Jungle,
     Hole,
-    Quake
+    Quake,
+    BigCoin,
 }
