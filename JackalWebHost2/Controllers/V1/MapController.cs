@@ -22,13 +22,29 @@ public class MapController(IMapService mapService) : Controller
     }
     
     /// <summary>
+    /// Состав клеток игрового набора
+    /// </summary>
+    [HttpGet("tiles-types")]
+    public List<TilesTypeModel> GetTiles(string tilesPackName)
+    {
+        return TilesPackFactory.Create(tilesPackName).AllTiles
+            .GroupBy(p => p.Type)
+            .Select(g => new TilesTypeModel
+            {
+                Name = g.Key.ToString(),
+                Count = g.Count()
+            })
+            .OrderByDescending(g => g.Count)
+            .ToList();
+    }
+    
+    /// <summary>
     /// Проверить высадку
     /// </summary>
     [HttpGet("check-landing")]
     public List<CheckLandingResponse> CheckLanding([FromQuery] CheckLandingRequest request)
     {
         var landingResults = mapService.CheckLanding(request);
-
         return landingResults.Select(ToCheckLandingResponse).ToList();
     }
 
