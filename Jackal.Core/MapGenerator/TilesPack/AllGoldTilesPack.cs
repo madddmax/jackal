@@ -3,7 +3,7 @@ using Jackal.Core.Domain;
 namespace Jackal.Core.MapGenerator.TilesPack;
 
 /// <summary>
-/// Набор только из клеток с сундуком
+/// Набор только из клеток с монетами
 /// </summary>
 public class AllGoldTilesPack : ITilesPack
 {
@@ -17,7 +17,9 @@ public class AllGoldTilesPack : ITilesPack
         AllTiles = new TileParams[117];
         for (var index = 0; index < AllTiles.Length; index++)
         {
-            AllTiles[index] = new TileParams(TileType.BigCoin);
+            AllTiles[index] = index % 2 == 0 
+                ? new TileParams(TileType.BigCoin) 
+                : new TileParams(TileType.Chest1);
         }
     }
 }

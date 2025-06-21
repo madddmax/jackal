@@ -1,6 +1,8 @@
+using Jackal.Core.Players;
+
 namespace JackalWebHost2.Controllers.Models.Leaderboard;
 
 public class LeaderboardResponse
 {
-    public List<GamePlayerStatModel> Leaderboard { get; set; }
+    public List<GamePlayerStat> Leaderboard { get; set; }
 }

@@ -1,3 +1,4 @@
+using Jackal.Core.Players;
 using JackalWebHost2.Controllers.Models.Leaderboard;
 using JackalWebHost2.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ namespace JackalWebHost2.Data.Repositories;
 
 public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayerRepository
 {
-    public async Task<List<GamePlayerStatModel>> GetLeaderboard()
+    public async Task<List<GamePlayerStat>> GetLeaderboard()
     {
         var bestWinningPlayers = await jackalDbContext.GamePlayers
             .Where(p => p.UserId != null)
@@ -21,7 +22,7 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
             .Where(g => g.TotalWin > 0)
             .ToListAsync();
         
-        return bestWinningPlayers.Select(g => new GamePlayerStatModel
+        return bestWinningPlayers.Select(g => new GamePlayerStat
             {
                 PlayerName = g.PlayerName,
                 TotalWin = g.TotalWin,
