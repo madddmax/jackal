@@ -1,6 +1,11 @@
-namespace JackalWebHost2.Controllers.Models.Leaderboard;
+using System;
 
-public class GamePlayerStatModel
+namespace Jackal.Core.Players;
+
+/// <summary>
+/// Статистика игрока
+/// </summary>
+public class GamePlayerStat
 {
     /// <summary>
     /// Имя пользователя или бота

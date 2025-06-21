@@ -92,31 +92,29 @@ internal static class Program
         {
             if (!BotStat.TryGetValue(team.Name, out var stat))
             {
-                stat = new GamePlayerStat();
+                stat = new GamePlayerStat { PlayerName = team.Name };
                 BotStat.Add(team.Name, stat);
             }
             stat.TotalWin += team.Coins == maxCoins ? 1 : 0;
             stat.TotalCoins += team.Coins;
             stat.GamesCount += 1;
-            stat.TotalTurns += game.TurnNumber / game.Board.Teams.Length;
         }
     }
 
     private static void ShowStat(int gamesCount, TimeSpan timeElapsed)
     {
         Console.WriteLine($"Arena games count = {gamesCount} | Time elapsed {timeElapsed}");
-        var orderedBotStat = BotStat.OrderByDescending(p => p.Value.AverageWin);
-        foreach (var (botName, gamePlayerStat) in orderedBotStat)
+        var orderedBotStat = BotStat.OrderByDescending(p => p.Value.Rating);
+        foreach (var (_, gamePlayerStat) in orderedBotStat)
         {
             Console.WriteLine(
-                $"Bot name = {botName} | " +
-                $"Games count = {gamePlayerStat.GamesCount} | " +
+                $"Player name = {gamePlayerStat.PlayerName} | " +
+                $"Rating = {gamePlayerStat.Rating} | " +
                 $"Average win = {gamePlayerStat.AverageWin:P} | " +
-                $"Average coins = {gamePlayerStat.AverageCoins:F} | " +
-                $"Average turns = {gamePlayerStat.AverageTurns} | " +
                 $"Total win = {gamePlayerStat.TotalWin} | " +
-                $"Total coins = {gamePlayerStat.TotalCoins} | " +
-                $"Total turns = {gamePlayerStat.TotalTurns}"
+                $"Games count = {gamePlayerStat.GamesCount} | " +
+                $"Average coins = {gamePlayerStat.AverageCoins:F} | " +
+                $"Total coins = {gamePlayerStat.TotalCoins}"
             );
         }
     }
