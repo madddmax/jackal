@@ -72,6 +72,7 @@ public class RandomMapGenerator : IMapGenerator
             }
 
             TotalCoins += pack.AllTiles[index].Type.CoinsCount();
+            TotalCoins += pack.AllTiles[index].Type.BigCoinsCount() * Constants.BigCoinValue;
 
             // сдвигаем оставшиеся клетки в наборе, последнюю ставим на место выбранной
             pack.AllTiles[index] = pack.AllTiles[pack.AllTiles.Length - 1 - i];
@@ -144,6 +145,7 @@ public class RandomMapGenerator : IMapGenerator
                 
             var tile = new Tile(tempDef);
             tile.Levels[0].Coins = tile.Type.CoinsCount();
+            tile.Levels[0].BigCoins = tile.Type.BigCoinsCount();
                 
             tiles.Add(info.Position, tile);
         }
@@ -161,8 +163,10 @@ public class RandomMapGenerator : IMapGenerator
         
         _tiles[from] = new Tile(from, toTile);
         _tiles[from].Levels[0].Coins = toTile.Coins;
+        _tiles[from].Levels[0].BigCoins = toTile.BigCoins;
         
         _tiles[to] = new Tile(to, fromTile);
         _tiles[to].Levels[0].Coins = fromTile.Coins;
+        _tiles[to].Levels[0].BigCoins = fromTile.BigCoins;
     }
 }

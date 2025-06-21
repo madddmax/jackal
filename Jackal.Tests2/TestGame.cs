@@ -139,11 +139,14 @@ public class TestGame
     /// <param name="x">X координата куда делаем ход</param>
     /// <param name="y">Y координата куда делаем ход</param>
     /// <param name="withCoin">С монетой</param>
-    public void SetMoveAndTurn(int x, int y, bool withCoin = false)
+    /// <param name="withBigCoin">С большой монетой</param>
+    public void SetMoveAndTurn(int x, int y, bool withCoin = false, bool withBigCoin = false)
     {
         var position = new TilePosition(x, y);
         var moves = _testGame.GetAvailableMoves();
-        var moveNum = moves.FindIndex(a => a.To == position && a.WithCoin == withCoin);
+        var moveNum = moves.FindIndex(a =>
+            a.To == position && a.WithCoin == withCoin && a.WithBigCoin == withBigCoin
+        );
         Turn(moveNum);
     }
     

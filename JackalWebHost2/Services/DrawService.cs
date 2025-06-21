@@ -113,6 +113,7 @@ public class DrawService : IDrawService
             {
                 MoveNum = index++,
                 WithCoin = move.WithCoin,
+                WithBigCoin = move.WithBigCoin,
                 WithRespawn = move.WithRespawn,
                 WithLighthouse = move.WithLighthouse,
                 WithQuake = move.WithQuake,
@@ -174,7 +175,8 @@ public class DrawService : IDrawService
         new()
         {
             Level = levelIndex,
-            Coins = teamShip?.Coins ?? level.Coins
+            Coins = teamShip?.Coins ?? level.Coins,
+            BigCoins = level.BigCoins
         };
 
     private static void DrawTileBackground(Tile tile, Team? teamShip, ref TileChange tileChange)
@@ -197,6 +199,7 @@ public class DrawService : IDrawService
             case TileType.Chest3:
             case TileType.Chest4:
             case TileType.Chest5:
+            case TileType.BigCoin:
                 filename = "chest";
                 break;
             case TileType.Fort:

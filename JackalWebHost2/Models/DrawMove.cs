@@ -7,6 +7,7 @@ public class DrawMove
     public PiratePosition To;
     public DrawPosition? Prev;
     public bool WithCoin;
+    public bool WithBigCoin;
     public bool WithRespawn;
     public bool WithLighthouse;
     public bool WithQuake;

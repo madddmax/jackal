@@ -39,6 +39,11 @@ public record Move(TilePosition From, TilePosition To, Position? Prev, MoveType 
     public bool WithCoin => Type == MoveType.WithCoin;
 
     /// <summary>
+    /// Перенос большой монеты
+    /// </summary>
+    public bool WithBigCoin => Type == MoveType.WithBigCoin;
+    
+    /// <summary>
     /// Воскрешение пирата на бабе
     /// </summary>
     public bool WithRespawn => Type == MoveType.WithRespawn;
