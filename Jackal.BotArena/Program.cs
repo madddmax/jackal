@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Jackal.Core;
 using Jackal.Core.MapGenerator;
+using Jackal.Core.MapGenerator.TilesPack;
 using Jackal.Core.Players;
 
 namespace Jackal.BotArena;
@@ -15,7 +16,7 @@ internal static class Program
     /// <summary>
     /// Количество запускаемых игр
     /// </summary>
-    private const int ArenaGamesCount = 100;
+    private const int ArenaGamesCount = 120;
 
     /// <summary>
     /// Размер карты
@@ -32,16 +33,12 @@ internal static class Program
             new RandomPlayer()
         ],
         [
-            new RandomPlayer(),
-            new EasyPlayer(),
-        ],
-        [
             new EasyPlayer(),
             new OakioPlayer(),
         ],
         [
             new OakioPlayer(),
-            new EasyPlayer()
+            new RandomPlayer()
         ]
     ];
     
@@ -59,7 +56,7 @@ internal static class Program
             while (gameNumber < ArenaGamesCount)
             {
                 var mapId = new Random().Next();
-                var randomMap = new RandomMapGenerator(mapId, MapSize);
+                var randomMap = new RandomMapGenerator(mapId, MapSize, TilesPackFactory.Extended);
 
                 foreach (var players in CombinationOfPlayers)
                 {

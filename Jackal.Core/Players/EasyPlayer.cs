@@ -41,7 +41,7 @@ public class EasyPlayer : IPlayer
             .ToList();
             
         var goldPositions = board
-            .AllTiles(x => x.Type != TileType.Water && x.Coins > 0)
+            .AllTiles(x => x.Type != TileType.Water && (x.Coins > 0 || x.BigCoins > 0))
             .Select(x => x.Position)
             .ToList();
             
@@ -95,7 +95,7 @@ public class EasyPlayer : IPlayer
             .Where(x => !respawnPositions.Contains(x.From.Position))
             .ToArray();
             
-        bool hasMoveWithCoins = safeAvailableMoves.Any(m => m.WithCoin);
+        bool hasMoveWithCoins = safeAvailableMoves.Any(m => m.WithCoin || m.WithBigCoin);
         if (hasMoveWithCoins)
         {
             // перемещаем золото ближе к кораблю
@@ -107,7 +107,7 @@ public class EasyPlayer : IPlayer
                 
             List<Tuple<int, Move>> list = [];
             foreach (Move move in safeAvailableMoves
-                         .Where(x => x.WithCoin)
+                         .Where(x => x.WithCoin || x.WithBigCoin)
                          .Where(x => !waterPositions.Contains(x.To.Position))
                          .Where(x => IsEnemyNear(x.To.Position, board, teamId) == false))
             {
@@ -149,7 +149,7 @@ public class EasyPlayer : IPlayer
         {
             // идем к самому ближнему золоту
             goodMoves = safeAvailableMoves
-                .Where(x => x.WithCoin == false)
+                .Where(x => x is { WithCoin: false, WithBigCoin: false })
                 .Where(m => goldPositions.Contains(m.To.Position))
                 .ToList();
                 

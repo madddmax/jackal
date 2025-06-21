@@ -4,10 +4,10 @@ namespace Jackal.Core.MapGenerator.TilesPack;
 
 public static class TilesPackFactory
 {
-    private const string Extended = "extended";
-    private const string Classic = "classic";
-    private const string Difficult = "difficult";
-    private const string AllGold = "all-gold";
+    public const string Extended = "extended";
+    public const string Classic = "classic";
+    public const string Difficult = "difficult";
+    public const string AllGold = "all-gold";
     
     public static string CheckName(string? name) =>
         name switch
