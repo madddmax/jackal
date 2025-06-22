@@ -137,7 +137,7 @@ public class Board
             var usualMove = AvailableMoveFactory.UsualMove(task.Source, newPosition, source);
             var coinMove = AvailableMoveFactory.CoinMove(task.Source, newPosition, source);
             var bigCoinMove = AvailableMoveFactory.BigCoinMove(task.Source, newPosition, source);
-                
+            
             // проверяем, что на этой клетке
             var newPositionTile = Map[newPosition.Position];
                 

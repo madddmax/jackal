@@ -169,14 +169,42 @@ public class Game : ICompletable
     {
         _availableMoves.Clear();
         _actions.Clear();
+        var targets = new List<AvailableMove>();
             
         Team team = Board.Teams[teamId];
-
+        if (team.RumBottles > 0 && NeedSubTurnPirate == null)
+        {
+            // todo добавить пиратов, которые находятся в клетках вертушках
+            IEnumerable<Pirate> trappedPirates = team.Pirates.Where(x => x.IsInTrap);
+            foreach (var pirate in trappedPirates)
+            {
+                AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, pirate.Position);
+                List<AvailableMove> moves = Board.GetAllAvailableMoves(
+                    task,
+                    task.Source,
+                    task.Prev,
+                    SubTurn
+                );
+                foreach (var move in moves)
+                {
+                    var drinkRumBottleAction = new DrinkRumBottleAction();
+                    move.ActionList.AddAction(drinkRumBottleAction);
+                    move.MoveType = move.MoveType switch
+                    {
+                        MoveType.WithRumBottleAndCoin => MoveType.WithRumBottleAndCoin,
+                        MoveType.WithRumBottleAndBigCoin => MoveType.WithRumBottleAndBigCoin,
+                        _ => MoveType.WithRumBottle
+                    };
+                }
+                
+                targets.AddRange(moves);
+            }
+        }
+        
         IEnumerable<Pirate> activePirates = NeedSubTurnPirate != null
             ? new[] { NeedSubTurnPirate }
             : team.Pirates.Where(x => x.IsActive);
-
-        var targets = new List<AvailableMove>();
+        
         foreach (var pirate in activePirates)
         {
             TilePosition prev = PrevSubTurnPosition ?? pirate.Position;

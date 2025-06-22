@@ -7,6 +7,11 @@ public class GameActionList(params IGameAction[] actions) : IGameAction
 {
     private readonly List<IGameAction> _actions = [..actions];
 
+    public void AddAction(IGameAction action)
+    {
+        _actions.Add(action);
+    }
+    
     public GameActionResult Act(Game game,Pirate pirate)
     {
         foreach (var action in _actions)
