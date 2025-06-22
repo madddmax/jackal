@@ -1,7 +1,8 @@
+import { PayloadAction } from '@reduxjs/toolkit';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
-import { CheckMapInfo } from '../../common/redux.types';
 import { setMapForecasts, setTilesPackNames } from '../redux/gameSlice';
+import { CheckMapRequest, CheckMapResponse } from '../types/gameFeaturesSaga';
 import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
 
 export function* getTilesPackNames() {
@@ -15,8 +16,8 @@ export function* getTilesPackNames() {
     yield put(setTilesPackNames(result.data));
 }
 
-export function* checkMap(action: { payload: unknown }) {
-    const result: { data: CheckMapInfo[] } = yield call(
+export function* checkMap(action: PayloadAction<CheckMapRequest>) {
+    const result: { data: CheckMapResponse[] } = yield call(
         async () =>
             await axiosInstance({
                 url: 'v1/map/check-landing',

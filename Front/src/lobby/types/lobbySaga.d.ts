@@ -1,13 +1,9 @@
-import { GameSettings } from '../game/types/hubContracts';
-import { CommonState } from './redux/commonSlice.types';
-
-export interface GameInfo {
-    id: number;
-    creatorName: string;
-    isCreator: boolean;
-    isPlayer: boolean;
-    isPublic: boolean;
-    timeStamp: number;
+export interface LeaderBoardItemResponse {
+    playerName: string;
+    totalWin: number;
+    totalCoins: number;
+    gamesCount: number;
+    rating: number;
 }
 
 export interface NetGameInfoResponse {
@@ -35,15 +31,4 @@ export interface NetGameEntryResponse {
         },
     ];
     timeStamp: number;
-}
-
-export interface CheckMapRequest {
-    mapId?: number;
-    mapSize: number;
-    tilesPackName?: string;
-}
-
-export interface CheckMapInfo {
-    direction: string;
-    difficulty: string;
 }

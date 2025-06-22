@@ -1,8 +1,8 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { GameInfo } from '../../common/redux.types';
-import { LeaderBoardItemResponse } from '../types/sagaContracts';
-import { LobbyGameInfo, LobbyGamesEntriesList, LobbyState, NetGameInfo } from './lobbySlice.types';
+import { LobbyState } from '../types/lobby';
+import { LeaderBoardItemResponse } from '../types/lobbySaga';
+import { GameInfo, LobbyGameInfo, LobbyGamesEntriesList, NetGameInfo } from '../types/lobbySlice';
 
 export const lobbySlice = createSlice({
     name: 'lobby',

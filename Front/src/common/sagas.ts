@@ -2,11 +2,11 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { call, put } from 'redux-saga/effects';
 
-import { setAuth } from '../auth/redux/authSlice';
 import { showMessage } from './redux/commonSlice';
-import { ErrorInfo } from './redux/commonSlice.types';
+import { ErrorInfo } from './types/common';
 import config from '/app/config';
 import { debugLog } from '/app/global';
+import { setAuth } from '/auth/redux/authSlice';
 
 export const sagaActions = {
     GAME_START_APPLY_DATA: 'GAME_START_APPLY_DATA',
