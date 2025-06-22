@@ -87,6 +87,14 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             game.AddPirate(pirate.TeamId, To, PirateType.BenGunn);
             targetTile.Used = true;
         }
+        
+        // нашли бутылки с ромом не маяком
+        if (targetTile is { Type: TileType.RumBottles, Used: false } && 
+            game.SubTurn.LighthouseViewCount == 0)
+        {
+            board.Teams[pirate.TeamId].RumBottles += targetTile.ArrowsCode;
+            targetTile.Used = true;
+        }
             
         // просматриваем карту с маяка,
         // перезатираем просматриваемую клетку текущей позицией пирата,

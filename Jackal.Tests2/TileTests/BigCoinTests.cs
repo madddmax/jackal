@@ -25,7 +25,6 @@ public class BigCoinTests
         // + 2 на свой корабль с большой монетой и без неё
         Assert.Equal(5, moves.Count);
         Assert.Equal(new TilePosition(2, 1), moves.First().From);
-        
         Assert.Equivalent(new List<MoveType>
             {
                 MoveType.Usual,
@@ -33,7 +32,6 @@ public class BigCoinTests
             },
             moves.Where(m => m.To == new TilePosition(2, 0)).Select(m => m.Type)
         );
-        
         Assert.Equal(1, game.TurnNumber);
     }
     
@@ -56,7 +54,6 @@ public class BigCoinTests
         // Assert - доступен один ход - высадка с корабля
         Assert.Single(moves);
         Assert.Equal(new TilePosition(2, 0), moves.Single().From);
-        
         Assert.Equal(3, game.Board.Teams.Single().Coins);
         Assert.Equal(2, game.TurnNumber);
     }
@@ -83,14 +80,7 @@ public class BigCoinTests
         // Assert - доступно 4 хода на соседние клетки в месте высадки
         Assert.Equal(4, moves.Count);
         Assert.Equal(new TilePosition(2, 1), moves.First().From);
-
-        Assert.Equivalent(new List<MoveType>
-            {
-                MoveType.Usual,
-            },
-            moves.Select(m => m.Type)
-        );
-        
+        Assert.Equivalent(new List<MoveType> { MoveType.Usual }, moves.Select(m => m.Type));
         Assert.Equal(3, game.TurnNumber);
     }
 }
