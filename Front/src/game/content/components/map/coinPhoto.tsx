@@ -7,14 +7,15 @@ interface CoinPhotoProps {
     freeCoinGirlId: string | undefined;
     pirateSize: number;
     coinCount: number;
+    bigCoinCount: number;
 }
 
-const CoinPhoto = ({ coinCount, piratesWithCoins, freeCoinGirlId, pirateSize }: CoinPhotoProps) => {
+const CoinPhoto = ({ coinCount, bigCoinCount, piratesWithCoins, freeCoinGirlId, pirateSize }: CoinPhotoProps) => {
     const dispatch = useDispatch();
 
-    if (piratesWithCoins === coinCount) return <div />;
+    if (piratesWithCoins === coinCount && bigCoinCount === 0) return <div />;
 
-    const text = coinCount - (piratesWithCoins || 0);
+    const text = bigCoinCount > 0 ? bigCoinCount : coinCount - (piratesWithCoins || 0);
     const coinSize = pirateSize * 0.6;
 
     const onClick = (girlId: string) => {
@@ -23,7 +24,7 @@ const CoinPhoto = ({ coinCount, piratesWithCoins, freeCoinGirlId, pirateSize }: 
 
     return freeCoinGirlId ? (
         <div
-            className="coins"
+            className={bigCoinCount > 0 ? 'bigCoins' : 'coins'}
             style={{
                 width: coinSize,
                 height: coinSize,
@@ -36,7 +37,7 @@ const CoinPhoto = ({ coinCount, piratesWithCoins, freeCoinGirlId, pirateSize }: 
         </div>
     ) : (
         <div
-            className="coins"
+            className={bigCoinCount > 0 ? 'bigCoins' : 'coins'}
             style={{
                 width: coinSize,
                 height: coinSize,

@@ -525,9 +525,9 @@ describe('redux logic tests', () => {
                         backgroundImageSrc: '/fields/forest.png',
                         rotate: 2,
                         levels: [
-                            { level: 0, coins: 0 },
-                            { level: 1, coins: 0 },
-                            { level: 2, coins: 0 },
+                            { level: 0, coins: 0, bigCoins: 0 },
+                            { level: 1, coins: 0, bigCoins: 0 },
+                            { level: 2, coins: 0, bigCoins: 0 },
                         ],
                         x: 2,
                         y: 4,
