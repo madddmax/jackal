@@ -48,6 +48,11 @@ public record Team
     /// </summary>
     public int Coins;
 
+    /// <summary>
+    /// Бутылки с ромом
+    /// </summary>
+    public int RumBottles;
+
     [JsonConstructor]
     public Team(int id, string name, long userId, Position shipPosition, Pirate[] pirates)
     {
