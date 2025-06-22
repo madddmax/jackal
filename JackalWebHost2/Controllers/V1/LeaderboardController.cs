@@ -13,11 +13,14 @@ public class LeaderboardController(IGamePlayerRepository gamePlayerRepository) :
     /// Таблица лидеров
     /// </summary>
     [HttpGet]
-    public async Task<LeaderboardResponse> GetLeaderboard()
+    public async Task<LeaderboardResponse> GetLeaderboard(LeaderboardOrderByType? orderBy)
     {
+        var rand = new Random();
+        var orderByParam = orderBy ?? (LeaderboardOrderByType)rand.Next(0, 3);
+        
         return new LeaderboardResponse
         {
-            Leaderboard = await gamePlayerRepository.GetLeaderboard()
+            Leaderboard = await gamePlayerRepository.GetLeaderboard(orderByParam)
         };
     }
 }

@@ -6,7 +6,7 @@ namespace JackalWebHost2.Data.Repositories;
 
 public class GamePlayerRepositoryStub : IGamePlayerRepository
 {
-    public Task<List<GamePlayerStat>> GetLeaderboard()
+    public Task<List<GamePlayerStat>> GetLeaderboard(LeaderboardOrderByType orderBy)
     {
         return Task.FromResult(new List<GamePlayerStat>());
     }
