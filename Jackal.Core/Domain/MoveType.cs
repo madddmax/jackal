@@ -33,5 +33,20 @@ public enum MoveType
     /// <summary>
     /// Перенос большой монеты
     /// </summary>
-    WithBigCoin = 5
+    WithBigCoin = 5,
+    
+    /// <summary>
+    /// Выход за бутылку с ромом
+    /// </summary>
+    WithRumBottle = 6,
+    
+    /// <summary>
+    /// Выход за бутылку с ромом с монетой
+    /// </summary>
+    WithRumBottleAndCoin = 7,
+    
+    /// <summary>
+    /// Выход за бутылку с ромом с большой монетой
+    /// </summary>
+    WithRumBottleAndBigCoin = 8,
 };
