@@ -15,7 +15,7 @@ import { StorageState } from '../types';
 import { GameStartResponse, GameTurnResponse } from '../types/sagaContracts';
 import { history } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
-import { AuthState } from '/auth/redux/authSlice.types';
+import { AuthState } from '/auth/types/auth';
 import { errorsWrapper, sagaActions } from '/common/sagas';
 
 const animateQueue: GameTurnResponse[] = [];

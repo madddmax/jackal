@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import classes from '../newgame.module.less';
 import Players from './players';
 import { PlayersInfo } from './types';
-import { UserInfo } from '/auth/redux/authSlice.types';
 import { sagaActions } from '/common/sagas';
 import { getGameSettings, getMapForecasts, setMapForecasts } from '/game/redux/gameSlice';
 import { GameSettingsFormData } from '/game/types/hubContracts';
@@ -113,9 +112,9 @@ const GameSettingsForm = ({
                             Участники:{' '}
                             {viewers &&
                                 viewers.map((it) => (
-                                    <div className="badge bg-primary me-1">
+                                    <div className="badge border border-primary text-primary me-1">
                                         {it.login}
-                                        <div className="ms-1 badge bg-light text-dark">{it.id}</div>
+                                        <div className="ms-1 badge bg-primary">{it.id}</div>
                                     </div>
                                 ))}
                         </Form.Label>

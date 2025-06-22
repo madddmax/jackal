@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import classes from './login.module.less';
 import { useDispatch } from 'react-redux';
+
+import classes from './login.module.less';
+import { AuthLoginRequest } from '/auth/types/authSaga';
 import { sagaActions } from '/common/sagas';
 
 function Login() {
@@ -16,7 +18,7 @@ function Login() {
             type: sagaActions.AUTH_LOGIN,
             payload: {
                 login: login,
-            },
+            } as AuthLoginRequest,
         });
     };
 

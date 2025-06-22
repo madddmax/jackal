@@ -5,10 +5,10 @@ import { VscDebugContinueSmall } from 'react-icons/vsc';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { getGames, getLeaderBoard, getNetGames } from '../../redux/lobbySlice';
 import GameListItem from './components/gameListItem';
 import classes from './gamelist.module.less';
 import gameHub from '/game/hub/gameHub';
-import { getGames, getLeaderBoard, getNetGames } from '/netgame/redux/lobbySlice';
 
 const GameList = () => {
     const navigate = useNavigate();
