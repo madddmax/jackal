@@ -202,6 +202,11 @@ public class DrawService : IDrawService
             case TileType.BigCoin:
                 filename = "chest";
                 break;
+            case TileType.Rum1:
+            case TileType.Rum2:
+            case TileType.Rum3:
+                filename = $"rum{tile.ArrowsCode}";
+                break;
             case TileType.Fort:
                 filename = "fort";
                 break;

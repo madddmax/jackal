@@ -12,7 +12,7 @@ public class ExtendedTilesPack : ITilesPack
     /// </summary>
     public TileParams[] AllTiles { get; } =
     [
-        // 96 значимых клеток
+        // 102 значимых клеток
         new TileParams(TileType.Chest1), // 1 монета - первый сундук берем всегда
         new TileParams(TileType.Chest1), // 2
         new TileParams(TileType.Chest1), // 3
@@ -38,6 +38,12 @@ public class ExtendedTilesPack : ITilesPack
         new TileParams(TileType.RumBarrel),
         new TileParams(TileType.RumBarrel),
         new TileParams(TileType.RumBarrel),
+        new TileParams(TileType.Rum1, 1),
+        new TileParams(TileType.Rum1, 1),
+        new TileParams(TileType.Rum1, 1),
+        new TileParams(TileType.Rum2, 2),
+        new TileParams(TileType.Rum2, 2),
+        new TileParams(TileType.Rum3, 3),
         new TileParams(TileType.Horse),
         new TileParams(TileType.Horse),
         new TileParams(TileType.Horse),
@@ -109,8 +115,7 @@ public class ExtendedTilesPack : ITilesPack
         new TileParams(TileType.Hole) { Direction = DirectionType.Left },
         new TileParams(TileType.Quake),
         new TileParams(TileType.Quake),
-        // 24 пустых клеток
-        new TileParams(TileType.Grass, 0),
+        // 18 пустых клеток
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
@@ -121,15 +126,10 @@ public class ExtendedTilesPack : ITilesPack
         new TileParams(TileType.Grass, 1),
         new TileParams(TileType.Grass, 1),
         new TileParams(TileType.Grass, 1),
-        new TileParams(TileType.Grass, 1),
         new TileParams(TileType.Grass, 2),
         new TileParams(TileType.Grass, 2),
         new TileParams(TileType.Grass, 2),
         new TileParams(TileType.Grass, 2),
-        new TileParams(TileType.Grass, 2),
-        new TileParams(TileType.Grass, 2),
-        new TileParams(TileType.Grass, 3),
-        new TileParams(TileType.Grass, 3),
         new TileParams(TileType.Grass, 3),
         new TileParams(TileType.Grass, 3),
         new TileParams(TileType.Grass, 3),
