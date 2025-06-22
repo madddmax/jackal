@@ -10,6 +10,10 @@ public enum TileType
     Chest3,
     Chest4,
     Chest5,
+    BigCoin,
+    Rum1,
+    Rum2,
+    Rum3,
     Fort,
     RespawnFort,
     RumBarrel,
@@ -29,5 +33,4 @@ public enum TileType
     Jungle,
     Hole,
     Quake,
-    BigCoin,
 }
