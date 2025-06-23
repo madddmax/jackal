@@ -9,7 +9,7 @@ import reducer, {
     setCurrentHumanTeam,
 } from '/game/redux/gameSlice';
 import { GameState } from '/game/types';
-import { GameTeamResponse } from '/game/types/sagaContracts';
+import { GameTeamResponse } from '/game/types/gameSaga';
 
 const testTeamId = 12;
 

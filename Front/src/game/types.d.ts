@@ -1,3 +1,5 @@
+import { GameLevel } from '/game/types/gameContent';
+
 export interface GameState {
     stat?: GameStat;
     teamScores?: GameScore[];

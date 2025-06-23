@@ -1,5 +1,5 @@
 import { GameState } from '../types';
-import { GameTeamResponse } from '../types/sagaContracts';
+import { GameTeamResponse } from '../types/gameSaga';
 import reducer, {
     applyChanges,
     applyPirateChanges,
@@ -459,8 +459,12 @@ describe('redux money actions tests', () => {
         expect(previousState.pirates?.find((it) => it.id == '200')?.withCoin).toBeTruthy();
         const level = previousState.fields[4][2].levels[0];
         expect(level).toEqual({
-            level: 0,
-            coins: 2,
+            info: {
+                level: 0,
+                coins: 2,
+                bigCoins: 0,
+            },
+            hasFreeMoney: true,
             piratesWithCoinsCount: 1,
             freeCoinGirlId: '300',
         });
@@ -472,8 +476,12 @@ describe('redux money actions tests', () => {
         expect(currentState.highlight_x).toEqual(2);
         expect(currentState.highlight_y).toEqual(4);
         expect(currentState.fields[4][2].levels[0]).toEqual({
-            level: 0,
-            coins: 2,
+            info: {
+                level: 0,
+                coins: 2,
+                bigCoins: 0,
+            },
+            hasFreeMoney: true,
             piratesWithCoinsCount: 1,
             freeCoinGirlId: '300',
         });
@@ -484,8 +492,12 @@ describe('redux money actions tests', () => {
         expect(boy?.withCoin).toBeFalsy();
         expect(boy?.isActive).toBeTruthy();
         expect(result.fields[4][2].levels[0]).toEqual({
-            level: 0,
-            coins: 2,
+            info: {
+                level: 0,
+                coins: 2,
+                bigCoins: 0,
+            },
+            hasFreeMoney: true,
             piratesWithCoinsCount: 0,
             freeCoinGirlId: '200',
         });
@@ -519,27 +531,29 @@ describe('redux logic tests', () => {
     test('Производим изменения на карте', () => {
         const result = reducer(
             previousState,
-            applyChanges({
-                changes: [
-                    {
-                        backgroundImageSrc: '/fields/forest.png',
-                        rotate: 2,
-                        levels: [
-                            { level: 0, coins: 0, bigCoins: 0 },
-                            { level: 1, coins: 0, bigCoins: 0 },
-                            { level: 2, coins: 0, bigCoins: 0 },
-                        ],
-                        x: 2,
-                        y: 4,
-                    },
-                ],
-            }),
+            applyChanges([
+                {
+                    backgroundImageSrc: '/fields/forest.png',
+                    rotate: 2,
+                    levels: [
+                        { level: 0, coins: 0, bigCoins: 0 },
+                        { level: 1, coins: 0, bigCoins: 0 },
+                        { level: 2, coins: 0, bigCoins: 0 },
+                    ],
+                    x: 2,
+                    y: 4,
+                },
+            ]),
         );
 
         expect(result.fields[4][2].levels[0]).toEqual({
-            level: 0,
-            coins: 0,
-            pirate: undefined,
+            info: {
+                level: 0,
+                coins: 0,
+                bigCoins: 0,
+            },
+            hasFreeMoney: false,
+            piratesWithCoinsCount: 0,
             features: undefined,
         });
     });
@@ -590,11 +604,15 @@ describe('redux logic tests', () => {
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(3);
         expect(result.fields[3][2].levels[0]).toEqual({
-            level: 0,
-            coins: 0,
-            features: undefined,
+            info: {
+                level: 0,
+                coins: 0,
+                bigCoins: 0,
+            },
+            hasFreeMoney: false,
             piratesWithCoinsCount: 0,
             freeCoinGirlId: '200',
+            features: undefined,
         });
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
@@ -630,16 +648,20 @@ describe('redux logic tests', () => {
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);
         expect(result.fields[4][2].levels[0]).toEqual({
-            level: 0,
-            coins: 2,
+            info: {
+                level: 0,
+                coins: 2,
+                bigCoins: 0,
+            },
+            hasFreeMoney: true,
+            piratesWithCoinsCount: 0,
+            freeCoinGirlId: '300',
             features: [
                 {
                     photo: 'skull_light.png',
                     backgroundColor: 'transparent',
                 },
             ],
-            piratesWithCoinsCount: 0,
-            freeCoinGirlId: '300',
         });
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({

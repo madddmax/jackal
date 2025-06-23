@@ -1,4 +1,4 @@
-import { GameMapResponse } from '../types/sagaContracts';
+import { GameMapResponse } from '../types/gameSaga';
 
 export const getMapData: GameMapResponse = {
     height: 5,
@@ -11,6 +11,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 0,
@@ -23,6 +24,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 1,
@@ -35,6 +37,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 2,
@@ -47,6 +50,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 3,
@@ -59,6 +63,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 4,
@@ -71,6 +76,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 0,
@@ -83,6 +89,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 1,
@@ -95,6 +102,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 2,
@@ -107,6 +115,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 3,
@@ -119,6 +128,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 4,
@@ -131,6 +141,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 0,
@@ -143,6 +154,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 1,
@@ -155,6 +167,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 2,
@@ -167,6 +180,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 3,
@@ -179,6 +193,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 4,
@@ -191,6 +206,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 0,
@@ -203,6 +219,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 1,
@@ -215,6 +232,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 2,
@@ -227,6 +245,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 3,
@@ -239,6 +258,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 4,
@@ -251,6 +271,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 0,
@@ -263,6 +284,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 1,
@@ -275,6 +297,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 2,
+                    bigCoins: 0,
                 },
             ],
             x: 2,
@@ -287,6 +310,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 3,
@@ -299,6 +323,7 @@ export const getMapData: GameMapResponse = {
                 {
                     level: 0,
                     coins: 0,
+                    bigCoins: 0,
                 },
             ],
             x: 4,

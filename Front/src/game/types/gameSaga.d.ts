@@ -26,16 +26,18 @@ export interface GameMapResponse {
     width: number;
 }
 
-export interface GameMapChangesResponse {
-    changes: CellDiffResponse[];
-}
-
 interface CellDiffResponse {
     backgroundImageSrc: string;
     rotate: number;
-    levels: GameLevel[];
+    levels: LevelInfoResponse[];
     x: number;
     y: number;
+}
+
+export interface LevelInfoResponse {
+    level: number;
+    coins: number;
+    bigCoins: number;
 }
 
 export interface GameTeamResponse {

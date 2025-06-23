@@ -1,7 +1,7 @@
 import { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
 import { GameState } from '../types';
-import { GameStartResponse, GameTurnResponse } from '../types/sagaContracts';
+import { GameStartResponse, GameTurnResponse } from '../types/gameSaga';
 import { applyChanges, applyPirateChanges, applyStat, highlightHumanMoves, initGame, initMap } from './gameSlice';
 import { girlsMap } from '/app/global';
 
@@ -27,7 +27,7 @@ export const applyMoveChanges =
     (data: GameTurnResponse): ThunkAction<void, GameState, unknown, UnknownAction> =>
     async (dispatch) => {
         dispatch(applyStat(data));
-        dispatch(applyChanges({ changes: data.changes }));
+        dispatch(applyChanges(data.changes));
         dispatch(
             applyPirateChanges({
                 moves: data.moves,

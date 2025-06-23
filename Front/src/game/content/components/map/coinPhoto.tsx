@@ -2,8 +2,12 @@ import { useDispatch } from 'react-redux';
 
 import { chooseHumanPirate } from '../../../redux/gameSlice';
 
+interface CoinPhotoCalcs {
+    imageClass: string;
+    count?: number;
+}
 interface CoinPhotoProps {
-    piratesWithCoins: number | undefined;
+    piratesWithCoins: number;
     freeCoinGirlId: string | undefined;
     pirateSize: number;
     coinCount: number;
@@ -13,9 +17,17 @@ interface CoinPhotoProps {
 const CoinPhoto = ({ coinCount, bigCoinCount, piratesWithCoins, freeCoinGirlId, pirateSize }: CoinPhotoProps) => {
     const dispatch = useDispatch();
 
-    if (piratesWithCoins === coinCount && bigCoinCount === 0) return <div />;
+    const data: CoinPhotoCalcs = {
+        imageClass: 'treasure',
+    };
+    if (bigCoinCount === 0) {
+        data.imageClass = 'coins';
+        data.count = coinCount - piratesWithCoins;
+    } else if (coinCount === piratesWithCoins) {
+        data.imageClass = 'bigCoins';
+        data.count = bigCoinCount;
+    }
 
-    const text = bigCoinCount > 0 ? bigCoinCount : coinCount - (piratesWithCoins || 0);
     const coinSize = pirateSize * 0.6;
 
     const onClick = (girlId: string) => {
@@ -24,7 +36,7 @@ const CoinPhoto = ({ coinCount, bigCoinCount, piratesWithCoins, freeCoinGirlId, 
 
     return freeCoinGirlId ? (
         <div
-            className={bigCoinCount > 0 ? 'bigCoins' : 'coins'}
+            className={data.imageClass}
             style={{
                 width: coinSize,
                 height: coinSize,
@@ -33,18 +45,18 @@ const CoinPhoto = ({ coinCount, bigCoinCount, piratesWithCoins, freeCoinGirlId, 
             }}
             onClick={() => onClick(freeCoinGirlId)}
         >
-            {text}
+            {data.count}
         </div>
     ) : (
         <div
-            className={bigCoinCount > 0 ? 'bigCoins' : 'coins'}
+            className={data.imageClass}
             style={{
                 width: coinSize,
                 height: coinSize,
                 fontSize: Math.ceil(coinSize * 0.6),
             }}
         >
-            {text}
+            {data.count}
         </div>
     );
 };

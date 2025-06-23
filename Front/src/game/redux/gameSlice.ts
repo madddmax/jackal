@@ -10,14 +10,15 @@ import {
     HighlightHumanMovesActionProps,
     StorageState,
 } from '../types';
+import { GameLevel, GameLevelFeature } from '../types/gameContent';
 import {
-    GameMapChangesResponse,
+    CellDiffResponse,
     GameMapResponse,
     GamePirateChangesResponse,
     GameStartResponse,
     GameStatisticsResponse,
     GameTeamResponse,
-} from '../types/sagaContracts';
+} from '../types/gameSaga';
 import { ScreenSizes, TeamScores } from './gameSlice.types';
 import { Constants } from '/app/constants';
 import { debugLog, getAnotherRandomValue, girlsMap } from '/app/global';
@@ -87,7 +88,14 @@ export const gameSlice = createSlice({
                     row.push({
                         image: change.backgroundImageSrc,
                         rotate: change.rotate,
-                        levels: change.levels,
+                        levels: change.levels.map(
+                            (lev) =>
+                                ({
+                                    info: lev,
+                                    piratesWithCoinsCount: 0,
+                                    hasFreeMoney: lev.coins > 0 || lev.bigCoins > 0,
+                                }) as GameLevel,
+                        ),
                         availableMoves: [],
                     });
                     j++;
@@ -194,7 +202,7 @@ export const gameSlice = createSlice({
                 action.payload.withCoinAction && !hasPirateChanging && pirate.withCoin !== undefined;
             if (hasCoinChanging) {
                 const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
-                if (pirate.withCoin || (level.piratesWithCoinsCount || 0) < level.coins) {
+                if (pirate.withCoin || level.piratesWithCoinsCount < level.info.coins) {
                     pirate.withCoin = !pirate.withCoin;
                     gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
                 }
@@ -389,7 +397,7 @@ export const gameSlice = createSlice({
 
                         if (changeCoin !== undefined) {
                             changeCoin =
-                                levelPirates!.filter((pr) => pr.id != it.id && pr.withCoin).length < level.coins;
+                                levelPirates!.filter((pr) => pr.id != it.id && pr.withCoin).length < level.info.coins;
                         }
                         it.withCoin = changeCoin;
                         const prt = levelPirates?.find((pr) => pr.id == it.id);
@@ -400,8 +408,8 @@ export const gameSlice = createSlice({
                 });
             }
         },
-        applyChanges: (state, action: PayloadAction<GameMapChangesResponse>) => {
-            action.payload.changes.forEach((it) => {
+        applyChanges: (state, action: PayloadAction<CellDiffResponse[]>) => {
+            action.payload.forEach((it) => {
                 const cell = state.fields[it.y][it.x];
                 if (cell.image != it.backgroundImageSrc) {
                     cell.image = it.backgroundImageSrc;
@@ -410,11 +418,21 @@ export const gameSlice = createSlice({
                 if (state.stat?.isGameOver) {
                     cell.dark = true;
                 }
-                cell.levels = it.levels.map((lev) => ({
-                    ...lev,
-                    pirate: undefined,
-                    features: cell?.levels && cell?.levels[lev.level]?.features,
-                }));
+                if (cell.levels.length !== it.levels.length) {
+                    // открыли новую клетку или разлом
+                    cell.levels = it.levels.map(
+                        (lev) =>
+                            ({
+                                info: lev,
+                                piratesWithCoinsCount: 0,
+                                hasFreeMoney: lev.coins > 0 || lev.bigCoins > 0,
+                            }) as GameLevel,
+                    );
+                } else {
+                    cell.levels.forEach((lev) => {
+                        lev.info = it.levels[lev.info.level];
+                    });
+                }
             });
         },
         updateLevelCoinsData: (state, action: PayloadAction<GamePiratePosition>) => {
@@ -422,7 +440,8 @@ export const gameSlice = createSlice({
             const field = state.fields[action.payload.position.y][action.payload.position.x];
             const level = field.levels[action.payload.position.level];
             const levelPirates = state.pirates?.filter((it) => cell?.girls?.includes(it.id));
-            level.piratesWithCoinsCount = levelPirates?.filter((it) => it.withCoin).length;
+            level.piratesWithCoinsCount = levelPirates?.filter((it) => it.withCoin).length ?? 0;
+            level.hasFreeMoney = level.piratesWithCoinsCount < level.info.coins || level.info.bigCoins > 0;
             level.freeCoinGirlId = !field.image?.includes('ship')
                 ? levelPirates?.find((it) => !it.withCoin)?.id
                 : undefined;

@@ -2,6 +2,7 @@ import cn from 'classnames';
 import Image from 'react-bootstrap/Image';
 
 import './cell.less';
+import { GameLevelFeature } from '/game/types/gameContent';
 
 interface FeaturePhotoProps {
     feature: GameLevelFeature;

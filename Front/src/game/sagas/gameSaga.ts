@@ -12,7 +12,7 @@ import {
     removeHumanMoves,
 } from '../redux/gameSlice';
 import { StorageState } from '../types';
-import { GameStartResponse, GameTurnResponse } from '../types/sagaContracts';
+import { GameStartResponse, GameTurnResponse } from '../types/gameSaga';
 import { history } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
 import { AuthState } from '/auth/types/auth';
@@ -81,7 +81,7 @@ export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
     }
 
     yield put(applyStat(result.data));
-    yield put(applyChanges({ changes: result.data.changes }));
+    yield put(applyChanges(result.data.changes));
     yield put(
         applyPirateChanges({
             moves: result.data.moves,
