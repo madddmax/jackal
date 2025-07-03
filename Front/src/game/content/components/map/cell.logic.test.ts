@@ -108,6 +108,7 @@ describe('cell logic tests', () => {
                         from: { pirateIds: ['100'], level: 0, x: 2, y: 0 },
                         to: { pirateIds: ['100'], level: 0, x: 2, y: 0 },
                         withCoin: false,
+                        withBigCoin: false,
                         withRespawn: false,
                     },
                 ],

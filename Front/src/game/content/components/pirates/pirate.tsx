@@ -12,6 +12,10 @@ interface PirateProps {
 
 const Pirate = ({ pirate, isActive, onClick, onCoinClick }: PirateProps) => {
     const isDisabled = pirate.isDrunk || pirate.isInTrap || pirate.isInHole;
+    let img = '/pictures/ruble.png';
+    if (pirate.isDrunk) img = '/pictures/rum.png';
+    if (pirate.withBigCoin) img = '/pictures/gold_ruble.png';
+
     return (
         <div className="photo-position float-end">
             <Image
@@ -26,10 +30,10 @@ const Pirate = ({ pirate, isActive, onClick, onCoinClick }: PirateProps) => {
                 }}
                 onClick={onClick}
             />
-            {(pirate.withCoin !== undefined || pirate.isDrunk) && (
+            {(pirate.withCoin !== undefined || pirate.withBigCoin !== undefined || pirate.isDrunk) && (
                 <>
                     <Image
-                        src={pirate.isDrunk ? '/pictures/rum.png' : '/pictures/ruble.png'}
+                        src={img}
                         roundedCircle
                         className={cn({
                             moneta: !pirate.isDrunk,
@@ -37,7 +41,7 @@ const Pirate = ({ pirate, isActive, onClick, onCoinClick }: PirateProps) => {
                         })}
                         onClick={onCoinClick}
                     />
-                    {!pirate.withCoin && !pirate.isDrunk && (
+                    {!pirate.withCoin && !pirate.withBigCoin && !pirate.isDrunk && (
                         <Image
                             src="/pictures/cross-linear-icon.png"
                             roundedCircle

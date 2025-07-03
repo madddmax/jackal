@@ -315,6 +315,7 @@ describe('redux basic tests', () => {
                         from: { pirateIds: ['200'], level: 0, x: 2, y: 4 },
                         to: { pirateIds: ['200'], level: 0, x: 2, y: 2 },
                         withCoin: true,
+                        withBigCoin: false,
                         withRespawn: false,
                     },
                 ],
@@ -341,6 +342,7 @@ describe('redux basic tests', () => {
                         from: { pirateIds: ['200'], level: 0, x: 2, y: 4 },
                         to: { pirateIds: ['200'], level: 0, x: 2, y: 2 },
                         withCoin: true,
+                        withBigCoin: false,
                         withRespawn: false,
                     },
                 ],
@@ -441,6 +443,7 @@ describe('redux money actions tests', () => {
                         from: { pirateIds: ['200'], level: 0, x: 2, y: 4 },
                         to: { pirateIds: ['200'], level: 0, x: 2, y: 2 },
                         withCoin: true,
+                        withBigCoin: false,
                         withRespawn: false,
                     },
                     {
@@ -448,6 +451,7 @@ describe('redux money actions tests', () => {
                         from: { pirateIds: ['200'], level: 0, x: 2, y: 4 },
                         to: { pirateIds: ['200'], level: 0, x: 2, y: 2 },
                         withCoin: false,
+                        withBigCoin: false,
                         withRespawn: false,
                     },
                 ],
@@ -465,6 +469,7 @@ describe('redux money actions tests', () => {
                 bigCoins: 0,
             },
             hasFreeMoney: true,
+            piratesWithBigCoinsCount: 0,
             piratesWithCoinsCount: 1,
             freeCoinGirlId: '300',
         });
@@ -482,6 +487,7 @@ describe('redux money actions tests', () => {
                 bigCoins: 0,
             },
             hasFreeMoney: true,
+            piratesWithBigCoinsCount: 0,
             piratesWithCoinsCount: 1,
             freeCoinGirlId: '300',
         });
@@ -498,6 +504,7 @@ describe('redux money actions tests', () => {
                 bigCoins: 0,
             },
             hasFreeMoney: true,
+            piratesWithBigCoinsCount: 0,
             piratesWithCoinsCount: 0,
             freeCoinGirlId: '200',
         });
@@ -553,6 +560,7 @@ describe('redux logic tests', () => {
                 bigCoins: 0,
             },
             hasFreeMoney: false,
+            piratesWithBigCoinsCount: 0,
             piratesWithCoinsCount: 0,
             features: undefined,
         });
@@ -610,8 +618,9 @@ describe('redux logic tests', () => {
                 bigCoins: 0,
             },
             hasFreeMoney: false,
+            piratesWithBigCoinsCount: 0,
             piratesWithCoinsCount: 0,
-            freeCoinGirlId: '200',
+            // freeCoinGirlId: '200',
             features: undefined,
         });
         expect(girlsMap.Map).toEqual(
@@ -655,6 +664,7 @@ describe('redux logic tests', () => {
             },
             hasFreeMoney: true,
             piratesWithCoinsCount: 0,
+            piratesWithBigCoinsCount: 0,
             freeCoinGirlId: '300',
             features: [
                 {

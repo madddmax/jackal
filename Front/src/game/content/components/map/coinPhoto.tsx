@@ -1,31 +1,29 @@
 import { useDispatch } from 'react-redux';
 
 import { chooseHumanPirate } from '../../../redux/gameSlice';
+import { GameLevel } from '/game/types/gameContent';
 
 interface CoinPhotoCalcs {
     imageClass: string;
     count?: number;
 }
 interface CoinPhotoProps {
-    piratesWithCoins: number;
-    freeCoinGirlId: string | undefined;
+    level: GameLevel;
     pirateSize: number;
-    coinCount: number;
-    bigCoinCount: number;
 }
 
-const CoinPhoto = ({ coinCount, bigCoinCount, piratesWithCoins, freeCoinGirlId, pirateSize }: CoinPhotoProps) => {
+const CoinPhoto = ({ level, pirateSize }: CoinPhotoProps) => {
     const dispatch = useDispatch();
 
     const data: CoinPhotoCalcs = {
         imageClass: 'treasure',
     };
-    if (bigCoinCount === 0) {
+    if (level.info.bigCoins === level.piratesWithBigCoinsCount) {
         data.imageClass = 'coins';
-        data.count = coinCount - piratesWithCoins;
-    } else if (coinCount === piratesWithCoins) {
+        data.count = level.info.coins - level.piratesWithCoinsCount;
+    } else if (level.info.coins === level.piratesWithCoinsCount) {
         data.imageClass = 'bigCoins';
-        data.count = bigCoinCount;
+        data.count = level.info.bigCoins - level.piratesWithBigCoinsCount;
     }
 
     const coinSize = pirateSize * 0.6;
@@ -34,7 +32,7 @@ const CoinPhoto = ({ coinCount, bigCoinCount, piratesWithCoins, freeCoinGirlId, 
         dispatch(chooseHumanPirate({ pirate: girlId, withCoinAction: true }));
     };
 
-    return freeCoinGirlId ? (
+    return level.freeCoinGirlId ? (
         <div
             className={data.imageClass}
             style={{
@@ -43,7 +41,7 @@ const CoinPhoto = ({ coinCount, bigCoinCount, piratesWithCoins, freeCoinGirlId, 
                 fontSize: Math.ceil(coinSize * 0.6),
                 cursor: 'pointer',
             }}
-            onClick={() => onClick(freeCoinGirlId)}
+            onClick={() => onClick(level.freeCoinGirlId!)}
         >
             {data.count}
         </div>

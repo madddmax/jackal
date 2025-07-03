@@ -23,6 +23,11 @@ const PiratePhoto = ({ pirate, pirateSize, isCurrentPlayerGirl, onTeamPirateClic
     const coinPos = pirateSize - coinSize - addSize;
     const isDisabled = pirate.isDrunk || pirate.isInTrap || pirate.isInHole;
 
+    let img = '';
+    if (pirate.isDrunk) img = '/pictures/rum.png';
+    if (pirate.withCoin) img = '/pictures/ruble.png';
+    if (pirate.withBigCoin) img = '/pictures/gold_ruble.png';
+
     return (
         <>
             <Image
@@ -45,14 +50,15 @@ const PiratePhoto = ({ pirate, pirateSize, isCurrentPlayerGirl, onTeamPirateClic
                             gameState.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
                         const allowChoosingPirate =
                             level.piratesWithCoinsCount === level.info.coins &&
-                            (mapLevel?.girls?.length || 0) > level.info.coins;
+                            level.piratesWithBigCoinsCount === level.info.bigCoins &&
+                            (mapLevel?.girls?.length || 0) > level.info.coins + level.info.bigCoins;
                         onTeamPirateClick(pirate, allowChoosingPirate);
                     }
                 }}
             />
-            {(pirate.withCoin || pirate.isDrunk) && (
+            {(pirate.withCoin || pirate.withBigCoin || pirate.isDrunk) && (
                 <Image
-                    src={pirate.isDrunk ? '/pictures/rum.png' : '/pictures/ruble.png'}
+                    src={img}
                     roundedCircle
                     className={cn({
                         'cell-moneta': !pirate.isDrunk,

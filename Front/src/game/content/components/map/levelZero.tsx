@@ -43,13 +43,7 @@ const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
                     }}
                     onClick={onClick}
                 >
-                    <CoinPhoto
-                        coinCount={data.info.coins}
-                        bigCoinCount={data.info.bigCoins}
-                        piratesWithCoins={data.piratesWithCoinsCount}
-                        freeCoinGirlId={data.freeCoinGirlId}
-                        pirateSize={pirateSize}
-                    />
+                    <CoinPhoto level={data} pirateSize={pirateSize} />
                 </div>
             )}
             {data.features?.map((feature, idx) => (
