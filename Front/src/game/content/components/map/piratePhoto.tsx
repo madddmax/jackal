@@ -49,8 +49,8 @@ const PiratePhoto = ({ pirate, pirateSize, isCurrentPlayerGirl, onTeamPirateClic
                         const level =
                             gameState.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
                         const allowChoosingPirate =
-                            level.piratesWithCoinsCount === level.info.coins &&
-                            level.piratesWithBigCoinsCount === level.info.bigCoins &&
+                            level.pirates.coins === level.info.coins &&
+                            level.pirates.bigCoins === level.info.bigCoins &&
                             (mapLevel?.girls?.length || 0) > level.info.coins + level.info.bigCoins;
                         onTeamPirateClick(pirate, allowChoosingPirate);
                     }

@@ -92,7 +92,10 @@ export const gameSlice = createSlice({
                             (lev) =>
                                 ({
                                     info: lev,
-                                    piratesWithCoinsCount: 0,
+                                    pirates: {
+                                        coins: 0,
+                                        bigCoins: 0,
+                                    },
                                     hasFreeMoney: lev.coins > 0 || lev.bigCoins > 0,
                                 }) as GameLevel,
                         ),
@@ -206,14 +209,14 @@ export const gameSlice = createSlice({
                 const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
                 if (pirate.withBigCoin) {
                     pirate.withBigCoin = false;
-                    if (level.piratesWithCoinsCount < level.info.coins) {
+                    if (level.pirates.coins < level.info.coins) {
                         pirate.withCoin = true;
                     }
                 } else if (pirate.withCoin) {
                     pirate.withCoin = false;
-                } else if (level.piratesWithBigCoinsCount < level.info.bigCoins) {
+                } else if (level.pirates.bigCoins < level.info.bigCoins) {
                     pirate.withBigCoin = true;
-                } else if (level.piratesWithCoinsCount < level.info.coins) {
+                } else if (level.pirates.coins < level.info.coins) {
                     pirate.withCoin = true;
                 }
                 gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
@@ -444,8 +447,10 @@ export const gameSlice = createSlice({
                         (lev) =>
                             ({
                                 info: lev,
-                                piratesWithCoinsCount: 0,
-                                piratesWithBigCoinsCount: 0,
+                                pirates: {
+                                    coins: 0,
+                                    bigCoins: 0,
+                                },
                                 hasFreeMoney: lev.coins > 0 || lev.bigCoins > 0,
                             }) as GameLevel,
                     );
@@ -461,15 +466,16 @@ export const gameSlice = createSlice({
             const level = field.levels[action.payload.position.level];
             const girlsLevel = girlsMap.GetPosition(action.payload);
             const levelPirates = state.pirates?.filter((it) => girlsLevel?.girls?.includes(it.id));
-            level.piratesWithCoinsCount = levelPirates?.filter((it) => it.withCoin).length ?? 0;
-            level.piratesWithBigCoinsCount = levelPirates?.filter((it) => it.withBigCoin).length ?? 0;
-            level.hasFreeMoney =
-                level.piratesWithCoinsCount < level.info.coins || level.piratesWithBigCoinsCount < level.info.bigCoins;
+            level.pirates = {
+                coins: levelPirates?.filter((it) => it.withCoin).length ?? 0,
+                bigCoins: levelPirates?.filter((it) => it.withBigCoin).length ?? 0,
+            };
+            level.hasFreeMoney = level.pirates.coins < level.info.coins || level.pirates.bigCoins < level.info.bigCoins;
             level.freeCoinGirlId = !field.image?.includes('ship')
                 ? levelPirates?.find(
                       (it) =>
-                          (!it.withBigCoin && level.piratesWithBigCoinsCount < level.info.bigCoins) ||
-                          (!it.withCoin && level.piratesWithCoinsCount < level.info.coins),
+                          (!it.withBigCoin && level.pirates.bigCoins < level.info.bigCoins) ||
+                          (!it.withCoin && level.pirates.coins < level.info.coins),
                   )?.id
                 : undefined;
         },

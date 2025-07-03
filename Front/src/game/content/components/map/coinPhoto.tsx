@@ -18,12 +18,12 @@ const CoinPhoto = ({ level, pirateSize }: CoinPhotoProps) => {
     const data: CoinPhotoCalcs = {
         imageClass: 'treasure',
     };
-    if (level.info.bigCoins === level.piratesWithBigCoinsCount) {
+    if (level.info.bigCoins === level.pirates.bigCoins) {
         data.imageClass = 'coins';
-        data.count = level.info.coins - level.piratesWithCoinsCount;
-    } else if (level.info.coins === level.piratesWithCoinsCount) {
+        data.count = level.info.coins - level.pirates.coins;
+    } else if (level.info.coins === level.pirates.coins) {
         data.imageClass = 'bigCoins';
-        data.count = level.info.bigCoins - level.piratesWithBigCoinsCount;
+        data.count = level.info.bigCoins - level.pirates.bigCoins;
     }
 
     const coinSize = pirateSize * 0.6;

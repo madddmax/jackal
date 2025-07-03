@@ -468,9 +468,11 @@ describe('redux money actions tests', () => {
                 coins: 2,
                 bigCoins: 0,
             },
+            pirates: {
+                coins: 1,
+                bigCoins: 0,
+            },
             hasFreeMoney: true,
-            piratesWithBigCoinsCount: 0,
-            piratesWithCoinsCount: 1,
             freeCoinGirlId: '300',
         });
     });
@@ -486,9 +488,11 @@ describe('redux money actions tests', () => {
                 coins: 2,
                 bigCoins: 0,
             },
+            pirates: {
+                coins: 1,
+                bigCoins: 0,
+            },
             hasFreeMoney: true,
-            piratesWithBigCoinsCount: 0,
-            piratesWithCoinsCount: 1,
             freeCoinGirlId: '300',
         });
 
@@ -503,9 +507,11 @@ describe('redux money actions tests', () => {
                 coins: 2,
                 bigCoins: 0,
             },
+            pirates: {
+                coins: 0,
+                bigCoins: 0,
+            },
             hasFreeMoney: true,
-            piratesWithBigCoinsCount: 0,
-            piratesWithCoinsCount: 0,
             freeCoinGirlId: '200',
         });
     });
@@ -559,9 +565,11 @@ describe('redux logic tests', () => {
                 coins: 0,
                 bigCoins: 0,
             },
+            pirates: {
+                coins: 0,
+                bigCoins: 0,
+            },
             hasFreeMoney: false,
-            piratesWithBigCoinsCount: 0,
-            piratesWithCoinsCount: 0,
             features: undefined,
         });
     });
@@ -617,9 +625,11 @@ describe('redux logic tests', () => {
                 coins: 0,
                 bigCoins: 0,
             },
+            pirates: {
+                coins: 0,
+                bigCoins: 0,
+            },
             hasFreeMoney: false,
-            piratesWithBigCoinsCount: 0,
-            piratesWithCoinsCount: 0,
             // freeCoinGirlId: '200',
             features: undefined,
         });
@@ -662,9 +672,11 @@ describe('redux logic tests', () => {
                 coins: 2,
                 bigCoins: 0,
             },
+            pirates: {
+                coins: 0,
+                bigCoins: 0,
+            },
             hasFreeMoney: true,
-            piratesWithCoinsCount: 0,
-            piratesWithBigCoinsCount: 0,
             freeCoinGirlId: '300',
             features: [
                 {
