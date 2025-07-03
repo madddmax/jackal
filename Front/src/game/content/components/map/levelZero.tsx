@@ -32,7 +32,7 @@ const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
 
     return (
         <>
-            {data.hasFreeMoney && (
+            {data.hasFreeMoney() && (
                 <div
                     key={`cell_level_${data.info.level}_coin`}
                     style={{

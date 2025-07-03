@@ -20,6 +20,7 @@ import {
     GameTeamResponse,
 } from '../types/gameSaga';
 import { ScreenSizes, TeamScores } from './gameSlice.types';
+import { constructGameLevel } from './utils';
 import { Constants } from '/app/constants';
 import { debugLog, getAnotherRandomValue, girlsMap } from '/app/global';
 
@@ -88,17 +89,7 @@ export const gameSlice = createSlice({
                     row.push({
                         image: change.backgroundImageSrc,
                         rotate: change.rotate,
-                        levels: change.levels.map(
-                            (lev) =>
-                                ({
-                                    info: lev,
-                                    pirates: {
-                                        coins: 0,
-                                        bigCoins: 0,
-                                    },
-                                    hasFreeMoney: lev.coins > 0 || lev.bigCoins > 0,
-                                }) as GameLevel,
-                        ),
+                        levels: change.levels.map(constructGameLevel),
                         availableMoves: [],
                     });
                     j++;
@@ -443,17 +434,7 @@ export const gameSlice = createSlice({
                 }
                 if (cell.levels.length !== it.levels.length) {
                     // открыли новую клетку или разлом
-                    cell.levels = it.levels.map(
-                        (lev) =>
-                            ({
-                                info: lev,
-                                pirates: {
-                                    coins: 0,
-                                    bigCoins: 0,
-                                },
-                                hasFreeMoney: lev.coins > 0 || lev.bigCoins > 0,
-                            }) as GameLevel,
-                    );
+                    cell.levels = it.levels.map(constructGameLevel);
                 } else {
                     cell.levels.forEach((lev) => {
                         lev.info = it.levels[lev.info.level];
@@ -470,7 +451,6 @@ export const gameSlice = createSlice({
                 coins: levelPirates?.filter((it) => it.withCoin).length ?? 0,
                 bigCoins: levelPirates?.filter((it) => it.withBigCoin).length ?? 0,
             };
-            level.hasFreeMoney = level.pirates.coins < level.info.coins || level.pirates.bigCoins < level.info.bigCoins;
             level.freeCoinGirlId = !field.image?.includes('ship')
                 ? levelPirates?.find(
                       (it) =>

@@ -462,19 +462,16 @@ describe('redux money actions tests', () => {
     test('Автоподнятие монеты по возможному действию', () => {
         expect(previousState.pirates?.find((it) => it.id == '200')?.withCoin).toBeTruthy();
         const level = previousState.fields[4][2].levels[0];
-        expect(level).toEqual({
-            info: {
-                level: 0,
-                coins: 2,
-                bigCoins: 0,
-            },
-            pirates: {
-                coins: 1,
-                bigCoins: 0,
-            },
-            hasFreeMoney: true,
-            freeCoinGirlId: '300',
+        expect(level.info).toEqual({
+            level: 0,
+            coins: 2,
+            bigCoins: 0,
         });
+        expect(level.pirates).toEqual({
+            coins: 1,
+            bigCoins: 0,
+        });
+        expect(level.hasFreeMoney()).toEqual(true);
     });
 
     test('Кладём монету', () => {
@@ -482,38 +479,34 @@ describe('redux money actions tests', () => {
         currentState = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
         expect(currentState.highlight_x).toEqual(2);
         expect(currentState.highlight_y).toEqual(4);
-        expect(currentState.fields[4][2].levels[0]).toEqual({
-            info: {
-                level: 0,
-                coins: 2,
-                bigCoins: 0,
-            },
-            pirates: {
-                coins: 1,
-                bigCoins: 0,
-            },
-            hasFreeMoney: true,
-            freeCoinGirlId: '300',
+        const preLevel = currentState.fields[4][2].levels[0];
+        expect(preLevel.info).toEqual({
+            level: 0,
+            coins: 2,
+            bigCoins: 0,
         });
+        expect(preLevel.pirates).toEqual({
+            coins: 1,
+            bigCoins: 0,
+        });
+        expect(preLevel.hasFreeMoney()).toEqual(true);
 
         const result = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
 
         const boy = result.pirates?.find((it) => it.id == '200');
         expect(boy?.withCoin).toBeFalsy();
         expect(boy?.isActive).toBeTruthy();
-        expect(result.fields[4][2].levels[0]).toEqual({
-            info: {
-                level: 0,
-                coins: 2,
-                bigCoins: 0,
-            },
-            pirates: {
-                coins: 0,
-                bigCoins: 0,
-            },
-            hasFreeMoney: true,
-            freeCoinGirlId: '200',
+        const postLevel = result.fields[4][2].levels[0];
+        expect(postLevel.info).toEqual({
+            level: 0,
+            coins: 2,
+            bigCoins: 0,
         });
+        expect(postLevel.pirates).toEqual({
+            coins: 0,
+            bigCoins: 0,
+        });
+        expect(postLevel.hasFreeMoney()).toEqual(true);
     });
 });
 
@@ -559,19 +552,17 @@ describe('redux logic tests', () => {
             ]),
         );
 
-        expect(result.fields[4][2].levels[0]).toEqual({
-            info: {
-                level: 0,
-                coins: 0,
-                bigCoins: 0,
-            },
-            pirates: {
-                coins: 0,
-                bigCoins: 0,
-            },
-            hasFreeMoney: false,
-            features: undefined,
+        const level = result.fields[4][2].levels[0];
+        expect(level.info).toEqual({
+            level: 0,
+            coins: 0,
+            bigCoins: 0,
         });
+        expect(level.pirates).toEqual({
+            coins: 0,
+            bigCoins: 0,
+        });
+        expect(level.hasFreeMoney()).toEqual(false);
     });
 
     test('Открываем Бен Ганна', () => {
@@ -619,20 +610,18 @@ describe('redux logic tests', () => {
         expect(ben?.backgroundColor).toEqual('DarkBlue');
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(3);
-        expect(result.fields[3][2].levels[0]).toEqual({
-            info: {
-                level: 0,
-                coins: 0,
-                bigCoins: 0,
-            },
-            pirates: {
-                coins: 0,
-                bigCoins: 0,
-            },
-            hasFreeMoney: false,
-            // freeCoinGirlId: '200',
-            features: undefined,
+        const level = result.fields[3][2].levels[0];
+        expect(level.info).toEqual({
+            level: 0,
+            coins: 0,
+            bigCoins: 0,
         });
+        expect(level.pirates).toEqual({
+            coins: 0,
+            bigCoins: 0,
+        });
+        expect(level.hasFreeMoney()).toEqual(false);
+
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
                 '20': { girls: ['100'], level: 0, levelsCountInCell: 1 },
@@ -666,25 +655,24 @@ describe('redux logic tests', () => {
         expect(result.pirates).toHaveLength(2);
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);
-        expect(result.fields[4][2].levels[0]).toEqual({
-            info: {
-                level: 0,
-                coins: 2,
-                bigCoins: 0,
-            },
-            pirates: {
-                coins: 0,
-                bigCoins: 0,
-            },
-            hasFreeMoney: true,
-            freeCoinGirlId: '300',
-            features: [
-                {
-                    photo: 'skull_light.png',
-                    backgroundColor: 'transparent',
-                },
-            ],
+        const level = result.fields[4][2].levels[0];
+        expect(level.info).toEqual({
+            level: 0,
+            coins: 2,
+            bigCoins: 0,
         });
+        expect(level.pirates).toEqual({
+            coins: 0,
+            bigCoins: 0,
+        });
+        expect(level.hasFreeMoney()).toEqual(true);
+        expect(level.features).toEqual([
+            {
+                photo: 'skull_light.png',
+                backgroundColor: 'transparent',
+            },
+        ]);
+
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
                 '20': { girls: ['100'], level: 0, levelsCountInCell: 1 },

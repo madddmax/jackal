@@ -99,7 +99,7 @@ const Level = ({ cellSize, pirateSize, field, data, hasFeaturesOnly, onClick }: 
             }}
             onClick={onClick}
         >
-            {data.hasFreeMoney && <CoinPhoto level={data} pirateSize={pirateSize} />}
+            {data.hasFreeMoney() && <CoinPhoto level={data} pirateSize={pirateSize} />}
         </div>
     );
 };
