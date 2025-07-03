@@ -7,4 +7,6 @@ public class TeamScore(Team team)
     public int TeamId = team.Id;
     
     public int Coins = team.Coins;
+
+    public int RumBottles = team.RumBottles;
 }
