@@ -1,9 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 
-import { NetGameInfoResponse, NetGameListResponse } from '../../common/redux.types';
 import { applyGamesList, applyLeaderBoard, applyNetGame, applyNetGamesList } from '../redux/lobbySlice';
-import { LeaderBoardItemResponse } from '../types/sagaContracts';
+import { LeaderBoardItemResponse, NetGameInfoResponse, NetGameListResponse } from '../types/lobbySaga';
 import { getAuth } from '/auth/redux/authSlice';
 import { AuthState } from '/auth/types/auth';
 import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';

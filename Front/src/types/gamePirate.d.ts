@@ -1,6 +1,7 @@
 interface GamePirate extends GamePiratePosition {
     teamId: number;
     withCoin?: boolean;
+    withBigCoin?: boolean;
     isDrunk?: boolean;
     isInTrap?: boolean;
     isInHole?: boolean;

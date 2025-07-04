@@ -1,13 +1,5 @@
-import { LeaderBoardItemResponse } from '../types/sagaContracts';
-import { GameInfo, NetGameEntryResponse, NetGameInfoResponse } from '/common/redux.types';
+import { NetGameEntryResponse, NetGameInfoResponse } from './lobbySaga';
 import { GameSettings } from '/game/types/hubContracts';
-
-export interface LobbyState {
-    gamelist: GameInfo[];
-    netgamelist: GameInfo[];
-    netGame?: NetGameInfo;
-    leaderBoard?: LeaderBoardItemResponse[];
-}
 
 export interface LobbyGamesEntriesList {
     currentUserId?: number;
@@ -26,4 +18,13 @@ export interface NetGameInfo {
     settings: GameSettings;
     viewers: number[];
     users: UserInfo[];
+}
+
+export interface GameInfo {
+    id: number;
+    creatorName: string;
+    isCreator: boolean;
+    isPlayer: boolean;
+    isPublic: boolean;
+    timeStamp: number;
 }

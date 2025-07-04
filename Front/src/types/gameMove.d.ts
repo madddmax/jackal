@@ -7,6 +7,7 @@ interface GameMove {
         y: number;
     };
     withCoin: boolean;
+    withBigCoin: boolean;
     withRespawn: boolean;
 }
 

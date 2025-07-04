@@ -1,49 +1,60 @@
 import { useDispatch } from 'react-redux';
 
 import { chooseHumanPirate } from '../../../redux/gameSlice';
+import { GameLevel } from '/game/types/gameContent';
 
+interface CoinPhotoCalcs {
+    imageClass: string;
+    count?: number;
+}
 interface CoinPhotoProps {
-    piratesWithCoins: number | undefined;
-    freeCoinGirlId: string | undefined;
+    level: GameLevel;
     pirateSize: number;
-    coinCount: number;
 }
 
-const CoinPhoto = ({ coinCount, piratesWithCoins, freeCoinGirlId, pirateSize }: CoinPhotoProps) => {
+const CoinPhoto = ({ level, pirateSize }: CoinPhotoProps) => {
     const dispatch = useDispatch();
 
-    if (piratesWithCoins === coinCount) return <div />;
+    const data: CoinPhotoCalcs = {
+        imageClass: 'treasure',
+    };
+    if (level.info.bigCoins === level.pirates.bigCoins) {
+        data.imageClass = 'coins';
+        data.count = level.info.coins - level.pirates.coins;
+    } else if (level.info.coins === level.pirates.coins) {
+        data.imageClass = 'bigCoins';
+        data.count = level.info.bigCoins - level.pirates.bigCoins;
+    }
 
-    const text = coinCount - (piratesWithCoins || 0);
     const coinSize = pirateSize * 0.6;
 
     const onClick = (girlId: string) => {
         dispatch(chooseHumanPirate({ pirate: girlId, withCoinAction: true }));
     };
 
-    return freeCoinGirlId ? (
+    return level.freeCoinGirlId ? (
         <div
-            className="coins"
+            className={data.imageClass}
             style={{
                 width: coinSize,
                 height: coinSize,
                 fontSize: Math.ceil(coinSize * 0.6),
                 cursor: 'pointer',
             }}
-            onClick={() => onClick(freeCoinGirlId)}
+            onClick={() => onClick(level.freeCoinGirlId!)}
         >
-            {text}
+            {data.count}
         </div>
     ) : (
         <div
-            className="coins"
+            className={data.imageClass}
             style={{
                 width: coinSize,
                 height: coinSize,
                 fontSize: Math.ceil(coinSize * 0.6),
             }}
         >
-            {text}
+            {data.count}
         </div>
     );
 };

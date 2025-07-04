@@ -1,6 +1,7 @@
 import CoinPhoto from './coinPhoto';
 import FeaturePhoto from './featurePhoto';
 import { FieldState } from '/game/types';
+import { GameLevel } from '/game/types/gameContent';
 
 interface LevelProps {
     cellSize: number;
@@ -11,6 +12,7 @@ interface LevelProps {
     onClick?: () => void;
 }
 
+/// Для отображение монет или черепов на многоуровневых клетках
 const Level = ({ cellSize, pirateSize, field, data, hasFeaturesOnly, onClick }: LevelProps) => {
     const mul_x_times = cellSize / 50;
     const addSize = (mul_x_times - 1) * 5;
@@ -69,11 +71,11 @@ const Level = ({ cellSize, pirateSize, field, data, hasFeaturesOnly, onClick }: 
     if (hasFeaturesOnly) {
         return (
             <div
-                key={`cell-level-${data.level}-features`}
+                key={`cell-level-${data.info.level}-features`}
                 className="feature"
                 style={{
-                    marginTop: getMarginTop(field, data.level),
-                    marginLeft: getMarginLeft(field, data.level),
+                    marginTop: getMarginTop(field, data.info.level),
+                    marginLeft: getMarginLeft(field, data.info.level),
                     width: getWidth(field),
                 }}
                 onClick={onClick}
@@ -87,24 +89,17 @@ const Level = ({ cellSize, pirateSize, field, data, hasFeaturesOnly, onClick }: 
 
     return (
         <div
-            key={`cell-level-${data.level}-coin`}
+            key={`cell-level-${data.info.level}-coin`}
             className="level"
             style={{
-                marginTop: getMarginTop(field, data.level),
-                marginLeft: getMarginLeft(field, data.level),
+                marginTop: getMarginTop(field, data.info.level),
+                marginLeft: getMarginLeft(field, data.info.level),
                 width: getWidth(field),
                 cursor: onClick ? 'pointer' : 'default',
             }}
             onClick={onClick}
         >
-            {data.coins > 0 && (
-                <CoinPhoto
-                    coinCount={data.coins}
-                    piratesWithCoins={data.piratesWithCoinsCount}
-                    freeCoinGirlId={data.freeCoinGirlId}
-                    pirateSize={pirateSize}
-                />
-            )}
+            {data.hasFreeMoney() && <CoinPhoto level={data} pirateSize={pirateSize} />}
         </div>
     );
 };

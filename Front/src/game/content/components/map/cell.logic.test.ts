@@ -9,7 +9,7 @@ import reducer, {
     setCurrentHumanTeam,
 } from '/game/redux/gameSlice';
 import { GameState } from '/game/types';
-import { GameTeamResponse } from '/game/types/sagaContracts';
+import { GameTeamResponse } from '/game/types/gameSaga';
 
 const testTeamId = 12;
 
@@ -108,6 +108,7 @@ describe('cell logic tests', () => {
                         from: { pirateIds: ['100'], level: 0, x: 2, y: 0 },
                         to: { pirateIds: ['100'], level: 0, x: 2, y: 0 },
                         withCoin: false,
+                        withBigCoin: false,
                         withRespawn: false,
                     },
                 ],

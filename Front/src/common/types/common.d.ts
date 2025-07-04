@@ -4,14 +4,14 @@ export interface CommonState {
     messageQueue: MessageInfo[];
 }
 
-export interface ErrorInfo {
-    error: boolean;
-    errorCode: string;
-    errorMessage: string;
-}
-
 export interface MessageInfo {
     isError: boolean;
     errorCode: string;
     messageText: string;
+}
+
+export interface ErrorInfo {
+    error: boolean;
+    errorCode: string;
+    errorMessage: string;
 }

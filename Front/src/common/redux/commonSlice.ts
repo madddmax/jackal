@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { CommonState, MessageInfo } from './commonSlice.types';
+import { CommonState, MessageInfo } from '../types/common';
 
 export const commonSlice = createSlice({
     name: 'common',

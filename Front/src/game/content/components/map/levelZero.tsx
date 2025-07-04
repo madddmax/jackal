@@ -1,5 +1,6 @@
 import CoinPhoto from './coinPhoto';
 import FeaturePhoto from './featurePhoto';
+import { GameLevel } from '/game/types/gameContent';
 
 interface LevelZeroProps {
     cellSize: number;
@@ -8,6 +9,7 @@ interface LevelZeroProps {
     onClick?: () => void;
 }
 
+/// Для отображение монет и черепов на одноуровневых клетках
 const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
     const addSize = data.features && data.features.length > 3 ? cellSize / 10 : 0;
     const unitSize = cellSize - pirateSize;
@@ -30,9 +32,9 @@ const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
 
     return (
         <>
-            {data.coins > 0 && (
+            {data.hasFreeMoney() && (
                 <div
-                    key={`cell_level_${data.level}_coin`}
+                    key={`cell_level_${data.info.level}_coin`}
                     style={{
                         position: 'absolute',
                         zIndex: 0,
@@ -41,17 +43,12 @@ const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
                     }}
                     onClick={onClick}
                 >
-                    <CoinPhoto
-                        coinCount={data.coins}
-                        piratesWithCoins={data.piratesWithCoinsCount}
-                        freeCoinGirlId={data.freeCoinGirlId}
-                        pirateSize={pirateSize}
-                    />
+                    <CoinPhoto level={data} pirateSize={pirateSize} />
                 </div>
             )}
             {data.features?.map((feature, idx) => (
                 <div
-                    key={`cell_level_${data.level}_feature_${idx}`}
+                    key={`cell_level_${data.info.level}_feature_${idx}`}
                     className="feature"
                     style={{
                         marginTop: getMarginTop(idx),
