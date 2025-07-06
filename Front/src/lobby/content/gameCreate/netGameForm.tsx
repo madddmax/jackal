@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getNetGames } from '../../redux/lobbySlice';
-import { NetGameInfo } from '../../redux/lobbySlice.types';
+import { NetGameInfo } from '../../types/lobbySlice';
 import { Constants } from '/app/constants';
 import GameSettingsForm from '/app/content/layout/components/gameSettingsForm';
 import { PlayerInfo } from '/app/content/layout/components/types';
