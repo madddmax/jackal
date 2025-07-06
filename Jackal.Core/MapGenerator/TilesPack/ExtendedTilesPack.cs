@@ -12,7 +12,7 @@ public class ExtendedTilesPack : ITilesPack
     /// </summary>
     public TileParams[] AllTiles { get; } =
     [
-        // 102 значимых клеток
+        // 104 значимых клеток
         new TileParams(TileType.Chest1), // 1 монета - первый сундук берем всегда
         new TileParams(TileType.Chest1), // 2
         new TileParams(TileType.Chest1), // 3
@@ -28,6 +28,8 @@ public class ExtendedTilesPack : ITilesPack
         new TileParams(TileType.Chest4), // 25
         new TileParams(TileType.Chest4), // 29
         new TileParams(TileType.Chest5), // 34
+        new TileParams(TileType.BigCoin), // 37
+        new TileParams(TileType.BigCoin), // 40
         new TileParams(TileType.Fort),
         new TileParams(TileType.Fort),
         new TileParams(TileType.RespawnFort), // порядок RespawnFort и Cannibal важен для баланса
@@ -115,13 +117,11 @@ public class ExtendedTilesPack : ITilesPack
         new TileParams(TileType.Hole) { Direction = DirectionType.Left },
         new TileParams(TileType.Quake),
         new TileParams(TileType.Quake),
-        // 18 пустых клеток
+        // 16 пустых клеток
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
         new TileParams(TileType.Grass, 0),
-        new TileParams(TileType.Grass, 0),
-        new TileParams(TileType.Grass, 1),
         new TileParams(TileType.Grass, 1),
         new TileParams(TileType.Grass, 1),
         new TileParams(TileType.Grass, 1),
