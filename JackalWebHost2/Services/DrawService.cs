@@ -94,7 +94,7 @@ public class DrawService : IDrawService
             if (pirate == null)
             {
                 var pirateIds = game.Board.AllPirates
-                    .Where(p => p.IsActive && p.Position.Equals(move.From))
+                    .Where(p => !p.IsDrunk && p.Position.Equals(move.From))
                     .Select(p => p.Id)
                     .ToList();
                     

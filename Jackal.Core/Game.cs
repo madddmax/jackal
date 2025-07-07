@@ -191,8 +191,8 @@ public class Game : ICompletable
                     move.ActionList.AddAction(drinkRumBottleAction);
                     move.MoveType = move.MoveType switch
                     {
-                        MoveType.WithRumBottleAndCoin => MoveType.WithRumBottleAndCoin,
-                        MoveType.WithRumBottleAndBigCoin => MoveType.WithRumBottleAndBigCoin,
+                        MoveType.WithCoin => MoveType.WithRumBottleAndCoin,
+                        MoveType.WithBigCoin => MoveType.WithRumBottleAndBigCoin,
                         _ => MoveType.WithRumBottle
                     };
                 }
