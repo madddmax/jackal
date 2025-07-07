@@ -10,10 +10,10 @@ import {
     saveMySettings,
     setPirateAutoChange,
 } from '../../../redux/gameSlice';
-import Pirate from './pirate';
-import './pirates.less';
+import PirateIcon from './pirateIcon';
+import './pirateIcon.less';
 
-function Pirates() {
+function LeftSidebar() {
     const dispatch = useDispatch();
 
     const currentPlayerPirates = useSelector(getCurrentPlayerPirates);
@@ -54,10 +54,9 @@ function Pirates() {
         <>
             {currentPlayerPirates &&
                 currentPlayerPirates.map((girl, index) => (
-                    <Pirate
+                    <PirateIcon
                         key={`pirate_${index}`}
                         pirate={girl}
-                        isActive={girl.isActive}
                         onClick={onClick(girl, false)}
                         onCoinClick={onClick(girl, true)}
                     />
@@ -87,4 +86,4 @@ function Pirates() {
     );
 }
 
-export default Pirates;
+export default LeftSidebar;

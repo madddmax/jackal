@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
 import { memoize } from 'proxy-memoize';
 
+import { girlsMap } from '../logic/gameLogic';
 import {
     ChooseHumanPirateActionProps,
     FieldState,
@@ -22,7 +23,7 @@ import {
 import { ScreenSizes, TeamScores } from './gameSlice.types';
 import { constructGameLevel } from './utils';
 import { Constants } from '/app/constants';
-import { debugLog, getAnotherRandomValue, girlsMap } from '/app/global';
+import { debugLog, getAnotherRandomValue } from '/app/global';
 
 export const gameSlice = createSlice({
     name: 'game',

@@ -1,9 +1,9 @@
 import { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
+import { girlsMap } from '../logic/gameLogic';
 import { GameState } from '../types';
 import { GameStartResponse, GameTurnResponse } from '../types/gameSaga';
 import { applyChanges, applyPirateChanges, applyStat, highlightHumanMoves, initGame, initMap } from './gameSlice';
-import { girlsMap } from '/app/global';
 
 export const applyStartData =
     (data: GameStartResponse): ThunkAction<void, GameState, unknown, UnknownAction> =>

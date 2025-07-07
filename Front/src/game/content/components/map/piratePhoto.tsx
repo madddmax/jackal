@@ -1,8 +1,9 @@
 import cn from 'classnames';
 import Image from 'react-bootstrap/Image';
 
+import { girlsMap } from '../../../logic/gameLogic';
 import './cell.less';
-import { debugLog, girlsMap } from '/app/global';
+import { debugLog } from '/app/global';
 import store from '/app/store';
 import { GameState } from '/game/types';
 

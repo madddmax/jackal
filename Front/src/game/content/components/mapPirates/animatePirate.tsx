@@ -1,7 +1,7 @@
 import { Animate } from 'react-move';
 
+import { girlsMap } from '../../../logic/gameLogic';
 import { PiratePhotoMemoized } from './piratePhotoMemoized';
-import { girlsMap } from '/app/global';
 
 interface AnimatePirateProps {
     pirate: GamePirate;

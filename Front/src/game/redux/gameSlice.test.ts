@@ -1,3 +1,4 @@
+import { girlsMap } from '../logic/gameLogic';
 import { GameState } from '../types';
 import { GameTeamResponse } from '../types/gameSaga';
 import reducer, {
@@ -15,7 +16,6 @@ import reducer, {
 } from './gameSlice';
 import { getMapData } from './mapDataForTests';
 import { Constants } from '/app/constants';
-import { girlsMap } from '/app/global';
 
 const testTeamId = 12;
 
