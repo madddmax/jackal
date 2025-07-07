@@ -88,13 +88,17 @@ public class DrawService : IDrawService
         foreach (var move in game.GetAvailableMoves())
         {
             var pirate = pirates.FirstOrDefault(p =>
-                p.X == move.From.X && p.Y == move.From.Y && p.Level == move.From.Level
+                p.X == move.From.X && p.Y == move.From.Y && (move.WithRumBottle || p.Level == move.From.Level)
             );
                 
             if (pirate == null)
             {
                 var pirateIds = game.Board.AllPirates
-                    .Where(p => !p.IsDrunk && p.Position.Equals(move.From))
+                    .Where(p => !p.IsDrunk && !p.IsInHole &&
+                                (p.Position.Equals(move.From) ||
+                                 (move.WithRumBottle &&
+                                  p.Position.Position.Equals(move.From.Position))
+                                ))
                     .Select(p => p.Id)
                     .ToList();
                     
@@ -111,6 +115,7 @@ public class DrawService : IDrawService
             result.Add(new DrawMove
             {
                 MoveNum = index++,
+                WithRumBottle = move.WithRumBottle,
                 WithCoin = move.WithCoin,
                 WithBigCoin = move.WithBigCoin,
                 WithRespawn = move.WithRespawn,

@@ -96,15 +96,16 @@ public class Game : ICompletable
                 TeamId = CurrentTeamId
             };
             var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
-                
-            var from = _availableMoves[moveNum].From;
+
+            var move = _availableMoves[moveNum];
+            var from = move.From;
             var currentTeamPirates = Board.Teams[CurrentTeamId].Pirates
-                .Where(x => x.IsActive)
+                .Where(x => !x.IsDrunk && !x.IsInHole)
                 .ToList();
             
             var pirate =
-                currentTeamPirates.FirstOrDefault(x => x.Id == pirateId && x.Position == from)
-                ?? currentTeamPirates.First(x => x.Position == from);
+                currentTeamPirates.FirstOrDefault(x => x.Id == pirateId && (x.Position == from || move.WithRumBottle && x.Position.Position == from.Position))
+                ?? currentTeamPirates.First(x => x.Position == from || move.WithRumBottle && x.Position.Position == from.Position);
                 
             IGameAction action = _actions[moveNum];
             action.Act(this, pirate);
@@ -174,11 +175,11 @@ public class Game : ICompletable
         Team team = Board.Teams[teamId];
         if (team.RumBottles > 0 && NeedSubTurnPirate == null)
         {
-            // todo добавить пиратов, которые находятся в клетках вертушках
-            IEnumerable<Pirate> trappedPirates = team.Pirates.Where(x => x.IsInTrap);
-            foreach (var pirate in trappedPirates)
+            IEnumerable<Pirate> piratesWithRumBottles = team.Pirates.Where(x => x.IsInTrap || x.Position.Level > 0);
+            foreach (var pirate in piratesWithRumBottles)
             {
-                AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, pirate.Position);
+                var piratePosition = new TilePosition(pirate.Position.X, pirate.Position.Y);
+                AvailableMovesTask task = new AvailableMovesTask(teamId, piratePosition, piratePosition);
                 List<AvailableMove> moves = Board.GetAllAvailableMoves(
                     task,
                     task.Source,
