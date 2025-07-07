@@ -8,7 +8,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
 {
     public TilePosition To = to;
 
-    public GameActionResult Act(Game game, Pirate pirate)
+    public void Act(Game game, Pirate pirate)
     {
         Board board = game.Board;
         Map map = board.Map;
@@ -222,7 +222,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 !airplaneFlying)
             {
                 game.KillPirate(pirate);
-                return GameActionResult.Die;
+                return;
             }
                 
             game.NeedSubTurnPirate = pirate;
@@ -252,7 +252,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         if (enemyShips.Contains(To.Position))
         {
             game.KillPirate(pirate);
-            return GameActionResult.Die;
+            return;
         }
         
         if (targetTileLevel.Pirates.Any(x => x.TeamId == pirate.TeamId))
@@ -296,10 +296,8 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 break;
             case TileType.Cannibal:
                 game.KillPirate(pirate);
-                return GameActionResult.Die;
+                return;
         }
-
-        return GameActionResult.Live;
     }
         
     private static TilePosition GetCannonFly(DirectionType direction, Position pos, int mapSize) =>

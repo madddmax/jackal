@@ -5,7 +5,7 @@ namespace Jackal.Core.Actions;
 
 public class DrinkRumBottleAction : IGameAction
 {
-    public GameActionResult Act(Game game, Pirate pirate)
+    public void Act(Game game, Pirate pirate)
     {
         Board board = game.Board;
         Team ourTeam = board.Teams[pirate.TeamId];
@@ -19,7 +19,5 @@ public class DrinkRumBottleAction : IGameAction
         ourTeam.RumBottles -= 1;
         if (allyTeam != null)
             allyTeam.RumBottles -= 1;
-
-        return GameActionResult.Live;
     }
 }

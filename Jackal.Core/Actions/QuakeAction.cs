@@ -4,7 +4,7 @@ namespace Jackal.Core.Actions;
 
 public class QuakeAction(TilePosition from, TilePosition to) : IGameAction
 {
-    public GameActionResult Act(Game game, Pirate pirate)
+    public void Act(Game game, Pirate pirate)
     {
         var map = game.Board.Map;
         
@@ -43,7 +43,5 @@ public class QuakeAction(TilePosition from, TilePosition to) : IGameAction
             game.NeedSubTurnPirate = pirate;
             game.PrevSubTurnPosition = to;
         }
-
-        return GameActionResult.Live;
     }
 }
