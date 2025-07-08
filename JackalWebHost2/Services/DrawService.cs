@@ -37,7 +37,7 @@ public class DrawService : IDrawService
                 pirateChange = new PirateChange(newPirate)
                 {
                     IsDrunk = oldPirate.IsDrunk != newPirate.IsDrunk ? newPirate.IsDrunk : null,
-                    IsInTrap = oldPirate.IsInTrap != newPirate.IsInTrap ? newPirate.IsInTrap : null,
+                    IsInTrap = newPirate.IsInTrap ? true : null,
                     IsInHole = oldPirate.IsInHole != newPirate.IsInHole ? newPirate.IsInHole : null
                 };
                 pirateChanges.Add(pirateChange);

@@ -7,9 +7,9 @@ public class GameActionList(params IGameAction[] actions) : IGameAction
 {
     private readonly List<IGameAction> _actions = [..actions];
 
-    public void AddAction(IGameAction action)
+    public void AddFirstAction(IGameAction action)
     {
-        _actions.Add(action);
+        _actions.Insert(0, action);
     }
     
     public void Act(Game game,Pirate pirate)

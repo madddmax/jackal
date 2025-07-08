@@ -19,5 +19,7 @@ public class DrinkRumBottleAction : IGameAction
         ourTeam.RumBottles -= 1;
         if (allyTeam != null)
             allyTeam.RumBottles -= 1;
+        
+        pirate.IsInTrap = false;
     }
 }

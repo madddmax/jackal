@@ -174,7 +174,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             game.PrevSubTurnPosition = prev;
         }
         
-        // заход в дыру (не из дыры))
+        // заход в дыру, не из дыры
         if (targetTile.Type == TileType.Hole && !game.SubTurn.FallingInTheHole)
         {
             var holeTiles = board.AllTiles(x => x.Type == TileType.Hole).ToList();
@@ -273,7 +273,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 game.MovePirateToTheShip(enemyPirate);
             }
         }
-
+        
         switch (targetTile.Type)
         {
             case TileType.RumBarrel:
@@ -282,16 +282,16 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 pirate.IsDrunk = true;
                 break;
             case TileType.Trap:
-                if (targetTile.Pirates.Count == 1)
-                {
-                    pirate.IsInTrap = true;
-                }
-                else
+                if (targetTile.Pirates.Count > 1)
                 {
                     foreach (Pirate pirateOnTile in targetTile.Pirates)
                     {
                         pirateOnTile.IsInTrap = false;
                     }
+                }
+                else
+                {
+                    pirate.IsInTrap = true;
                 }
                 break;
             case TileType.Cannibal:

@@ -104,8 +104,8 @@ public class Game : ICompletable
                 .ToList();
             
             var pirate =
-                currentTeamPirates.FirstOrDefault(x => x.Id == pirateId && (x.Position == from || move.WithRumBottle && x.Position.Position == from.Position))
-                ?? currentTeamPirates.First(x => x.Position == from || move.WithRumBottle && x.Position.Position == from.Position);
+                currentTeamPirates.FirstOrDefault(x => x.Id == pirateId && (x.Position == from || (move.WithRumBottle && x.Position.Position == from.Position)))
+                ?? currentTeamPirates.First(x => x.Position == from || (move.WithRumBottle && x.Position.Position == from.Position));
                 
             IGameAction action = _actions[moveNum];
             action.Act(this, pirate);
@@ -189,7 +189,7 @@ public class Game : ICompletable
                 foreach (var move in moves)
                 {
                     var drinkRumBottleAction = new DrinkRumBottleAction();
-                    move.ActionList.AddAction(drinkRumBottleAction);
+                    move.ActionList.AddFirstAction(drinkRumBottleAction);
                     move.MoveType = move.MoveType switch
                     {
                         MoveType.WithCoin => MoveType.WithRumBottleAndCoin,
