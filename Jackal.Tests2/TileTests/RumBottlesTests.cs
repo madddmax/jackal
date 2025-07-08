@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
@@ -62,5 +63,75 @@ public class RumBottlesTests
         Assert.Equal(4, moves.Count);
         Assert.Equal(3, game.Board.Teams.Single().RumBottles);
         Assert.Equal(1, game.TurnNumber);
+    }
+    
+    [Fact]
+    public void RumBottleThenTrap_GetAvailableMoves_ReturnNearestMovesWithRumBottle()
+    {
+        // Arrange
+        var rumBottleTrapLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.RumBottles, 1),
+            new TileParams(TileType.Trap)
+        );
+        var game = new TestGame(rumBottleTrapLineMap);
+        
+        // Act - высадка с корабля бутылку с ромом
+        game.Turn();
+        
+        // выбираем ход - вперед на ловушку
+        game.SetMoveAndTurn(2, 2);
+        
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - доступно 4 хода из ловушки за бутылку рома на соседние клетки
+        Assert.Equal(4, moves.Count);
+        Assert.Equal(new TilePosition(2, 2), moves.First().From);
+        Assert.Equivalent(new List<TilePosition>
+            {
+                new(1, 2),
+                new(2, 1),
+                new(2, 3),
+                new(3, 2)
+            },
+            moves.Select(m => m.To)
+        );
+        Assert.Equal(4, moves.Count(m => m.WithRumBottle));
+        Assert.Equal(2, game.TurnNumber);
+    }
+    
+    [Fact]
+    public void RumBottleThenSpinning_GetAvailableMoves_ReturnNearestMovesWithRumBottleAndOneSpinningMove()
+    {
+        // Arrange
+        var rumBottleSpinningLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.RumBottles, 1),
+            new TileParams(TileType.Spinning) { SpinningCount = 5 }
+        );
+        var game = new TestGame(rumBottleSpinningLineMap);
+        
+        // Act - высадка с корабля бутылку с ромом
+        game.Turn();
+        
+        // выбираем ход - вперед на гору-вертушку
+        game.SetMoveAndTurn(2, 2);
+        
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - доступно 5 ходов: 4 из горы-вертушки за бутылку рома на соседние клетки и 1 ход по горе 
+        Assert.Equal(5, moves.Count);
+        Assert.Equal(new TilePosition(2, 2), moves.First().From);
+        Assert.Equivalent(new List<TilePosition>
+            {
+                new(1, 2),
+                new(2, 1),
+                new(2, 3),
+                new(3, 2),
+                new(2,2, 3)
+            },
+            moves.Select(m => m.To)
+        );
+        Assert.Equal(4, moves.Count(m => m.WithRumBottle));
+        Assert.Equal(1, moves.Count(m => !m.WithRumBottle));
+        Assert.Equal(2, game.TurnNumber);
     }
 }
