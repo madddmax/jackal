@@ -119,7 +119,7 @@ public class RumBottlesTests
         
         // Assert - доступно 5 ходов: 4 из горы-вертушки за бутылку рома на соседние клетки и 1 ход по горе 
         Assert.Equal(5, moves.Count);
-        Assert.Equal(new TilePosition(2, 2), moves.First().From);
+        Assert.Equal(new TilePosition(2, 2, 4), moves.First().From);
         Assert.Equivalent(new List<TilePosition>
             {
                 new(1, 2),
