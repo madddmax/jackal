@@ -96,16 +96,17 @@ public class Game : ICompletable
                 TeamId = CurrentTeamId
             };
             var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
-                
-            var from = _availableMoves[moveNum].From;
+
+            var move = _availableMoves[moveNum];
             var currentTeamPirates = Board.Teams[CurrentTeamId].Pirates
-                .Where(x => x.IsActive)
+                .Where(x => !x.IsDrunk && !x.IsInHole)
+                .Where(x =>
+                    (!x.IsInTrap && !move.WithRumBottle && x.Position == move.From) ||
+                    (move.WithRumBottle && x.Position.Position == move.From.Position)
+                )
                 .ToList();
-            
-            var pirate =
-                currentTeamPirates.FirstOrDefault(x => x.Id == pirateId && x.Position == from)
-                ?? currentTeamPirates.First(x => x.Position == from);
-                
+
+            var pirate = currentTeamPirates.FirstOrDefault(x => x.Id == pirateId) ?? currentTeamPirates.First();
             IGameAction action = _actions[moveNum];
             action.Act(this, pirate);
         }
@@ -169,14 +170,41 @@ public class Game : ICompletable
     {
         _availableMoves.Clear();
         _actions.Clear();
+        var targets = new List<AvailableMove>();
             
         Team team = Board.Teams[teamId];
-
+        if (team.RumBottles > 0 && NeedSubTurnPirate == null)
+        {
+            IEnumerable<Pirate> piratesWithRumBottles = team.Pirates.Where(x => x.IsInTrap || x.Position.Level > 0);
+            foreach (var pirate in piratesWithRumBottles)
+            {
+                AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, pirate.Position);
+                List<AvailableMove> moves = Board.GetAllAvailableMoves(
+                    task,
+                    task.Source,
+                    task.Prev,
+                    new SubTurnState { DrinkRumBottle = true }
+                );
+                foreach (var move in moves)
+                {
+                    var drinkRumBottleAction = new DrinkRumBottleAction();
+                    move.ActionList.AddFirstAction(drinkRumBottleAction);
+                    move.MoveType = move.MoveType switch
+                    {
+                        MoveType.WithCoin => MoveType.WithRumBottleAndCoin,
+                        MoveType.WithBigCoin => MoveType.WithRumBottleAndBigCoin,
+                        _ => MoveType.WithRumBottle
+                    };
+                }
+                
+                targets.AddRange(moves);
+            }
+        }
+        
         IEnumerable<Pirate> activePirates = NeedSubTurnPirate != null
             ? new[] { NeedSubTurnPirate }
             : team.Pirates.Where(x => x.IsActive);
-
-        var targets = new List<AvailableMove>();
+        
         foreach (var pirate in activePirates)
         {
             TilePosition prev = PrevSubTurnPosition ?? pirate.Position;

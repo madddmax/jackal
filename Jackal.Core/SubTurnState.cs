@@ -28,11 +28,17 @@ public class SubTurnState
     /// </summary>
     public int QuakePhase { get; set; }
     
+    /// <summary>
+    /// Ход за бутылку с ромом
+    /// </summary>
+    public bool DrinkRumBottle { get; set; }
+    
     public void Clear()
     {
         AirplaneFlying = false;
         LighthouseViewCount = 0;
         FallingInTheHole = false;
         QuakePhase = 0;
+        DrinkRumBottle = false;
     }
 }

@@ -34,14 +34,20 @@ public record Move(TilePosition From, TilePosition To, Position? Prev, MoveType 
     public readonly MoveType Type = Type;
 
     /// <summary>
+    /// Использовать бутылку с ромом
+    /// </summary>
+    public bool WithRumBottle =>
+        Type is MoveType.WithRumBottle or MoveType.WithRumBottleAndCoin or MoveType.WithRumBottleAndBigCoin;
+    
+    /// <summary>
     /// Перенос монеты
     /// </summary>
-    public bool WithCoin => Type == MoveType.WithCoin;
+    public bool WithCoin => Type is MoveType.WithCoin or MoveType.WithRumBottleAndCoin;
 
     /// <summary>
     /// Перенос большой монеты
     /// </summary>
-    public bool WithBigCoin => Type == MoveType.WithBigCoin;
+    public bool WithBigCoin => Type is MoveType.WithBigCoin or MoveType.WithRumBottleAndBigCoin;
     
     /// <summary>
     /// Воскрешение пирата на бабе

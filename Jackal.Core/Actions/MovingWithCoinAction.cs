@@ -5,7 +5,7 @@ namespace Jackal.Core.Actions;
 
 internal class MovingWithCoinAction(TilePosition from, TilePosition to, TilePosition prev) : IGameAction
 {
-    public GameActionResult Act(Game game, Pirate pirate)
+    public void Act(Game game, Pirate pirate)
     {
         var movingAction = new MovingAction(from, to, prev);
         movingAction.Act(game, pirate);
@@ -58,7 +58,5 @@ internal class MovingWithCoinAction(TilePosition from, TilePosition to, TilePosi
         {
             targetTileLevel.Coins++;
         }
-
-        return GameActionResult.Live;
     }
 }

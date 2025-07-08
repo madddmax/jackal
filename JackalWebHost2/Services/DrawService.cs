@@ -1,6 +1,5 @@
 ﻿using Jackal.Core;
 using Jackal.Core.Domain;
-using Jackal.Core.Players;
 using JackalWebHost2.Models;
 
 namespace JackalWebHost2.Services;
@@ -38,7 +37,7 @@ public class DrawService : IDrawService
                 pirateChange = new PirateChange(newPirate)
                 {
                     IsDrunk = oldPirate.IsDrunk != newPirate.IsDrunk ? newPirate.IsDrunk : null,
-                    IsInTrap = oldPirate.IsInTrap != newPirate.IsInTrap ? newPirate.IsInTrap : null,
+                    IsInTrap = newPirate.IsInTrap ? true : null,
                     IsInHole = oldPirate.IsInHole != newPirate.IsInHole ? newPirate.IsInHole : null
                 };
                 pirateChanges.Add(pirateChange);
@@ -89,13 +88,17 @@ public class DrawService : IDrawService
         foreach (var move in game.GetAvailableMoves())
         {
             var pirate = pirates.FirstOrDefault(p =>
-                p.X == move.From.X && p.Y == move.From.Y && p.Level == move.From.Level
+                p.X == move.From.X && p.Y == move.From.Y && (move.WithRumBottle || p.Level == move.From.Level)
             );
                 
             if (pirate == null)
             {
                 var pirateIds = game.Board.AllPirates
-                    .Where(p => p.IsActive && p.Position.Equals(move.From))
+                    .Where(x => !x.IsDrunk && !x.IsInHole)
+                    .Where(x =>
+                        (!x.IsInTrap && !move.WithRumBottle && x.Position == move.From) ||
+                        (move.WithRumBottle && x.Position.Position == move.From.Position)
+                    )
                     .Select(p => p.Id)
                     .ToList();
                     
@@ -112,6 +115,7 @@ public class DrawService : IDrawService
             result.Add(new DrawMove
             {
                 MoveNum = index++,
+                WithRumBottle = move.WithRumBottle,
                 WithCoin = move.WithCoin,
                 WithBigCoin = move.WithBigCoin,
                 WithRespawn = move.WithRespawn,
@@ -202,11 +206,6 @@ public class DrawService : IDrawService
             case TileType.BigCoin:
                 filename = "chest";
                 break;
-            case TileType.Rum1:
-            case TileType.Rum2:
-            case TileType.Rum3:
-                filename = $"rum{tile.ArrowsCode}";
-                break;
             case TileType.Fort:
                 filename = "fort";
                 break;
@@ -215,6 +214,9 @@ public class DrawService : IDrawService
                 break;
             case TileType.RumBarrel:
                 filename = "rumbar";
+                break;
+            case TileType.RumBottles:
+                filename = $"rum{tile.ArrowsCode}";
                 break;
             case TileType.Horse:
                 filename = "horse";

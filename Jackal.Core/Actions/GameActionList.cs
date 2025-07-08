@@ -7,15 +7,16 @@ public class GameActionList(params IGameAction[] actions) : IGameAction
 {
     private readonly List<IGameAction> _actions = [..actions];
 
-    public GameActionResult Act(Game game,Pirate pirate)
+    public void AddFirstAction(IGameAction action)
+    {
+        _actions.Insert(0, action);
+    }
+    
+    public void Act(Game game,Pirate pirate)
     {
         foreach (var action in _actions)
         {
-            var rez = action.Act(game, pirate);
-            if (rez == GameActionResult.Die)
-                return GameActionResult.Die;
+            action.Act(game, pirate);
         }
-        
-        return GameActionResult.Live;
     }
 }

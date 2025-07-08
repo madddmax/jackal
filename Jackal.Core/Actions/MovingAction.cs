@@ -8,7 +8,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
 {
     public TilePosition To = to;
 
-    public GameActionResult Act(Game game, Pirate pirate)
+    public void Act(Game game, Pirate pirate)
     {
         Board board = game.Board;
         Map map = board.Map;
@@ -85,6 +85,14 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             game.SubTurn.LighthouseViewCount == 0)
         {
             game.AddPirate(pirate.TeamId, To, PirateType.BenGunn);
+            targetTile.Used = true;
+        }
+        
+        // нашли бутылки с ромом не маяком
+        if (targetTile is { Type: TileType.RumBottles, Used: false } && 
+            game.SubTurn.LighthouseViewCount == 0)
+        {
+            board.Teams[pirate.TeamId].RumBottles += targetTile.ArrowsCode;
             targetTile.Used = true;
         }
             
@@ -166,7 +174,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             game.PrevSubTurnPosition = prev;
         }
         
-        // заход в дыру (не из дыры))
+        // заход в дыру, не из дыры
         if (targetTile.Type == TileType.Hole && !game.SubTurn.FallingInTheHole)
         {
             var holeTiles = board.AllTiles(x => x.Type == TileType.Hole).ToList();
@@ -214,7 +222,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 !airplaneFlying)
             {
                 game.KillPirate(pirate);
-                return GameActionResult.Die;
+                return;
             }
                 
             game.NeedSubTurnPirate = pirate;
@@ -244,7 +252,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         if (enemyShips.Contains(To.Position))
         {
             game.KillPirate(pirate);
-            return GameActionResult.Die;
+            return;
         }
         
         if (targetTileLevel.Pirates.Any(x => x.TeamId == pirate.TeamId))
@@ -265,7 +273,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 game.MovePirateToTheShip(enemyPirate);
             }
         }
-
+        
         switch (targetTile.Type)
         {
             case TileType.RumBarrel:
@@ -274,24 +282,22 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 pirate.IsDrunk = true;
                 break;
             case TileType.Trap:
-                if (targetTile.Pirates.Count == 1)
-                {
-                    pirate.IsInTrap = true;
-                }
-                else
+                if (targetTile.Pirates.Count > 1)
                 {
                     foreach (Pirate pirateOnTile in targetTile.Pirates)
                     {
                         pirateOnTile.IsInTrap = false;
                     }
                 }
+                else
+                {
+                    pirate.IsInTrap = true;
+                }
                 break;
             case TileType.Cannibal:
                 game.KillPirate(pirate);
-                return GameActionResult.Die;
+                return;
         }
-
-        return GameActionResult.Live;
     }
         
     private static TilePosition GetCannonFly(DirectionType direction, Position pos, int mapSize) =>

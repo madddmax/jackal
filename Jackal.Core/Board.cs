@@ -137,7 +137,7 @@ public class Board
             var usualMove = AvailableMoveFactory.UsualMove(task.Source, newPosition, source);
             var coinMove = AvailableMoveFactory.CoinMove(task.Source, newPosition, source);
             var bigCoinMove = AvailableMoveFactory.BigCoinMove(task.Source, newPosition, source);
-                
+            
             // проверяем, что на этой клетке
             var newPositionTile = Map[newPosition.Position];
                 
@@ -316,9 +316,9 @@ public class Board
                 rez = new[] { IncomeTilePosition(target) };
                 break;
             case TileType.Spinning:
-                if (source.Level > 0)
+                if (source.Level > 0 && !subTurn.DrinkRumBottle)
                 {
-                    rez = new[] {new TilePosition(source.Position, source.Level - 1)};
+                    rez = new[] { new TilePosition(source.Position, source.Level - 1) };
                 }
                 break;
             case TileType.Water:
