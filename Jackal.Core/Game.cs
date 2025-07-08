@@ -98,15 +98,15 @@ public class Game : ICompletable
             var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
 
             var move = _availableMoves[moveNum];
-            var from = move.From;
             var currentTeamPirates = Board.Teams[CurrentTeamId].Pirates
                 .Where(x => !x.IsDrunk && !x.IsInHole)
+                .Where(x =>
+                    (!x.IsInTrap && !move.WithRumBottle && x.Position == move.From) ||
+                    (move.WithRumBottle && x.Position.Position == move.From.Position)
+                )
                 .ToList();
-            
-            var pirate =
-                currentTeamPirates.FirstOrDefault(x => x.Id == pirateId && (x.Position == from || (move.WithRumBottle && x.Position.Position == from.Position)))
-                ?? currentTeamPirates.First(x => x.Position == from || (move.WithRumBottle && x.Position.Position == from.Position));
-                
+
+            var pirate = currentTeamPirates.FirstOrDefault(x => x.Id == pirateId) ?? currentTeamPirates.First();
             IGameAction action = _actions[moveNum];
             action.Act(this, pirate);
         }
