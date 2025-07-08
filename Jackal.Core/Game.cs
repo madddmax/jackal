@@ -178,13 +178,12 @@ public class Game : ICompletable
             IEnumerable<Pirate> piratesWithRumBottles = team.Pirates.Where(x => x.IsInTrap || x.Position.Level > 0);
             foreach (var pirate in piratesWithRumBottles)
             {
-                var piratePosition = new TilePosition(pirate.Position.X, pirate.Position.Y);
-                AvailableMovesTask task = new AvailableMovesTask(teamId, piratePosition, piratePosition);
+                AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, pirate.Position);
                 List<AvailableMove> moves = Board.GetAllAvailableMoves(
                     task,
                     task.Source,
                     task.Prev,
-                    SubTurn
+                    new SubTurnState { DrinkRumBottle = true }
                 );
                 foreach (var move in moves)
                 {
