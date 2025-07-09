@@ -17,7 +17,7 @@ public class RumBottlesTests
         );
         var game = new TestGame(oneRumOnlyMap);
         
-        // Act - высадка с корабля бутылку с ромом
+        // Act - высадка с корабля на бутылку с ромом
         game.Turn();
         var moves = game.GetAvailableMoves();
         
@@ -75,7 +75,7 @@ public class RumBottlesTests
         );
         var game = new TestGame(rumBottleTrapLineMap);
         
-        // Act - высадка с корабля бутылку с ромом
+        // Act - высадка с корабля на бутылку с ромом
         game.Turn();
         
         // выбираем ход - вперед на ловушку
@@ -109,7 +109,7 @@ public class RumBottlesTests
         );
         var game = new TestGame(rumBottleSpinningLineMap);
         
-        // Act - высадка с корабля бутылку с ромом
+        // Act - высадка с корабля на бутылку с ромом
         game.Turn();
         
         // выбираем ход - вперед на гору-вертушку
@@ -133,5 +133,33 @@ public class RumBottlesTests
         Assert.Equal(4, moves.Count(m => m.WithRumBottle));
         Assert.Equal(1, moves.Count(m => !m.WithRumBottle));
         Assert.Equal(2, game.TurnNumber);
+    }
+    
+    [Fact]
+    public void LighthouseThenSearchRumBottles_GetAvailableMoves_ReturnNearestMovesAndNoRumBottles()
+    {
+        // Arrange
+        var rumBottleTrapLineMap = new TwoTileMapGenerator(
+            new TileParams(TileType.Lighthouse),
+            new TileParams(TileType.RumBottles, 1)
+        );
+        var game = new TestGame(rumBottleTrapLineMap);
+        
+        // Act - высадка с корабля на маяк
+        game.Turn();
+        
+        // по очереди смотрим неизвестные клетки с бутылками
+        game.Turn(); // 1
+        game.Turn(); // 2
+        game.Turn(); // 3
+        game.Turn(); // 4
+        
+        var moves = game.GetAvailableMoves();
+        
+        // Assert - доступно 4 хода на соседние клетки в месте высадки и 0 бутылок с ромом
+        Assert.Equal(4, moves.Count);
+        Assert.Equal(new TilePosition(2, 1), moves.First().From);
+        Assert.Equal(0, game.Board.Teams.Single().RumBottles);
+        Assert.Equal(1, game.TurnNumber);
     }
 }
