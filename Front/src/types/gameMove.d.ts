@@ -9,6 +9,7 @@ interface GameMove {
     withCoin: boolean;
     withBigCoin: boolean;
     withRespawn: boolean;
+    withRumBottle: boolean;
 }
 
 interface GameMovePosition {

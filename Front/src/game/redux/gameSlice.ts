@@ -52,6 +52,7 @@ export const gameSlice = createSlice({
         highlight_x: 0,
         highlight_y: 0,
         hasPirateAutoChange: true,
+        includeMovesWithRum: false,
     } satisfies GameState as GameState,
     reducers: {
         initMySettings: (state, action: PayloadAction<StorageState>) => {
@@ -179,6 +180,10 @@ export const gameSlice = createSlice({
         setPirateAutoChange: (state, action: PayloadAction<boolean>) => {
             state.hasPirateAutoChange = action.payload;
         },
+        setIncludeMovesWithRum: (state, action: PayloadAction<boolean>) => {
+            state.includeMovesWithRum = action.payload;
+            gameSlice.caseReducers.highlightHumanMoves(state, highlightHumanMoves({}));
+        },
         chooseHumanPirate: (state, action: PayloadAction<ChooseHumanPirateActionProps>) => {
             const selectors = gameSlice.getSelectors();
             const pirate = selectors.getPirateById(state, action.payload.pirate)!;
@@ -252,6 +257,7 @@ export const gameSlice = createSlice({
                 .filter(
                     (move) =>
                         move.from.pirateIds.includes(currentTeam.activePirate) &&
+                        (!move.withRumBottle || (move.withRumBottle && state.includeMovesWithRum)) &&
                         ((pirate?.withCoin && move.withCoin) ||
                             (pirate?.withBigCoin && move.withBigCoin) ||
                             (pirate?.withCoin === undefined && pirate?.withBigCoin === undefined) ||
@@ -501,6 +507,7 @@ export const gameSlice = createSlice({
         getGameField: (state, row: number, col: number): FieldState => state.fields[row][col],
         getMapForecasts: (state): string[] | undefined => state.mapForecasts,
         getPirateAutoChange: (state): boolean => state.hasPirateAutoChange,
+        getIncludeMovesWithRum: (state): boolean => state.includeMovesWithRum,
         getGameStatistics: (state): GameStat | undefined => state.stat,
         getTeamScores: (state): TeamScores[] | undefined => {
             return state.teamScores?.map((it) => {
@@ -527,6 +534,7 @@ export const {
     initPiratePositions,
     setCurrentHumanTeam,
     setPirateAutoChange,
+    setIncludeMovesWithRum,
     chooseHumanPirate,
     highlightPirate,
     highlightHumanMoves,
@@ -550,6 +558,7 @@ export const {
     getUserSettings,
     getMapForecasts,
     getPirateAutoChange,
+    getIncludeMovesWithRum,
     getGameStatistics,
     getTeamScores,
 } = gameSlice.selectors;

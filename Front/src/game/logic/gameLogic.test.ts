@@ -89,6 +89,7 @@ const getState = (pirates: GamePirate[]) => ({
     highlight_x: 0,
     highlight_y: 0,
     hasPirateAutoChange: true,
+    includeMovesWithRum: false,
 });
 
 describe('cell logic tests', () => {
@@ -111,6 +112,7 @@ describe('cell logic tests', () => {
                         withCoin: false,
                         withBigCoin: false,
                         withRespawn: false,
+                        withRumBottle: false,
                     },
                 ],
             }),

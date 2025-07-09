@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     chooseHumanPirate,
     getCurrentPlayerPirates,
+    getIncludeMovesWithRum,
     getPirateAutoChange,
     getUserSettings,
     saveMySettings,
+    setIncludeMovesWithRum,
     setPirateAutoChange,
 } from '../../../redux/gameSlice';
 import PirateIcon from './pirateIcon';
@@ -18,6 +20,7 @@ function LeftSidebar() {
 
     const currentPlayerPirates = useSelector(getCurrentPlayerPirates);
     const hasPirateAutoChange = useSelector(getPirateAutoChange);
+    const includeMovesWithRum = useSelector(getIncludeMovesWithRum);
     const userSettings = useSelector(getUserSettings);
 
     const [gameSpeed, setGameSpeed] = useState<number>(userSettings.gameSpeed || 0);
@@ -27,6 +30,8 @@ function LeftSidebar() {
 
     const pirateAutoChangeToggle = (event: { target: { checked: boolean } }) =>
         dispatch(setPirateAutoChange(event.target.checked));
+    const includeMovesWithRumToggle = (event: { target: { checked: boolean } }) =>
+        dispatch(setIncludeMovesWithRum(event.target.checked));
 
     const increaseSpeed = () => {
         if (gameSpeed >= 10) return;
@@ -63,6 +68,14 @@ function LeftSidebar() {
                 ))}
 
             <Form.Group controlId="formBasicCheckbox">
+                <Form.Check
+                    className="photo-position float-end mb-3"
+                    style={{ marginLeft: 0 }}
+                    type="switch"
+                    label="бухло"
+                    checked={includeMovesWithRum}
+                    onChange={includeMovesWithRumToggle}
+                />
                 <Form.Check
                     className="photo-position float-end mb-3"
                     style={{ marginLeft: 0 }}
