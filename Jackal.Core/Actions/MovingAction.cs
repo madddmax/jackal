@@ -93,6 +93,11 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             game.SubTurn.LighthouseViewCount == 0)
         {
             board.Teams[pirate.TeamId].RumBottles += targetTile.ArrowsCode;
+            if (allyTeam != null)
+            {
+                allyTeam.RumBottles += targetTile.ArrowsCode;
+            }
+            
             targetTile.Used = true;
         }
             
