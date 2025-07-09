@@ -216,7 +216,7 @@ public class DrawService : IDrawService
                 filename = "rumbar";
                 break;
             case TileType.RumBottles:
-                filename = $"rum{tile.ArrowsCode}";
+                filename = tile.Used ? $"used_rum{tile.ArrowsCode}" : $"rum{tile.ArrowsCode}";
                 break;
             case TileType.Horse:
                 filename = "horse";
