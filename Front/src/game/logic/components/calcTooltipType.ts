@@ -1,13 +1,5 @@
-import { FieldState, GameState } from '/game/types';
-
-export const TooltipTypes = {
-    SkipMove: 'skipmove',
-    GroundHole: 'groundhole',
-    Respawn: 'respawn',
-    Seajump: 'seajump',
-    SomeFields: 'somefields',
-    NoTooltip: 'notooltip',
-};
+import { TooltipTypes } from '../../constants';
+import { FieldState, GameState } from '../../types';
 
 export interface CalcTooltipTypeProps {
     row: number;

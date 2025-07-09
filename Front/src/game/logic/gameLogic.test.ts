@@ -1,15 +1,16 @@
-import { getMapData } from '../../../redux/mapDataForTests';
-import { CalcTooltipType, TooltipTypes } from './cell.logic';
-import { Constants } from '/app/constants';
+import { TooltipTypes } from '../constants';
 import reducer, {
     highlightHumanMoves,
     initMap,
     initPiratePositions,
     initTeams,
     setCurrentHumanTeam,
-} from '/game/redux/gameSlice';
-import { GameState } from '/game/types';
-import { GameTeamResponse } from '/game/types/gameSaga';
+} from '../redux/gameSlice';
+import { getMapData } from '../redux/mapDataForTests';
+import { GameState } from '../types';
+import { GameTeamResponse } from '../types/gameSaga';
+import { CalcTooltipType } from './components/calcTooltipType';
+import { Constants } from '/app/constants';
 
 const testTeamId = 12;
 

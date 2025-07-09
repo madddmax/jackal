@@ -1,5 +1,5 @@
 import { memo } from 'react';
 
-import PiratePhoto from '../map/piratePhoto';
+import PiratePhoto from './piratePhoto';
 
 export const PiratePhotoMemoized = memo(PiratePhoto);
