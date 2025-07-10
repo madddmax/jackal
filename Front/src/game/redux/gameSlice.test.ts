@@ -1,3 +1,4 @@
+import { girlsMap } from '../logic/gameLogic';
 import { GameState } from '../types';
 import { GameTeamResponse } from '../types/gameSaga';
 import reducer, {
@@ -15,7 +16,6 @@ import reducer, {
 } from './gameSlice';
 import { getMapData } from './mapDataForTests';
 import { Constants } from '/app/constants';
-import { girlsMap } from '/app/global';
 
 const testTeamId = 12;
 
@@ -167,6 +167,7 @@ const getState = (pirates: GamePirate[]): GameState => ({
     highlight_x: 0,
     highlight_y: 0,
     hasPirateAutoChange: true,
+    includeMovesWithRum: false,
 });
 
 describe('redux init tests', () => {
@@ -317,6 +318,7 @@ describe('redux basic tests', () => {
                         withCoin: true,
                         withBigCoin: false,
                         withRespawn: false,
+                        withRumBottle: false,
                     },
                 ],
             }),
@@ -344,6 +346,7 @@ describe('redux basic tests', () => {
                         withCoin: true,
                         withBigCoin: false,
                         withRespawn: false,
+                        withRumBottle: false,
                     },
                 ],
             }),
@@ -445,6 +448,7 @@ describe('redux money actions tests', () => {
                         withCoin: true,
                         withBigCoin: false,
                         withRespawn: false,
+                        withRumBottle: false,
                     },
                     {
                         moveNum: 2,
@@ -453,6 +457,7 @@ describe('redux money actions tests', () => {
                         withCoin: false,
                         withBigCoin: false,
                         withRespawn: false,
+                        withRumBottle: false,
                     },
                 ],
             }),

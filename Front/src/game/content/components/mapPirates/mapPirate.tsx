@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { girlsMap } from '../../../logic/gameLogic';
 import { chooseHumanPirate, getPirateById, getUserSettings } from '../../../redux/gameSlice';
 import AnimatePirate from './animatePirate';
-import { girlsMap } from '/app/global';
 import store from '/app/store';
 import { GameState } from '/game/types';
 

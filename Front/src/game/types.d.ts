@@ -5,6 +5,7 @@ export interface GameState {
     teamScores?: GameScore[];
     mapForecasts?: string[];
     hasPirateAutoChange: boolean;
+    includeMovesWithRum: boolean;
 
     gameSettings: GameStateSettings;
     userSettings: StorageState;

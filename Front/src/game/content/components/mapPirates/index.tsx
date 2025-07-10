@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 
+import { girlsMap } from '../../../logic/gameLogic';
 import { getGameSettings, getPiratesIds } from '../../../redux/gameSlice';
 import MapPirate from './mapPirate';
-import { girlsMap } from '/app/global';
 
 interface MapPiratesProps {
     mapSize: number;

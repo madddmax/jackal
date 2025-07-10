@@ -1,23 +1,30 @@
+import cn from 'classnames';
 import { useState } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
+import Image from 'react-bootstrap/Image';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
     chooseHumanPirate,
     getCurrentPlayerPirates,
+    getIncludeMovesWithRum,
     getPirateAutoChange,
+    getRumBottles,
     getUserSettings,
     saveMySettings,
+    setIncludeMovesWithRum,
     setPirateAutoChange,
 } from '../../../redux/gameSlice';
-import Pirate from './pirate';
-import './pirates.less';
+import './leftSidebar.less';
+import PirateIcon from './pirateIcon';
 
-function Pirates() {
+function LeftSidebar() {
     const dispatch = useDispatch();
 
     const currentPlayerPirates = useSelector(getCurrentPlayerPirates);
     const hasPirateAutoChange = useSelector(getPirateAutoChange);
+    const includeMovesWithRum = useSelector(getIncludeMovesWithRum);
+    const rumBottlesCount = useSelector(getRumBottles);
     const userSettings = useSelector(getUserSettings);
 
     const [gameSpeed, setGameSpeed] = useState<number>(userSettings.gameSpeed || 0);
@@ -27,6 +34,8 @@ function Pirates() {
 
     const pirateAutoChangeToggle = (event: { target: { checked: boolean } }) =>
         dispatch(setPirateAutoChange(event.target.checked));
+    const includeMovesWithRumToggle = (event: { target: { checked: boolean } }) =>
+        dispatch(setIncludeMovesWithRum(event.target.checked));
 
     const increaseSpeed = () => {
         if (gameSpeed >= 10) return;
@@ -54,16 +63,31 @@ function Pirates() {
         <>
             {currentPlayerPirates &&
                 currentPlayerPirates.map((girl, index) => (
-                    <Pirate
+                    <PirateIcon
                         key={`pirate_${index}`}
                         pirate={girl}
-                        isActive={girl.isActive}
                         onClick={onClick(girl, false)}
                         onCoinClick={onClick(girl, true)}
                     />
                 ))}
 
             <Form.Group controlId="formBasicCheckbox">
+                <Form.Check
+                    className="float-end mb-3"
+                    style={{ marginLeft: 0 }}
+                    type="switch"
+                    label={
+                        <>
+                            <Image
+                                src="/pictures/rum.png"
+                                className={cn('rum-bottle', { 'rum-bottle-disabled': !includeMovesWithRum })}
+                            />
+                            x <span className="bottles-count">{rumBottlesCount}</span>
+                        </>
+                    }
+                    checked={includeMovesWithRum}
+                    onChange={includeMovesWithRumToggle}
+                />
                 <Form.Check
                     className="photo-position float-end mb-3"
                     style={{ marginLeft: 0 }}
@@ -87,4 +111,4 @@ function Pirates() {
     );
 }
 
-export default Pirates;
+export default LeftSidebar;

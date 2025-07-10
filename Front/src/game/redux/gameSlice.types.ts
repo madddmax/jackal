@@ -8,4 +8,5 @@ export interface TeamScores {
     name: string;
     backColor: string;
     coins: number;
+    bottles: number;
 }

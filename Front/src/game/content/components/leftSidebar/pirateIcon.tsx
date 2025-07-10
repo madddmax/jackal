@@ -1,20 +1,19 @@
 import cn from 'classnames';
 import Image from 'react-bootstrap/Image';
 
-import './pirates.less';
+import './pirateIcon.less';
 
 interface PirateProps {
     pirate: GamePirate;
-    isActive?: boolean;
     onClick: () => void;
     onCoinClick: () => void;
 }
 
-const Pirate = ({ pirate, isActive, onClick, onCoinClick }: PirateProps) => {
+const PirateIcon = ({ pirate, onClick, onCoinClick }: PirateProps) => {
     const isDisabled = pirate.isDrunk || pirate.isInTrap || pirate.isInHole;
-    let img = '/pictures/ruble.png';
-    if (pirate.isDrunk) img = '/pictures/rum.png';
-    if (pirate.withBigCoin) img = '/pictures/gold_ruble.png';
+    let coinImg = '/pictures/ruble.png';
+    if (pirate.isDrunk) coinImg = '/pictures/rum.png';
+    if (pirate.withBigCoin) coinImg = '/pictures/gold_ruble.png';
 
     return (
         <div className="photo-position float-end">
@@ -22,7 +21,7 @@ const Pirate = ({ pirate, isActive, onClick, onCoinClick }: PirateProps) => {
                 src={`/pictures/${pirate.photo}`}
                 roundedCircle
                 className={cn('photo', {
-                    'photo-active': isActive || false,
+                    'photo-active': pirate.isActive || false,
                 })}
                 style={{
                     filter: isDisabled ? 'grayscale(100%)' : undefined,
@@ -33,7 +32,7 @@ const Pirate = ({ pirate, isActive, onClick, onCoinClick }: PirateProps) => {
             {(pirate.withCoin !== undefined || pirate.withBigCoin !== undefined || pirate.isDrunk) && (
                 <>
                     <Image
-                        src={img}
+                        src={coinImg}
                         roundedCircle
                         className={cn({
                             moneta: !pirate.isDrunk,
@@ -55,4 +54,4 @@ const Pirate = ({ pirate, isActive, onClick, onCoinClick }: PirateProps) => {
     );
 };
 
-export default Pirate;
+export default PirateIcon;

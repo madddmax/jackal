@@ -8,4 +8,5 @@ interface GameStat {
 interface GameScore {
     teamId: number;
     coins: number;
+    rumBottles: number;
 }
