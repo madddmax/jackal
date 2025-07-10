@@ -1,5 +1,7 @@
+import cn from 'classnames';
 import { useState } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
+import Image from 'react-bootstrap/Image';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -7,13 +9,14 @@ import {
     getCurrentPlayerPirates,
     getIncludeMovesWithRum,
     getPirateAutoChange,
+    getRumBottles,
     getUserSettings,
     saveMySettings,
     setIncludeMovesWithRum,
     setPirateAutoChange,
 } from '../../../redux/gameSlice';
+import './leftSidebar.less';
 import PirateIcon from './pirateIcon';
-import './pirateIcon.less';
 
 function LeftSidebar() {
     const dispatch = useDispatch();
@@ -21,6 +24,7 @@ function LeftSidebar() {
     const currentPlayerPirates = useSelector(getCurrentPlayerPirates);
     const hasPirateAutoChange = useSelector(getPirateAutoChange);
     const includeMovesWithRum = useSelector(getIncludeMovesWithRum);
+    const rumBottlesCount = useSelector(getRumBottles);
     const userSettings = useSelector(getUserSettings);
 
     const [gameSpeed, setGameSpeed] = useState<number>(userSettings.gameSpeed || 0);
@@ -69,10 +73,18 @@ function LeftSidebar() {
 
             <Form.Group controlId="formBasicCheckbox">
                 <Form.Check
-                    className="photo-position float-end mb-3"
+                    className="float-end mb-3"
                     style={{ marginLeft: 0 }}
                     type="switch"
-                    label="бухло"
+                    label={
+                        <>
+                            <Image
+                                src="/pictures/rum.png"
+                                className={cn('rum-bottle', { 'rum-bottle-disabled': !includeMovesWithRum })}
+                            />
+                            x <span className="bottles-count">{rumBottlesCount}</span>
+                        </>
+                    }
                     checked={includeMovesWithRum}
                     onChange={includeMovesWithRumToggle}
                 />

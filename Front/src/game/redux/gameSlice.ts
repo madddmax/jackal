@@ -517,8 +517,14 @@ export const gameSlice = createSlice({
                     name: team?.name,
                     backColor: team?.backColor,
                     coins: it.coins,
+                    bottles: it.rumBottles,
                 } as TeamScores;
             });
+        },
+        getRumBottles: (state): number => {
+            const curTeam = gameSlice.getSelectors().getCurrentPlayerTeam(state);
+            const curScores = state.teamScores?.find((it) => it.teamId === curTeam?.id);
+            return curScores?.rumBottles ?? 0;
         },
     },
 });
@@ -561,6 +567,7 @@ export const {
     getIncludeMovesWithRum,
     getGameStatistics,
     getTeamScores,
+    getRumBottles,
 } = gameSlice.selectors;
 
 export default gameSlice.reducer;
