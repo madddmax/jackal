@@ -21,5 +21,7 @@ public class LoadGameResponse
     
     public List<DrawTeam> Teams { get; set; }
     
+    public List<TeamScore> TeamScores { get; set; }
+    
     public List<DrawMove> Moves { get; set; }
 }
