@@ -48,7 +48,8 @@ public class MapService : IMapService
 
     private static void SetLandingResult(CheckLandingResult landing, Tile tile)
     {
-        landing.Coins += tile.Type.CoinsCount();
+        landing.Coins += tile.CoinsCount();
+        landing.Coins += tile.BigCoinsCount() * Constants.BigCoinValue;
         landing.Cannibals += tile.Type == TileType.Cannibal ? 1 : 0;
     }
 

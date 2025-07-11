@@ -198,11 +198,7 @@ public class DrawService : IDrawService
             case TileType.Grass:
                 filename = $"empty{tile.ArrowsCode + 1}";
                 break;
-            case TileType.Chest1:
-            case TileType.Chest2:
-            case TileType.Chest3:
-            case TileType.Chest4:
-            case TileType.Chest5:
+            case TileType.Coin:
             case TileType.BigCoin:
                 filename = "chest";
                 break;

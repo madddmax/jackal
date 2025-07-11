@@ -13,20 +13,20 @@ public class DifficultTilesPack : ITilesPack
     public TileParams[] AllTiles { get; } =
     [
         // 120 значимых клеток
-        new TileParams(TileType.Chest1), // 1 монета - первый сундук берем всегда
-        new TileParams(TileType.Chest1), // 2
-        new TileParams(TileType.Chest1), // 3
-        new TileParams(TileType.Chest1), // 4
-        new TileParams(TileType.Chest1), // 5
-        new TileParams(TileType.Chest1), // 6
-        new TileParams(TileType.Chest1), // 7
-        new TileParams(TileType.Chest1), // 8
-        new TileParams(TileType.Chest2), // 10
-        new TileParams(TileType.Chest2), // 12
-        new TileParams(TileType.Chest2), // 14
-        new TileParams(TileType.Chest2), // 16
-        new TileParams(TileType.Chest3), // 19
-        new TileParams(TileType.Chest3), // 21
+        TileFactory.Coin(), // 1 монета - первый сундук берем всегда
+        TileFactory.Coin(), // 2
+        TileFactory.Coin(), // 3
+        TileFactory.Coin(), // 4
+        TileFactory.Coin(), // 5
+        TileFactory.Coin(), // 6
+        TileFactory.Coin(), // 7
+        TileFactory.Coin(), // 8
+        TileFactory.Coin(2), // 10
+        TileFactory.Coin(2), // 12
+        TileFactory.Coin(2), // 14
+        TileFactory.Coin(2), // 16
+        TileFactory.Coin(3), // 19
+        TileFactory.Coin(3), // 21
         new TileParams(TileType.Cannibal), // берем сундук вместе с людоедом
         new TileParams(TileType.Cannibal),
         new TileParams(TileType.Cannibal),

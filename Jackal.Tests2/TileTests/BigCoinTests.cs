@@ -13,7 +13,7 @@ public class BigCoinTests
     {
         // Arrange
         var bigCoinOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.BigCoin)
+            TileFactory.BigCoin()
         );
         var game = new TestGame(bigCoinOnlyMap);
         
@@ -40,7 +40,7 @@ public class BigCoinTests
     {
         // Arrange
         var bigCoinOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.BigCoin)
+            TileFactory.BigCoin()
         );
         var game = new TestGame(bigCoinOnlyMap);
         
@@ -63,7 +63,7 @@ public class BigCoinTests
     {
         // Arrange
         var bigCoinOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.BigCoin)
+            TileFactory.BigCoin()
         );
         var game = new TestGame(bigCoinOnlyMap);
         

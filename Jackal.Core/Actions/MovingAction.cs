@@ -28,8 +28,8 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         {
             targetTile = board.OpenTile(To.Position);
             game.LastActionTurnNumber = game.TurnNumber;
-            game.CoinsOnMap += targetTile.Type.CoinsCount();
-            game.CoinsOnMap += targetTile.Type.BigCoinsCount() * Constants.BigCoinValue;
+            game.CoinsOnMap += targetTile.CoinsCount();
+            game.CoinsOnMap += targetTile.BigCoinsCount() * Constants.BigCoinValue;
             newTile = true;
         }
         

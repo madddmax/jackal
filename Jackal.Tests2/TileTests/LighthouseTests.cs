@@ -68,7 +68,7 @@ public class LighthouseTests
         var lighthouseChestLineMap = new ThreeTileMapGenerator(
             new TileParams(TileType.Lighthouse),
             new TileParams(TileType.Lighthouse),
-            new TileParams(TileType.Chest1)
+            TileFactory.Coin()
         );
         var game = new TestGame(lighthouseChestLineMap);
         

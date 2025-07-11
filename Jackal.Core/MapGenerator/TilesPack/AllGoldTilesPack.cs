@@ -18,8 +18,8 @@ public class AllGoldTilesPack : ITilesPack
         for (var index = 0; index < AllTiles.Length; index++)
         {
             AllTiles[index] = index % 2 == 0 
-                ? new TileParams(TileType.BigCoin) 
-                : new TileParams(TileType.Chest1);
+                ? TileFactory.BigCoin() 
+                : TileFactory.Coin();
         }
     }
 }
