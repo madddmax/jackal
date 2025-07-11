@@ -53,6 +53,7 @@ public class GameService : IGameService
             MapId = game.Board.Generator.MapId,
             Statistics = _drawService.GetStatistics(game),
             Teams = game.Board.Teams.Select(team => new DrawTeam(team)).ToList(),
+            TeamScores = game.Board.Teams.Select(team => new TeamScore(team)).ToList(),
             Moves = game.CurrentPlayer is HumanPlayer
                 ? _drawService.GetAvailableMoves(game)
                 : []

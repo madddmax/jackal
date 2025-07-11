@@ -84,6 +84,7 @@ public class GameHub : Hub
             MapId = result.MapId,
             Stats = result.Statistics,
             Teams = result.Teams,
+            TeamScores = result.TeamScores,
             Moves = result.Moves
         });
 
