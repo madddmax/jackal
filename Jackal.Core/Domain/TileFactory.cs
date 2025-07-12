@@ -13,6 +13,12 @@ public static class TileFactory
     /// </summary>
     /// <param name="count">Количество больших монет</param>
     public static TileParams BigCoin(int count = 1) => new(TileType.BigCoin, count);
+    
+    /// <summary>
+    /// Бутылка с ромом
+    /// </summary>
+    /// <param name="count">Количество бутылок</param>
+    public static TileParams RumBottle(int count = 1) => new(TileType.RumBottle, count);    
 
     /// <summary>
     /// Лес - требуется 2 хода для прохождения клетки
