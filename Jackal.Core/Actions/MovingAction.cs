@@ -28,8 +28,8 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         {
             targetTile = board.OpenTile(To.Position);
             game.LastActionTurnNumber = game.TurnNumber;
-            game.CoinsOnMap += targetTile.Type.CoinsCount();
-            game.CoinsOnMap += targetTile.Type.BigCoinsCount() * Constants.BigCoinValue;
+            game.CoinsOnMap += targetTile.CoinsCount();
+            game.CoinsOnMap += targetTile.BigCoinsCount() * Constants.BigCoinValue;
             newTile = true;
         }
         
@@ -45,7 +45,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             To = GetCannonFly(targetTile.Direction, To.Position, board.MapSize);
         }
             
-        // ходим по клетке вертушке
+        // ходим по задерживающей клетке
         if (newTile && targetTile.Type == TileType.Spinning)
         {
             To = new TilePosition(To.Position, targetTile.SpinningCount - 1);
@@ -92,10 +92,10 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         if (targetTile is { Type: TileType.RumBottles, Used: false } && 
             game.SubTurn.LighthouseViewCount == 0)
         {
-            board.Teams[pirate.TeamId].RumBottles += targetTile.ArrowsCode;
+            board.Teams[pirate.TeamId].RumBottles += targetTile.Code;
             if (allyTeam != null)
             {
-                allyTeam.RumBottles += targetTile.ArrowsCode;
+                allyTeam.RumBottles += targetTile.Code;
             }
             
             targetTile.Used = true;

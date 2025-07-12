@@ -13,10 +13,11 @@ public class TileParams : IClonable<TileParams>
     public TileType Type;
         
     /// <summary>
-    /// Код клетки, используется для стрелок и пустых клеток.
-    /// По коду вычисляем номер картинки для клетки.
+    /// Код клетки:
+    /// задаёт подтип клетки для стрелок и пустых клеток,
+    /// задаёт количество для клеток с монетами и бутылками
     /// </summary>
-    public int ArrowsCode;
+    public int Code;
         
     /// <summary>
     /// Направление клетки (или количество поворотов)
@@ -24,7 +25,7 @@ public class TileParams : IClonable<TileParams>
     public DirectionType Direction;
         
     /// <summary>
-    /// Количество ходов на клетке-вертушке
+    /// Количество ходов на задерживающей клетке
     /// </summary>
     public int SpinningCount;
 
@@ -37,10 +38,10 @@ public class TileParams : IClonable<TileParams>
         Type = type;
     }
         
-    public TileParams(TileType type, int arrowsCode)
+    public TileParams(TileType type, int code)
     {
         Type = type;
-        ArrowsCode = arrowsCode;
+        Code = code;
     }
     
     public TileParams Clone()

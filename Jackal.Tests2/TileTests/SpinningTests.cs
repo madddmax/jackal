@@ -13,16 +13,16 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Spinning) { SpinningCount = 2 }
+            TileFactory.SpinningForest()
         );
         var game = new TestGame(spinningOnlyMap);
         
-        // Act - высадка с корабля на джунгли-вертушку
+        // Act - высадка с корабля на лес
         game.Turn(); // 1 ход
         
         var moves = game.GetAvailableMoves();
         
-        // Assert - доступен единственный ход на следующую клетку джунглей-вертушки
+        // Assert - доступен единственный ход на следующую клетку леса
         Assert.Single(moves);
         Assert.Equal(new TilePosition(2, 1, 1), moves.First().From);
         Assert.Equal(new TilePosition(2, 1, 0), moves.First().To);
@@ -34,19 +34,19 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Spinning) { SpinningCount = 2 }
+            TileFactory.SpinningForest()
         );
         var game = new TestGame(spinningOnlyMap);
         
-        // Act - высадка с корабля на джунгли-вертушку
+        // Act - высадка с корабля на лес
         game.Turn(); // 1 ход
         
-        // доходим до конца клетки джунгли-вертушка
+        // доходим до конца клетки лес
         game.Turn(); // 2 ход
         
         var moves = game.GetAvailableMoves();
         
-        // Assert - доступно 4 хода на соседние клетки с клетки джунгли-вертушка в месте высадки
+        // Assert - доступно 4 хода на соседние клетки с клетки лес в месте высадки
         Assert.Equal(4, moves.Count);
         Assert.Equal(new TilePosition(2, 1), moves.First().From);
         Assert.Equivalent(new List<TilePosition>
@@ -66,14 +66,14 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Spinning) { SpinningCount = 5 }
+            TileFactory.SpinningMount()
         );
         var game = new TestGame(spinningOnlyMap);
         
-        // Act - высадка с корабля на горы-вертушку
+        // Act - высадка с корабля на гору
         game.Turn(); // 1 ход
         
-        // доходим до конца клетки горы-вертушка
+        // доходим до конца клетки гора
         game.Turn(); // 2 ход
         game.Turn(); // 3 ход
         game.Turn(); // 4 ход
@@ -81,7 +81,7 @@ public class SpinningTests
         
         var moves = game.GetAvailableMoves();
         
-        // Assert - доступно 4 хода на соседние клетки с клетки горы-вертушка в месте высадки
+        // Assert - доступно 4 хода на соседние клетки с клетки гора в месте высадки
         Assert.Equal(4, moves.Count);
         Assert.Equal(new TilePosition(2, 1), moves.First().From);
         Assert.Equivalent(new List<TilePosition>
@@ -101,15 +101,15 @@ public class SpinningTests
     {
         // Arrange
         var spinningCrocodileLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Spinning) { SpinningCount = 2 },
+            TileFactory.SpinningForest(),
             new TileParams(TileType.Crocodile)
         );
         var game = new TestGame(spinningCrocodileLineMap);
         
-        // Act - высадка с корабля на джунгли-вертушку
+        // Act - высадка с корабля на лес
         game.Turn(); // 1 ход
         
-        // доходим до конца клетки джунгли-вертушка
+        // доходим до конца клетки лес
         game.Turn(); // 2 ход
         
         // выбираем ход - вперед на крокодила
@@ -117,7 +117,7 @@ public class SpinningTests
 
         var moves = game.GetAvailableMoves();
         
-        // Assert - возврат на начало клетки джунгли-вертушка
+        // Assert - возврат на начало клетки лес
         Assert.Single(moves);
         Assert.Equal(new TilePosition(2, 2), moves.Single().From);
         Assert.Equal(new TilePosition(2, 1, 1), moves.Single().To);
@@ -129,17 +129,17 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Spinning) { SpinningCount = 2 }
+            TileFactory.SpinningForest()
         );
         var game = new TestGame(spinningOnlyMap);
         
-        // Act - высадка с корабля на джунгли-вертушку
+        // Act - высадка с корабля на лес
         game.Turn(); // 1 ход
         
-        // добавляем пирата противника - в месте высадки нашего пирата на последнюю позицию джунгли-вертушки
+        // добавляем пирата противника - в месте высадки нашего пирата на последнюю позицию леса
         game.AddEnemyTeamAndPirate(new TilePosition(2, 1, 0));
         
-        // доходим до конца клетки джунгли-вертушка - сбиваем вражеского пирата
+        // доходим до конца клетки лес - сбиваем вражеского пирата
         game.Turn(); // 2 ход
         
         // Assert
@@ -147,7 +147,7 @@ public class SpinningTests
         Assert.Single(game.Board.Teams[0].Pirates);
         Assert.Single(game.Board.Teams[1].Pirates);
 
-        // наш пират на последней позиции джунгли-вертушки
+        // наш пират на последней позиции леса
         var ownPirate = game.Board.Teams[0].Pirates[0];
         Assert.Equal(new TilePosition(2, 1, 0), ownPirate.Position);
         
@@ -164,19 +164,19 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Spinning) { SpinningCount = 2 }
+            TileFactory.SpinningForest()
         );
         var game = new TestGame(spinningOnlyMap);
         
-        // Act - высадка с корабля на джунгли-вертушку
+        // Act - высадка с корабля на лес
         game.Turn(); // 1 ход
         
-        // добавляем монету - в месте высадки нашего пирата на первую позицию джунгли-вертушки
+        // добавляем монету - в месте высадки нашего пирата на первую позицию леса
         game.AddCoin(new TilePosition(2, 1, 1));
         
         var moves = game.GetAvailableMoves();
         
-        // Assert - доступно 2 хода на следующую клетку джунглей-вертушки с монетой и без монеты
+        // Assert - доступно 2 хода на следующую клетку леса с монетой и без монеты
         Assert.Equal(2, moves.Count);
         
         var withCoin = moves.Single(m => m.WithCoin);
@@ -195,22 +195,22 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Spinning) { SpinningCount = 2 }
+            TileFactory.SpinningForest()
         );
         var game = new TestGame(spinningOnlyMap);
         
-        // Act - высадка с корабля на джунгли-вертушку
+        // Act - высадка с корабля на лес
         game.Turn(); // 1 ход
         
-        // добавляем монету - в месте высадки нашего пирата на первую позицию джунгли-вертушки
+        // добавляем монету - в месте высадки нашего пирата на первую позицию леса
         game.AddCoin(new TilePosition(2, 1, 1));
         
-        // добавляем пирата противника - в месте высадки нашего пирата на последнюю позицию джунгли-вертушки
+        // добавляем пирата противника - в месте высадки нашего пирата на последнюю позицию леса
         game.AddEnemyTeamAndPirate(new TilePosition(2, 1, 0));
         
         var moves = game.GetAvailableMoves();
         
-        // Assert - доступен единственный ход на следующую клетку джунглей-вертушки без монеты
+        // Assert - доступен единственный ход на следующую клетку леса без монеты
         Assert.Single(moves);
         
         var withoutCoin = moves.Single(m => !m.WithCoin);
@@ -225,12 +225,12 @@ public class SpinningTests
     {
         // Arrange
         var spinningGrassLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Spinning) { SpinningCount = 2 },
+            TileFactory.SpinningForest(),
             new TileParams(TileType.Grass)
         );
         var game = new TestGame(spinningGrassLineMap);
         
-        // Act - высадка с корабля на джунгли-вертушку
+        // Act - высадка с корабля на лес
         game.Turn(); // 1 ход
         game.Turn(); // 2 ход
         
@@ -240,7 +240,7 @@ public class SpinningTests
         // добавляем монету - на текущую позицию нашего пирата
         game.AddCoin(new TilePosition(2, 2));
         
-        // добавляем пирата противника - в месте высадки нашего пирата на первую позицию джунгли-вертушки
+        // добавляем пирата противника - в месте высадки нашего пирата на первую позицию леса
         game.AddEnemyTeamAndPirate(new TilePosition(2, 1, 1));
         
         var moves = game.GetAvailableMoves();
@@ -256,12 +256,12 @@ public class SpinningTests
     {
         // Arrange
         var spinningGrassLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Spinning) { SpinningCount = 2 },
+            TileFactory.SpinningForest(),
             new TileParams(TileType.Grass)
         );
         var game = new TestGame(spinningGrassLineMap);
         
-        // Act - высадка с корабля на джунгли-вертушку
+        // Act - высадка с корабля на лес
         game.Turn(); // 1 ход
         game.Turn(); // 2 ход
         
@@ -271,12 +271,12 @@ public class SpinningTests
         // добавляем монету - на текущую позицию нашего пирата
         game.AddCoin(new TilePosition(2, 2));
         
-        // добавляем пирата противника - в месте высадки нашего пирата на последнюю позицию джунгли-вертушки
+        // добавляем пирата противника - в месте высадки нашего пирата на последнюю позицию леса
         game.AddEnemyTeamAndPirate(new TilePosition(2, 1, 0));
         
         var moves = game.GetAvailableMoves();
         
-        // Assert - доступно 4 хода без монеты на соседние клетки из цента карты и 1 ход с монетой на джунгли-вертушку
+        // Assert - доступно 4 хода без монеты на соседние клетки из цента карты и 1 ход с монетой на лес
         Assert.Equal(5, moves.Count);
         Assert.Single(moves, m => m.WithCoin);
         Assert.Equal(3, game.TurnNumber);

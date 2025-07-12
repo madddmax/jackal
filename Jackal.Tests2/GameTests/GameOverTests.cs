@@ -31,7 +31,7 @@ public class GameOverTests
         // Arrange
         var lighthouseSpinningLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Lighthouse), 
-            new TileParams(TileType.Spinning) {SpinningCount = 2}
+            TileFactory.SpinningForest()
         );
         var game = new TestGame(lighthouseSpinningLineMap);
         
@@ -56,7 +56,7 @@ public class GameOverTests
         // Arrange
         var totalCoins = 1;
         var chest1GrassLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Chest1), 
+            TileFactory.Coin(), 
             new TileParams(TileType.Grass),
             totalCoins
         );
@@ -79,7 +79,7 @@ public class GameOverTests
         // Arrange
         var totalCoins = 1;
         var chest1GrassLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Chest1), 
+            TileFactory.Coin(), 
             new TileParams(TileType.Grass),
             totalCoins
         );
@@ -105,7 +105,7 @@ public class GameOverTests
         var totalCoins = 2;
         var enemyTeamCoins = 1;
         var chest1LighthouseLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Chest1), 
+            TileFactory.Coin(), 
             new TileParams(TileType.Lighthouse),
             totalCoins
         );
@@ -141,8 +141,8 @@ public class GameOverTests
         // Arrange
         var totalCoins = 2;
         var chest1GrassLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Chest2), 
-            new TileParams(TileType.Arrow) {ArrowsCode = ArrowsCodesHelper.FourArrowsDiagonal},
+            TileFactory.Coin(2), 
+            new TileParams(TileType.Arrow) {Code = ArrowsCodesHelper.FourArrowsDiagonal},
             totalCoins
         );
         var game = new TestGame(chest1GrassLineMap);

@@ -94,11 +94,8 @@ public class DrawService : IDrawService
             if (pirate == null)
             {
                 var pirateIds = game.Board.AllPirates
-                    .Where(x => !x.IsDrunk && !x.IsInHole)
-                    .Where(x =>
-                        (!x.IsInTrap && !move.WithRumBottle && x.Position == move.From) ||
-                        (move.WithRumBottle && x.Position.Position == move.From.Position)
-                    )
+                    .Where(x => !x.IsDrunk && !x.IsInHole && x.Position == move.From)
+                    .Where(x => (!x.IsInTrap && !move.WithRumBottle) || move.WithRumBottle)
                     .Select(p => p.Id)
                     .ToList();
                     
@@ -196,13 +193,9 @@ public class DrawService : IDrawService
                 filename = teamShip != null ? $"ship_{teamShip.Id + 1}" : "water";
                 break;
             case TileType.Grass:
-                filename = $"empty{tile.ArrowsCode + 1}";
+                filename = $"empty{tile.Code + 1}";
                 break;
-            case TileType.Chest1:
-            case TileType.Chest2:
-            case TileType.Chest3:
-            case TileType.Chest4:
-            case TileType.Chest5:
+            case TileType.Coin:
             case TileType.BigCoin:
                 filename = "chest";
                 break;
@@ -216,7 +209,7 @@ public class DrawService : IDrawService
                 filename = "rumbar";
                 break;
             case TileType.RumBottles:
-                filename = tile.Used ? $"used_rum{tile.ArrowsCode}" : $"rum{tile.ArrowsCode}";
+                filename = tile.Used ? $"used_rum{tile.Code}" : $"rum{tile.Code}";
                 break;
             case TileType.Horse:
                 filename = "horse";
@@ -280,7 +273,7 @@ public class DrawService : IDrawService
                 }
                 break;
             case TileType.Arrow:
-                var search = ArrowsCodesHelper.Search(tile.ArrowsCode);
+                var search = ArrowsCodesHelper.Search(tile.Code);
                 filename = $"arrow{search.ArrowType + 1}";
                 break;
             

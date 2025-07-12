@@ -71,8 +71,9 @@ public class RandomMapGenerator : IMapGenerator
                     break;
             }
 
-            TotalCoins += pack.AllTiles[index].Type.CoinsCount();
-            TotalCoins += pack.AllTiles[index].Type.BigCoinsCount() * Constants.BigCoinValue;
+            var tileParam = pack.AllTiles[index];
+            TotalCoins += tileParam.Type == TileType.Coin ? tileParam.Code : 0;
+            TotalCoins += tileParam.Type == TileType.BigCoin ? tileParam.Code * Constants.BigCoinValue : 0;
 
             // сдвигаем оставшиеся клетки в наборе, последнюю ставим на место выбранной
             pack.AllTiles[index] = pack.AllTiles[pack.AllTiles.Length - 1 - i];
@@ -121,11 +122,8 @@ public class RandomMapGenerator : IMapGenerator
             var tempDef = info.Def.Clone();
             if (tempDef.Type != TileType.Spinning && 
                 tempDef.Type != TileType.Caramba &&
-                tempDef.Type != TileType.Chest1 &&
-                tempDef.Type != TileType.Chest2 &&
-                tempDef.Type != TileType.Chest3 &&
-                tempDef.Type != TileType.Chest4 &&
-                tempDef.Type != TileType.Chest5 &&
+                tempDef.Type != TileType.Coin &&
+                tempDef.Type != TileType.BigCoin &&
                 tempDef.Type != TileType.Ice &&
                 tempDef.Type != TileType.Hole)
             {
@@ -137,15 +135,15 @@ public class RandomMapGenerator : IMapGenerator
             {
                 for (var j = 1; j <= (int)tempDef.Direction; j++)
                 {
-                    tempDef.ArrowsCode = ArrowsCodesHelper.DoRotate(tempDef.ArrowsCode);
+                    tempDef.Code = ArrowsCodesHelper.DoRotate(tempDef.Code);
                 }
             }
 
             tempDef.Position = info.Position;
                 
             var tile = new Tile(tempDef);
-            tile.Levels[0].Coins = tile.Type.CoinsCount();
-            tile.Levels[0].BigCoins = tile.Type.BigCoinsCount();
+            tile.Levels[0].Coins = tile.CoinsCount();
+            tile.Levels[0].BigCoins = tile.BigCoinsCount();
                 
             tiles.Add(info.Position, tile);
         }
