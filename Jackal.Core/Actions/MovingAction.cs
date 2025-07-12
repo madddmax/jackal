@@ -45,7 +45,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             To = GetCannonFly(targetTile.Direction, To.Position, board.MapSize);
         }
             
-        // ходим по клетке вертушке
+        // ходим по задерживающей клетке
         if (newTile && targetTile.Type == TileType.Spinning)
         {
             To = new TilePosition(To.Position, targetTile.SpinningCount - 1);

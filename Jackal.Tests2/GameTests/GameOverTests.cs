@@ -31,7 +31,7 @@ public class GameOverTests
         // Arrange
         var lighthouseSpinningLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Lighthouse), 
-            new TileParams(TileType.Spinning) {SpinningCount = 2}
+            TileFactory.SpinningForest()
         );
         var game = new TestGame(lighthouseSpinningLineMap);
         

@@ -33,7 +33,7 @@ public record Tile
 	public readonly DirectionType Direction;
 		
 	/// <summary>
-	/// Количество ходов на клетке-вертушке
+	/// Количество ходов на задерживающей клетке
 	/// </summary>
 	[JsonProperty]
 	public readonly int SpinningCount;

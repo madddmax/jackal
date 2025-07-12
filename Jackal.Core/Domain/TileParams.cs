@@ -24,7 +24,7 @@ public class TileParams : IClonable<TileParams>
     public DirectionType Direction;
         
     /// <summary>
-    /// Количество ходов на клетке-вертушке
+    /// Количество ходов на задерживающей клетке
     /// </summary>
     public int SpinningCount;
 

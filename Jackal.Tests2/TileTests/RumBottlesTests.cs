@@ -105,19 +105,19 @@ public class RumBottlesTests
         // Arrange
         var rumBottleSpinningLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.RumBottles, 1),
-            new TileParams(TileType.Spinning) { SpinningCount = 5 }
+            TileFactory.SpinningMount()
         );
         var game = new TestGame(rumBottleSpinningLineMap);
         
         // Act - высадка с корабля на бутылку с ромом
         game.Turn();
         
-        // выбираем ход - вперед на гору-вертушку
+        // выбираем ход - вперед на гору
         game.SetMoveAndTurn(2, 2);
         
         var moves = game.GetAvailableMoves();
         
-        // Assert - доступно 5 ходов: 4 из горы-вертушки за бутылку рома на соседние клетки и 1 ход по горе 
+        // Assert - доступно 5 ходов: 4 из горы за бутылку рома на соседние клетки и 1 ход по горе 
         Assert.Equal(5, moves.Count);
         Assert.Equal(new TilePosition(2, 2, 4), moves.First().From);
         Assert.Equivalent(new List<TilePosition>
