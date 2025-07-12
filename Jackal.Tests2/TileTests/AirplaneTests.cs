@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Jackal.Core;
 using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Xunit;
@@ -146,7 +145,7 @@ public class AirplaneTests
         // Arrange
         var airplaneArrowUpOnCrocodileLineMap = new ThreeTileMapGenerator(
             new TileParams(TileType.Airplane),
-            new TileParams(TileType.Arrow) { Code = ArrowsCodesHelper.OneArrowUp },
+            TileFactory.OneArrowUp(),
             new TileParams(TileType.Crocodile));
         
         var game = new TestGame(airplaneArrowUpOnCrocodileLineMap);
@@ -173,7 +172,7 @@ public class AirplaneTests
         // Arrange
         var airplaneArrowUpOnCrocodileLineMap = new ThreeTileMapGenerator(
             new TileParams(TileType.Airplane),
-            new TileParams(TileType.Arrow) { Code = ArrowsCodesHelper.OneArrowUp },
+            TileFactory.OneArrowUp(),
             new TileParams(TileType.Crocodile));
         
         var game = new TestGame(airplaneArrowUpOnCrocodileLineMap);
