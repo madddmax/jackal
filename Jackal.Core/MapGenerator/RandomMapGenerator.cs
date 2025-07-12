@@ -72,8 +72,8 @@ public class RandomMapGenerator : IMapGenerator
             }
 
             var tileParam = pack.AllTiles[index];
-            TotalCoins += tileParam.Type == TileType.Coin ? tileParam.ArrowsCode : 0;
-            TotalCoins += tileParam.Type == TileType.BigCoin ? tileParam.ArrowsCode * Constants.BigCoinValue : 0;
+            TotalCoins += tileParam.Type == TileType.Coin ? tileParam.Code : 0;
+            TotalCoins += tileParam.Type == TileType.BigCoin ? tileParam.Code * Constants.BigCoinValue : 0;
 
             // сдвигаем оставшиеся клетки в наборе, последнюю ставим на место выбранной
             pack.AllTiles[index] = pack.AllTiles[pack.AllTiles.Length - 1 - i];
@@ -135,7 +135,7 @@ public class RandomMapGenerator : IMapGenerator
             {
                 for (var j = 1; j <= (int)tempDef.Direction; j++)
                 {
-                    tempDef.ArrowsCode = ArrowsCodesHelper.DoRotate(tempDef.ArrowsCode);
+                    tempDef.Code = ArrowsCodesHelper.DoRotate(tempDef.Code);
                 }
             }
 

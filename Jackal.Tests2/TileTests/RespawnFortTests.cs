@@ -180,7 +180,7 @@ public class RespawnFortTests
     {
         // Arrange
         var arrowUpOnRespawnFortLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.OneArrowUp },
+            new TileParams(TileType.Arrow) { Code = ArrowsCodesHelper.OneArrowUp },
             new TileParams(TileType.RespawnFort)
         );
         var game = new TestGame(arrowUpOnRespawnFortLineMap);
@@ -217,7 +217,7 @@ public class RespawnFortTests
         const int piratesPerPlayer = 3;
         
         var arrowUpOnRespawnFortLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.OneArrowUp },
+            new TileParams(TileType.Arrow) { Code = ArrowsCodesHelper.OneArrowUp },
             new TileParams(TileType.RespawnFort)
         );
         var game = new TestGame(arrowUpOnRespawnFortLineMap, mapSize, piratesPerPlayer);

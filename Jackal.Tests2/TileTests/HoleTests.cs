@@ -149,7 +149,7 @@ public class HoleTests
     {
         // Arrange
         var arrowHoleLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.FourArrowsDiagonal },
+            new TileParams(TileType.Arrow) { Code = ArrowsCodesHelper.FourArrowsDiagonal },
             new TileParams(TileType.Hole)
         );
         const int mapSize = 5;

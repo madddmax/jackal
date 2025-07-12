@@ -146,7 +146,7 @@ public class AirplaneTests
         // Arrange
         var airplaneArrowUpOnCrocodileLineMap = new ThreeTileMapGenerator(
             new TileParams(TileType.Airplane),
-            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.OneArrowUp },
+            new TileParams(TileType.Arrow) { Code = ArrowsCodesHelper.OneArrowUp },
             new TileParams(TileType.Crocodile));
         
         var game = new TestGame(airplaneArrowUpOnCrocodileLineMap);
@@ -173,7 +173,7 @@ public class AirplaneTests
         // Arrange
         var airplaneArrowUpOnCrocodileLineMap = new ThreeTileMapGenerator(
             new TileParams(TileType.Airplane),
-            new TileParams(TileType.Arrow) { ArrowsCode = ArrowsCodesHelper.OneArrowUp },
+            new TileParams(TileType.Arrow) { Code = ArrowsCodesHelper.OneArrowUp },
             new TileParams(TileType.Crocodile));
         
         var game = new TestGame(airplaneArrowUpOnCrocodileLineMap);

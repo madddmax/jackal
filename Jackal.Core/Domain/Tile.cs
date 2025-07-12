@@ -75,7 +75,7 @@ public record Tile
 		new TileParams(tile.Type)
 		{
 			Position = position,
-			ArrowsCode = tile.ArrowsCode,
+			Code = tile.ArrowsCode,
 			Direction = tile.Direction,
 			SpinningCount = tile.SpinningCount
 		})
@@ -92,7 +92,7 @@ public record Tile
 			var tileLevel = new TileLevel(new TilePosition(tileParams.Position, level));
 			Levels.Add(tileLevel);
 		}
-		ArrowsCode = tileParams.ArrowsCode;
+		ArrowsCode = tileParams.Code;
 		SpinningCount = tileParams.SpinningCount;
 		Direction = tileParams.Direction;
 	}

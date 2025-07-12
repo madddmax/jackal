@@ -142,7 +142,7 @@ public class GameOverTests
         var totalCoins = 2;
         var chest1GrassLineMap = new TwoTileMapGenerator(
             TileFactory.Coin(2), 
-            new TileParams(TileType.Arrow) {ArrowsCode = ArrowsCodesHelper.FourArrowsDiagonal},
+            new TileParams(TileType.Arrow) {Code = ArrowsCodesHelper.FourArrowsDiagonal},
             totalCoins
         );
         var game = new TestGame(chest1GrassLineMap);
