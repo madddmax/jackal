@@ -6,14 +6,14 @@ using Xunit;
 
 namespace Jackal.Tests2.TileTests;
 
-public class RumBottlesTests
+public class RumBottleTests
 {
     [Fact]
     public void OneRum_GetAvailableMoves_ReturnNearestMovesAndOneRumBottel()
     {
         // Arrange
         var oneRumOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.RumBottles, 1)
+            new TileParams(TileType.RumBottle, 1)
         );
         var game = new TestGame(oneRumOnlyMap);
         
@@ -32,7 +32,7 @@ public class RumBottlesTests
     {
         // Arrange
         var twoRumOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.RumBottles, 2)
+            new TileParams(TileType.RumBottle, 2)
         );
         var game = new TestGame(twoRumOnlyMap);
         
@@ -51,7 +51,7 @@ public class RumBottlesTests
     {
         // Arrange
         var threeRumOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.RumBottles, 3)
+            new TileParams(TileType.RumBottle, 3)
         );
         var game = new TestGame(threeRumOnlyMap);
         
@@ -70,7 +70,7 @@ public class RumBottlesTests
     {
         // Arrange
         var rumBottleTrapLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.RumBottles, 1),
+            new TileParams(TileType.RumBottle, 1),
             new TileParams(TileType.Trap)
         );
         var game = new TestGame(rumBottleTrapLineMap);
@@ -104,7 +104,7 @@ public class RumBottlesTests
     {
         // Arrange
         var rumBottleSpinningLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.RumBottles, 1),
+            new TileParams(TileType.RumBottle, 1),
             TileFactory.SpinningMount()
         );
         var game = new TestGame(rumBottleSpinningLineMap);
@@ -141,7 +141,7 @@ public class RumBottlesTests
         // Arrange
         var rumBottleTrapLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Lighthouse),
-            new TileParams(TileType.RumBottles, 1)
+            new TileParams(TileType.RumBottle, 1)
         );
         var game = new TestGame(rumBottleTrapLineMap);
         
