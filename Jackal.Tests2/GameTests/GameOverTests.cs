@@ -11,7 +11,7 @@ public class GameOverTests
     {
         // Arrange
         var holeOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Hole)
+            TileFactory.Hole()
         );
         var game = new TestGame(holeOnlyMap);
         

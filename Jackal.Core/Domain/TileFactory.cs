@@ -74,4 +74,9 @@ public static class TileFactory
     /// Четыре стрелки по диагонали на все углы
     /// </summary>
     public static TileParams FourArrowsDiagonal() => new(TileType.Arrow, ArrowsCodesHelper.FourArrowsDiagonal);
+
+    /// <summary>
+    /// Дыра, не меняем направление клетки чтобы пираты и монеты не закрывали изображение дыры
+    /// </summary>
+    public static TileParams Hole() => new(TileType.Hole) { Direction = DirectionType.Left };
 }
