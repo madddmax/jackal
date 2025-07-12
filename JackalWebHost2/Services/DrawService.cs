@@ -94,11 +94,8 @@ public class DrawService : IDrawService
             if (pirate == null)
             {
                 var pirateIds = game.Board.AllPirates
-                    .Where(x => !x.IsDrunk && !x.IsInHole)
-                    .Where(x =>
-                        (!x.IsInTrap && !move.WithRumBottle && x.Position == move.From) ||
-                        (move.WithRumBottle && x.Position.Position == move.From.Position)
-                    )
+                    .Where(x => !x.IsDrunk && !x.IsInHole && x.Position == move.From)
+                    .Where(x => (!x.IsInTrap && !move.WithRumBottle) || move.WithRumBottle)
                     .Select(p => p.Id)
                     .ToList();
                     

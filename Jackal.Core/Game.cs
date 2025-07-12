@@ -99,11 +99,8 @@ public class Game : ICompletable
 
             var move = _availableMoves[moveNum];
             var currentTeamPirates = Board.Teams[CurrentTeamId].Pirates
-                .Where(x => !x.IsDrunk && !x.IsInHole)
-                .Where(x =>
-                    (!x.IsInTrap && !move.WithRumBottle && x.Position == move.From) ||
-                    (move.WithRumBottle && x.Position.Position == move.From.Position)
-                )
+                .Where(x => !x.IsDrunk && !x.IsInHole && x.Position == move.From)
+                .Where(x => (!x.IsInTrap && !move.WithRumBottle) || move.WithRumBottle)
                 .ToList();
 
             var pirate = currentTeamPirates.FirstOrDefault(x => x.Id == pirateId) ?? currentTeamPirates.First();
