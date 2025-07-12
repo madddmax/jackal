@@ -20,11 +20,12 @@ public record Tile
 	public readonly TileType Type;
         
 	/// <summary>
-	/// Код клетки, используется для стрелок, пустых клеток и бутылок с ромом.
-	/// По коду вычисляем номер картинки для клетки.
+	/// Код клетки:
+	/// задаёт подтип клетки для стрелок и пустых клеток,
+	/// задаёт количество для клеток с монетами и бутылками
 	/// </summary>
 	[JsonProperty]
-	public readonly int ArrowsCode;
+	public readonly int Code;
 
 	/// <summary>
 	/// Направление клетки (или количество поворотов)
@@ -75,7 +76,7 @@ public record Tile
 		new TileParams(tile.Type)
 		{
 			Position = position,
-			Code = tile.ArrowsCode,
+			Code = tile.Code,
 			Direction = tile.Direction,
 			SpinningCount = tile.SpinningCount
 		})
@@ -92,7 +93,7 @@ public record Tile
 			var tileLevel = new TileLevel(new TilePosition(tileParams.Position, level));
 			Levels.Add(tileLevel);
 		}
-		ArrowsCode = tileParams.Code;
+		Code = tileParams.Code;
 		SpinningCount = tileParams.SpinningCount;
 		Direction = tileParams.Direction;
 	}
@@ -106,7 +107,7 @@ public record Tile
 		if (ReferenceEquals(this, other)) return true;
 		return Position.Equals(other.Position) && 
 		       Type == other.Type && 
-		       ArrowsCode == other.ArrowsCode && 
+		       Code == other.Code && 
 		       Direction == other.Direction && 
 		       SpinningCount == other.SpinningCount && 
 		       Levels.SequenceEqual(other.Levels) && 
@@ -115,6 +116,6 @@ public record Tile
 
 	public override int GetHashCode()
 	{
-		return HashCode.Combine(Position, (int)Type, ArrowsCode, (int)Direction, SpinningCount, Levels);
+		return HashCode.Combine(Position, (int)Type, Code, (int)Direction, SpinningCount, Levels);
 	}
 }

@@ -193,7 +193,7 @@ public class DrawService : IDrawService
                 filename = teamShip != null ? $"ship_{teamShip.Id + 1}" : "water";
                 break;
             case TileType.Grass:
-                filename = $"empty{tile.ArrowsCode + 1}";
+                filename = $"empty{tile.Code + 1}";
                 break;
             case TileType.Coin:
             case TileType.BigCoin:
@@ -209,7 +209,7 @@ public class DrawService : IDrawService
                 filename = "rumbar";
                 break;
             case TileType.RumBottles:
-                filename = tile.Used ? $"used_rum{tile.ArrowsCode}" : $"rum{tile.ArrowsCode}";
+                filename = tile.Used ? $"used_rum{tile.Code}" : $"rum{tile.Code}";
                 break;
             case TileType.Horse:
                 filename = "horse";
@@ -273,7 +273,7 @@ public class DrawService : IDrawService
                 }
                 break;
             case TileType.Arrow:
-                var search = ArrowsCodesHelper.Search(tile.ArrowsCode);
+                var search = ArrowsCodesHelper.Search(tile.Code);
                 filename = $"arrow{search.ArrowType + 1}";
                 break;
             

@@ -286,7 +286,7 @@ public class Board
                     .Select(IncomeTilePosition);
                 break;
             case TileType.Arrow:
-                rez = GetArrowsDeltas(sourceTile.ArrowsCode, source.Position)
+                rez = GetArrowsDeltas(sourceTile.Code, source.Position)
                     .Select(IncomeTilePosition);
                 break;
             case TileType.Airplane:
