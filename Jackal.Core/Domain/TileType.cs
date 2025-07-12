@@ -10,7 +10,7 @@ public enum TileType
     Fort,
     RespawnFort,
     RumBarrel,
-    RumBottles,
+    RumBottle,
     Horse,
     Arrow,
     Balloon,

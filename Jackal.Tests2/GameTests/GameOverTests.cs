@@ -1,4 +1,3 @@
-using Jackal.Core;
 using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Xunit;
@@ -12,7 +11,7 @@ public class GameOverTests
     {
         // Arrange
         var holeOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Hole)
+            TileFactory.Hole()
         );
         var game = new TestGame(holeOnlyMap);
         
@@ -142,7 +141,7 @@ public class GameOverTests
         var totalCoins = 2;
         var chest1GrassLineMap = new TwoTileMapGenerator(
             TileFactory.Coin(2), 
-            new TileParams(TileType.Arrow) {Code = ArrowsCodesHelper.FourArrowsDiagonal},
+            TileFactory.FourArrowsDiagonal(),
             totalCoins
         );
         var game = new TestGame(chest1GrassLineMap);

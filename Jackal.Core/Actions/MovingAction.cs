@@ -89,7 +89,7 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
         }
         
         // нашли бутылки с ромом не маяком
-        if (targetTile is { Type: TileType.RumBottles, Used: false } && 
+        if (targetTile is { Type: TileType.RumBottle, Used: false } && 
             game.SubTurn.LighthouseViewCount == 0)
         {
             board.Teams[pirate.TeamId].RumBottles += targetTile.Code;

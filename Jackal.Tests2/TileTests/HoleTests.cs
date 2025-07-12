@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Jackal.Core;
 using Jackal.Core.Domain;
 using Jackal.Core.MapGenerator;
 using Xunit;
@@ -14,7 +13,7 @@ public class HoleTests
     {
         // Arrange
         var holeOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Hole)
+            TileFactory.Hole()
         );
         var game = new TestGame(holeOnlyMap);
         
@@ -34,7 +33,7 @@ public class HoleTests
         // Arrange
         var grassHoleLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Grass),
-            new TileParams(TileType.Hole)
+            TileFactory.Hole()
         );
         const int mapSize = 5;
         const int piratesPerPlayer = 2;
@@ -65,7 +64,7 @@ public class HoleTests
         // Arrange
         var grassHoleLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Grass),
-            new TileParams(TileType.Hole)
+            TileFactory.Hole()
         );
         const int mapSize = 5;
         const int piratesPerPlayer = 2;
@@ -96,7 +95,7 @@ public class HoleTests
         // Arrange
         var grassHoleLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Grass),
-            new TileParams(TileType.Hole)
+            TileFactory.Hole()
         );
         const int mapSize = 5;
         const int piratesPerPlayer = 2;
@@ -149,8 +148,8 @@ public class HoleTests
     {
         // Arrange
         var arrowHoleLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Arrow) { Code = ArrowsCodesHelper.FourArrowsDiagonal },
-            new TileParams(TileType.Hole)
+            TileFactory.FourArrowsDiagonal(),
+            TileFactory.Hole()
         );
         const int mapSize = 5;
         const int piratesPerPlayer = 2;
