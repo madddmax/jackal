@@ -22,7 +22,7 @@ export const Constants = {
         Friday: 'Friday',
     },
     positions: ['Down', 'Left', 'Up', 'Right'],
-    commonGannMaxId: 5,
+    commonGannMaxId: 4,
     commonFridayMaxId: 1,
     groupIds,
     groups: [
