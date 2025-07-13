@@ -73,39 +73,45 @@ function LeftSidebar() {
 
             <Form.Group controlId="formBasicCheckbox">
                 <Form.Check
-                    className="float-end mb-3"
+                    id="rum-bottle-switch"
+                    className="photo-position float-end mb-3"
                     style={{ marginLeft: 0 }}
                     type="switch"
                     label={
-                        <>
+                        <div style={{ width: '83px' }}>
                             <Image
-                                src="/pictures/rum.png"
-                                className={cn('rum-bottle', { 'rum-bottle-disabled': !includeMovesWithRum })}
+                                src="/pictures/rum-slim.png"
+                                className={cn('rum-bottle', 'me-1', 'mt-2', {
+                                    'rum-bottle-disabled': !includeMovesWithRum,
+                                })}
                             />
                             x <span className="bottles-count">{rumBottlesCount}</span>
-                        </>
+                        </div>
                     }
                     checked={includeMovesWithRum}
                     onChange={includeMovesWithRumToggle}
                 />
                 <Form.Check
+                    id="pirate-auto-change-switch"
                     className="photo-position float-end mb-3"
                     style={{ marginLeft: 0 }}
                     type="switch"
-                    label="Автовыбор пиратки"
+                    label={<div style={{ width: '83px' }}>Автовыбор пиратки</div>}
                     checked={hasPirateAutoChange}
                     onChange={pirateAutoChangeToggle}
                 />
-                <Form.Label>Задержка хода</Form.Label>
-                <InputGroup className="mb-3" size="sm">
-                    <Button variant="outline-secondary" onClick={decreaseSpeed} disabled={gameSpeed <= 0}>
-                        -
-                    </Button>
-                    <Form.Control value={gameSpeed / 10} />
-                    <Button variant="outline-secondary" onClick={increaseSpeed} disabled={gameSpeed >= 10}>
-                        +
-                    </Button>
-                </InputGroup>
+                <div className="photo-position float-end mb-3">
+                    <Form.Label>Задержка хода</Form.Label>
+                    <InputGroup className="mb-3" size="sm">
+                        <Button variant="outline-secondary" onClick={decreaseSpeed} disabled={gameSpeed <= 0}>
+                            -
+                        </Button>
+                        <Form.Control value={gameSpeed / 10} />
+                        <Button variant="outline-secondary" onClick={increaseSpeed} disabled={gameSpeed >= 10}>
+                            +
+                        </Button>
+                    </InputGroup>
+                </div>
             </Form.Group>
         </>
     );
