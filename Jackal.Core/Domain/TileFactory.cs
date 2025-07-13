@@ -3,10 +3,10 @@ namespace Jackal.Core.Domain;
 public static class TileFactory
 {
     /// <summary>
-    /// Монета
+    /// Монета todo заменил TileType.Coin -> TileType.BigCoin все обычные монеты стали большими
     /// </summary>
     /// <param name="count">Количество монет</param>
-    public static TileParams Coin(int count = 1) => new(TileType.Coin, count);
+    public static TileParams Coin(int count = 1) => new(TileType.BigCoin, count);
     
     /// <summary>
     /// Большая монета
@@ -76,7 +76,7 @@ public static class TileFactory
     public static TileParams FourArrowsDiagonal() => new(TileType.Arrow, ArrowsCodesHelper.FourArrowsDiagonal);
 
     /// <summary>
-    /// Дыра, не меняем направление клетки чтобы пираты и монеты не закрывали изображение дыры
+    /// Дыра, задаём направление клетки чтобы пираты не закрывали изображение дыры
     /// </summary>
     public static TileParams Hole() => new(TileType.Hole) { Direction = DirectionType.Left };
 }
