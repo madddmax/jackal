@@ -13,7 +13,7 @@ public class RespawnFortTests
     public void OneRespawnFort_GetAvailableMoves_ReturnNearestMovesAndMoveWithRespawn()
     {
         // Arrange
-        var respawnFortOnlyMap = new OneTileMapGenerator(new TileParams(TileType.RespawnFort));
+        var respawnFortOnlyMap = new OneTileMapGenerator(TileFactory.RespawnFort());
         var game = new TestGame(respawnFortOnlyMap);
         
         // Act - высадка с корабля на воскрешающий форт
@@ -40,7 +40,7 @@ public class RespawnFortTests
     public void OneRespawnFort_MoveWithRespawn_ReturnTwoOwnPirates()
     {
         // Arrange
-        var respawnFortOnlyMap = new OneTileMapGenerator(new TileParams(TileType.RespawnFort));
+        var respawnFortOnlyMap = new OneTileMapGenerator(TileFactory.RespawnFort());
         var game = new TestGame(respawnFortOnlyMap);
         
         // Act - высадка с корабля на воскрешающий форт
@@ -60,7 +60,7 @@ public class RespawnFortTests
     public void OneRespawnFort_DoubleMoveWithRespawn_ReturnThreeOwnPirates()
     {
         // Arrange
-        var respawnFortOnlyMap = new OneTileMapGenerator(new TileParams(TileType.RespawnFort));
+        var respawnFortOnlyMap = new OneTileMapGenerator(TileFactory.RespawnFort());
         var game = new TestGame(respawnFortOnlyMap);
         
         // Act - высадка с корабля на воскрешающий форт
@@ -84,7 +84,7 @@ public class RespawnFortTests
     public void OneRespawnFort_DoubleMoveWithRespawn_ReturnNearestMovesAndNoMoveWithRespawn()
     {
         // Arrange
-        var respawnFortOnlyMap = new OneTileMapGenerator(new TileParams(TileType.RespawnFort));
+        var respawnFortOnlyMap = new OneTileMapGenerator(TileFactory.RespawnFort());
         var game = new TestGame(respawnFortOnlyMap);
         
         // Act - высадка с корабля на воскрешающий форт
@@ -118,7 +118,7 @@ public class RespawnFortTests
     {
         // Arrange
         const int piratesPerPlayer = 0;
-        var respawnFortOnlyMap = new OneTileMapGenerator(new TileParams(TileType.RespawnFort));
+        var respawnFortOnlyMap = new OneTileMapGenerator(TileFactory.RespawnFort());
         var game = new TestGame(respawnFortOnlyMap, 5, piratesPerPlayer);
         
         // добавляем Бена Ганна на свой корабль
@@ -148,7 +148,7 @@ public class RespawnFortTests
     public void OneRespawnFortWithBenGunnAndUsualPirate_DoubleMoveWithRespawn_ReturnFourOwnPirates()
     {
         // Arrange
-        var respawnFortOnlyMap = new OneTileMapGenerator(new TileParams(TileType.RespawnFort));
+        var respawnFortOnlyMap = new OneTileMapGenerator(TileFactory.RespawnFort());
         var game = new TestGame(respawnFortOnlyMap);
         
         // добавляем Бена Ганна на свой корабль
@@ -181,7 +181,7 @@ public class RespawnFortTests
         // Arrange
         var arrowUpOnRespawnFortLineMap = new TwoTileMapGenerator(
             TileFactory.OneArrowUp(),
-            new TileParams(TileType.RespawnFort)
+            TileFactory.RespawnFort()
         );
         var game = new TestGame(arrowUpOnRespawnFortLineMap);
         
@@ -218,7 +218,7 @@ public class RespawnFortTests
         
         var arrowUpOnRespawnFortLineMap = new TwoTileMapGenerator(
             TileFactory.OneArrowUp(),
-            new TileParams(TileType.RespawnFort)
+            TileFactory.RespawnFort()
         );
         var game = new TestGame(arrowUpOnRespawnFortLineMap, mapSize, piratesPerPlayer);
         

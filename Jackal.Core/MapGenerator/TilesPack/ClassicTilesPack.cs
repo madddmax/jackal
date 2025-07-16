@@ -29,9 +29,9 @@ public class ClassicTilesPack : ITilesPack
         TileFactory.Coin(4), // 28
         TileFactory.Coin(4), // 32
         TileFactory.Coin(5), // 37
-        new TileParams(TileType.Fort),
-        new TileParams(TileType.Fort),
-        new TileParams(TileType.RespawnFort), // порядок RespawnFort и Cannibal важен для баланса
+        TileFactory.Fort(),
+        TileFactory.Fort(),
+        TileFactory.RespawnFort(), // порядок RespawnFort и Cannibal важен для баланса
         new TileParams(TileType.Cannibal), // берем воскрешающий форт вместе с людоедом
         new TileParams(TileType.RumBarrel),
         new TileParams(TileType.RumBarrel),

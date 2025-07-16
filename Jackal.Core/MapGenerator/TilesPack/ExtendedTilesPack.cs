@@ -30,11 +30,11 @@ public class ExtendedTilesPack : ITilesPack
         TileFactory.Coin(5), // 34
         TileFactory.BigCoin(), // 37
         TileFactory.BigCoin(), // 40
-        new TileParams(TileType.Fort),
-        new TileParams(TileType.Fort),
-        new TileParams(TileType.RespawnFort), // порядок RespawnFort и Cannibal важен для баланса
+        TileFactory.Fort(),
+        TileFactory.Fort(),
+        TileFactory.RespawnFort(), // порядок RespawnFort и Cannibal важен для баланса
         new TileParams(TileType.Cannibal), // берем воскрешающий форт вместе с людоедом
-        new TileParams(TileType.RespawnFort),
+        TileFactory.RespawnFort(),
         new TileParams(TileType.Cannibal),
         new TileParams(TileType.RumBarrel),
         new TileParams(TileType.RumBarrel),

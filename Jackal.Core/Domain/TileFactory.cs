@@ -96,4 +96,14 @@ public static class TileFactory
     /// Дыра, задаём направление клетки чтобы пираты не закрывали изображение дыры
     /// </summary>
     public static TileParams Hole() => new(TileType.Hole) { Direction = DirectionType.Left };
+    
+    /// <summary>
+    /// Форт
+    /// </summary>
+    public static TileParams Fort() => new(TileType.Fort);
+    
+    /// <summary>
+    /// Воскрешающий форт
+    /// </summary>
+    public static TileParams RespawnFort() => new(TileType.RespawnFort);
 }
