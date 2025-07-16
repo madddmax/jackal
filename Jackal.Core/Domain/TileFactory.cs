@@ -23,7 +23,7 @@ public static class TileFactory
     /// Монета
     /// </summary>
     /// <param name="count">Количество монет</param>
-    public static TileParams Coin(int count = 1) => new(TileType.BigCoin, count);
+    public static TileParams Coin(int count = 1) => new(TileType.Coin, count);
     
     /// <summary>
     /// Большая монета
