@@ -33,9 +33,9 @@ public class ExtendedTilesPack : ITilesPack
         TileFactory.Fort(),
         TileFactory.Fort(),
         TileFactory.RespawnFort(), // порядок RespawnFort и Cannibal важен для баланса
-        new TileParams(TileType.Cannibal), // берем воскрешающий форт вместе с людоедом
+        TileFactory.Cannibal(), // берем воскрешающий форт вместе с людоедом
         TileFactory.RespawnFort(),
-        new TileParams(TileType.Cannibal),
+        TileFactory.Cannibal(),
         new TileParams(TileType.RumBarrel),
         new TileParams(TileType.RumBarrel),
         new TileParams(TileType.RumBarrel),

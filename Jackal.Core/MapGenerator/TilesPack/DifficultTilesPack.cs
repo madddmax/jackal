@@ -27,11 +27,11 @@ public class DifficultTilesPack : ITilesPack
         TileFactory.Coin(2), // 16
         TileFactory.Coin(3), // 19
         TileFactory.Coin(3), // 21
-        new TileParams(TileType.Cannibal), // берем сундук вместе с людоедом
-        new TileParams(TileType.Cannibal),
-        new TileParams(TileType.Cannibal),
-        new TileParams(TileType.Cannibal),
-        new TileParams(TileType.Cannibal),
+        TileFactory.Cannibal(), // берем сундук вместе с людоедом
+        TileFactory.Cannibal(),
+        TileFactory.Cannibal(),
+        TileFactory.Cannibal(),
+        TileFactory.Cannibal(),
         new TileParams(TileType.RumBarrel),
         new TileParams(TileType.RumBarrel),
         new TileParams(TileType.RumBarrel),

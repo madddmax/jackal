@@ -106,4 +106,9 @@ public static class TileFactory
     /// Воскрешающий форт
     /// </summary>
     public static TileParams RespawnFort() => new(TileType.RespawnFort);
+    
+    /// <summary>
+    /// Людоед
+    /// </summary>
+    public static TileParams Cannibal() => new(TileType.Cannibal);
 }
