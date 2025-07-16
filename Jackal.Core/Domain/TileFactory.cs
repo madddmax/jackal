@@ -116,4 +116,9 @@ public static class TileFactory
     /// Бочка с ромом
     /// </summary>
     public static TileParams RumBarrel() => new(TileType.RumBarrel);
+    
+    /// <summary>
+    /// Лошадь
+    /// </summary>
+    public static TileParams Horse() => new(TileType.Horse);
 }
