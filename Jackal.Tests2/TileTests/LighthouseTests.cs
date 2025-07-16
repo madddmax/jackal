@@ -62,15 +62,15 @@ public class LighthouseTests
     }
     
     [Fact]
-    public void LighthouseThenSearch3LighthouseAndChest_GetAvailableMoves_ReturnNearestMoves()
+    public void LighthouseThenSearch3LighthouseAndCoin_GetAvailableMoves_ReturnNearestMoves()
     {
         // Arrange
-        var lighthouseChestLineMap = new ThreeTileMapGenerator(
+        var lighthouseCoinLineMap = new ThreeTileMapGenerator(
             new TileParams(TileType.Lighthouse),
             new TileParams(TileType.Lighthouse),
             TileFactory.Coin()
         );
-        var game = new TestGame(lighthouseChestLineMap);
+        var game = new TestGame(lighthouseCoinLineMap);
         
         // Act - высадка с корабля на маяк
         game.Turn();

@@ -50,16 +50,16 @@ public class GameOverTests
     }
     
     [Fact]
-    public void OnePlayerChest1_MoveAllCoinsToTheShip_ReturnNoGameOver()
+    public void OnePlayerCoin1_MoveAllCoinsToTheShip_ReturnNoGameOver()
     {
         // Arrange
         var totalCoins = 1;
-        var chest1EmptyLineMap = new TwoTileMapGenerator(
+        var coin1EmptyLineMap = new TwoTileMapGenerator(
             TileFactory.Coin(), 
             TileFactory.Empty(),
             totalCoins
         );
-        var game = new TestGame(chest1EmptyLineMap);
+        var game = new TestGame(coin1EmptyLineMap);
         
         // Act - высадка с корабля на сундук с одной монетой
         game.Turn();
@@ -73,16 +73,16 @@ public class GameOverTests
     }
     
     [Fact]
-    public void TwoPlayersChest1_MoveAllCoinsToTheShip_ReturnGameOverByGoldDomination()
+    public void TwoPlayersCoin1_MoveAllCoinsToTheShip_ReturnGameOverByGoldDomination()
     {
         // Arrange
         var totalCoins = 1;
-        var chest1EmptyLineMap = new TwoTileMapGenerator(
+        var coin1EmptyLineMap = new TwoTileMapGenerator(
             TileFactory.Coin(), 
             TileFactory.Empty(),
             totalCoins
         );
-        var game = new TestGame(chest1EmptyLineMap);
+        var game = new TestGame(coin1EmptyLineMap);
         game.AddEnemyTeamAndPirate(new TilePosition(2, 4));
         
         // Act - высадка с корабля на сундук с одной монетой
@@ -98,17 +98,17 @@ public class GameOverTests
     }
     
     [Fact]
-    public void TwoPlayersChest1_EqualAmountOfCoinsThenSearchAllMap_ReturnGameOver()
+    public void TwoPlayersCoin1_EqualAmountOfCoinsThenSearchAllMap_ReturnGameOver()
     {
         // Arrange
         var totalCoins = 2;
         var enemyTeamCoins = 1;
-        var chest1LighthouseLineMap = new TwoTileMapGenerator(
+        var coin1LighthouseLineMap = new TwoTileMapGenerator(
             TileFactory.Coin(), 
             new TileParams(TileType.Lighthouse),
             totalCoins
         );
-        var game = new TestGame(chest1LighthouseLineMap);
+        var game = new TestGame(coin1LighthouseLineMap);
         game.AddEnemyTeamAndPirate(new TilePosition(2, 4), enemyTeamCoins);
         
         // Act - высадка с корабля на сундук с одной монетой
@@ -135,16 +135,16 @@ public class GameOverTests
     }
     
     [Fact]
-    public void TwoPlayersChest2_OneCoinMoveToTheShipOneCoinLost_ReturnGameOverByGoldDomination()
+    public void TwoPlayersCoin2_OneCoinMoveToTheShipOneCoinLost_ReturnGameOverByGoldDomination()
     {
         // Arrange
         var totalCoins = 2;
-        var chest1EmptyLineMap = new TwoTileMapGenerator(
+        var coin1EmptyLineMap = new TwoTileMapGenerator(
             TileFactory.Coin(2), 
             TileFactory.FourArrowsDiagonal(),
             totalCoins
         );
-        var game = new TestGame(chest1EmptyLineMap);
+        var game = new TestGame(coin1EmptyLineMap);
         game.AddEnemyTeamAndPirate(new TilePosition(2, 4));
         
         // Act - высадка с корабля на сундук с двумя монетами
