@@ -28,16 +28,16 @@ public class HoleTests
     }
     
     [Fact]
-    public void GrassThenHoleThenNextPirateGrassAndSameHole_GetAvailableMoves_ReturnNoAvailableMoves()
+    public void EmptyThenHoleThenNextPirateEmptyAndSameHole_GetAvailableMoves_ReturnNoAvailableMoves()
     {
         // Arrange
-        var grassHoleLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Grass),
+        var emptyHoleLineMap = new TwoTileMapGenerator(
+            TileFactory.Empty(),
             TileFactory.Hole()
         );
         const int mapSize = 5;
         const int piratesPerPlayer = 2;
-        var game = new TestGame(grassHoleLineMap, mapSize, piratesPerPlayer);
+        var game = new TestGame(emptyHoleLineMap, mapSize, piratesPerPlayer);
         
         // Act - высадка с корабля на пустое поле
         game.Turn();
@@ -59,16 +59,16 @@ public class HoleTests
     }
     
     [Fact]
-    public void GrassThenHoleThenNextPirateGrassAndOtherHole_GetAvailableMoves_ReturnAvailableMoves()
+    public void EmptyThenHoleThenNextPirateEmptyAndOtherHole_GetAvailableMoves_ReturnAvailableMoves()
     {
         // Arrange
-        var grassHoleLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Grass),
+        var emptyHoleLineMap = new TwoTileMapGenerator(
+            TileFactory.Empty(),
             TileFactory.Hole()
         );
         const int mapSize = 5;
         const int piratesPerPlayer = 2;
-        var game = new TestGame(grassHoleLineMap, mapSize, piratesPerPlayer);
+        var game = new TestGame(emptyHoleLineMap, mapSize, piratesPerPlayer);
         
         // Act - высадка с корабля на пустое поле
         game.Turn();
@@ -93,13 +93,13 @@ public class HoleTests
     public void MoveOnHoleWhenEnemyPirateInOtherHole_GetAvailableMoves_ReturnNearestMoves()
     {
         // Arrange
-        var grassHoleLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Grass),
+        var emptyHoleLineMap = new TwoTileMapGenerator(
+            TileFactory.Empty(),
             TileFactory.Hole()
         );
         const int mapSize = 5;
         const int piratesPerPlayer = 2;
-        var game = new TestGame(grassHoleLineMap, mapSize, piratesPerPlayer);
+        var game = new TestGame(emptyHoleLineMap, mapSize, piratesPerPlayer);
         
         // Act - высадка с корабля на пустое поле
         game.Turn();

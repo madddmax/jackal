@@ -54,12 +54,12 @@ public class GameOverTests
     {
         // Arrange
         var totalCoins = 1;
-        var chest1GrassLineMap = new TwoTileMapGenerator(
+        var chest1EmptyLineMap = new TwoTileMapGenerator(
             TileFactory.Coin(), 
-            new TileParams(TileType.Grass),
+            TileFactory.Empty(),
             totalCoins
         );
-        var game = new TestGame(chest1GrassLineMap);
+        var game = new TestGame(chest1EmptyLineMap);
         
         // Act - высадка с корабля на сундук с одной монетой
         game.Turn();
@@ -77,12 +77,12 @@ public class GameOverTests
     {
         // Arrange
         var totalCoins = 1;
-        var chest1GrassLineMap = new TwoTileMapGenerator(
+        var chest1EmptyLineMap = new TwoTileMapGenerator(
             TileFactory.Coin(), 
-            new TileParams(TileType.Grass),
+            TileFactory.Empty(),
             totalCoins
         );
-        var game = new TestGame(chest1GrassLineMap);
+        var game = new TestGame(chest1EmptyLineMap);
         game.AddEnemyTeamAndPirate(new TilePosition(2, 4));
         
         // Act - высадка с корабля на сундук с одной монетой
@@ -139,12 +139,12 @@ public class GameOverTests
     {
         // Arrange
         var totalCoins = 2;
-        var chest1GrassLineMap = new TwoTileMapGenerator(
+        var chest1EmptyLineMap = new TwoTileMapGenerator(
             TileFactory.Coin(2), 
             TileFactory.FourArrowsDiagonal(),
             totalCoins
         );
-        var game = new TestGame(chest1GrassLineMap);
+        var game = new TestGame(chest1EmptyLineMap);
         game.AddEnemyTeamAndPirate(new TilePosition(2, 4));
         
         // Act - высадка с корабля на сундук с двумя монетами

@@ -221,14 +221,14 @@ public class SpinningTests
     }
     
     [Fact]
-    public void SpinningThenGrassWithCoinThenSpinningAgainWithEnemyOnFirstPosition_GetAvailableMoves_ReturnAllMoveWithoutCoin()
+    public void SpinningThenEmptyWithCoinThenSpinningAgainWithEnemyOnFirstPosition_GetAvailableMoves_ReturnAllMoveWithoutCoin()
     {
         // Arrange
-        var spinningGrassLineMap = new TwoTileMapGenerator(
+        var spinningEmptyLineMap = new TwoTileMapGenerator(
             TileFactory.SpinningForest(),
-            new TileParams(TileType.Grass)
+            TileFactory.Empty()
         );
-        var game = new TestGame(spinningGrassLineMap);
+        var game = new TestGame(spinningEmptyLineMap);
         
         // Act - высадка с корабля на лес
         game.Turn(); // 1 ход
@@ -252,14 +252,14 @@ public class SpinningTests
     }
     
     [Fact]
-    public void SpinningThenGrassWithCoinThenSpinningAgainWithEnemyOnLastPosition_GetAvailableMoves_ReturnSingleMoveWithCoin()
+    public void SpinningThenEmptyWithCoinThenSpinningAgainWithEnemyOnLastPosition_GetAvailableMoves_ReturnSingleMoveWithCoin()
     {
         // Arrange
-        var spinningGrassLineMap = new TwoTileMapGenerator(
+        var spinningEmptyLineMap = new TwoTileMapGenerator(
             TileFactory.SpinningForest(),
-            new TileParams(TileType.Grass)
+            TileFactory.Empty()
         );
-        var game = new TestGame(spinningGrassLineMap);
+        var game = new TestGame(spinningEmptyLineMap);
         
         // Act - высадка с корабля на лес
         game.Turn(); // 1 ход

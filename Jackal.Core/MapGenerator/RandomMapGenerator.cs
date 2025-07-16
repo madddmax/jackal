@@ -83,7 +83,7 @@ public class RandomMapGenerator : IMapGenerator
         var holeTiles = list.Where(x => x.Type == TileType.Hole).ToList();
         if (holeTiles.Count == 1)
         {
-            holeTiles[0].Type = TileType.Grass;
+            holeTiles[0] = TileFactory.Empty();
         }
 
         return list;

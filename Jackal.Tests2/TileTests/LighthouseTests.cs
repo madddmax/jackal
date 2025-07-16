@@ -38,14 +38,14 @@ public class LighthouseTests
     }
     
     [Fact]
-    public void LighthouseThenSearch4Grass_Turn_ReturnGameOver()
+    public void LighthouseThenSearch4Empty_Turn_ReturnGameOver()
     {
         // Arrange
-        var lighthouseGrassLineMap = new TwoTileMapGenerator(
+        var lighthouseEmptyLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Lighthouse),
-            new TileParams(TileType.Grass)
+            TileFactory.Empty()
         );
-        var game = new TestGame(lighthouseGrassLineMap);
+        var game = new TestGame(lighthouseEmptyLineMap);
         
         // Act - высадка с корабля на маяк
         game.Turn();

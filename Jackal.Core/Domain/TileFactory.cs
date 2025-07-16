@@ -1,9 +1,26 @@
+using System;
+
 namespace Jackal.Core.Domain;
 
 public static class TileFactory
 {
     /// <summary>
-    /// Монета todo заменил TileType.Coin -> TileType.BigCoin все обычные монеты стали большими
+    /// Пустая клетка
+    /// </summary>
+    /// <param name="imageNumber">Номер изображения</param>
+    public static TileParams Empty(int imageNumber = 1)
+    {
+        if (imageNumber < 1 || imageNumber > 4)
+            throw new ArgumentException(
+                "Номер изображения для TileType.Empty должен быть от 1 до 4 включительно",
+                nameof(imageNumber)
+            );
+        
+        return new TileParams(TileType.Empty, imageNumber);
+    }
+
+    /// <summary>
+    /// Монета
     /// </summary>
     /// <param name="count">Количество монет</param>
     public static TileParams Coin(int count = 1) => new(TileType.BigCoin, count);
@@ -18,8 +35,8 @@ public static class TileFactory
     /// Бутылка с ромом
     /// </summary>
     /// <param name="count">Количество бутылок</param>
-    public static TileParams RumBottle(int count = 1) => new(TileType.RumBottle, count);    
-
+    public static TileParams RumBottle(int count = 1) => new(TileType.RumBottle, count);
+    
     /// <summary>
     /// Лес - требуется 2 хода для прохождения клетки
     /// </summary>

@@ -38,14 +38,14 @@ public class JungleTests
     }
     
     [Fact]
-    public void JungleThenGrassWithCoin_GetAvailableMoves_ReturnAllMoveWithoutCoin()
+    public void JungleThenEmptyWithCoin_GetAvailableMoves_ReturnAllMoveWithoutCoin()
     {
         // Arrange
-        var jungleGrassLineMap = new TwoTileMapGenerator(
+        var jungleEmptyLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Jungle),
-            new TileParams(TileType.Grass)
+            TileFactory.Empty()
         );
-        var game = new TestGame(jungleGrassLineMap);
+        var game = new TestGame(jungleEmptyLineMap);
         
         // Act - высадка с корабля на джунгли
         game.Turn();
@@ -65,14 +65,14 @@ public class JungleTests
     }
     
     [Fact]
-    public void JungleThenGrassThenJungleAgainWithEnemy_MoveOnEnemyTurn_ReturnAllPiratesInOneJungle()
+    public void JungleThenEmptyThenJungleAgainWithEnemy_MoveOnEnemyTurn_ReturnAllPiratesInOneJungle()
     {
         // Arrange
-        var jungleGrassLineMap = new TwoTileMapGenerator(
+        var jungleEmptyLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Jungle),
-            new TileParams(TileType.Grass)
+            TileFactory.Empty()
         );
-        var game = new TestGame(jungleGrassLineMap);
+        var game = new TestGame(jungleEmptyLineMap);
         
         // Act - высадка с корабля на джунгли
         game.Turn();
