@@ -121,4 +121,9 @@ public static class TileFactory
     /// Лошадь
     /// </summary>
     public static TileParams Horse() => new(TileType.Horse);
+    
+    /// <summary>
+    /// Воздушный шар
+    /// </summary>
+    public static TileParams Balloon() => new(TileType.Balloon);
 }
