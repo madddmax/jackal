@@ -131,4 +131,9 @@ public static class TileFactory
     /// Самолёт
     /// </summary>
     public static TileParams Airplane() => new(TileType.Airplane);
+    
+    /// <summary>
+    /// Крокодил
+    /// </summary>
+    public static TileParams Crocodile() => new(TileType.Crocodile);
 }

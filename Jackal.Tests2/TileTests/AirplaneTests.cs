@@ -77,7 +77,8 @@ public class AirplaneTests
         // Arrange
         var airplaneIceLineMap = new TwoTileMapGenerator(
             TileFactory.Airplane(),
-            new TileParams(TileType.Ice));
+            new TileParams(TileType.Ice)
+        );
         
         var game = new TestGame(airplaneIceLineMap);
         
@@ -111,7 +112,8 @@ public class AirplaneTests
         // Arrange
         var airplaneIceLineMap = new TwoTileMapGenerator(
             TileFactory.Airplane(),
-            new TileParams(TileType.Crocodile));
+            TileFactory.Crocodile()
+        );
         
         var game = new TestGame(airplaneIceLineMap);
         
@@ -146,7 +148,8 @@ public class AirplaneTests
         var airplaneArrowUpOnCrocodileLineMap = new ThreeTileMapGenerator(
             TileFactory.Airplane(),
             TileFactory.OneArrowUp(),
-            new TileParams(TileType.Crocodile));
+            TileFactory.Crocodile()
+        );
         
         var game = new TestGame(airplaneArrowUpOnCrocodileLineMap);
         
@@ -173,7 +176,8 @@ public class AirplaneTests
         var airplaneArrowUpOnCrocodileLineMap = new ThreeTileMapGenerator(
             TileFactory.Airplane(),
             TileFactory.OneArrowUp(),
-            new TileParams(TileType.Crocodile));
+            TileFactory.Crocodile()
+        );
         
         var game = new TestGame(airplaneArrowUpOnCrocodileLineMap);
         

@@ -110,7 +110,7 @@ public class LighthouseTests
         // Arrange
         var lighthouseCrocodileLineMap = new TwoTileMapGenerator(
             new TileParams(TileType.Lighthouse),
-            new TileParams(TileType.Crocodile)
+            TileFactory.Crocodile()
         );
         var mapSize = 7; // карта большая - возможно движение корабля
         var game = new TestGame(lighthouseCrocodileLineMap, mapSize);

@@ -102,7 +102,7 @@ public class SpinningTests
         // Arrange
         var spinningCrocodileLineMap = new TwoTileMapGenerator(
             TileFactory.SpinningForest(),
-            new TileParams(TileType.Crocodile)
+            TileFactory.Crocodile()
         );
         var game = new TestGame(spinningCrocodileLineMap);
         
