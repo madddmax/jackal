@@ -32,7 +32,7 @@ public class RumBottleTests
     {
         // Arrange
         var twoRumOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.RumBottle, 2)
+            TileFactory.RumBottle(2)
         );
         var game = new TestGame(twoRumOnlyMap);
         
@@ -51,7 +51,7 @@ public class RumBottleTests
     {
         // Arrange
         var threeRumOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.RumBottle, 3)
+            TileFactory.RumBottle(3)
         );
         var game = new TestGame(threeRumOnlyMap);
         
