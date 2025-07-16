@@ -111,4 +111,9 @@ public static class TileFactory
     /// Людоед
     /// </summary>
     public static TileParams Cannibal() => new(TileType.Cannibal);
+    
+    /// <summary>
+    /// Бочка с ромом
+    /// </summary>
+    public static TileParams RumBarrel() => new(TileType.RumBarrel);
 }

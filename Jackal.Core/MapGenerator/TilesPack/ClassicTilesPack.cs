@@ -33,10 +33,10 @@ public class ClassicTilesPack : ITilesPack
         TileFactory.Fort(),
         TileFactory.RespawnFort(), // порядок RespawnFort и Cannibal важен для баланса
         TileFactory.Cannibal(), // берем воскрешающий форт вместе с людоедом
-        new TileParams(TileType.RumBarrel),
-        new TileParams(TileType.RumBarrel),
-        new TileParams(TileType.RumBarrel),
-        new TileParams(TileType.RumBarrel),
+        TileFactory.RumBarrel(),
+        TileFactory.RumBarrel(),
+        TileFactory.RumBarrel(),
+        TileFactory.RumBarrel(),
         new TileParams(TileType.Horse),
         new TileParams(TileType.Horse),
         new TileParams(TileType.Balloon),
