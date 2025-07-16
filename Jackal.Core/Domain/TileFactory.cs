@@ -126,4 +126,9 @@ public static class TileFactory
     /// Воздушный шар
     /// </summary>
     public static TileParams Balloon() => new(TileType.Balloon);
+    
+    /// <summary>
+    /// Самолёт
+    /// </summary>
+    public static TileParams Airplane() => new(TileType.Airplane);
 }

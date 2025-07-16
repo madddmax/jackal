@@ -41,7 +41,7 @@ public class ClassicTilesPack : ITilesPack
         TileFactory.Horse(),
         TileFactory.Balloon(),
         TileFactory.Balloon(),
-        new TileParams(TileType.Airplane),
+        TileFactory.Airplane(),
         new TileParams(TileType.Crocodile),
         new TileParams(TileType.Crocodile),
         new TileParams(TileType.Crocodile),
