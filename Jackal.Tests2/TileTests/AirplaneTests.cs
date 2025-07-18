@@ -77,7 +77,7 @@ public class AirplaneTests
         // Arrange
         var airplaneIceLineMap = new TwoTileMapGenerator(
             TileFactory.Airplane(),
-            new TileParams(TileType.Ice)
+            TileFactory.Ice()
         );
         
         var game = new TestGame(airplaneIceLineMap);

@@ -136,4 +136,9 @@ public static class TileFactory
     /// Крокодил
     /// </summary>
     public static TileParams Crocodile() => new(TileType.Crocodile);
+    
+    /// <summary>
+    /// Лёд
+    /// </summary>
+    public static TileParams Ice() => new(TileType.Ice);
 }
