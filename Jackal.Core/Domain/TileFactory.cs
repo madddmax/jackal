@@ -148,4 +148,9 @@ public static class TileFactory
     /// <param name="direction">Направление задаётся для тестов, в игре выбирается рэндомом</param>
     public static TileParams Cannon(DirectionType direction = DirectionType.Up) =>
         new(TileType.Cannon) { Direction = direction };
+    
+    /// <summary>
+    /// Ловушка
+    /// </summary>
+    public static TileParams Trap() => new(TileType.Trap);
 }

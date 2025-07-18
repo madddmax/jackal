@@ -71,7 +71,7 @@ public class RumBottleTests
         // Arrange
         var rumBottleTrapLineMap = new TwoTileMapGenerator(
             TileFactory.RumBottle(),
-            new TileParams(TileType.Trap)
+            TileFactory.Trap()
         );
         var game = new TestGame(rumBottleTrapLineMap);
         
