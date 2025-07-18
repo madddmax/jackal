@@ -141,4 +141,11 @@ public static class TileFactory
     /// Лёд
     /// </summary>
     public static TileParams Ice() => new(TileType.Ice);
+
+    /// <summary>
+    /// Пушка
+    /// </summary>
+    /// <param name="direction">Направление задаётся для тестов, в игре выбирается рэндомом</param>
+    public static TileParams Cannon(DirectionType direction = DirectionType.Up) =>
+        new(TileType.Cannon) { Direction = direction };
 }
