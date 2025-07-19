@@ -107,7 +107,7 @@ public class ExtendedTilesPack : ITilesPack
         TileFactory.SpinningSwamp(),
         TileFactory.SpinningMount(),
         TileFactory.SpinningMount(),
-        new TileParams(TileType.Caramba),
+        TileFactory.Caramba(),
         new TileParams(TileType.Jungle),
         new TileParams(TileType.Jungle),
         TileFactory.Hole(),

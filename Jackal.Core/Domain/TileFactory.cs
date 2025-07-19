@@ -163,4 +163,9 @@ public static class TileFactory
     /// Бен Ганн
     /// </summary>
     public static TileParams BenGunn() => new(TileType.BenGunn);
+    
+    /// <summary>
+    /// Карамба
+    /// </summary>
+    public static TileParams Caramba() => new(TileType.Caramba);
 }
