@@ -173,15 +173,15 @@ public class GameService : IGameService
         await _gameRepository.UpdateGame(request.GameId, game);
         _gameStateRepository.UpdateObject(request.GameId, game);
         var prevBoard = JsonHelper.DeserializeWithType<Board>(prevBoardStr);
-        
+
         return new TurnGameResult
         {
             PirateChanges = _drawService.GetPirateChanges(game.Board, prevBoard),
             Changes = _drawService.GetTileChanges(game.Board, prevBoard),
             Statistics = _drawService.GetStatistics(game),
             TeamScores = game.Board.Teams.Select(team => new TeamScore(team)).ToList(),
-            Moves = game.CurrentPlayer is HumanPlayer 
-                ? _drawService.GetAvailableMoves(game) 
+            Moves = game.CurrentPlayer is HumanPlayer
+                ? _drawService.GetAvailableMoves(game)
                 : []
         };
     }

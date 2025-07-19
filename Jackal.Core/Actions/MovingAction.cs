@@ -100,6 +100,20 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
             
             targetTile.Used = true;
         }
+        
+        // нашли хи-хи траву не маяком
+        if (targetTile is { Type: TileType.Cannabis, Used: false } && 
+            game.SubTurn.LighthouseViewCount == 0)
+        {
+            game.SubTurn.CannabisTurnCount += board.Teams.Length switch
+            {
+                2 => board.Teams.Length + 1,
+                4 => board.Teams.Length + 2,
+                _ => 0
+            };
+
+            targetTile.Used = true;
+        }
             
         // просматриваем карту с маяка,
         // перезатираем просматриваемую клетку текущей позицией пирата,

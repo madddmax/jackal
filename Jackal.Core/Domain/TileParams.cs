@@ -235,4 +235,9 @@ public class TileParams : IClonable<TileParams>
     /// Землетрясение
     /// </summary>
     public static TileParams Quake() => new(TileType.Quake);
+    
+    /// <summary>
+    /// Хи-хи трава
+    /// </summary>
+    public static TileParams Cannabis() => new(TileType.Cannabis);
 }
