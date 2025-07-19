@@ -5,6 +5,20 @@ namespace Jackal.Core.Domain;
 public static class TileFactory
 {
     /// <summary>
+    /// Вода
+    /// </summary>
+    /// <param name="x">Позиция X на карте</param>
+    /// <param name="y">Позиция У на карте</param>
+    public static TileParams Water(int x, int y) => new(TileType.Water) { Position = new Position(x, y) };
+
+    /// <summary>
+    /// Неизвестная клетка суши
+    /// </summary>
+    /// <param name="x">Позиция X на карте</param>
+    /// <param name="y">Позиция У на карте</param>
+    public static TileParams Unknown(int x, int y) => new(TileType.Unknown) { Position = new Position(x, y) };
+    
+    /// <summary>
     /// Пустая клетка
     /// </summary>
     /// <param name="imageNumber">Номер изображения</param>

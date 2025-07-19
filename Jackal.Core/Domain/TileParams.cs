@@ -28,10 +28,6 @@ public class TileParams : IClonable<TileParams>
     /// Количество ходов на задерживающей клетке
     /// </summary>
     public int SpinningCount;
-
-    public TileParams()
-    {
-    }
         
     public TileParams(TileType type)
     {
