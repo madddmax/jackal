@@ -173,4 +173,9 @@ public static class TileFactory
     /// Джунгли
     /// </summary>
     public static TileParams Jungle() => new(TileType.Jungle);
+    
+    /// <summary>
+    /// Землетрясение
+    /// </summary>
+    public static TileParams Quake() => new(TileType.Quake);
 }

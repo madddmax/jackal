@@ -123,15 +123,15 @@ public class DifficultTilesPack : ITilesPack
         TileFactory.Hole(),
         TileFactory.Hole(),
         TileFactory.Hole(),
-        new TileParams(TileType.Quake),
-        new TileParams(TileType.Quake),
-        new TileParams(TileType.Quake),
-        new TileParams(TileType.Quake),
-        new TileParams(TileType.Quake),
-        new TileParams(TileType.Quake),
-        new TileParams(TileType.Quake),
-        new TileParams(TileType.Quake),
-        new TileParams(TileType.Quake),
-        new TileParams(TileType.Quake)
+        TileFactory.Quake(),
+        TileFactory.Quake(),
+        TileFactory.Quake(),
+        TileFactory.Quake(),
+        TileFactory.Quake(),
+        TileFactory.Quake(),
+        TileFactory.Quake(),
+        TileFactory.Quake(),
+        TileFactory.Quake(),
+        TileFactory.Quake()
     ];
 }

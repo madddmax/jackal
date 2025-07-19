@@ -115,8 +115,8 @@ public class ExtendedTilesPack : ITilesPack
         TileFactory.Hole(),
         TileFactory.Hole(),
         TileFactory.Hole(),
-        new TileParams(TileType.Quake),
-        new TileParams(TileType.Quake),
+        TileFactory.Quake(),
+        TileFactory.Quake(),
         // 16 пустых клеток
         TileFactory.Empty(),
         TileFactory.Empty(),
