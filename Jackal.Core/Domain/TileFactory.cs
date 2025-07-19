@@ -168,4 +168,9 @@ public static class TileFactory
     /// Карамба
     /// </summary>
     public static TileParams Caramba() => new(TileType.Caramba);
+    
+    /// <summary>
+    /// Джунгли
+    /// </summary>
+    public static TileParams Jungle() => new(TileType.Jungle);
 }
