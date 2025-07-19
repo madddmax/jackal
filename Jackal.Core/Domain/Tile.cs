@@ -72,30 +72,36 @@ public record Tile
 	{
 	}
 
-	public Tile(Position position, Tile tile) : this(
-		new TileParams(tile.Type)
-		{
-			Position = position,
-			Code = tile.Code,
-			Direction = tile.Direction,
-			SpinningCount = tile.SpinningCount
-		})
+	public Tile(Position position, Tile tile)
 	{
+		Position = position;
+		Type = tile.Type;
+		Code = tile.Code;
+		Direction = tile.Direction;
+		SpinningCount = tile.SpinningCount;
+		
+		InitLevels();
 	}
 
 	public Tile(TileParams tileParams)
 	{
 		Position = tileParams.Position;
 		Type = tileParams.Type;
-		int levelsCount = (tileParams.Type == TileType.Spinning) ? tileParams.SpinningCount : 1;
+		Code = tileParams.Code;
+		Direction = tileParams.Direction;
+		SpinningCount = tileParams.SpinningCount;
+		
+		InitLevels();
+	}
+
+	private void InitLevels()
+	{
+		int levelsCount = Type == TileType.Spinning ? SpinningCount : 1;
 		for (int level = 0; level < levelsCount; level++)
 		{
-			var tileLevel = new TileLevel(new TilePosition(tileParams.Position, level));
+			var tileLevel = new TileLevel(new TilePosition(Position, level));
 			Levels.Add(tileLevel);
 		}
-		Code = tileParams.Code;
-		SpinningCount = tileParams.SpinningCount;
-		Direction = tileParams.Direction;
 	}
 
 	public bool HasNoEnemy(int[] enemyTeamIds) => 

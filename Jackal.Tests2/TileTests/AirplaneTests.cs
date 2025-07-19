@@ -12,7 +12,7 @@ public class AirplaneTests
     public void OneAirplane_GetAvailableMoves_ReturnWholeMapAndOwnShip()
     {
         // Arrange
-        var airplaneOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Airplane));
+        var airplaneOnlyMap = new OneTileMapGenerator(TileParams.Airplane());
         var game = new TestGame(airplaneOnlyMap);
         
         // Act - высадка с корабля на самолет
@@ -41,7 +41,7 @@ public class AirplaneTests
     public void AirplaneThenNextAirplane_GetAvailableMoves_ReturnWholeMapAndOwnShip()
     {
         // Arrange
-        var airplaneOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Airplane));
+        var airplaneOnlyMap = new OneTileMapGenerator(TileParams.Airplane());
         var game = new TestGame(airplaneOnlyMap);
         
         // Act - высадка с корабля на самолет
@@ -76,8 +76,9 @@ public class AirplaneTests
     {
         // Arrange
         var airplaneIceLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Airplane),
-            new TileParams(TileType.Ice));
+            TileParams.Airplane(),
+            TileParams.Ice()
+        );
         
         var game = new TestGame(airplaneIceLineMap);
         
@@ -110,8 +111,9 @@ public class AirplaneTests
     {
         // Arrange
         var airplaneIceLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Airplane),
-            new TileParams(TileType.Crocodile));
+            TileParams.Airplane(),
+            TileParams.Crocodile()
+        );
         
         var game = new TestGame(airplaneIceLineMap);
         
@@ -144,9 +146,10 @@ public class AirplaneTests
     {
         // Arrange
         var airplaneArrowUpOnCrocodileLineMap = new ThreeTileMapGenerator(
-            new TileParams(TileType.Airplane),
-            TileFactory.OneArrowUp(),
-            new TileParams(TileType.Crocodile));
+            TileParams.Airplane(),
+            TileParams.OneArrowUp(),
+            TileParams.Crocodile()
+        );
         
         var game = new TestGame(airplaneArrowUpOnCrocodileLineMap);
         
@@ -171,9 +174,10 @@ public class AirplaneTests
     {
         // Arrange
         var airplaneArrowUpOnCrocodileLineMap = new ThreeTileMapGenerator(
-            new TileParams(TileType.Airplane),
-            TileFactory.OneArrowUp(),
-            new TileParams(TileType.Crocodile));
+            TileParams.Airplane(),
+            TileParams.OneArrowUp(),
+            TileParams.Crocodile()
+        );
         
         var game = new TestGame(airplaneArrowUpOnCrocodileLineMap);
         
@@ -197,7 +201,7 @@ public class AirplaneTests
     public void OneAirplaneWait_GetAvailableMoves_ReturnWholeMapAndOwnShip()
     {
         // Arrange
-        var airplaneOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Airplane));
+        var airplaneOnlyMap = new OneTileMapGenerator(TileParams.Airplane());
         var game = new TestGame(airplaneOnlyMap);
         
         // Act - высадка с корабля на самолет
@@ -231,7 +235,7 @@ public class AirplaneTests
     {
         // Arrange
         const int piratesPerPlayer = 2;
-        var airplaneOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Airplane));
+        var airplaneOnlyMap = new OneTileMapGenerator(TileParams.Airplane());
         var game = new TestGame(airplaneOnlyMap, 5, piratesPerPlayer);
         
         // Act - высадка с корабля на самолет

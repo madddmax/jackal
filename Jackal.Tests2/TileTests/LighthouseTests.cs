@@ -12,7 +12,7 @@ public class LighthouseTests
     public void OneLighthouse_GetAvailableMoves_ReturnAllUnknownTiles()
     {
         // Arrange
-        var lighthouseOnlyMap = new OneTileMapGenerator(new TileParams(TileType.Lighthouse));
+        var lighthouseOnlyMap = new OneTileMapGenerator(TileParams.Lighthouse());
         var game = new TestGame(lighthouseOnlyMap);
         
         // Act - высадка с корабля на маяк
@@ -38,14 +38,14 @@ public class LighthouseTests
     }
     
     [Fact]
-    public void LighthouseThenSearch4Grass_Turn_ReturnGameOver()
+    public void LighthouseThenSearch4Empty_Turn_ReturnGameOver()
     {
         // Arrange
-        var lighthouseGrassLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Lighthouse),
-            new TileParams(TileType.Grass)
+        var lighthouseEmptyLineMap = new TwoTileMapGenerator(
+            TileParams.Lighthouse(),
+            TileParams.Empty()
         );
-        var game = new TestGame(lighthouseGrassLineMap);
+        var game = new TestGame(lighthouseEmptyLineMap);
         
         // Act - высадка с корабля на маяк
         game.Turn();
@@ -62,15 +62,15 @@ public class LighthouseTests
     }
     
     [Fact]
-    public void LighthouseThenSearch3LighthouseAndChest_GetAvailableMoves_ReturnNearestMoves()
+    public void LighthouseThenSearch3LighthouseAndCoin_GetAvailableMoves_ReturnNearestMoves()
     {
         // Arrange
-        var lighthouseChestLineMap = new ThreeTileMapGenerator(
-            new TileParams(TileType.Lighthouse),
-            new TileParams(TileType.Lighthouse),
-            TileFactory.Coin()
+        var lighthouseCoinLineMap = new ThreeTileMapGenerator(
+            TileParams.Lighthouse(),
+            TileParams.Lighthouse(),
+            TileParams.Coin()
         );
-        var game = new TestGame(lighthouseChestLineMap);
+        var game = new TestGame(lighthouseCoinLineMap);
         
         // Act - высадка с корабля на маяк
         game.Turn();
@@ -109,8 +109,8 @@ public class LighthouseTests
     {
         // Arrange
         var lighthouseCrocodileLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Lighthouse),
-            new TileParams(TileType.Crocodile)
+            TileParams.Lighthouse(),
+            TileParams.Crocodile()
         );
         var mapSize = 7; // карта большая - возможно движение корабля
         var game = new TestGame(lighthouseCrocodileLineMap, mapSize);

@@ -13,7 +13,7 @@ public class JungleTests
     {
         // Arrange
         var jungleOnlyMap = new OneTileMapGenerator(
-            new TileParams(TileType.Jungle)
+            TileParams.Jungle()
         );
         var game = new TestGame(jungleOnlyMap);
         
@@ -38,14 +38,14 @@ public class JungleTests
     }
     
     [Fact]
-    public void JungleThenGrassWithCoin_GetAvailableMoves_ReturnAllMoveWithoutCoin()
+    public void JungleThenEmptyWithCoin_GetAvailableMoves_ReturnAllMoveWithoutCoin()
     {
         // Arrange
-        var jungleGrassLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Jungle),
-            new TileParams(TileType.Grass)
+        var jungleEmptyLineMap = new TwoTileMapGenerator(
+            TileParams.Jungle(),
+            TileParams.Empty()
         );
-        var game = new TestGame(jungleGrassLineMap);
+        var game = new TestGame(jungleEmptyLineMap);
         
         // Act - высадка с корабля на джунгли
         game.Turn();
@@ -65,14 +65,14 @@ public class JungleTests
     }
     
     [Fact]
-    public void JungleThenGrassThenJungleAgainWithEnemy_MoveOnEnemyTurn_ReturnAllPiratesInOneJungle()
+    public void JungleThenEmptyThenJungleAgainWithEnemy_MoveOnEnemyTurn_ReturnAllPiratesInOneJungle()
     {
         // Arrange
-        var jungleGrassLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Jungle),
-            new TileParams(TileType.Grass)
+        var jungleEmptyLineMap = new TwoTileMapGenerator(
+            TileParams.Jungle(),
+            TileParams.Empty()
         );
-        var game = new TestGame(jungleGrassLineMap);
+        var game = new TestGame(jungleEmptyLineMap);
         
         // Act - высадка с корабля на джунгли
         game.Turn();

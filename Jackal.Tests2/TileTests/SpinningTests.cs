@@ -13,7 +13,7 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            TileFactory.SpinningForest()
+            TileParams.SpinningForest()
         );
         var game = new TestGame(spinningOnlyMap);
         
@@ -34,7 +34,7 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            TileFactory.SpinningForest()
+            TileParams.SpinningForest()
         );
         var game = new TestGame(spinningOnlyMap);
         
@@ -66,7 +66,7 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            TileFactory.SpinningMount()
+            TileParams.SpinningMount()
         );
         var game = new TestGame(spinningOnlyMap);
         
@@ -101,8 +101,8 @@ public class SpinningTests
     {
         // Arrange
         var spinningCrocodileLineMap = new TwoTileMapGenerator(
-            TileFactory.SpinningForest(),
-            new TileParams(TileType.Crocodile)
+            TileParams.SpinningForest(),
+            TileParams.Crocodile()
         );
         var game = new TestGame(spinningCrocodileLineMap);
         
@@ -129,7 +129,7 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            TileFactory.SpinningForest()
+            TileParams.SpinningForest()
         );
         var game = new TestGame(spinningOnlyMap);
         
@@ -164,7 +164,7 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            TileFactory.SpinningForest()
+            TileParams.SpinningForest()
         );
         var game = new TestGame(spinningOnlyMap);
         
@@ -195,7 +195,7 @@ public class SpinningTests
     {
         // Arrange
         var spinningOnlyMap = new OneTileMapGenerator(
-            TileFactory.SpinningForest()
+            TileParams.SpinningForest()
         );
         var game = new TestGame(spinningOnlyMap);
         
@@ -221,14 +221,14 @@ public class SpinningTests
     }
     
     [Fact]
-    public void SpinningThenGrassWithCoinThenSpinningAgainWithEnemyOnFirstPosition_GetAvailableMoves_ReturnAllMoveWithoutCoin()
+    public void SpinningThenEmptyWithCoinThenSpinningAgainWithEnemyOnFirstPosition_GetAvailableMoves_ReturnAllMoveWithoutCoin()
     {
         // Arrange
-        var spinningGrassLineMap = new TwoTileMapGenerator(
-            TileFactory.SpinningForest(),
-            new TileParams(TileType.Grass)
+        var spinningEmptyLineMap = new TwoTileMapGenerator(
+            TileParams.SpinningForest(),
+            TileParams.Empty()
         );
-        var game = new TestGame(spinningGrassLineMap);
+        var game = new TestGame(spinningEmptyLineMap);
         
         // Act - высадка с корабля на лес
         game.Turn(); // 1 ход
@@ -252,14 +252,14 @@ public class SpinningTests
     }
     
     [Fact]
-    public void SpinningThenGrassWithCoinThenSpinningAgainWithEnemyOnLastPosition_GetAvailableMoves_ReturnSingleMoveWithCoin()
+    public void SpinningThenEmptyWithCoinThenSpinningAgainWithEnemyOnLastPosition_GetAvailableMoves_ReturnSingleMoveWithCoin()
     {
         // Arrange
-        var spinningGrassLineMap = new TwoTileMapGenerator(
-            TileFactory.SpinningForest(),
-            new TileParams(TileType.Grass)
+        var spinningEmptyLineMap = new TwoTileMapGenerator(
+            TileParams.SpinningForest(),
+            TileParams.Empty()
         );
-        var game = new TestGame(spinningGrassLineMap);
+        var game = new TestGame(spinningEmptyLineMap);
         
         // Act - высадка с корабля на лес
         game.Turn(); // 1 ход
