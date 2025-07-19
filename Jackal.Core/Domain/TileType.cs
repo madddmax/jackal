@@ -27,4 +27,5 @@ public enum TileType
     Jungle,
     Hole,
     Quake,
+    Cannabis
 }

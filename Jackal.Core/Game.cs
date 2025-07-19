@@ -250,9 +250,15 @@ public class Game : ICompletable
     public int CurrentTeamId => TurnNumber % _players.Length;
 
     /// <summary>
+    /// Индекс команды которая ходит,
+    /// отличается от ИД команды при розыгрыше хи-хи травы
+    /// </summary>
+    private int CurrentPlayerIndex => (TurnNumber + (SubTurn.CannabisTurnCount > 0 ? 1 : 0)) % _players.Length;
+    
+    /// <summary>
     /// Игрок который ходит
     /// </summary>
-    public IPlayer CurrentPlayer => _players[CurrentTeamId];
+    public IPlayer CurrentPlayer => _players[CurrentPlayerIndex];
 
     /// <summary>
     /// Убрать пирата с карты

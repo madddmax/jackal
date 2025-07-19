@@ -223,7 +223,9 @@ export const gameSlice = createSlice({
         highlightHumanMoves: (state, action: PayloadAction<HighlightHumanMovesActionProps>) => {
             const selectors = gameSlice.getSelectors();
             const currentTeam = selectors.getCurrentTeam(state)!;
-            if (!currentTeam?.isCurrentUser) return;
+            
+            // TODO MAD удалить после 19.08.25 условие мешает ходить за компа когда разыгрываем хи-хи траву
+            //if (!currentTeam?.isCurrentUser) return; 
 
             // undraw previous moves
             state.lastMoves.forEach((move) => {

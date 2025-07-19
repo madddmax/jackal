@@ -33,6 +33,11 @@ public class SubTurnState
     /// </summary>
     public bool DrinkRumBottle { get; set; }
     
+    /// <summary>
+    /// Ходы за другую команду при розыгрыше хи-хи травы
+    /// </summary>
+    public int CannabisTurnCount { get; set; }
+    
     public void Clear()
     {
         AirplaneFlying = false;
@@ -40,5 +45,6 @@ public class SubTurnState
         FallingInTheHole = false;
         QuakePhase = 0;
         DrinkRumBottle = false;
+        CannabisTurnCount = CannabisTurnCount > 0 ? CannabisTurnCount - 1 : 0;
     }
 }

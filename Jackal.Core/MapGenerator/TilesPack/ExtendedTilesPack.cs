@@ -12,7 +12,7 @@ public class ExtendedTilesPack : ITilesPack
     /// </summary>
     public TileParams[] AllTiles { get; } =
     [
-        // 104 значимых клеток
+        // 108 значимых клеток
         TileParams.Coin(), // 1 монета - первый сундук берем всегда
         TileParams.Coin(), // 2
         TileParams.Coin(), // 3
@@ -117,20 +117,20 @@ public class ExtendedTilesPack : ITilesPack
         TileParams.Hole(),
         TileParams.Quake(),
         TileParams.Quake(),
-        // 16 пустых клеток
-        TileParams.Empty(),
+        TileParams.Cannabis(),
+        TileParams.Cannabis(),
+        TileParams.Cannabis(),
+        TileParams.Cannabis(),
+        // 12 пустых клеток
         TileParams.Empty(),
         TileParams.Empty(),
         TileParams.Empty(),
         TileParams.Empty(2),
         TileParams.Empty(2),
         TileParams.Empty(2),
-        TileParams.Empty(2),
         TileParams.Empty(3),
         TileParams.Empty(3),
         TileParams.Empty(3),
-        TileParams.Empty(3),
-        TileParams.Empty(4),
         TileParams.Empty(4),
         TileParams.Empty(4),
         TileParams.Empty(4)
