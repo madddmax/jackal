@@ -158,4 +158,9 @@ public static class TileFactory
     /// Маяк
     /// </summary>
     public static TileParams Lighthouse() => new(TileType.Lighthouse);
+    
+    /// <summary>
+    /// Бен Ганн
+    /// </summary>
+    public static TileParams BenGunn() => new(TileType.BenGunn);
 }
