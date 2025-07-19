@@ -13,7 +13,7 @@ public class RumBarrelTests
     {
         // Arrange
         var rumBarrelOnlyMap = new OneTileMapGenerator(
-            TileFactory.RumBarrel()
+            TileParams.RumBarrel()
         );
         var game = new TestGame(rumBarrelOnlyMap);
         
@@ -39,7 +39,7 @@ public class RumBarrelTests
     {
         // Arrange
         var rumBarrelOnlyMap = new OneTileMapGenerator(
-            TileFactory.RumBarrel()
+            TileParams.RumBarrel()
         );
         var game = new TestGame(rumBarrelOnlyMap);
         
@@ -71,7 +71,7 @@ public class RumBarrelTests
     {
         // Arrange
         var rumBarrelOnlyMap = new OneTileMapGenerator(
-            TileFactory.RumBarrel()
+            TileParams.RumBarrel()
         );
         var game = new TestGame(rumBarrelOnlyMap);
         

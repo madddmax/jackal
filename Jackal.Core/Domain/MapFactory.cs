@@ -32,13 +32,13 @@ public static class MapFactory
 
     private static void SetWater(this Map map, int x, int y)
     {
-        var tile = new Tile(TileFactory.Water(x, y));
+        var tile = new Tile(TileParams.Water(x, y));
         map[x, y] = tile;
     }
 
     private static void SetUnknown(this Map map, int x, int y)
     {
-        var tile = new Tile(TileFactory.Unknown(x, y));
+        var tile = new Tile(TileParams.Unknown(x, y));
         map[x, y] = tile;
     }
     

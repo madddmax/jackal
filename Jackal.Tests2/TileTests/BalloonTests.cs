@@ -10,7 +10,7 @@ public class BalloonTests
     public void OneBalloon_Turn_ReturnToOurShip()
     {
         // Arrange
-        var balloonOnlyMap = new OneTileMapGenerator(TileFactory.Balloon());
+        var balloonOnlyMap = new OneTileMapGenerator(TileParams.Balloon());
         var game = new TestGame(balloonOnlyMap);
         
         // Act - высадка с корабля на закрытый воздушный шар
@@ -26,7 +26,7 @@ public class BalloonTests
     public void OneBalloon_2Turn_ReturnToOurShip()
     {
         // Arrange
-        var balloonOnlyMap = new OneTileMapGenerator(TileFactory.Balloon());
+        var balloonOnlyMap = new OneTileMapGenerator(TileParams.Balloon());
         var game = new TestGame(balloonOnlyMap);
         
         // Act - высадка с корабля на закрытый воздушный шар

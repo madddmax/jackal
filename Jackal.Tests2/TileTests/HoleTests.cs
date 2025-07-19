@@ -13,7 +13,7 @@ public class HoleTests
     {
         // Arrange
         var holeOnlyMap = new OneTileMapGenerator(
-            TileFactory.Hole()
+            TileParams.Hole()
         );
         var game = new TestGame(holeOnlyMap);
         
@@ -32,8 +32,8 @@ public class HoleTests
     {
         // Arrange
         var emptyHoleLineMap = new TwoTileMapGenerator(
-            TileFactory.Empty(),
-            TileFactory.Hole()
+            TileParams.Empty(),
+            TileParams.Hole()
         );
         const int mapSize = 5;
         const int piratesPerPlayer = 2;
@@ -63,8 +63,8 @@ public class HoleTests
     {
         // Arrange
         var emptyHoleLineMap = new TwoTileMapGenerator(
-            TileFactory.Empty(),
-            TileFactory.Hole()
+            TileParams.Empty(),
+            TileParams.Hole()
         );
         const int mapSize = 5;
         const int piratesPerPlayer = 2;
@@ -94,8 +94,8 @@ public class HoleTests
     {
         // Arrange
         var emptyHoleLineMap = new TwoTileMapGenerator(
-            TileFactory.Empty(),
-            TileFactory.Hole()
+            TileParams.Empty(),
+            TileParams.Hole()
         );
         const int mapSize = 5;
         const int piratesPerPlayer = 2;
@@ -148,8 +148,8 @@ public class HoleTests
     {
         // Arrange
         var arrowHoleLineMap = new TwoTileMapGenerator(
-            TileFactory.FourArrowsDiagonal(),
-            TileFactory.Hole()
+            TileParams.FourArrowsDiagonal(),
+            TileParams.Hole()
         );
         const int mapSize = 5;
         const int piratesPerPlayer = 2;

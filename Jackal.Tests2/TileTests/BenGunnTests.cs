@@ -12,7 +12,7 @@ public class BenGunnTests
     public void OneBenGunn_GetAvailableMoves_ReturnNearestMoves()
     {
         // Arrange
-        var benGunnOnlyMap = new OneTileMapGenerator(TileFactory.BenGunn());
+        var benGunnOnlyMap = new OneTileMapGenerator(TileParams.BenGunn());
         var game = new TestGame(benGunnOnlyMap);
         
         // Act - высадка с корабля на Бен Ганна
@@ -38,7 +38,7 @@ public class BenGunnTests
     public void OneBenGunn_Turn_ReturnNewPirate()
     {
         // Arrange
-        var benGunnOnlyMap = new OneTileMapGenerator(TileFactory.BenGunn());
+        var benGunnOnlyMap = new OneTileMapGenerator(TileParams.BenGunn());
         var game = new TestGame(benGunnOnlyMap);
         
         // Act - высадка с корабля на Бен Ганна
@@ -55,7 +55,7 @@ public class BenGunnTests
     public void OneBenGunnThenShipThenSameBenGunnAgain_Turn_ReturnOneNewPirate()
     {
         // Arrange
-        var benGunnOnlyMap = new OneTileMapGenerator(TileFactory.BenGunn());
+        var benGunnOnlyMap = new OneTileMapGenerator(TileParams.BenGunn());
         var game = new TestGame(benGunnOnlyMap);
         
         // Act - высадка с корабля на Бен Ганна
@@ -79,8 +79,8 @@ public class BenGunnTests
     {
         // Arrange
         var lighthouseBenGunnLineMap = new TwoTileMapGenerator(
-            TileFactory.Lighthouse(),
-            TileFactory.BenGunn()
+            TileParams.Lighthouse(),
+            TileParams.BenGunn()
         );
         var game = new TestGame(lighthouseBenGunnLineMap);
         

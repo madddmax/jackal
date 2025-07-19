@@ -13,7 +13,7 @@ public class RumBottleTests
     {
         // Arrange
         var oneRumOnlyMap = new OneTileMapGenerator(
-            TileFactory.RumBottle()
+            TileParams.RumBottle()
         );
         var game = new TestGame(oneRumOnlyMap);
         
@@ -32,7 +32,7 @@ public class RumBottleTests
     {
         // Arrange
         var twoRumOnlyMap = new OneTileMapGenerator(
-            TileFactory.RumBottle(2)
+            TileParams.RumBottle(2)
         );
         var game = new TestGame(twoRumOnlyMap);
         
@@ -51,7 +51,7 @@ public class RumBottleTests
     {
         // Arrange
         var threeRumOnlyMap = new OneTileMapGenerator(
-            TileFactory.RumBottle(3)
+            TileParams.RumBottle(3)
         );
         var game = new TestGame(threeRumOnlyMap);
         
@@ -70,8 +70,8 @@ public class RumBottleTests
     {
         // Arrange
         var rumBottleTrapLineMap = new TwoTileMapGenerator(
-            TileFactory.RumBottle(),
-            TileFactory.Trap()
+            TileParams.RumBottle(),
+            TileParams.Trap()
         );
         var game = new TestGame(rumBottleTrapLineMap);
         
@@ -104,8 +104,8 @@ public class RumBottleTests
     {
         // Arrange
         var rumBottleSpinningLineMap = new TwoTileMapGenerator(
-            TileFactory.RumBottle(),
-            TileFactory.SpinningMount()
+            TileParams.RumBottle(),
+            TileParams.SpinningMount()
         );
         var game = new TestGame(rumBottleSpinningLineMap);
         
@@ -140,8 +140,8 @@ public class RumBottleTests
     {
         // Arrange
         var rumBottleTrapLineMap = new TwoTileMapGenerator(
-            TileFactory.Lighthouse(),
-            TileFactory.RumBottle()
+            TileParams.Lighthouse(),
+            TileParams.RumBottle()
         );
         var game = new TestGame(rumBottleTrapLineMap);
         

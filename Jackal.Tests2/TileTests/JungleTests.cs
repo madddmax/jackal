@@ -13,7 +13,7 @@ public class JungleTests
     {
         // Arrange
         var jungleOnlyMap = new OneTileMapGenerator(
-            TileFactory.Jungle()
+            TileParams.Jungle()
         );
         var game = new TestGame(jungleOnlyMap);
         
@@ -42,8 +42,8 @@ public class JungleTests
     {
         // Arrange
         var jungleEmptyLineMap = new TwoTileMapGenerator(
-            TileFactory.Jungle(),
-            TileFactory.Empty()
+            TileParams.Jungle(),
+            TileParams.Empty()
         );
         var game = new TestGame(jungleEmptyLineMap);
         
@@ -69,8 +69,8 @@ public class JungleTests
     {
         // Arrange
         var jungleEmptyLineMap = new TwoTileMapGenerator(
-            TileFactory.Jungle(),
-            TileFactory.Empty()
+            TileParams.Jungle(),
+            TileParams.Empty()
         );
         var game = new TestGame(jungleEmptyLineMap);
         

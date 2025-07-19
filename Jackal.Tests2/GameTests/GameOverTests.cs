@@ -11,7 +11,7 @@ public class GameOverTests
     {
         // Arrange
         var holeOnlyMap = new OneTileMapGenerator(
-            TileFactory.Hole()
+            TileParams.Hole()
         );
         var game = new TestGame(holeOnlyMap);
         
@@ -29,8 +29,8 @@ public class GameOverTests
     {
         // Arrange
         var lighthouseSpinningLineMap = new TwoTileMapGenerator(
-            TileFactory.Lighthouse(), 
-            TileFactory.SpinningForest()
+            TileParams.Lighthouse(), 
+            TileParams.SpinningForest()
         );
         var game = new TestGame(lighthouseSpinningLineMap);
         
@@ -55,8 +55,8 @@ public class GameOverTests
         // Arrange
         var totalCoins = 1;
         var coin1EmptyLineMap = new TwoTileMapGenerator(
-            TileFactory.Coin(), 
-            TileFactory.Empty(),
+            TileParams.Coin(), 
+            TileParams.Empty(),
             totalCoins
         );
         var game = new TestGame(coin1EmptyLineMap);
@@ -78,8 +78,8 @@ public class GameOverTests
         // Arrange
         var totalCoins = 1;
         var coin1EmptyLineMap = new TwoTileMapGenerator(
-            TileFactory.Coin(), 
-            TileFactory.Empty(),
+            TileParams.Coin(), 
+            TileParams.Empty(),
             totalCoins
         );
         var game = new TestGame(coin1EmptyLineMap);
@@ -104,8 +104,8 @@ public class GameOverTests
         var totalCoins = 2;
         var enemyTeamCoins = 1;
         var coin1LighthouseLineMap = new TwoTileMapGenerator(
-            TileFactory.Coin(), 
-            TileFactory.Lighthouse(),
+            TileParams.Coin(), 
+            TileParams.Lighthouse(),
             totalCoins
         );
         var game = new TestGame(coin1LighthouseLineMap);
@@ -140,8 +140,8 @@ public class GameOverTests
         // Arrange
         var totalCoins = 2;
         var coin1EmptyLineMap = new TwoTileMapGenerator(
-            TileFactory.Coin(2), 
-            TileFactory.FourArrowsDiagonal(),
+            TileParams.Coin(2), 
+            TileParams.FourArrowsDiagonal(),
             totalCoins
         );
         var game = new TestGame(coin1EmptyLineMap);

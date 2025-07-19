@@ -12,7 +12,7 @@ public class CarambaTests
     public void OneCaramba_MoveOn_ReturnAllPiratesOnTheShips()
     {
         // Arrange
-        var carambaOnlyMap = new OneTileMapGenerator(TileFactory.Caramba());
+        var carambaOnlyMap = new OneTileMapGenerator(TileParams.Caramba());
         var game = new TestGame(carambaOnlyMap);
         
         // добавляем пирата противника в воду, место выбрано случайно
@@ -41,7 +41,7 @@ public class CarambaTests
     public void OneUsedCaramba_GetAvailableMoves_ReturnNearestMoves()
     {
         // Arrange
-        var carambaOnlyMap = new OneTileMapGenerator(TileFactory.Caramba());
+        var carambaOnlyMap = new OneTileMapGenerator(TileParams.Caramba());
         var game = new TestGame(carambaOnlyMap);
         
         // Act - высадка с корабля на карамбу
@@ -72,7 +72,7 @@ public class CarambaTests
     {
         // Arrange
         var lighthouseCarambaLineMap = new TwoTileMapGenerator(
-            TileFactory.Lighthouse(), TileFactory.Caramba()
+            TileParams.Lighthouse(), TileParams.Caramba()
         );
         var game = new TestGame(lighthouseCarambaLineMap);
         

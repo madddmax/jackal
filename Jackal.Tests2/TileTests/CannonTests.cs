@@ -12,7 +12,7 @@ public class CannonTests
     public void OneCannonUp_GetAvailableMoves_ReturnOnlyWaterMoves()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(TileFactory.Cannon());
+        var cannonOnlyMap = new OneTileMapGenerator(TileParams.Cannon());
         var game = new TestGame(cannonOnlyMap);
         
         // Act - высадка с корабля на пушку
@@ -40,7 +40,7 @@ public class CannonTests
     public void OneCannonUp_MoveOnEnemyShipByCannon_ReturnDeadOwnPirate()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(TileFactory.Cannon());
+        var cannonOnlyMap = new OneTileMapGenerator(TileParams.Cannon());
         var game = new TestGame(cannonOnlyMap);
         
         // добавляем пирата противника на корабль противника в место куда прилетает наш пират на пушке
@@ -60,7 +60,7 @@ public class CannonTests
     public void OneCannonRight_GetAvailableMoves_ReturnOnlyWaterMoves()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(TileFactory.Cannon(DirectionType.Right));
+        var cannonOnlyMap = new OneTileMapGenerator(TileParams.Cannon(DirectionType.Right));
         var game = new TestGame(cannonOnlyMap);
         
         // Act - высадка с корабля на пушку
@@ -88,7 +88,7 @@ public class CannonTests
     public void OneCannonRight_MoveOnEnemyPirateByCannon_ReturnDeadEnemyPirate()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(TileFactory.Cannon(DirectionType.Right));
+        var cannonOnlyMap = new OneTileMapGenerator(TileParams.Cannon(DirectionType.Right));
         var game = new TestGame(cannonOnlyMap);
         
         // добавляем пирата противника в воду в место куда прилетает наш пират на пушке
@@ -108,7 +108,7 @@ public class CannonTests
     public void OneCannonDown_GetAvailableMoves_ReturnSingleMoveFromShip()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(TileFactory.Cannon(DirectionType.Down));
+        var cannonOnlyMap = new OneTileMapGenerator(TileParams.Cannon(DirectionType.Down));
         var game = new TestGame(cannonOnlyMap);
         
         // Act - высадка с корабля на пушку
@@ -128,7 +128,7 @@ public class CannonTests
     public void OneCannonDownRepeatMove_GetAvailableMoves_ReturnSingleMoveFromShip()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(TileFactory.Cannon(DirectionType.Down));
+        var cannonOnlyMap = new OneTileMapGenerator(TileParams.Cannon(DirectionType.Down));
         var game = new TestGame(cannonOnlyMap);
         
         // Act - высадка с корабля на пушку
@@ -151,7 +151,7 @@ public class CannonTests
     public void OneCannonLeft_GetAvailableMoves_ReturnOnlyWaterMoves()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(TileFactory.Cannon(DirectionType.Left));
+        var cannonOnlyMap = new OneTileMapGenerator(TileParams.Cannon(DirectionType.Left));
         
         var game = new TestGame(cannonOnlyMap);
         

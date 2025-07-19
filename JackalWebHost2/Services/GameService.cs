@@ -91,9 +91,9 @@ public class GameService : IGameService
         // для ручной отладки можно использовать закомментированные генераторы карт
         int mapSize = gameSettings.MapSize ?? 5;
         IMapGenerator mapGenerator = new RandomMapGenerator(gameSettings.MapId.Value, mapSize, gameSettings.TilesPackName);
-        // mapGenerator = new OneTileMapGenerator(TileFactory.Airplane());
+        // mapGenerator = new OneTileMapGenerator(TileParams.Airplane());
         // mapGenerator = new ThreeTileMapGenerator(
-        //     TileFactory.Airplane(), TileFactory.Airplane(), TileFactory.Quake()
+        //     TileParams.Airplane(), TileParams.Airplane(), TileParams.Quake()
         // );
 
         var gameMode = gameSettings.GameMode ?? GameModeType.FreeForAll;

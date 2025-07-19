@@ -12,7 +12,7 @@ public class LighthouseTests
     public void OneLighthouse_GetAvailableMoves_ReturnAllUnknownTiles()
     {
         // Arrange
-        var lighthouseOnlyMap = new OneTileMapGenerator(TileFactory.Lighthouse());
+        var lighthouseOnlyMap = new OneTileMapGenerator(TileParams.Lighthouse());
         var game = new TestGame(lighthouseOnlyMap);
         
         // Act - высадка с корабля на маяк
@@ -42,8 +42,8 @@ public class LighthouseTests
     {
         // Arrange
         var lighthouseEmptyLineMap = new TwoTileMapGenerator(
-            TileFactory.Lighthouse(),
-            TileFactory.Empty()
+            TileParams.Lighthouse(),
+            TileParams.Empty()
         );
         var game = new TestGame(lighthouseEmptyLineMap);
         
@@ -66,9 +66,9 @@ public class LighthouseTests
     {
         // Arrange
         var lighthouseCoinLineMap = new ThreeTileMapGenerator(
-            TileFactory.Lighthouse(),
-            TileFactory.Lighthouse(),
-            TileFactory.Coin()
+            TileParams.Lighthouse(),
+            TileParams.Lighthouse(),
+            TileParams.Coin()
         );
         var game = new TestGame(lighthouseCoinLineMap);
         
@@ -109,8 +109,8 @@ public class LighthouseTests
     {
         // Arrange
         var lighthouseCrocodileLineMap = new TwoTileMapGenerator(
-            TileFactory.Lighthouse(),
-            TileFactory.Crocodile()
+            TileParams.Lighthouse(),
+            TileParams.Crocodile()
         );
         var mapSize = 7; // карта большая - возможно движение корабля
         var game = new TestGame(lighthouseCrocodileLineMap, mapSize);
