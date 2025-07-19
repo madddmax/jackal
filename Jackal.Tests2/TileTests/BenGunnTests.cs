@@ -79,7 +79,7 @@ public class BenGunnTests
     {
         // Arrange
         var lighthouseBenGunnLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Lighthouse),
+            TileFactory.Lighthouse(),
             new TileParams(TileType.BenGunn)
         );
         var game = new TestGame(lighthouseBenGunnLineMap);

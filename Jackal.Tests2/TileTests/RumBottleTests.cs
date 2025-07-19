@@ -140,7 +140,7 @@ public class RumBottleTests
     {
         // Arrange
         var rumBottleTrapLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Lighthouse),
+            TileFactory.Lighthouse(),
             TileFactory.RumBottle()
         );
         var game = new TestGame(rumBottleTrapLineMap);

@@ -153,4 +153,9 @@ public static class TileFactory
     /// Ловушка
     /// </summary>
     public static TileParams Trap() => new(TileType.Trap);
+    
+    /// <summary>
+    /// Маяк
+    /// </summary>
+    public static TileParams Lighthouse() => new(TileType.Lighthouse);
 }

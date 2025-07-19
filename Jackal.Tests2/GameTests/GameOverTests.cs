@@ -29,7 +29,7 @@ public class GameOverTests
     {
         // Arrange
         var lighthouseSpinningLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Lighthouse), 
+            TileFactory.Lighthouse(), 
             TileFactory.SpinningForest()
         );
         var game = new TestGame(lighthouseSpinningLineMap);
@@ -105,7 +105,7 @@ public class GameOverTests
         var enemyTeamCoins = 1;
         var coin1LighthouseLineMap = new TwoTileMapGenerator(
             TileFactory.Coin(), 
-            new TileParams(TileType.Lighthouse),
+            TileFactory.Lighthouse(),
             totalCoins
         );
         var game = new TestGame(coin1LighthouseLineMap);

@@ -72,7 +72,7 @@ public class CarambaTests
     {
         // Arrange
         var lighthouseCarambaLineMap = new TwoTileMapGenerator(
-            new TileParams(TileType.Lighthouse), new TileParams(TileType.Caramba)
+            TileFactory.Lighthouse(), new TileParams(TileType.Caramba)
         );
         var game = new TestGame(lighthouseCarambaLineMap);
         
