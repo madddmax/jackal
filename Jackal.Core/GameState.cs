@@ -23,7 +23,7 @@ public class GameState
     public int TeamId;
     
     /// <summary>
-    /// Номер хода
+    /// Ходы за другую команду при розыгрыше хи-хи травы
     /// </summary>
-    public int TurnNumber;
+    public bool WithCannabis;
 }
