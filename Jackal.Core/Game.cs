@@ -92,8 +92,8 @@ public class Game : ICompletable
             {
                 AvailableMoves = _availableMoves.ToArray(),
                 Board = Board,
-                TurnNumber = TurnNumber,
-                TeamId = CurrentTeamId
+                TeamId = CurrentTeamId,
+                WithCannabis = CurrentTeamId != CurrentPlayerIndex
             };
             var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
 
@@ -253,7 +253,7 @@ public class Game : ICompletable
     /// Индекс команды которая ходит,
     /// отличается от ИД команды при розыгрыше хи-хи травы
     /// </summary>
-    private int CurrentPlayerIndex => (TurnNumber + (SubTurn.CannabisTurnCount > 0 ? 1 : 0)) % _players.Length;
+    public int CurrentPlayerIndex => (TurnNumber + (SubTurn.CannabisTurnCount > 0 ? 1 : 0)) % _players.Length;
     
     /// <summary>
     /// Игрок который ходит
