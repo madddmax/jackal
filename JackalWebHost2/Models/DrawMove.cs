@@ -12,5 +12,4 @@ public class DrawMove
     public bool WithRespawn;
     public bool WithLighthouse;
     public bool WithQuake;
-    public bool WithCannabis;
 }

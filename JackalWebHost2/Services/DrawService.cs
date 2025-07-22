@@ -77,7 +77,7 @@ public class DrawService : IDrawService
             IsGameOver = game.IsGameOver,
             GameMessage = game.GameMessage,
             CurrentTeamId = game.CurrentTeamId,
-            WithCannabis = game.CurrentTeamId != game.CurrentPlayerIndex
+            CurrentPlayerId = game.CurrentPlayerId
         };
 
     public List<DrawMove> GetAvailableMoves(Game game)
