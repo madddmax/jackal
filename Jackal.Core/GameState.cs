@@ -23,7 +23,8 @@ public class GameState
     public int TeamId;
     
     /// <summary>
-    /// Ходы за другую команду при розыгрыше хи-хи травы
+    /// ИД игрока чей ход,
+    /// отличается от ИД команды при розыгрыше хи-хи травы
     /// </summary>
-    public bool WithCannabis;
+    public int PlayerId;
 }

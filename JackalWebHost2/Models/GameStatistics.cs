@@ -21,12 +21,13 @@ public class GameStatistics
     public string GameMessage;
     
     /// <summary>
-    /// ИД команды которая ходит
+    /// ИД команды пиратов чей ход
     /// </summary>
     public int CurrentTeamId;
-    
+
     /// <summary>
-    /// Ходы за другую команду при розыгрыше хи-хи травы
+    /// ИД игрока чей ход,
+    /// отличается от ИД команды при розыгрыше хи-хи травы
     /// </summary>
-    public bool WithCannabis;
+    public int CurrentPlayerId;
 }
