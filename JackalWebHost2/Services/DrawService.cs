@@ -77,7 +77,7 @@ public class DrawService : IDrawService
             IsGameOver = game.IsGameOver,
             GameMessage = game.GameMessage,
             CurrentTeamId = game.CurrentTeamId,
-            CurrentPlayerId = game.CurrentPlayerId
+            CurrentUserId = game.Board.Teams[game.CurrentPlayerIndex].UserId
         };
 
     public List<DrawMove> GetAvailableMoves(Game game)

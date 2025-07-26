@@ -23,8 +23,7 @@ public class GameState
     public int TeamId;
     
     /// <summary>
-    /// ИД игрока чей ход,
-    /// отличается от ИД команды при розыгрыше хи-хи травы
+    /// ИД пользователя чей ход
     /// </summary>
-    public int PlayerId;
+    public long UserId;
 }
