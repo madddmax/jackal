@@ -26,8 +26,7 @@ public class GameStatistics
     public int CurrentTeamId;
 
     /// <summary>
-    /// ИД игрока чей ход,
-    /// отличается от ИД команды при розыгрыше хи-хи травы
+    /// ИД пользователя чей ход
     /// </summary>
-    public int CurrentPlayerId;
+    public long CurrentUserId;
 }
