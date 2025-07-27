@@ -5,7 +5,7 @@ import {
     applyChanges,
     applyPirateChanges,
     applyStat,
-    getCurrentTeam,
+    getGameStatistics,
     getUserSettings,
     highlightHumanMoves,
     initGame,
@@ -23,6 +23,7 @@ const animateQueue: GameTurnResponse[] = [];
 export function* applyStartData(action: { payload: GameStartResponse }) {
     const data = action.payload;
     const auth: AuthState = yield select(getAuth);
+    data.stats.isCurrentUsersMove = data.stats.currentUserId === auth.user?.id;
     data.teams.forEach((it) => {
         if (it.userId === auth.user?.id) it.isCurrentUser = true;
     });
@@ -70,11 +71,13 @@ function* doAnimate() {
 export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
     const result = { data: action.payload };
 
-    const currentTeam: TeamState | undefined = yield select(getCurrentTeam);
+    const prevStat: GameStat | undefined = yield select(getGameStatistics);
+    const auth: AuthState = yield select(getAuth);
+    result.data.stats.isCurrentUsersMove = result.data.stats.currentUserId === auth.user?.id;
     const { gameSpeed: speed }: StorageState = yield select(getUserSettings);
 
     yield put(removeHumanMoves());
-    if (!currentTeam!.isCurrentUser) {
+    if (!prevStat?.isCurrentUsersMove) {
         if (speed > 0) {
             yield delay(speed * 100);
         }
@@ -98,6 +101,7 @@ export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
 export function* applyLookingData(action: { payload: GameStartResponse }) {
     const data = action.payload;
     const auth: AuthState = yield select(getAuth);
+    data.stats.isCurrentUsersMove = data.stats.currentUserId === auth.user?.id;
     data.teams.forEach((it) => {
         if (it.userId === auth.user?.id) it.isCurrentUser = true;
     });

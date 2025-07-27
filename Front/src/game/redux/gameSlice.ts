@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
 import { memoize } from 'proxy-memoize';
 
-import { girlsMap } from '../logic/gameLogic';
+import { constructGameLevel, girlsMap } from '../logic/gameLogic';
 import {
     ChooseHumanPirateActionProps,
     FieldState,
@@ -21,7 +21,6 @@ import {
     GameTeamResponse,
 } from '../types/gameSaga';
 import { ScreenSizes, TeamScores } from './gameSlice.types';
-import { constructGameLevel } from './utils';
 import { Constants } from '/app/constants';
 import { debugLog, getAnotherRandomValue } from '/app/global';
 
@@ -172,9 +171,8 @@ export const gameSlice = createSlice({
             });
         },
         setCurrentHumanTeam: (state) => {
-            const currentTeam = gameSlice.getSelectors().getCurrentTeam(state);
-            if (currentTeam?.isCurrentUser && currentTeam.id !== state.currentHumanTeamId) {
-                state.currentHumanTeamId = currentTeam.id;
+            if (state.stat?.isCurrentUsersMove && state.stat.currentTeamId !== state.currentHumanTeamId) {
+                state.currentHumanTeamId = state.stat.currentTeamId;
             }
         },
         setPirateAutoChange: (state, action: PayloadAction<boolean>) => {
@@ -222,10 +220,9 @@ export const gameSlice = createSlice({
         },
         highlightHumanMoves: (state, action: PayloadAction<HighlightHumanMovesActionProps>) => {
             const selectors = gameSlice.getSelectors();
-            const currentTeam = selectors.getCurrentTeam(state)!;
-            
-            // TODO MAD удалить после 19.08.25 условие мешает ходить за компа когда разыгрываем хи-хи траву
-            //if (!currentTeam?.isCurrentUser) return; 
+            const currentTeam = state.teams.find((it) => it.id == state.stat?.currentTeamId)!;
+
+            if (!state.stat?.isCurrentUsersMove) return;
 
             // undraw previous moves
             state.lastMoves.forEach((move) => {
@@ -386,9 +383,8 @@ export const gameSlice = createSlice({
             });
 
             debugLog(current(state.teams));
-            // автоподнятие монет
-            const currentTeam = selectors.getCurrentTeam(state)!;
-            if (currentTeam.isCurrentUser) {
+            // поднятие/опускание и автоподнятие монет
+            if (selectors.getGameStatistics(state)!.isCurrentUsersMove) {
                 const girlIds = new Set();
                 action.payload.moves
                     .filter((move) => move.withCoin || move.withBigCoin)
@@ -487,10 +483,9 @@ export const gameSlice = createSlice({
         getCurrentPlayerTeam: (state): TeamState | undefined =>
             state.teams.find((it) => it.id == state.currentHumanTeamId),
         getCurrentPlayerPirates: (state): GamePirate[] | undefined => {
-            const currentPlayerTeam = gameSlice.getSelectors().getCurrentPlayerTeam(state);
-            return state.pirates?.filter((it) => it.teamId == currentPlayerTeam?.id);
+            // const currentPlayerTeam = gameSlice.getSelectors().getCurrentPlayerTeam(state);
+            return state.pirates?.filter((it) => it.teamId == state.currentHumanTeamId);
         },
-        getCurrentTeam: (state): TeamState | undefined => state.teams.find((it) => it.id == state.stat?.currentTeamId),
         getPiratesIds: memoize((state): string[] | undefined => state.pirates?.map((it) => it.id)),
         getPirateById: (state, pirateId: string): GamePirate | undefined =>
             state.pirates?.find((it) => it.id === pirateId),
@@ -556,7 +551,6 @@ export const {
 } = gameSlice.actions;
 
 export const {
-    getCurrentTeam,
     getCurrentPlayerTeam,
     getCurrentPlayerPirates,
     getPiratesIds,

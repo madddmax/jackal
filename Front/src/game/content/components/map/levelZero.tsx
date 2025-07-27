@@ -1,5 +1,6 @@
 import CoinPhoto from './coinPhoto';
 import FeaturePhoto from './featurePhoto';
+import { hasFreeMoney } from '/game/logic/gameLogic';
 import { GameLevel } from '/game/types/gameContent';
 
 interface LevelZeroProps {
@@ -32,7 +33,7 @@ const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
 
     return (
         <>
-            {data.hasFreeMoney() && (
+            {hasFreeMoney(data) && (
                 <div
                     key={`cell_level_${data.info.level}_coin`}
                     style={{

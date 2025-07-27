@@ -5,7 +5,6 @@ export interface GameLevel {
     pirates: GameLevelPirates;
     freeCoinGirlId?: string;
     features?: GameLevelFeature[];
-    hasFreeMoney: () => boolean;
 }
 
 export interface GameLevelPirates {

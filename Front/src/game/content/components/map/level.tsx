@@ -1,5 +1,6 @@
 import CoinPhoto from './coinPhoto';
 import FeaturePhoto from './featurePhoto';
+import { hasFreeMoney } from '/game/logic/gameLogic';
 import { FieldState } from '/game/types';
 import { GameLevel } from '/game/types/gameContent';
 
@@ -99,7 +100,7 @@ const Level = ({ cellSize, pirateSize, field, data, hasFeaturesOnly, onClick }: 
             }}
             onClick={onClick}
         >
-            {data.hasFreeMoney() && <CoinPhoto level={data} pirateSize={pirateSize} />}
+            {hasFreeMoney(data) && <CoinPhoto level={data} pirateSize={pirateSize} />}
         </div>
     );
 };

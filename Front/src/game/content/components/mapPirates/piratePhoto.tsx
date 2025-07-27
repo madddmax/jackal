@@ -33,7 +33,7 @@ const PiratePhoto = ({ pirate, pirateSize, isCurrentPlayerGirl, onTeamPirateClic
         <>
             <Image
                 src={`/pictures/${pirate.photo}`}
-                roundedCircle={!pirate.isActive}
+                roundedCircle={!isCurrentPlayerGirl || !pirate.isActive}
                 className={cn('pirates')}
                 style={{
                     border: `${pirateSize >= 50 ? 4 : 3}px ${pirate.backgroundColor || 'transparent'} solid`,
