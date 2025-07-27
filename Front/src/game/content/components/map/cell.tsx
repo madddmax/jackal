@@ -13,6 +13,7 @@ import Level from './level';
 import LevelZero from './levelZero';
 import store from '/app/store';
 import { showMessage } from '/common/redux/commonSlice';
+import { hasFreeMoney } from '/game/logic/gameLogic';
 
 interface CellAvailableMove extends AvailableMove {
     img?: string;
@@ -141,7 +142,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
             ></div>
             {field.levels &&
                 field.levels.length === 1 &&
-                (field.levels[0].hasFreeMoney() ||
+                (hasFreeMoney(field.levels[0]) ||
                     (field.levels[0].features && field.levels[0].features.length > 0)) && (
                     <LevelZero
                         key={`cell-level-0`}
@@ -169,7 +170,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
             {field.levels &&
                 field.levels.length > 1 &&
                 field.levels
-                    .filter((it) => it.hasFreeMoney())
+                    .filter((it) => hasFreeMoney(it))
                     .map((it, idx) => (
                         <Level
                             key={`cell-level-${idx}-pirates`}

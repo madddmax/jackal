@@ -1,4 +1,4 @@
-import { girlsMap } from '../logic/gameLogic';
+import { girlsMap, hasFreeMoney } from '../logic/gameLogic';
 import { GameState } from '../types';
 import { GameTeamResponse } from '../types/gameSaga';
 import reducer, {
@@ -478,7 +478,7 @@ describe('redux money actions tests', () => {
             coins: 1,
             bigCoins: 0,
         });
-        expect(level.hasFreeMoney()).toEqual(true);
+        expect(hasFreeMoney(level)).toEqual(true);
     });
 
     test('Кладём монету', () => {
@@ -496,7 +496,7 @@ describe('redux money actions tests', () => {
             coins: 1,
             bigCoins: 0,
         });
-        expect(preLevel.hasFreeMoney()).toEqual(true);
+        expect(hasFreeMoney(preLevel)).toEqual(true);
 
         const result = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
 
@@ -513,7 +513,7 @@ describe('redux money actions tests', () => {
             coins: 0,
             bigCoins: 0,
         });
-        expect(postLevel.hasFreeMoney()).toEqual(true);
+        expect(hasFreeMoney(postLevel)).toEqual(true);
     });
 });
 
@@ -569,7 +569,7 @@ describe('redux logic tests', () => {
             coins: 0,
             bigCoins: 0,
         });
-        expect(level.hasFreeMoney()).toEqual(false);
+        expect(hasFreeMoney(level)).toEqual(false);
     });
 
     test('Открываем Бен Ганна', () => {
@@ -627,7 +627,7 @@ describe('redux logic tests', () => {
             coins: 0,
             bigCoins: 0,
         });
-        expect(level.hasFreeMoney()).toEqual(false);
+        expect(hasFreeMoney(level)).toEqual(false);
 
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
@@ -672,7 +672,7 @@ describe('redux logic tests', () => {
             coins: 0,
             bigCoins: 0,
         });
-        expect(level.hasFreeMoney()).toEqual(true);
+        expect(hasFreeMoney(level)).toEqual(true);
         expect(level.features).toEqual([
             {
                 photo: 'skull_light.png',
