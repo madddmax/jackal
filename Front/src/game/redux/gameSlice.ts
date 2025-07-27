@@ -220,7 +220,7 @@ export const gameSlice = createSlice({
         },
         highlightHumanMoves: (state, action: PayloadAction<HighlightHumanMovesActionProps>) => {
             const selectors = gameSlice.getSelectors();
-            const currentTeam = selectors.getCurrentTeam(state)!;
+            const currentTeam = state.teams.find((it) => it.id == state.stat?.currentTeamId)!;
 
             if (!state.stat?.isCurrentUsersMove) return;
 
@@ -383,9 +383,8 @@ export const gameSlice = createSlice({
             });
 
             debugLog(current(state.teams));
-            // автоподнятие монет
-            const currentTeam = selectors.getCurrentTeam(state)!;
-            if (currentTeam.isCurrentUser) {
+            // поднятие/опускание и автоподнятие монет
+            if (selectors.getGameStatistics(state)!.isCurrentUsersMove) {
                 const girlIds = new Set();
                 action.payload.moves
                     .filter((move) => move.withCoin || move.withBigCoin)
@@ -487,7 +486,6 @@ export const gameSlice = createSlice({
             // const currentPlayerTeam = gameSlice.getSelectors().getCurrentPlayerTeam(state);
             return state.pirates?.filter((it) => it.teamId == state.currentHumanTeamId);
         },
-        getCurrentTeam: (state): TeamState | undefined => state.teams.find((it) => it.id == state.stat?.currentTeamId),
         getPiratesIds: memoize((state): string[] | undefined => state.pirates?.map((it) => it.id)),
         getPirateById: (state, pirateId: string): GamePirate | undefined =>
             state.pirates?.find((it) => it.id === pirateId),
@@ -553,7 +551,6 @@ export const {
 } = gameSlice.actions;
 
 export const {
-    getCurrentTeam,
     getCurrentPlayerTeam,
     getCurrentPlayerPirates,
     getPiratesIds,
