@@ -2,9 +2,8 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { girlsMap } from '../../../logic/gameLogic';
-import { chooseHumanPirate, getPirateById, getUserSettings } from '../../../redux/gameSlice';
+import { chooseHumanPirate, getCurrentPlayerTeam, getPirateById, getUserSettings } from '../../../redux/gameSlice';
 import AnimatePirate from './animatePirate';
-import store from '/app/store';
 import { GameState } from '/game/types';
 
 interface MapPirateProps {
@@ -18,6 +17,10 @@ interface MapPirateProps {
 
 const MapPirate = ({ id, getMarginTop, getMarginLeft, cellSize, mapSize, pirateSize }: MapPirateProps) => {
     const pirate = useSelector<{ game: GameState }, GamePirate | undefined>((state) => getPirateById(state, id));
+    const currentHumanTeam = useSelector<{ game: GameState }, TeamState | undefined>((state) =>
+        getCurrentPlayerTeam(state),
+    );
+
     const { gameSpeed: speed } = useSelector(getUserSettings);
     const dispatch = useDispatch();
 
@@ -45,13 +48,6 @@ const MapPirate = ({ id, getMarginTop, getMarginLeft, cellSize, mapSize, pirateS
     const leftOffset = pirate.position.x * (cellSize + 1) + getMarginLeft(pirate);
     const topOffset = (mapSize - 1 - pirate.position.y) * (cellSize + 1) + getMarginTop(pirate);
 
-    // TODO: optimize
-    const isCurrentPlayerPirate = (girl: GamePirate): boolean => {
-        const gameState = store.getState().game as GameState;
-        const team = gameState.teams.find((it) => it.id == gameState.currentHumanTeamId);
-        return girl.teamId === team?.id;
-    };
-
     return (
         <AnimatePirate
             pirate={pirate}
@@ -59,7 +55,7 @@ const MapPirate = ({ id, getMarginTop, getMarginLeft, cellSize, mapSize, pirateS
             speed={speed}
             left={leftOffset}
             top={topOffset}
-            isCurrentPlayerGirl={isCurrentPlayerPirate(pirate)}
+            isCurrentPlayerGirl={pirate.teamId === currentHumanTeam?.id}
             onTeamPirateClick={onTeamPirateClick}
         />
     );

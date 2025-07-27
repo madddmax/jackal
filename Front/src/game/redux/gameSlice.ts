@@ -172,9 +172,8 @@ export const gameSlice = createSlice({
             });
         },
         setCurrentHumanTeam: (state) => {
-            const currentTeam = gameSlice.getSelectors().getCurrentTeam(state);
-            if (currentTeam?.isCurrentUser && currentTeam.id !== state.currentHumanTeamId) {
-                state.currentHumanTeamId = currentTeam.id;
+            if (state.stat?.isCurrentUsersMove && state.stat.currentTeamId !== state.currentHumanTeamId) {
+                state.currentHumanTeamId = state.stat.currentTeamId;
             }
         },
         setPirateAutoChange: (state, action: PayloadAction<boolean>) => {
@@ -223,9 +222,8 @@ export const gameSlice = createSlice({
         highlightHumanMoves: (state, action: PayloadAction<HighlightHumanMovesActionProps>) => {
             const selectors = gameSlice.getSelectors();
             const currentTeam = selectors.getCurrentTeam(state)!;
-            
-            // TODO MAD удалить после 19.08.25 условие мешает ходить за компа когда разыгрываем хи-хи траву
-            //if (!currentTeam?.isCurrentUser) return; 
+
+            if (!state.stat?.isCurrentUsersMove) return;
 
             // undraw previous moves
             state.lastMoves.forEach((move) => {
@@ -487,8 +485,8 @@ export const gameSlice = createSlice({
         getCurrentPlayerTeam: (state): TeamState | undefined =>
             state.teams.find((it) => it.id == state.currentHumanTeamId),
         getCurrentPlayerPirates: (state): GamePirate[] | undefined => {
-            const currentPlayerTeam = gameSlice.getSelectors().getCurrentPlayerTeam(state);
-            return state.pirates?.filter((it) => it.teamId == currentPlayerTeam?.id);
+            // const currentPlayerTeam = gameSlice.getSelectors().getCurrentPlayerTeam(state);
+            return state.pirates?.filter((it) => it.teamId == state.currentHumanTeamId);
         },
         getCurrentTeam: (state): TeamState | undefined => state.teams.find((it) => it.id == state.stat?.currentTeamId),
         getPiratesIds: memoize((state): string[] | undefined => state.pirates?.map((it) => it.id)),

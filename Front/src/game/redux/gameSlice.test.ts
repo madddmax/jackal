@@ -158,6 +158,8 @@ const getState = (pirates: GamePirate[]): GameState => ({
     stat: {
         turnNumber: 1,
         currentTeamId: testTeamId,
+        currentUserId: 2,
+        isCurrentUsersMove: true,
         isGameOver: false,
         gameMessage: '',
     },

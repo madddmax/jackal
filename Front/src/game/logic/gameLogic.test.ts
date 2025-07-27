@@ -56,7 +56,7 @@ const testPirates: GamePirate[] = [
     },
 ];
 
-const getState = (pirates: GamePirate[]) => ({
+const getState = (pirates: GamePirate[]): GameState => ({
     fields: [[]],
     lastMoves: [],
     gameSettings: {
@@ -80,6 +80,8 @@ const getState = (pirates: GamePirate[]) => ({
     stat: {
         turnNumber: 1,
         currentTeamId: testTeamId,
+        currentUserId: 2,
+        isCurrentUsersMove: true,
         isGameOver: false,
         gameMessage: '',
     },
