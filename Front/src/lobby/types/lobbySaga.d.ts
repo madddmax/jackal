@@ -1,9 +1,11 @@
 export interface LeaderBoardItemResponse {
     playerName: string;
+    gamesCountToday: number;
+    gamesCountThisWeek: number;
+    gamesCountThisMonth: number;
+    gamesCountTotal: number;
     totalWin: number;
     totalCoins: number;
-    gamesCount: number;
-    rating: number;
 }
 
 export interface NetGameInfoResponse {

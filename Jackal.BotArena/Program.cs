@@ -94,22 +94,21 @@ internal static class Program
             }
             stat.TotalWin += team.Coins == maxCoins ? 1 : 0;
             stat.TotalCoins += team.Coins;
-            stat.GamesCount += 1;
+            stat.GamesCountTotal += 1;
         }
     }
 
     private static void ShowStat(int gamesCount, TimeSpan timeElapsed)
     {
         Console.WriteLine($"Arena games count = {gamesCount} | Time elapsed {timeElapsed}");
-        var orderedBotStat = BotStat.OrderByDescending(p => p.Value.Rating);
+        var orderedBotStat = BotStat.OrderByDescending(p => p.Value.AverageWin);
         foreach (var (_, gamePlayerStat) in orderedBotStat)
         {
             Console.WriteLine(
                 $"Player name = {gamePlayerStat.PlayerName} | " +
-                $"Rating = {gamePlayerStat.Rating} | " +
                 $"Average win = {gamePlayerStat.AverageWin:P} | " +
                 $"Total win = {gamePlayerStat.TotalWin} | " +
-                $"Games count = {gamePlayerStat.GamesCount} | " +
+                $"Games count = {gamePlayerStat.GamesCountTotal} | " +
                 $"Average coins = {gamePlayerStat.AverageCoins:F} | " +
                 $"Total coins = {gamePlayerStat.TotalCoins}"
             );
