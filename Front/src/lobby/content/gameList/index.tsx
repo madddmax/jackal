@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import { Button, Container, ListGroup, Row, Table } from 'react-bootstrap';
 import { PiEyesThin } from 'react-icons/pi';
 import { TbArrowsJoin } from 'react-icons/tb';
@@ -30,7 +31,7 @@ const GameList = () => {
     return (
         <Container>
             <Row className="justify-content-center">
-                <div className={classes.gameList}>
+                <div className={cn(classes.gameList, 'col-lg-6')}>
                     <ListGroup>
                         {list &&
                             list.map((it) => (
@@ -69,9 +70,7 @@ const GameList = () => {
                             ))}
                     </ListGroup>
                 </div>
-            </Row>
-            <Row className="justify-content-center">
-                <div className={classes.netGameList}>
+                <div className={cn(classes.netGameList, 'col-lg-6')}>
                     <ListGroup>
                         {netList &&
                             netList.map((it) => (
