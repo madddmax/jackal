@@ -17,10 +17,10 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
                 PlayerName = g.Key,
                 TotalWin = g.Count(x => x.Winner),
                 TotalCoins = g.Sum(x => x.Coins),
-                GamesCountToday = g.Count(x => x.Game.Created == DateTime.Today),
+                GamesCountToday = g.Count(x => (x.Game.Created - DateTime.Today).Days <= 1),
                 GamesCountThisWeek =  g.Count(x => 
-                    x.Game.Created >= DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday) && 
-                    x.Game.Created <= DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Sunday)),
+                    x.Game.Created >= DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Sunday) && 
+                    x.Game.Created <= DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Saturday)),
                 GamesCountThisMonth = g.Count(x => 
                     x.Game.Created.Month == DateTime.Today.Month && 
                     x.Game.Created.Year == DateTime.Today.Year),
