@@ -17,17 +17,22 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
                 PlayerName = g.Key,
                 TotalWin = g.Count(x => x.Winner),
                 TotalCoins = g.Sum(x => x.Coins),
-                GamesCount = g.Count()
+                GamesCountToday = g.Count(x => x.Game.Created == DateTime.Today),
+                GamesCountThisWeek =  g.Count(x => 
+                    x.Game.Created >= DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday) && 
+                    x.Game.Created <= DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Sunday)),
+                GamesCountThisMonth = g.Count(x => 
+                    x.Game.Created.Month == DateTime.Today.Month && 
+                    x.Game.Created.Year == DateTime.Today.Year),
+                GamesCountTotal = g.Count()
             })
-            .Where(g => g.TotalWin > 0)
             .ToListAsync();
 
         return orderBy switch
         {
-            LeaderboardOrderByType.Rating => bestWinningPlayers.OrderByDescending(g => g.Rating).ToList(),
-            LeaderboardOrderByType.TotalWin => bestWinningPlayers.OrderByDescending(g => g.TotalWin).ToList(),
-            LeaderboardOrderByType.GamesCount => bestWinningPlayers.OrderByDescending(g => g.GamesCount).ToList(),
             LeaderboardOrderByType.TotalCoins => bestWinningPlayers.OrderByDescending(g => g.TotalCoins).ToList(),
+            LeaderboardOrderByType.TotalWin => bestWinningPlayers.OrderByDescending(g => g.TotalWin).ToList(),
+            LeaderboardOrderByType.GamesCount => bestWinningPlayers.OrderByDescending(g => g.GamesCountTotal).ToList(),
             _ => throw new ArgumentOutOfRangeException(nameof(orderBy), orderBy, null)
         };
     }

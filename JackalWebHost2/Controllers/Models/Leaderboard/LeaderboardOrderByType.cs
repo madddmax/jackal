@@ -6,9 +6,9 @@ namespace JackalWebHost2.Controllers.Models.Leaderboard;
 public enum LeaderboardOrderByType
 {
     /// <summary>
-    /// По рейтингу
+    /// По добытым монетам
     /// </summary>
-    Rating = 0,
+    TotalCoins = 0,
     
     /// <summary>
     /// По победам
@@ -18,10 +18,5 @@ public enum LeaderboardOrderByType
     /// <summary>
     /// По играм
     /// </summary>
-    GamesCount = 2,
-    
-    /// <summary>
-    /// По добытым монетам
-    /// </summary>
-    TotalCoins = 3
+    GamesCount = 2
 }

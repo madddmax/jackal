@@ -130,9 +130,11 @@ const GameList = () => {
                                 <tr>
                                     <th>#</th>
                                     <th>Логин</th>
-                                    <th>Рейтинг</th>
+                                    <th>Игры сегодня</th>
+                                    <th>Игры недели</th>
+                                    <th>Игры месяца</th>
+                                    <th>Игры всего</th>
                                     <th>Победы</th>
-                                    <th>Игры</th>
                                     <th>Монеты</th>
                                 </tr>
                             </thead>
@@ -142,9 +144,11 @@ const GameList = () => {
                                         <tr key={`leader_${ratingNumber}`}>
                                             <td>{ratingNumber++}</td>
                                             <td>{it.playerName}</td>
-                                            <td>{it.rating}</td>
+                                            <td>{it.gamesCountToday}</td>
+                                            <td>{it.gamesCountThisWeek}</td>
+                                            <td>{it.gamesCountThisMonth}</td>
+                                            <td>{it.gamesCountTotal}</td>
                                             <td>{it.totalWin}</td>
-                                            <td>{it.gamesCount}</td>
                                             <td>{it.totalCoins}</td>
                                         </tr>
                                     ))}
