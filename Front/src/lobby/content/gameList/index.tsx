@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { Button, Container, ListGroup, Row, Table } from 'react-bootstrap';
+import { Button, Col, Container, ListGroup, Row, Table } from 'react-bootstrap';
 import { PiEyesThin } from 'react-icons/pi';
 import { TbArrowsJoin } from 'react-icons/tb';
 import { VscDebugContinueSmall } from 'react-icons/vsc';
@@ -31,121 +31,127 @@ const GameList = () => {
     return (
         <Container>
             <Row className="justify-content-center">
-                <div className={cn(classes.gameList, 'col-lg-6')}>
-                    <ListGroup>
-                        {list &&
-                            list.map((it) => (
-                                <GameListItem
-                                    key={`game-${it.id}`}
-                                    id={it.id}
-                                    isPublic={it.isPublic}
-                                    creatorName={it.creatorName}
-                                    timeStamp={it.timeStamp}
-                                >
-                                    <Button
-                                        className="float-end"
-                                        variant="outline-primary"
-                                        type="submit"
-                                        onClick={() => loadGame(it.id)}
+                <Col lg className="g-lg-2">
+                    <div className={cn(classes.gameList)}>
+                        <ListGroup>
+                            {list &&
+                                list.map((it) => (
+                                    <GameListItem
+                                        key={`game-${it.id}`}
+                                        id={it.id}
+                                        isPublic={it.isPublic}
+                                        creatorName={it.creatorName}
+                                        timeStamp={it.timeStamp}
                                     >
-                                        {it.isCreator || it.isPlayer ? (
-                                            <>
-                                                <VscDebugContinueSmall
-                                                    size={20}
-                                                    style={{ verticalAlign: 'bottom', marginRight: 3 }}
-                                                />
-                                                Продолжить
-                                            </>
-                                        ) : (
-                                            <>
-                                                <PiEyesThin
-                                                    size={20}
-                                                    style={{ verticalAlign: 'bottom', marginRight: 3 }}
-                                                />
-                                                Смотреть
-                                            </>
-                                        )}
-                                    </Button>
-                                </GameListItem>
-                            ))}
-                    </ListGroup>
-                </div>
-                <div className={cn(classes.netGameList, 'col-lg-6')}>
-                    <ListGroup>
-                        {netList &&
-                            netList.map((it) => (
-                                <GameListItem
-                                    key={`netgame-${it.id}`}
-                                    creatorName={it.creatorName}
-                                    timeStamp={it.timeStamp}
-                                >
-                                    <Button
-                                        className="float-end"
-                                        variant="outline-primary"
-                                        type="submit"
-                                        onClick={() => continueNet(it.id)}
+                                        <Button
+                                            className="float-end"
+                                            variant="outline-primary"
+                                            type="submit"
+                                            onClick={() => loadGame(it.id)}
+                                        >
+                                            {it.isCreator || it.isPlayer ? (
+                                                <>
+                                                    <VscDebugContinueSmall
+                                                        size={20}
+                                                        style={{ verticalAlign: 'bottom', marginRight: 3 }}
+                                                    />
+                                                    Продолжить
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <PiEyesThin
+                                                        size={20}
+                                                        style={{ verticalAlign: 'bottom', marginRight: 3 }}
+                                                    />
+                                                    Смотреть
+                                                </>
+                                            )}
+                                        </Button>
+                                    </GameListItem>
+                                ))}
+                        </ListGroup>
+                    </div>
+                </Col>
+                <Col lg className="g-lg-2">
+                    <div className={cn(classes.netGameList)}>
+                        <ListGroup>
+                            {netList &&
+                                netList.map((it) => (
+                                    <GameListItem
+                                        key={`netgame-${it.id}`}
+                                        creatorName={it.creatorName}
+                                        timeStamp={it.timeStamp}
                                     >
-                                        {it.isCreator && (
-                                            <>
-                                                <VscDebugContinueSmall
-                                                    size={20}
-                                                    style={{ verticalAlign: 'bottom', marginRight: 3 }}
-                                                />
-                                                Продолжить
-                                            </>
-                                        )}
-                                        {!it.isCreator && it.isPlayer && (
-                                            <>
-                                                <PiEyesThin
-                                                    size={20}
-                                                    style={{ verticalAlign: 'bottom', marginRight: 3 }}
-                                                />
-                                                Смотреть
-                                            </>
-                                        )}
-                                        {!it.isCreator && !it.isPlayer && (
-                                            <>
-                                                <TbArrowsJoin
-                                                    size={20}
-                                                    style={{ verticalAlign: 'bottom', marginRight: 3 }}
-                                                />
-                                                Присоединиться
-                                            </>
-                                        )}
-                                    </Button>
-                                </GameListItem>
-                            ))}
-                    </ListGroup>
-                </div>
+                                        <Button
+                                            className="float-end"
+                                            variant="outline-primary"
+                                            type="submit"
+                                            onClick={() => continueNet(it.id)}
+                                        >
+                                            {it.isCreator && (
+                                                <>
+                                                    <VscDebugContinueSmall
+                                                        size={20}
+                                                        style={{ verticalAlign: 'bottom', marginRight: 3 }}
+                                                    />
+                                                    Продолжить
+                                                </>
+                                            )}
+                                            {!it.isCreator && it.isPlayer && (
+                                                <>
+                                                    <PiEyesThin
+                                                        size={20}
+                                                        style={{ verticalAlign: 'bottom', marginRight: 3 }}
+                                                    />
+                                                    Смотреть
+                                                </>
+                                            )}
+                                            {!it.isCreator && !it.isPlayer && (
+                                                <>
+                                                    <TbArrowsJoin
+                                                        size={20}
+                                                        style={{ verticalAlign: 'bottom', marginRight: 3 }}
+                                                    />
+                                                    Присоединиться
+                                                </>
+                                            )}
+                                        </Button>
+                                    </GameListItem>
+                                ))}
+                        </ListGroup>
+                    </div>
+                </Col>
             </Row>
             <Row className="justify-content-center">
-                <div className={classes.leaderboard}>
-                    <Table striped>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Логин</th>
-                                <th>Рейтинг</th>
-                                <th>Победы</th>
-                                <th>Игры</th>
-                                <th>Монеты</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {leaders &&
-                                leaders.map((it) => (
-                                    <tr key={`leader_${ratingNumber}`}>
-                                        <td>{ratingNumber++}</td>
-                                        <td>{it.playerName}</td>
-                                        <td>{it.rating}</td>
-                                        <td>{it.totalWin}</td>
-                                        <td>{it.gamesCount}</td>
-                                        <td>{it.totalCoins}</td>
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </Table>
-                </div>
+                <Col className="g-lg-2">
+                    <div className={classes.leaderboard}>
+                        <Table striped>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Логин</th>
+                                    <th>Рейтинг</th>
+                                    <th>Победы</th>
+                                    <th>Игры</th>
+                                    <th>Монеты</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {leaders &&
+                                    leaders.map((it) => (
+                                        <tr key={`leader_${ratingNumber}`}>
+                                            <td>{ratingNumber++}</td>
+                                            <td>{it.playerName}</td>
+                                            <td>{it.rating}</td>
+                                            <td>{it.totalWin}</td>
+                                            <td>{it.gamesCount}</td>
+                                            <td>{it.totalCoins}</td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </Table>
+                    </div>
+                </Col>
             </Row>
         </Container>
     );
