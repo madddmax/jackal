@@ -9,6 +9,8 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
 {
     public async Task<List<GamePlayerStat>> GetLeaderboard(LeaderboardOrderByType orderBy)
     {
+        DateTime today = DateTime.UtcNow.Date;
+        DateTime startOfWeek = today.AddDays(-(int)today.DayOfWeek + (int)DayOfWeek.Monday); // Начало текущей недели (понедельник)
         var bestWinningPlayers = await jackalDbContext.GamePlayers
             .Where(p => p.UserId != null)
             .GroupBy(p => p.PlayerName)
@@ -17,14 +19,11 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
                 PlayerName = g.Key,
                 TotalWin = g.Count(x => x.Winner),
                 TotalCoins = g.Sum(x => x.Coins),
-                GamesCountToday = g.Count(x => 
-                    x.Game.Created.Day == DateTime.Today.Day &&
-                    x.Game.Created.Month == DateTime.Today.Month && 
-                    x.Game.Created.Year == DateTime.Today.Year),
-                GamesCountThisWeek = 0,
+                GamesCountToday = g.Count(x => x.Game.Created.Date == today.Date),
+                GamesCountThisWeek = g.Count(x => x.Game.Created.Date >= startOfWeek.Date),
                 GamesCountThisMonth = g.Count(x => 
-                    x.Game.Created.Month == DateTime.Today.Month && 
-                    x.Game.Created.Year == DateTime.Today.Year),
+                    x.Game.Created.Month == today.Month && 
+                    x.Game.Created.Year == today.Year),
                 GamesCountTotal = g.Count()
             })
             .ToListAsync();
