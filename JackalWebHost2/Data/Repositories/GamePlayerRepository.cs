@@ -12,7 +12,7 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
         DateTime today = DateTime.UtcNow.Date;
         DateTime startOfWeek = today.AddDays(-(int)today.DayOfWeek + (int)DayOfWeek.Monday); // Начало текущей недели (понедельник)
         var bestWinningPlayers = await jackalDbContext.GamePlayers
-            .Where(p => p.UserId != null)
+            .Where(p => p.Game.GameOver)
             .GroupBy(p => p.PlayerName)
             .Select(g => new GamePlayerStat
             {
