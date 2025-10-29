@@ -24,7 +24,7 @@ public class GamePlayerStat
     /// <summary>
     /// Ранг по шкале силы юнитов игры Heroes of Might and Magic II
     /// </summary>
-    public string Rank => TotalCoins.GetHeroes2Rank();
+    public string Rank => TotalWin.GetHeroes2Rank();
 
     /// <summary>
     /// Количество проведенных игр за день

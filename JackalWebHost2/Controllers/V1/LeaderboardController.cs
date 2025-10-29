@@ -16,6 +16,6 @@ public class LeaderboardController(IGamePlayerRepository gamePlayerRepository) :
     public async Task<LeaderboardResponse> GetLeaderboard(LeaderboardOrderByType? orderBy) =>
         new()
         {
-            Leaderboard = await gamePlayerRepository.GetLeaderboard(orderBy ?? LeaderboardOrderByType.TotalCoins)
+            Leaderboard = await gamePlayerRepository.GetLeaderboard(orderBy ?? LeaderboardOrderByType.TotalWin)
         };
 }
