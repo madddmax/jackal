@@ -130,6 +130,7 @@ const GameList = () => {
                                 <tr>
                                     <th>#</th>
                                     <th>Логин</th>
+                                    <th>Ранг</th>
                                     <th>Игры сегодня</th>
                                     <th>Игры недели</th>
                                     <th>Игры месяца</th>
@@ -144,6 +145,7 @@ const GameList = () => {
                                         <tr key={`leader_${ratingNumber}`}>
                                             <td>{ratingNumber++}</td>
                                             <td>{it.playerName}</td>
+                                            <td>{it.rank}</td>
                                             <td>{it.gamesCountToday}</td>
                                             <td>{it.gamesCountThisWeek}</td>
                                             <td>{it.gamesCountThisMonth}</td>
