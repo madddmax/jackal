@@ -1,5 +1,6 @@
 export interface LeaderBoardItemResponse {
     playerName: string;
+    rank: string;
     gamesCountToday: number;
     gamesCountThisWeek: number;
     gamesCountThisMonth: number;
