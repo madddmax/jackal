@@ -134,8 +134,7 @@ const GameList = () => {
                                     <th>Игры сегодня</th>
                                     <th>Игры недели</th>
                                     <th>Игры месяца</th>
-                                    <th>Игры всего</th>
-                                    <th>Победы</th>
+                                    <th>Победы / Игры</th>
                                     <th>Монеты</th>
                                 </tr>
                             </thead>
@@ -146,11 +145,10 @@ const GameList = () => {
                                             <td>{ratingNumber++}</td>
                                             <td>{it.playerName}</td>
                                             <td>{it.rank}</td>
-                                            <td>{it.gamesCountToday}</td>
-                                            <td>{it.gamesCountThisWeek}</td>
-                                            <td>{it.gamesCountThisMonth}</td>
-                                            <td>{it.gamesCountTotal}</td>
-                                            <td>{it.totalWin}</td>
+                                            <td>{it.winCountToday} - {it.gamesCountToday}</td>
+                                            <td>{it.winCountThisWeek} - {it.gamesCountThisWeek}</td>
+                                            <td>{it.winCountThisMonth} - {it.gamesCountThisMonth}</td>
+                                            <td>{it.totalWin} - {it.gamesCountTotal}</td>
                                             <td>{it.totalCoins}</td>
                                         </tr>
                                     ))}

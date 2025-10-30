@@ -11,15 +11,25 @@ public class GamePlayerStat
     public string PlayerName { get; set; }
     
     /// <summary>
+    /// Количество побед за день
+    /// </summary>
+    public int WinCountToday { get; set; }
+    
+    /// <summary>
+    /// Количество побед за неделю
+    /// </summary>
+    public int WinCountThisWeek { get; set; }
+    
+    /// <summary>
+    /// Количество побед за месяц
+    /// </summary>
+    public int WinCountThisMonth { get; set; }
+    
+    /// <summary>
     /// Количество побед, когда в конце игры золота оказалось больше.
     /// В случае равенства по золоту, победа присуждается обеим командам.
     /// </summary>
     public int TotalWin { get; set; }
-    
-    /// <summary>
-    /// Суммарное количество добытых монет за все игры
-    /// </summary>
-    public int TotalCoins { get; set; }
 
     /// <summary>
     /// Ранг по шкале силы юнитов игры Heroes of Might and Magic II
@@ -45,6 +55,11 @@ public class GamePlayerStat
     /// Количество проведенных игр за всё время
     /// </summary>
     public int GamesCountTotal { get; set; }
+    
+    /// <summary>
+    /// Суммарное количество добытых монет за все игры
+    /// </summary>
+    public int TotalCoins { get; set; }
     
     /// <summary>
     /// Среднее количество побед за все игры

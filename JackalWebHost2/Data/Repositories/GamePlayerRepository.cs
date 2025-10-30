@@ -16,12 +16,15 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
             .Select(g => new GamePlayerStat
             {
                 PlayerName = g.Key,
+                WinCountToday = g.Count(x => x.Game.Created.Date == today.Date && x.Winner),
+                WinCountThisWeek = g.Count(x => x.Game.Created.Date >= today.Date.AddDays(-7) && x.Winner),
+                WinCountThisMonth = g.Count(x => x.Game.Created.Date >= today.Date.AddDays(-30) && x.Winner),
                 TotalWin = g.Count(x => x.Winner),
-                TotalCoins = g.Sum(x => x.Coins),
                 GamesCountToday = g.Count(x => x.Game.Created.Date == today.Date),
                 GamesCountThisWeek = g.Count(x => x.Game.Created.Date >= today.Date.AddDays(-7)),
                 GamesCountThisMonth = g.Count(x => x.Game.Created.Date >= today.Date.AddDays(-30)),
-                GamesCountTotal = g.Count()
+                GamesCountTotal = g.Count(),
+                TotalCoins = g.Sum(x => x.Coins)
             })
             .ToListAsync();
 
