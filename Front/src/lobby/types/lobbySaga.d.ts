@@ -1,11 +1,14 @@
 export interface LeaderBoardItemResponse {
     playerName: string;
     rank: string;
+    winCountToday: number;
+    winCountThisWeek: number;
+    winCountThisMonth: number;
+    totalWin: number;
     gamesCountToday: number;
     gamesCountThisWeek: number;
     gamesCountThisMonth: number;
     gamesCountTotal: number;
-    totalWin: number;
     totalCoins: number;
 }
 
