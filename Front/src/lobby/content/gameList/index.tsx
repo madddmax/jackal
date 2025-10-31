@@ -130,7 +130,7 @@ const GameList = () => {
                                 <tr>
                                     <th>#</th>
                                     <th>Логин</th>
-                                    <th>Ранг</th>
+                                    <th style={{ width: '150px' }}>Ранг</th>
                                     <th>Игры сегодня</th>
                                     <th>Игры недели</th>
                                     <th>Игры месяца</th>
@@ -144,11 +144,21 @@ const GameList = () => {
                                         <tr key={`leader_${ratingNumber}`}>
                                             <td>{ratingNumber++}</td>
                                             <td>{it.playerName}</td>
-                                            <td>{it.rank}</td>
-                                            <td>{it.winCountToday} - {it.gamesCountToday}</td>
-                                            <td>{it.winCountThisWeek} - {it.gamesCountThisWeek}</td>
-                                            <td>{it.winCountThisMonth} - {it.gamesCountThisMonth}</td>
-                                            <td>{it.totalWin} - {it.gamesCountTotal}</td>
+                                            <td>
+                                                <img src={`ranks/${it.rank}.webp`} alt={it.rank} />
+                                            </td>
+                                            <td>
+                                                {it.winCountToday} - {it.gamesCountToday}
+                                            </td>
+                                            <td>
+                                                {it.winCountThisWeek} - {it.gamesCountThisWeek}
+                                            </td>
+                                            <td>
+                                                {it.winCountThisMonth} - {it.gamesCountThisMonth}
+                                            </td>
+                                            <td>
+                                                {it.totalWin} - {it.gamesCountTotal}
+                                            </td>
                                             <td>{it.totalCoins}</td>
                                         </tr>
                                     ))}
