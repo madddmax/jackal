@@ -45,7 +45,8 @@ public class UserRepositoryInMemory : IUserRepository
         var user = new User
         {
             Id = Interlocked.Increment(ref Id),
-            Login = login
+            Login = login,
+            Rank = "Peasant"
         };
 
         _memoryCache.Set(GetKey(user.Id), user, _cacheEntryOptions);
