@@ -31,7 +31,8 @@ public class AuthController(IUserRepository userRepository) : Controller
             User = new UserModel
             {
                 Id = user.Id,
-                Login = user.Login
+                Login = user.Login,
+                Rank = user.Rank
             },
             Token = await FastAuthJwtBearerHelper.SignInUser(HttpContext, user)
         };
@@ -49,14 +50,20 @@ public class AuthController(IUserRepository userRepository) : Controller
             return new CheckResponse();
         }
 
-        var user = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
+        var tokenUser = FastAuthJwtBearerHelper.ExtractUser(HttpContext.User);
+        var user = await userRepository.GetUser(tokenUser.Id, token);
+        if(user == null)
+        {
+            return new CheckResponse();
+        }
         
         return new CheckResponse
         {
             User = new UserModel
             {
                 Id = user.Id,
-                Login = user.Login
+                Login = user.Login,
+                Rank = user.Rank
             }
         };
     }
