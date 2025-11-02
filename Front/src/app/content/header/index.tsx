@@ -101,7 +101,10 @@ const Header = () => {
                     <Nav className="me-auto">
                         <Navbar.Text>
                             {authInfo.isAuthorised ? (
-                                <span style={{ color: 'dark-red' }}>{authInfo.user?.login}</span>
+                                <div className="login-wrapper">
+                                    <img src={`ranks/${authInfo.user?.rank}.webp`} alt={authInfo.user?.rank} />
+                                    <span className="login-text">{authInfo.user?.login}</span>
+                                </div>
                             ) : (
                                 <span style={{ color: 'red' }}>Не авторизован</span>
                             )}
