@@ -1,3 +1,17 @@
 .header {
     margin-bottom: 20px;
 }
+
+.login-wrapper {
+    height: 24px;
+    overflow: hidden;
+}
+
+.login-wrapper img {
+    margin-right: 5px;
+}
+
+.login-text {
+    color: 'dark-red';
+    vertical-align: top;
+}
