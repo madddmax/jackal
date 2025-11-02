@@ -129,12 +129,12 @@ const GameList = () => {
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Логин</th>
-                                    <th style={{ width: '150px' }}>Ранг</th>
+                                    <th style={{ width: '100px' }}>Логин</th>
+                                    <th style={{ width: '100px' }}>Ранг</th>
                                     <th>Игры сегодня</th>
                                     <th>Игры недели</th>
                                     <th>Игры месяца</th>
-                                    <th>Победы / Игры</th>
+                                    <th>Победы - Игры</th>
                                     <th>Монеты</th>
                                 </tr>
                             </thead>
