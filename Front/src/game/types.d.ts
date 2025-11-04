@@ -57,6 +57,7 @@ export interface FieldState {
 export interface AvailableMove {
     num: number;
     isRespawn: boolean;
+    isQuake: boolean;
     pirateId: string;
     prev?: {
         x: number;

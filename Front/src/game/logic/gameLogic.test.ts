@@ -1,5 +1,6 @@
 import { TooltipTypes } from '../constants';
 import reducer, {
+    applyPirateChanges,
     highlightHumanMoves,
     initMap,
     initPiratePositions,
@@ -115,6 +116,27 @@ describe('cell logic tests', () => {
                         withBigCoin: false,
                         withRespawn: false,
                         withRumBottle: false,
+                        withQuake: false,
+                    },
+                    {
+                        moveNum: 2,
+                        from: { pirateIds: ['100'], level: 0, x: 2, y: 0 },
+                        to: { pirateIds: ['100'], level: 0, x: 2, y: 3 },
+                        withCoin: false,
+                        withBigCoin: false,
+                        withRespawn: false,
+                        withRumBottle: false,
+                        withQuake: false,
+                    },
+                    {
+                        moveNum: 3,
+                        from: { pirateIds: ['100'], level: 0, x: 2, y: 0 },
+                        to: { pirateIds: ['100'], level: 0, x: 3, y: 3 },
+                        withCoin: false,
+                        withBigCoin: false,
+                        withRespawn: false,
+                        withRumBottle: false,
+                        withQuake: true,
                     },
                 ],
             }),
@@ -131,5 +153,56 @@ describe('cell logic tests', () => {
             state: defaultState,
         });
         expect(result).toEqual(TooltipTypes.SkipMove);
+    });
+
+    test('Прыгаем в воду', () => {
+        const newState = reducer(
+            defaultState,
+            applyPirateChanges({
+                changes: [
+                    {
+                        id: '100',
+                        type: Constants.pirateTypes.Usual,
+                        teamId: testTeamId,
+                        position: { level: 0, x: 2, y: 2 },
+                    },
+                ],
+                moves: [],
+            }),
+        );
+
+        let row = 4;
+        let col = 2;
+        const result = CalcTooltipType({
+            row,
+            col,
+            field: newState.fields[row][col],
+            state: newState,
+        });
+        expect(result).toEqual(TooltipTypes.Seajump);
+    });
+
+    test('Прыгаем на пушку', () => {
+        let row = 3;
+        let col = 2;
+        const result = CalcTooltipType({
+            row,
+            col,
+            field: defaultState.fields[row][col],
+            state: defaultState,
+        });
+        expect(result).toEqual(TooltipTypes.Seajump);
+    });
+
+    test('Разыгрываем пушку при разломе', () => {
+        let row = 3;
+        let col = 3;
+        const result = CalcTooltipType({
+            row,
+            col,
+            field: defaultState.fields[row][col],
+            state: defaultState,
+        });
+        expect(result).toEqual(TooltipTypes.NoTooltip);
     });
 });
