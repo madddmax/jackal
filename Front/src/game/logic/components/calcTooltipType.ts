@@ -13,8 +13,9 @@ export const CalcTooltipType = ({ row, col, field, state }: CalcTooltipTypeProps
     const activePirate = state.pirates?.find((it) => it.id == team?.activePirate);
     const pirateField = activePirate && state.fields[activePirate.position.y][activePirate.position.x];
 
+    const move = field.availableMoves[0];
+
     if (field.levels.length == 1 && activePirate?.position.y === row && activePirate?.position.x === col) {
-        const move = field.availableMoves[0];
         if (move.isRespawn) return TooltipTypes.Respawn;
         if (field.image?.includes('hole.png')) return TooltipTypes.GroundHole;
         return TooltipTypes.SkipMove;
@@ -31,7 +32,7 @@ export const CalcTooltipType = ({ row, col, field, state }: CalcTooltipTypeProps
             !pirateField?.image?.includes('ship_3.png') &&
             !pirateField?.image?.includes('ship_4.png') &&
             !pirateField?.image?.includes('water.png')) || // and jump from beach
-        field.image?.includes('cannon.png')
+        (field.image?.includes('cannon.png') && !move.isQuake)
     ) {
         return TooltipTypes.Seajump;
     }

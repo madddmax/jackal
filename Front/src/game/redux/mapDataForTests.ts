@@ -161,7 +161,7 @@ export const getMapData: GameMapResponse = {
             y: 2,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            backgroundImageSrc: '/fields/ground.png',
             rotate: 0,
             levels: [
                 {
@@ -226,7 +226,7 @@ export const getMapData: GameMapResponse = {
             y: 3,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            backgroundImageSrc: '/fields/cannon.png',
             rotate: 0,
             levels: [
                 {
@@ -239,7 +239,7 @@ export const getMapData: GameMapResponse = {
             y: 3,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            backgroundImageSrc: '/fields/cannon.png',
             rotate: 0,
             levels: [
                 {
