@@ -9,20 +9,28 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
 {
     public async Task<List<GamePlayerStat>> GetLeaderboard(LeaderboardOrderByType orderBy)
     {
-        DateTime today = DateTime.UtcNow.Date;
+        TimeZoneInfo mskTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
+        
+        DateTime nowUtc = DateTime.UtcNow;
+        DateTime todayStartMsk = TimeZoneInfo.ConvertTimeFromUtc(nowUtc, mskTimeZone).Date;
+        
+        DateTime todayStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk, mskTimeZone);
+        DateTime weekStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk.AddDays(-7), mskTimeZone);
+        DateTime monthStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk.AddDays(-30), mskTimeZone);
+
         var bestWinningPlayers = await jackalDbContext.GamePlayers
             .Where(p => p.Game.GameOver)
             .GroupBy(p => p.PlayerName)
             .Select(g => new GamePlayerStat
             {
                 PlayerName = g.Key,
-                WinCountToday = g.Count(x => x.Game.Created.Date == today.Date && x.Winner),
-                WinCountThisWeek = g.Count(x => x.Game.Created.Date >= today.Date.AddDays(-7) && x.Winner),
-                WinCountThisMonth = g.Count(x => x.Game.Created.Date >= today.Date.AddDays(-30) && x.Winner),
+                WinCountToday = g.Count(x => x.Game.Created >= todayStartUtc && x.Winner),
+                WinCountThisWeek = g.Count(x => x.Game.Created >= weekStartUtc && x.Winner),
+                WinCountThisMonth = g.Count(x => x.Game.Created >= monthStartUtc && x.Winner),
                 TotalWin = g.Count(x => x.Winner),
-                GamesCountToday = g.Count(x => x.Game.Created.Date == today.Date),
-                GamesCountThisWeek = g.Count(x => x.Game.Created.Date >= today.Date.AddDays(-7)),
-                GamesCountThisMonth = g.Count(x => x.Game.Created.Date >= today.Date.AddDays(-30)),
+                GamesCountToday = g.Count(x => x.Game.Created >= todayStartUtc),
+                GamesCountThisWeek = g.Count(x => x.Game.Created >= weekStartUtc),
+                GamesCountThisMonth = g.Count(x => x.Game.Created >= monthStartUtc),
                 GamesCountTotal = g.Count(),
                 TotalCoins = g.Sum(x => x.Coins)
             })
