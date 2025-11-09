@@ -36,9 +36,6 @@ public class Game : ICompletable
     /// </summary>
     public int LostCoins;
 
-    private readonly List<Move> _availableMoves;
-    private readonly List<IGameAction> _actions;
-
     /// <summary>
     /// Режим игры
     /// </summary>
@@ -66,9 +63,6 @@ public class Game : ICompletable
         _players = request.Players;
         GameMode = request.GameMode;
 
-        _availableMoves = new List<Move>();
-        _actions = new List<IGameAction>();
-
         foreach (var player in _players)
         {
             player.OnNewGame();
@@ -80,31 +74,31 @@ public class Game : ICompletable
 
     public void Turn()
     {
-        GetAvailableMoves(CurrentTeamId);
+        var result = GetAvailableMoves(CurrentTeamId);
 
         NeedSubTurnPirate = null;
         PrevSubTurnPosition = null;
 
-        if (_availableMoves.Count > 0)
+        if (result.AvailableMoves.Count > 0)
         {
             // есть возможные ходы
             var gameState = new GameState
             {
-                AvailableMoves = _availableMoves.ToArray(),
+                AvailableMoves = result.AvailableMoves.ToArray(),
                 Board = Board,
                 TeamId = CurrentTeamId,
                 UserId = Board.Teams[CurrentPlayerIndex].UserId
             };
             var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
 
-            var move = _availableMoves[moveNum];
+            var move = result.AvailableMoves[moveNum];
             var currentTeamPirates = Board.Teams[CurrentTeamId].Pirates
                 .Where(x => !x.IsDrunk && !x.IsInHole && x.Position == move.From)
                 .Where(x => (!x.IsInTrap && !move.WithRumBottle) || move.WithRumBottle)
                 .ToList();
 
             var pirate = currentTeamPirates.FirstOrDefault(x => x.Id == pirateId) ?? currentTeamPirates.First();
-            IGameAction action = _actions[moveNum];
+            IGameAction action = result.Actions[moveNum];
             action.Act(this, pirate);
         }
 
@@ -159,14 +153,13 @@ public class Game : ICompletable
     
     public List<Move> GetAvailableMoves()
     {
-        GetAvailableMoves(CurrentTeamId);
-        return _availableMoves;
+        var result = GetAvailableMoves(CurrentTeamId);
+        return result.AvailableMoves;
     }
 
-    private void GetAvailableMoves(int teamId)
+    private AvailableMoveResult GetAvailableMoves(int teamId)
     {
-        _availableMoves.Clear();
-        _actions.Clear();
+        var result = new AvailableMoveResult();
         var targets = new List<AvailableMove>();
             
         Team team = Board.Teams[teamId];
@@ -218,12 +211,14 @@ public class Game : ICompletable
         foreach (var availableMove in targets)
         {
             var move = availableMove.ToMove;
-            if (_availableMoves.Exists(x => x == move))
+            if (result.AvailableMoves.Exists(x => x == move))
                 continue;
 
-            _availableMoves.Add(move);
-            _actions.Add(availableMove.ActionList);
+            result.AvailableMoves.Add(move);
+            result.Actions.Add(availableMove.ActionList);
         }
+
+        return result;
     }
 
     /// <summary>
