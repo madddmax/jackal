@@ -465,6 +465,15 @@ export const gameSlice = createSlice({
                   )?.id
                 : undefined;
         },
+        checkBottles: (state, action: PayloadAction<GameScore[] | undefined>) => {
+            const curTeam = gameSlice.getSelectors().getCurrentPlayerTeam(state);
+            const curScores = state.teamScores?.find((it) => it.teamId === curTeam?.id);
+            const newScores = action.payload?.find((it) => it.teamId === curTeam?.id);
+
+            if (curScores && newScores && curScores.rumBottles > newScores.rumBottles) {
+                state.includeMovesWithRum = false;
+            }
+        },
         applyStat: (state, action: PayloadAction<GameStatisticsResponse>) => {
             state.stat = action.payload.stats;
             state.teamScores = action.payload.teamScores;
@@ -546,6 +555,7 @@ export const {
     applyPirateChanges,
     applyChanges,
     updateLevelCoinsData,
+    checkBottles,
     applyStat,
     setTilesPackNames,
     setMapForecasts,
