@@ -5,6 +5,7 @@ import {
     applyChanges,
     applyPirateChanges,
     applyStat,
+    checkBottles,
     getGameStatistics,
     getUserSettings,
     highlightHumanMoves,
@@ -83,6 +84,7 @@ export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
         }
     }
 
+    yield put(checkBottles(result.data.teamScores));
     yield put(applyStat(result.data));
     yield put(applyChanges(result.data.changes));
     yield put(
