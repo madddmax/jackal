@@ -246,8 +246,8 @@ describe('redux init tests', () => {
         reducer(defaultState, initPiratePositions());
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
-                '20': { girls: ['100'], level: 0, levelsCountInCell: 1 },
-                '4020': { girls: ['200'], level: 0, levelsCountInCell: 1 },
+                '20': { girls: [{ id: '100', order: 0 }], level: 0, levelsCountInCell: 1 },
+                '4020': { girls: [{ id: '200', order: 0 }], level: 0, levelsCountInCell: 1 },
             }),
         );
     });
@@ -265,8 +265,8 @@ describe('redux init tests', () => {
         expect(result.pirates).toHaveLength(2);
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
-                '20': { girls: ['100'], level: 0, levelsCountInCell: 1 },
-                '4020': { girls: ['200'], level: 0, levelsCountInCell: 1 },
+                '20': { girls: [{ id: '100', order: 0 }], level: 0, levelsCountInCell: 1 },
+                '4020': { girls: [{ id: '200', order: 0 }], level: 0, levelsCountInCell: 1 },
             }),
         );
     });
@@ -420,8 +420,15 @@ describe('redux basic tests', () => {
         expect(boy?.position).toEqual({ level: 0, x: 2, y: 2 });
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
-                '2020': { girls: ['100'], level: 0, levelsCountInCell: 1 },
-                '4020': { girls: ['200', '300'], level: 0, levelsCountInCell: 1 },
+                '2020': { girls: [{ id: '100', order: 0 }], level: 0, levelsCountInCell: 1 },
+                '4020': {
+                    girls: [
+                        { id: '200', order: 0 },
+                        { id: '300', order: 1 },
+                    ],
+                    level: 0,
+                    levelsCountInCell: 1,
+                },
             }),
         );
     });
@@ -635,9 +642,16 @@ describe('redux logic tests', () => {
 
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
-                '20': { girls: ['100'], level: 0, levelsCountInCell: 1 },
-                '3020': { girls: ['200', '400'], level: 0, levelsCountInCell: 1 },
-                '4020': { girls: ['300'], level: 0, levelsCountInCell: 1 },
+                '20': { girls: [{ id: '100', order: 0 }], level: 0, levelsCountInCell: 1 },
+                '3020': {
+                    girls: [
+                        { id: '200', order: 0 },
+                        { id: '400', order: 1 },
+                    ],
+                    level: 0,
+                    levelsCountInCell: 1,
+                },
+                '4020': { girls: [{ id: '300', order: 1 }], level: 0, levelsCountInCell: 1 },
             }),
         );
     });
@@ -686,8 +700,8 @@ describe('redux logic tests', () => {
 
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
-                '20': { girls: ['100'], level: 0, levelsCountInCell: 1 },
-                '4020': { girls: ['300'], level: 0, levelsCountInCell: 1 },
+                '20': { girls: [{ id: '100', order: 0 }], level: 0, levelsCountInCell: 1 },
+                '4020': { girls: [{ id: '300', order: 1 }], level: 0, levelsCountInCell: 1 },
             }),
         );
     });

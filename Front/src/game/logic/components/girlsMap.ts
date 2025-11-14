@@ -11,13 +11,21 @@ const girlsMap: GirlsPositions = {
             this.Map[cachedId] = {
                 level: it.position.level,
                 levelsCountInCell: levelsCount,
-                girls: [it.id],
+                girls: [{ id: it.id, order: 0 }],
             };
         } else {
             if (level.girls) {
-                level.girls.push(it.id);
+                let ords = level.girls.map((x) => x.order).sort();
+                let ord = level.girls.length;
+                for (let i = 0; i < level.girls.length; ++i) {
+                    if (i != ords[i]) {
+                        ord = i;
+                        break;
+                    }
+                }
+                level.girls.push({ id: it.id, order: ord });
             } else {
-                level.girls = [it.id];
+                level.girls = [{ id: it.id, order: 0 }];
             }
         }
     },
@@ -25,7 +33,7 @@ const girlsMap: GirlsPositions = {
         const cachedId = it.position.y * 1000 + it.position.x * 10 + it.position.level;
         const girlsLevel = this.Map[cachedId];
         if (girlsLevel?.girls != undefined) {
-            girlsLevel.girls = girlsLevel.girls.filter((girl) => girl != it.id);
+            girlsLevel.girls = girlsLevel.girls.filter((girl) => girl.id != it.id);
             if (girlsLevel.girls.length == 0) delete this.Map[cachedId];
         }
     },
