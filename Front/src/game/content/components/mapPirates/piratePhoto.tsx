@@ -3,7 +3,6 @@ import Image from 'react-bootstrap/Image';
 
 import { girlsMap } from '../../../logic/gameLogic';
 import './piratePhoto.less';
-import { debugLog } from '/app/global';
 import store from '/app/store';
 import { GameState } from '/game/types';
 
@@ -16,8 +15,6 @@ interface PiratePhotoProps {
 
 const PiratePhoto = ({ pirate, pirateSize, isCurrentPlayerGirl, onTeamPirateClick }: PiratePhotoProps) => {
     const mapLevel = girlsMap.GetPosition(pirate);
-
-    debugLog('PiratePhoto', pirate.photo);
 
     const coinSize = pirateSize * 0.3 > 15 ? pirateSize * 0.3 : 15;
     const addSize = (pirateSize - coinSize - 20) / 10;

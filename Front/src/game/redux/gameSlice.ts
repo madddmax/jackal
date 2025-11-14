@@ -402,7 +402,7 @@ export const gameSlice = createSlice({
 
                         const cell = girlsMap.GetPosition(it);
                         const level = cached[cachedId];
-                        const levelPirates = state.pirates?.filter((it) => cell?.girls?.includes(it.id));
+                        const levelPirates = state.pirates?.filter((it) => cell?.girls?.some((x) => x.id == it.id));
 
                         let changeSmallCoin = changeCoin;
                         let changeBigCoin = changeCoin;
@@ -452,7 +452,7 @@ export const gameSlice = createSlice({
             const field = state.fields[action.payload.position.y][action.payload.position.x];
             const level = field.levels[action.payload.position.level];
             const girlsLevel = girlsMap.GetPosition(action.payload);
-            const levelPirates = state.pirates?.filter((it) => girlsLevel?.girls?.includes(it.id));
+            const levelPirates = state.pirates?.filter((it) => girlsLevel?.girls?.some((x) => x.id == it.id));
             level.pirates = {
                 coins: levelPirates?.filter((it) => it.withCoin).length ?? 0,
                 bigCoins: levelPirates?.filter((it) => it.withBigCoin).length ?? 0,

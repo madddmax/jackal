@@ -1,7 +1,7 @@
 export interface GirlsLevel {
     level: number;
     levelsCountInCell: number;
-    girls: string[] | undefined;
+    girls: GirlsLogicPosition[] | undefined;
 }
 
 export interface GirlsPositions {
@@ -10,4 +10,9 @@ export interface GirlsPositions {
     RemovePosition: (it: GamePiratePosition) => void;
     GetPosition: (it: GamePiratePosition) => GirlsLevel | undefined;
     ScrollGirls: (pos: GirlsLevel) => void;
+}
+
+export interface GirlsLogicPosition {
+    id: string;
+    order: number;
 }

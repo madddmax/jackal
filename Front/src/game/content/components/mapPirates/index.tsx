@@ -26,7 +26,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
 
         if (levelsCount === 1) {
             const addSize = position!.girls!.length > 3 ? cellSize / 10 : 0;
-            const idx = position!.girls!.findIndex((it) => it == girl.id);
+            const idx = position!.girls!.find((it) => it.id == girl.id)?.order;
             if (idx === 0) return -addSize;
             if (idx === 1) return unitSize + addSize;
             if (idx === 2) return unitSize + addSize;
@@ -58,7 +58,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
 
         if (levelsCount === 1) {
             const addSize = position!.girls!.length > 3 ? cellSize / 10 : 0;
-            const idx = position!.girls!.findIndex((it) => it == girl.id);
+            const idx = position!.girls!.find((it) => it.id == girl.id)?.order;
             if (idx === 0) return -addSize;
             if (idx === 1) return unitSize + addSize;
             if (idx === 2) return -addSize;

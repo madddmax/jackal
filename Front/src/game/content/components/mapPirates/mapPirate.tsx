@@ -35,7 +35,7 @@ const MapPirate = ({ id, getMarginTop, getMarginLeft, cellSize, mapSize, pirateS
             }
             dispatch(
                 chooseHumanPirate({
-                    pirate: willChangePirate ? mapLevel.girls[mapLevel.girls.length - 1] : girl.id,
+                    pirate: willChangePirate ? mapLevel.girls[mapLevel.girls.length - 1]?.id : girl.id,
                     withCoinAction: true,
                 }),
             );
