@@ -26,13 +26,14 @@ export const CalcTooltipType = ({ row, col, field, state }: CalcTooltipTypeProps
     }
 
     if (
-        (field.image?.includes('water.png') &&
+        state.lastMoves.length > 1 &&
+        ((field.image?.includes('water.png') &&
             !pirateField?.image?.includes('ship_1.png') &&
             !pirateField?.image?.includes('ship_2.png') &&
             !pirateField?.image?.includes('ship_3.png') &&
             !pirateField?.image?.includes('ship_4.png') &&
             !pirateField?.image?.includes('water.png')) || // and jump from beach
-        (field.image?.includes('cannon.png') && !move.isQuake)
+            (field.image?.includes('cannon.png') && !move.isQuake))
     ) {
         return TooltipTypes.Seajump;
     }
