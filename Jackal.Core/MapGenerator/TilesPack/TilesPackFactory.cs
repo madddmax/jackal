@@ -27,5 +27,5 @@ public static class TilesPackFactory
             _ => new ExtendedTilesPack()
         };
     
-    public static List<string> GetAll() => [Extended, Classic, Difficult, AllGold];
+    public static List<string> GetAll() => [Extended, Classic, Difficult];
 }

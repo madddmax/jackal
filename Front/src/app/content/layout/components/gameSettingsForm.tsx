@@ -140,7 +140,7 @@ const GameSettingsForm = ({
                     <Form.Range
                         disabled={isEditGroupsOnly}
                         value={gameSettingsData.mapSize}
-                        min={5}
+                        min={7}
                         max={13}
                         step={2}
                         name="mapSize"
