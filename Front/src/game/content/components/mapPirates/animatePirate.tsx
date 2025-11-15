@@ -45,7 +45,9 @@ const AnimatePirate = ({
                         style={{
                             top: y,
                             left: x,
-                            zIndex: pirate.isActive ? 10 : (mapLevel?.girls?.indexOf(pirate.id) || 0) + 3,
+                            zIndex: pirate.isActive
+                                ? 10
+                                : (mapLevel?.girls?.find((p) => p.id == pirate.id)?.order || 0) + 3,
                             pointerEvents: isCurrentPlayerGirl ? 'auto' : 'none',
                         }}
                     >
