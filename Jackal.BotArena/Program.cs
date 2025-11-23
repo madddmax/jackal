@@ -16,7 +16,7 @@ internal static class Program
     /// <summary>
     /// Количество запускаемых игр
     /// </summary>
-    private const int ArenaGamesCount = 120;
+    private const int ArenaGamesCount = 10;
 
     /// <summary>
     /// Размер карты
@@ -30,15 +30,11 @@ internal static class Program
     [
         [
             new EasyPlayer(),
-            new RandomPlayer()
+            new EasyPlayer2()
         ],
         [
+            new EasyPlayer2(),
             new EasyPlayer(),
-            new OakioPlayer(),
-        ],
-        [
-            new OakioPlayer(),
-            new RandomPlayer()
         ]
     ];
     
