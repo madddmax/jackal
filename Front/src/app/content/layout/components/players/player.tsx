@@ -18,7 +18,6 @@ const Player = ({ position, type, userName, group, posInfo, changePlayer, change
         if (type === 'human') return '/pictures/human.png';
         else if (type === 'robot') return '/pictures/robot.png';
         else if (type === 'robot2') return '/pictures/robot2.png';
-        else if (type === 'robot3') return '/pictures/robot3.png';
     };
 
     const getTopPosition = (pos: number) => {

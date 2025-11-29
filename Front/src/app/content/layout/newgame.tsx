@@ -24,7 +24,6 @@ const Newgame = () => {
         { id: counter++, type: 'human', userId: authInfo.user?.id ?? 0 },
         { id: counter++, type: 'robot', userId: 0 },
         { id: counter++, type: 'robot2', userId: 0 },
-        { id: counter++, type: 'robot3', userId: 0 },
     ];
 
     const [formData, setFormData] = useState<GameSettingsFormData>({
