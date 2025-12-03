@@ -3,7 +3,7 @@
 }
 
 .login-wrapper {
-    height: 24px;
+    height: 36px;
     overflow: hidden;
 }
 
@@ -12,6 +12,7 @@
 }
 
 .login-text {
-    color: 'dark-red';
-    vertical-align: top;
+    color: darkgoldenrod;
+    font-size: 18px;
+    vertical-align: middle;
 }
