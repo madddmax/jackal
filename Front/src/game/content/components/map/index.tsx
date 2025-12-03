@@ -1,8 +1,9 @@
+import { useRef } from 'react';
 import { Tooltip, TooltipRefProps } from 'react-tooltip';
+
+import MapPirates from '../mapPirates';
 import Cell from './cell';
 import './map.less';
-import { useRef } from 'react';
-import MapPirates from '../mapPirates';
 
 interface MapProps {
     mapSize: number;
@@ -15,7 +16,7 @@ function Map({ mapSize, cellSize }: MapProps) {
 
     return (
         <>
-            <div style={{ position: 'relative' }}>
+            <div className="map-container">
                 <div
                     className="map"
                     style={{

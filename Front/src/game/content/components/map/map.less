@@ -1,3 +1,13 @@
+@import '/common/content/common.less';
+
+.map-container {
+    position: relative;
+
+    @media (max-width: @screen-md-max) {
+        overflow-x: auto;
+    }
+}
+
 .map {
     display: table;
 }

@@ -1,6 +1,7 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import Offcanvas from 'react-bootstrap/esm/Offcanvas';
 import { FaBookSkull, FaGamepad, FaNetworkWired } from 'react-icons/fa6';
 import { GiWingfoot } from 'react-icons/gi';
 import { HiLogin, HiLogout } from 'react-icons/hi';
@@ -10,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { activateSockets, getEnableSockets } from '../../../common/redux/commonSlice';
-import './header.css';
+import './header.less';
 import config from '/app/config';
 import { Constants } from '/app/constants';
 import { getAuth } from '/auth/redux/authSlice';
@@ -46,9 +47,16 @@ const Header = () => {
     const useSocketsToggle = () => dispatch(activateSockets(!enableSockets));
 
     return (
-        <Navbar bg="light" data-bs-theme="light" className="header p-0">
+        <Navbar
+            bg="light"
+            data-bs-theme="light"
+            className="header p-0 justify-content-between"
+            expand="lg"
+            collapseOnSelect
+        >
             <Container>
-                <Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" className="me-3" />
+                <Navbar.Brand className="flex-grow-0">
                     <Nav.Link as={Link} to="/">
                         <img
                             alt=""
@@ -57,94 +65,100 @@ const Header = () => {
                             height="40"
                             className="d-inline-block align-top me-2"
                         />
-                        <span className="align-middle">React-Jackal</span>
+                        <span className="align-middle d-none d-md-inline">React-Jackal</span>
                     </Nav.Link>
                 </Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav" className="ms-3">
-                    <Nav className="me-auto">
-                        <Nav.Link as={Link} to="/" onClick={quickStart}>
-                            <GiWingfoot size={20} className="d-block mx-auto" />
-                            Быстрый старт
-                        </Nav.Link>
-                        <Nav.Link as={Link} to="/newgame">
-                            <FaGamepad size={20} className="d-block mx-auto" />
-                            Новая игра
-                        </Nav.Link>
-                        <Nav.Link as={Link} to="/netgame">
-                            <FaNetworkWired size={20} className="d-block mx-auto" />
-                            Лобби
-                        </Nav.Link>
-                        <Nav.Link as={Link} to="/docs">
-                            <FaBookSkull size={20} className="d-block mx-auto" />
-                            Обучение
-                        </Nav.Link>
-                    </Nav>
-                </Navbar.Collapse>
-                {process.env.NODE_ENV && process.env.NODE_ENV === 'development' && (
-                    <>
-                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                        <Navbar.Collapse id="basic-navbar-nav" className="d-flex">
-                            <Nav className="me-auto">
-                                <Nav.Link
-                                    as={Link}
-                                    to={`${config.BaseApi.substring(0, config.BaseApi.length - 4)}swagger`}
-                                    target="_blank"
-                                >
-                                    Swagger
-                                </Nav.Link>
-                            </Nav>
-                        </Navbar.Collapse>
-                    </>
-                )}
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav" className="d-flex">
-                    <Nav className="me-auto">
-                        <Nav.Item>
-                            <Nav.Link as={Link} to="/" onClick={useSocketsToggle}>
-                                {enableSockets ? <ImFire /> : <MdWaterDrop />}
+                <Navbar.Offcanvas id="basic-navbar-nav" placement="start">
+                    <Offcanvas.Header closeButton>
+                        <img
+                            alt=""
+                            src="/pictures/girls/logo.png"
+                            width="40"
+                            height="40"
+                            className="d-inline-block align-top me-2"
+                        />
+                        <span className="align-middle">React-Jackal</span>
+                    </Offcanvas.Header>
+                    <Offcanvas.Body>
+                        <Nav className="me-auto" activeKey="/">
+                            <Nav.Link as={Link} to="/" onClick={quickStart} eventKey="speedrun">
+                                <GiWingfoot size={20} className="menu-link" />
+                                Быстрый старт
                             </Nav.Link>
-                        </Nav.Item>
-                    </Nav>
-                </Navbar.Collapse>
-                <Navbar.Toggle />
-                <Navbar.Collapse className="justify-content-end">
-                    {authInfo.isAuthorised && (
-                        <Nav style={{ marginRight: '5px' }}>
-                            <div className="login-wrapper">
-                                <img src={`ranks/${authInfo.user?.rank}.webp`} alt={authInfo.user?.rank} />
-                            </div>
+                            <Nav.Item>
+                                <Nav.Link as={Link} to="/newgame" eventKey="newgame">
+                                    <FaGamepad size={20} className="menu-link" />
+                                    Новая игра
+                                </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Link as={Link} to="/netgame" eventKey="netgame">
+                                <FaNetworkWired size={20} className="menu-link" />
+                                Лобби
+                            </Nav.Link>
+                            <Nav.Link as={Link} to="/docs" eventKey="docs">
+                                <FaBookSkull size={20} className="menu-link" />
+                                Обучение
+                            </Nav.Link>
                         </Nav>
-                    )}
-                    <Nav className="me-auto">
-                        <Navbar.Text>
-                            {authInfo.isAuthorised ? (
+                    </Offcanvas.Body>
+                </Navbar.Offcanvas>
+                {process.env.NODE_ENV && process.env.NODE_ENV === 'development' && (
+                    <Nav className="me-auto d-none d-md-inline">
+                        <Nav.Link
+                            as={Link}
+                            to={`${config.BaseApi.substring(0, config.BaseApi.length - 4)}swagger`}
+                            target="_blank"
+                        >
+                            Swagger
+                        </Nav.Link>
+                    </Nav>
+                )}
+                <Nav className="me-auto flex-grow-1 align-items-center d-none d-md-inline">
+                    <Nav.Item>
+                        <Nav.Link as={Link} to="/" onClick={useSocketsToggle}>
+                            {enableSockets ? <ImFire /> : <MdWaterDrop />}
+                        </Nav.Link>
+                    </Nav.Item>
+                </Nav>
+                <Navbar className="p-0">
+                    <Container className="justify-content-end">
+                        {authInfo.isAuthorised && (
+                            <Nav style={{ marginRight: '5px' }}>
                                 <div className="login-wrapper">
-                                    <span className="login-text">{authInfo.user?.login}</span>
+                                    <img src={`ranks/${authInfo.user?.rank}.webp`} alt={authInfo.user?.rank} />
                                 </div>
-                            ) : (
-                                <span style={{ color: 'red' }}>Не авторизован</span>
-                            )}
-                        </Navbar.Text>
-                    </Nav>
-                    <Nav className="me-auto">
-                        {authInfo.isAuthorised ? (
-                            <Nav.Item>
-                                <Nav.Link as={Link} to="/" onClick={doLogout}>
-                                    <HiLogout size={20} className="d-block mx-auto" />
-                                    Выйти
-                                </Nav.Link>
-                            </Nav.Item>
-                        ) : (
-                            <Nav.Item>
-                                <Nav.Link as={Link} to="/login">
-                                    <HiLogin size={20} className="d-block mx-auto" />
-                                    Войти
-                                </Nav.Link>
-                            </Nav.Item>
+                            </Nav>
                         )}
-                    </Nav>
-                </Navbar.Collapse>
+                        <Nav className="me-3">
+                            <Navbar.Text>
+                                {authInfo.isAuthorised ? (
+                                    <div className="login-wrapper">
+                                        <span className="login-text">{authInfo.user?.login}</span>
+                                    </div>
+                                ) : (
+                                    <span style={{ color: 'red' }}>Не авторизован</span>
+                                )}
+                            </Navbar.Text>
+                        </Nav>
+                        <Nav className="me-auto">
+                            {authInfo.isAuthorised ? (
+                                <Nav.Item>
+                                    <Nav.Link as={Link} to="/" onClick={doLogout}>
+                                        <HiLogout size={20} className="d-block mx-auto" />
+                                        Выйти
+                                    </Nav.Link>
+                                </Nav.Item>
+                            ) : (
+                                <Nav.Item>
+                                    <Nav.Link as={Link} to="/login">
+                                        <HiLogin size={20} className="d-block mx-auto" />
+                                        Войти
+                                    </Nav.Link>
+                                </Nav.Item>
+                            )}
+                        </Nav>
+                    </Container>
+                </Navbar>
             </Container>
         </Navbar>
     );
