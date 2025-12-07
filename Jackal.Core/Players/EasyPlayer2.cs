@@ -13,14 +13,25 @@ public class EasyPlayer2 : IPlayer
 {
     public class BFSNode
     {
-        public TilePosition CurrentPosition { get; set; }
-        public List<Move> Path { get; set; } // Путь от стартовой позиции до текущей (может быть списком AvailableMove)
+        public TilePosition ToPosition { get; set; }
+        
+        public TilePosition FromPosition { get; set; }
+        
         public int Depth { get; set; }
+        
+        public int Score { get; set; }
+        
+        public List<Move> Path { get; set; } // Путь от стартовой позиции до текущей (может быть списком AvailableMove)
+        
         public SubTurnState CurrentSubTurnState { get; set; } // Состояние SubTurnState для текущего узла
-        public TilePosition PreviousPositionInPath { get; set; } // Откуда пришли в CurrentPosition (для корректного расчета delta)
+        
+        /// <summary>
+        /// Изначальный ход
+        /// </summary>
+        public Move? FirstMove { get; set; }
     }
-    
-    public SubTurnState DeepCloneSubTurnState(SubTurnState original)
+
+    private static SubTurnState DeepCloneSubTurnState(SubTurnState original)
     {
         return new SubTurnState
         {
@@ -33,99 +44,102 @@ public class EasyPlayer2 : IPlayer
         };
     }
 
-    private List<Move> FindRoutesBfs(
-        GameState gameState,
-        TilePosition startPosition)
+    private Move? FindRoutesBfs(GameState gameState)
     {
         int teamId = gameState.TeamId;
         Board board = gameState.Board;
-        
-        AvailableMovesTask task = new AvailableMovesTask(teamId, startPosition, startPosition);
-        var initialSubTurn = new SubTurnState();
+        var availableMoves = gameState.AvailableMoves;
+
+        int bestScore = 0;
+        BFSNode bestNode = null;
         
         // Очередь для BFS
         Queue<BFSNode> queue = new Queue<BFSNode>();
-
-        // Список для хранения всех найденных маршрутов
-        var allRoutes = new List<Move>();
-
-        // Исходный узел
-        BFSNode initialNode = new BFSNode
+        HashSet<TilePosition> bfsVisited = new HashSet<TilePosition>();
+        
+        foreach (var move in availableMoves)
         {
-            CurrentPosition = startPosition,
-            Path = new List<Move>(), // Для начала путь пуст
-            Depth = 0,
-            CurrentSubTurnState = initialSubTurn,
-            PreviousPositionInPath = startPosition // Или null, в зависимости от логики
-        };
+            // Исходный узел
+            var initialNode = new BFSNode
+            {
+                ToPosition = move.To,
+                FromPosition = move.From,
+                Score = CalcScore(move, out var hasCoin),
+                Path = [],
+                Depth = 0,
+                CurrentSubTurnState = new SubTurnState(),
+                FirstMove = move
+            };
 
-        queue.Enqueue(initialNode);
-
+            if (initialNode.Score > bestScore)
+            {
+                bestScore = initialNode.Score;
+                bestNode = initialNode;
+            }
+            
+            queue.Enqueue(initialNode);
+            bfsVisited.Add(move.To);
+        }
+        
         while (queue.Count > 0)
         {
-            BFSNode currentNode = queue.Dequeue();
-
+            var currentNode = queue.Dequeue();
             if (currentNode.Depth >= MaxDepth)
             {
-                // Достигли максимальной глубины, этот путь завершен
-                if (currentNode.Path.Any()) // Если путь не пустой (т.е. был сделан хотя бы один ход)
-                {
-                    allRoutes.AddRange(currentNode.Path);
-                }
-
-                continue; // Не продолжаем поиск по этому пути
+                continue;
             }
-
-            // Создадим временный `AvailableMovesTask` для `GetAllAvailableMoves` чтобы избежать модификации основного.
-            var tempTask = new AvailableMovesTask(task.TeamId, task.Source, task.Prev)
+            
+            var availableMovesTask = new AvailableMovesTask(teamId, currentNode.ToPosition, currentNode.ToPosition)
             {
                 AlreadyCheckedList = new List<CheckedPosition>(
                     currentNode.Path.Select(move => new CheckedPosition(move.To))
                 )
             };
-
-            // Список непосредственных шагов, доступных из currentNode.CurrentPosition
-            List<AvailableMove> nextPossibleMoves = board.GetAllAvailableMoves(
-                tempTask,
-                currentNode.CurrentPosition,
-                currentNode.PreviousPositionInPath,
+            
+            var nextPossibleMoves = board.GetAllAvailableMoves(
+                availableMovesTask,
+                currentNode.ToPosition,
+                currentNode.FromPosition,
                 currentNode.CurrentSubTurnState
             );
 
             foreach (var move in nextPossibleMoves)
             {
-                // Здесь мы должны обновить SubTurnState, если ход влияет на него.
-                // Например, уменьшить `LighthouseViewCount` или `Fuel`.
-                SubTurnState
-                    nextSubTurnState = DeepCloneSubTurnState(currentNode.CurrentSubTurnState); // Создаем копию!
-                // TODO: Применить изменения SubTurnState в зависимости от `move` (например, для Lighthouse)
-
-                TilePosition nextPosition = move.To;
-
-                // Проверяем, не посещали ли мы уже это состояние
-                if (_bfsVisited.Contains(nextPosition))
+                var nextPosition = move.To;
+                if (bfsVisited.Contains(nextPosition))
                 {
-                    continue; // Уже посетили это состояние по этому или более короткому пути
+                    continue;
                 }
-
+                
+                var nextSubTurnState = DeepCloneSubTurnState(currentNode.CurrentSubTurnState);
+                int score = currentNode.Score + CalcScore(move.ToMove, out var hasCoin) / (currentNode.Depth + 1);
+                
                 // Создаем новый путь
                 List<Move> newPath = new List<Move>(currentNode.Path) { move.ToMove };
-
-                BFSNode nextNode = new BFSNode
+                
+                var nextNode = new BFSNode
                 {
-                    CurrentPosition = nextPosition,
+                    ToPosition = nextPosition,
+                    FromPosition = move.From,
                     Path = newPath,
+                    Score = score,
                     Depth = currentNode.Depth + 1,
                     CurrentSubTurnState = nextSubTurnState,
-                    PreviousPositionInPath = currentNode.CurrentPosition
+                    FirstMove = currentNode.FirstMove
                 };
 
+                if (nextNode.Score > bestScore)
+                {
+                    bestScore = nextNode.Score;
+                    bestNode = nextNode;
+                }
+                
                 queue.Enqueue(nextNode);
-                _bfsVisited.Add(nextPosition); // Добавляем новое состояние в посещенные
+                bfsVisited.Add(nextPosition);
             }
         }
 
-        return allRoutes;
+        return bestNode?.FirstMove;
     }
 
     public void OnNewGame()
@@ -138,7 +152,6 @@ public class EasyPlayer2 : IPlayer
     private Position _shipPosition;
 
     private Move[] _availableMoves;
-    private HashSet<TilePosition> _bfsVisited;
 
     private List<Position> _escapePositions;
     private List<Position> _enemyShipPositions;
@@ -158,7 +171,6 @@ public class EasyPlayer2 : IPlayer
         _shipPosition = _team.ShipPosition;
 
         _availableMoves = gameState.AvailableMoves;
-        _bfsVisited = gameState.AvailableMoves.Select(m => m.To).ToHashSet();
         
         _escapePositions = _board.AllTiles(x => x.Type == TileType.Balloon)
             .Select(x => x.Position)
@@ -207,26 +219,7 @@ public class EasyPlayer2 : IPlayer
             .Select(x => x.Position)
             .ToList();
         
-        // Список для хранения всех найденных маршрутов
-        var allRoutes = new Dictionary<Move, List<Move>>();
-        foreach (var move in gameState.AvailableMoves)
-        {
-            var route = FindRoutesBfs(gameState, move.To);
-            allRoutes.Add(move, route);
-        }
-        
-        int bestScore = 0;
-        Move? bestMove = null;
-        
-        foreach ((Move currentMove, List<Move> route) in allRoutes)
-        {
-            int currentScore = CalcScore(currentMove, route);
-            if (currentScore > bestScore)
-            {
-                bestMove = currentMove;
-                bestScore = currentScore;
-            }
-        }
+        var bestMove = FindRoutesBfs(gameState);
         
         if (GetMove(bestMove, _availableMoves, out var moveNum)) 
             return (moveNum, null);
@@ -234,7 +227,7 @@ public class EasyPlayer2 : IPlayer
         return (0, null);
     }
 
-    private const int MaxDepth = 2;
+    private const int MaxDepth = 4;
     private const int BigCoinScore = 120;
     private const int RespawnScore = 100;
     private const int TrapScore = 80;
@@ -248,8 +241,11 @@ public class EasyPlayer2 : IPlayer
     
     // todo надо объединить текущий ход в маршрут + указывать глубину по которой считать score
     // todo внести расчет и сравнение score в bfs
-    private int CalcScore(Move currentMove, List<Move> route)
+    private int CalcScore(Move currentMove, out bool hasCoin)
     {
+        // todo менять карту в зависимости от пред ходов
+        hasCoin = false;
+        
         // не ходим туда-сюда и держим бабу
         if (currentMove.From == currentMove.To ||
             _respawnPositions.Contains(currentMove.From.Position))
@@ -277,11 +273,6 @@ public class EasyPlayer2 : IPlayer
             score += RespawnScore;
         }
 
-        if (route.Any(m => m.Type == MoveType.WithRespawn))
-        {
-            score += RespawnScore / 2;
-        }
-
         // освобождаем пирата из ловушек
         foreach (var trapPosition in _trapPositions)
         {
@@ -298,11 +289,6 @@ public class EasyPlayer2 : IPlayer
             {
                 score += TrapScore;
             }
-
-            if (route.Any(m => m.To.Position == trapPosition && piratesPosition.Contains(trapPosition)))
-            {
-                score += TrapScore / 2;
-            }
         }
 
         // заносим золото на корабль
@@ -311,19 +297,20 @@ public class EasyPlayer2 : IPlayer
             score += BigCoinScore;
         }
         
-        if(route.Any(move => move.WithBigCoin && _escapePositions.Contains(move.To.Position)))
-        {
-            score += BigCoinScore / 2;
-        }
-        
         if (currentMove.WithCoin && _escapePositions.Contains(currentMove.To.Position))
         {
             score += CoinScore;
         }
         
-        if(route.Any(move => move.WithCoin && _escapePositions.Contains(move.To.Position)))
+        // тащим монету
+        if (currentMove.WithBigCoin)
         {
-            score += CoinScore / 2;
+            score += TakeBigCoinScore;
+        }
+        
+        if (currentMove.WithCoin)
+        {
+            score += TakeCoinScore;
         }
         
         // уничтожаем врага, если он рядом
@@ -332,20 +319,9 @@ public class EasyPlayer2 : IPlayer
             score += FightScore;
         }
 
-        if (route.Any(move => IsEnemyPosition(move.To.Position, _board, _teamId)))
-        {
-            score += FightScore / 2;
-        }
-
         // идём к золоту
         if (currentMove is { WithCoin: false, WithBigCoin: false } && 
             _bigCoinPositions.Contains(currentMove.To.Position))
-        {
-            score += TakeBigCoinScore;
-        }
-        
-        if(currentMove is { WithCoin: false, WithBigCoin: false } && 
-           route.Any(move => move is { WithCoin: false, WithBigCoin: false } && _bigCoinPositions.Contains(move.To.Position)))
         {
             score += TakeBigCoinScore / 2;
         }
@@ -353,24 +329,13 @@ public class EasyPlayer2 : IPlayer
         if (currentMove is { WithCoin: false, WithBigCoin: false } && 
             _coinPositions.Contains(currentMove.To.Position))
         {
-            score += TakeCoinScore;
-        }
-        
-        if(currentMove is { WithCoin: false, WithBigCoin: false } && 
-           route.Any(move => move is { WithCoin: false, WithBigCoin: false } && _coinPositions.Contains(move.To.Position)))
-        {
             score += TakeCoinScore / 2;
         }
-
+        
         // открываем новые клетки
         if (_unknownPositions.Contains(currentMove.To.Position))
         {
             score += OpenScore;
-        }
-        
-        if(route.Any(move => _unknownPositions.Contains(move.To.Position)))
-        {
-            score += OpenScore / 2;
         }
         
         // залазим на свой корабль
@@ -379,11 +344,6 @@ public class EasyPlayer2 : IPlayer
             if (currentMove.To.Position == _shipPosition)
             {
                 score += BackFromWaterScore;
-            }
-
-            if (route.Any(m => m.To.Position == _shipPosition))
-            {
-                score += BackFromWaterScore / 2;
             }
         }
 
