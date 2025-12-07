@@ -13,30 +13,14 @@ import { Link } from 'react-router-dom';
 import { activateSockets, getEnableSockets } from '../../../common/redux/commonSlice';
 import './header.less';
 import config from '/app/config';
-import { Constants } from '/app/constants';
 import { getAuth } from '/auth/redux/authSlice';
 import { sagaActions } from '/common/sagas';
-import gameHub from '/game/hub/gameHub';
-import { getUserSettings } from '/game/redux/gameSlice';
 
 const Header = () => {
     const dispatch = useDispatch();
 
-    const userSettings = useSelector(getUserSettings);
     const authInfo = useSelector(getAuth);
     const enableSockets = useSelector(getEnableSockets);
-
-    const quickStart = () => {
-        gameHub.startGame({
-            players: [
-                { userId: authInfo.user?.id ?? 0, type: 'human', position: Constants.positions[0] },
-                { userId: 0, type: 'robot2', position: Constants.positions[2] },
-            ],
-            mapId: userSettings.mapId,
-            mapSize: 11,
-            tilesPackName: userSettings.tilesPackName,
-        });
-    };
 
     const doLogout = () =>
         dispatch({
@@ -56,7 +40,7 @@ const Header = () => {
         >
             <Container>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" className="me-3" />
-                <Navbar.Brand className="flex-grow-0">
+                <Navbar.Brand className="flex-grow-0 d-none d-md-inline">
                     <Nav.Link as={Link} to="/">
                         <img
                             alt=""
@@ -65,7 +49,7 @@ const Header = () => {
                             height="40"
                             className="d-inline-block align-top me-2"
                         />
-                        <span className="align-middle d-none d-md-inline">React-Jackal</span>
+                        <span className="align-middle">React-Jackal</span>
                     </Nav.Link>
                 </Navbar.Brand>
                 <Navbar.Offcanvas id="basic-navbar-nav" placement="start">
@@ -81,16 +65,14 @@ const Header = () => {
                     </Offcanvas.Header>
                     <Offcanvas.Body>
                         <Nav className="me-auto" activeKey="/">
-                            <Nav.Link as={Link} to="/" onClick={quickStart} eventKey="speedrun">
+                            <Nav.Link as={Link} to="/quickstart" eventKey="quickstart">
                                 <GiWingfoot size={20} className="menu-link" />
                                 Быстрый старт
                             </Nav.Link>
-                            <Nav.Item>
-                                <Nav.Link as={Link} to="/newgame" eventKey="newgame">
-                                    <FaGamepad size={20} className="menu-link" />
-                                    Новая игра
-                                </Nav.Link>
-                            </Nav.Item>
+                            <Nav.Link as={Link} to="/newgame" eventKey="newgame">
+                                <FaGamepad size={20} className="menu-link" />
+                                Новая игра
+                            </Nav.Link>
                             <Nav.Link as={Link} to="/netgame" eventKey="netgame">
                                 <FaNetworkWired size={20} className="menu-link" />
                                 Лобби

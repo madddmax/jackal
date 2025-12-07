@@ -8,6 +8,7 @@ import useHub from '../../hubs/useHub';
 import Logon from './logon';
 import MessageNotifier from './messNotifier';
 import Newgame from './newgame';
+import Quickstart from './quickstart';
 import { hubConnection } from '/app/global';
 import useClientMethods from '/app/hubs/useClientMethods';
 import Login from '/auth/content/login';
@@ -55,6 +56,7 @@ const Layout = () => {
     return (
         <>
             <Routes>
+                <Route path="/quickstart" element={<Quickstart />}></Route>
                 <Route path="/newgame" element={<Newgame />}></Route>
                 <Route path="/newpublic" element={<NetGameCreate />}></Route>
                 <Route path="/login" element={<Login />}></Route>
