@@ -163,7 +163,9 @@ public class Game : ICompletable
         var targets = new List<AvailableMove>();
             
         Team team = Board.Teams[teamId];
-        if (team.RumBottles > 0 && NeedSubTurnPirate == null)
+        if (SubTurn.CannabisTurnCount == 0 && 
+            team.RumBottles > 0 && 
+            NeedSubTurnPirate == null)
         {
             IEnumerable<Pirate> piratesWithRumBottles = team.Pirates.Where(x => x.IsInTrap || x.Position.Level > 0);
             foreach (var pirate in piratesWithRumBottles)
