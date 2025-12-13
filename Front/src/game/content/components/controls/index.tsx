@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import { Alert } from 'react-bootstrap';
+import { PiBeerBottleThin, PiCoinVerticalThin } from 'react-icons/pi';
 import { useSelector } from 'react-redux';
 
 import classes from './controls.module.less';
@@ -35,9 +36,21 @@ function Controls() {
                 </div>
                 <div className={cn(classes.teams, 'container')}>
                     {teamScores?.map((it) => (
-                        <div key={`ctrl_${it.teamId}`} className="row" style={{ backgroundColor: it?.backColor ?? '' }}>
-                            <div className="col-md-8">{it?.name}</div>
-                            <div className="col-md-4">{it.coins}</div>
+                        <div
+                            key={`ctrl_${it.teamId}`}
+                            className="row"
+                            style={{
+                                backgroundColor: it?.backColor ?? '',
+                                borderColor: it.teamId == stat?.currentTeamId ? 'gold' : (it?.backColor ?? ''),
+                            }}
+                        >
+                            <div className="col-8">{it?.name}</div>
+                            <div className="col-4">
+                                <PiBeerBottleThin style={{ marginRight: '2px' }} />
+                                {it.bottles}
+                                <PiCoinVerticalThin style={{ margin: '0 2px 0 4px' }} />
+                                {it.coins}
+                            </div>
                         </div>
                     ))}
                 </div>
