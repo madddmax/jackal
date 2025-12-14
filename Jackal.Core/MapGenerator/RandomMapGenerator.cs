@@ -80,10 +80,12 @@ public class RandomMapGenerator : IMapGenerator
         }
 
         // если сгенерилась одна дыра на карту - то заменяем её на пустую клетку
-        var holeTiles = list.Where(x => x.Type == TileType.Hole).ToList();
-        if (holeTiles.Count == 1)
+        var holeTilesCount = list.Count(x => x.Type == TileType.Hole);
+        if (holeTilesCount == 1)
         {
-            holeTiles[0] = TileParams.Empty();
+            var hole = list.First(x => x.Type == TileType.Hole);
+            list.Remove(hole);
+            list.Add(TileParams.Empty());
         }
 
         return list;
