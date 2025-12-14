@@ -330,35 +330,43 @@ public class Game : ICompletable
 
     private (bool GameOver, string Message) CheckGameOver()
     {
-        var orderedTeamCoins = Board.Teams
-            .Select(x => x.Coins)
-            .OrderByDescending(x => x)
+        var orderedTeamByCoins = Board.Teams
+            .OrderByDescending(x => x.Coins)
             .ToList();
 
         // игра на несколько игроков
-        if (orderedTeamCoins.Count == 4 && 
+        if (orderedTeamByCoins.Count == 4 && 
             GameMode == GameModeType.TwoPlayersInTeam)
         {
             // свободное золото
-            int freeCoins = Board.Generator.TotalCoins - LostCoins - orderedTeamCoins.Sum() / 2;
+            int freeCoins = Board.Generator.TotalCoins - LostCoins - orderedTeamByCoins.Sum(x => x.Coins) / 2;
             
             // игрок затащил большую часть монет
-            int firstTeamCoins = orderedTeamCoins[0];
-            int secondTeamCoins = orderedTeamCoins[2] + freeCoins;
-            if (firstTeamCoins > secondTeamCoins)
+            int firstTeamCoins = orderedTeamByCoins[0].Coins;
+            int secondTeamCoins = orderedTeamByCoins[2].Coins;
+            var secondTeamPirates = orderedTeamByCoins[2].Pirates.Length + orderedTeamByCoins[3].Pirates.Length;
+            if (freeCoins == 0 ||
+                firstTeamCoins > secondTeamCoins + freeCoins || 
+                (firstTeamCoins > secondTeamCoins && secondTeamPirates == 0))
             {
                 return (true, "доминирования по золоту");
             }
         }
-        else if (orderedTeamCoins.Count > 1)
+        else if (orderedTeamByCoins.Count > 1)
         {
             // свободное золото
-            int freeCoins = Board.Generator.TotalCoins - LostCoins - orderedTeamCoins.Sum();
+            int freeCoins = Board.Generator.TotalCoins - LostCoins - orderedTeamByCoins.Sum(x => x.Coins);
             
             // игрок затащил большую часть монет
-            int firstTeamCoins = orderedTeamCoins[0];
-            int secondTeamCoins = orderedTeamCoins[1] + freeCoins;
-            if (firstTeamCoins > secondTeamCoins)
+            int firstTeamCoins = orderedTeamByCoins[0].Coins;
+            int secondTeamCoins = orderedTeamByCoins[1].Coins;
+            var otherTeamsPirates = orderedTeamByCoins
+                .Where(x => x.Id != orderedTeamByCoins[0].Id)
+                .Sum(x => x.Pirates.Length);
+            
+            if (freeCoins == 0 || 
+                firstTeamCoins > secondTeamCoins + freeCoins || 
+                (firstTeamCoins > secondTeamCoins && otherTeamsPirates == 0))
             {
                 return (true, "доминирования по золоту");
             }
