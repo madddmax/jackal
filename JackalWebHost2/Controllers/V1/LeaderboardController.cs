@@ -10,12 +10,22 @@ namespace JackalWebHost2.Controllers.V1;
 public class LeaderboardController(IGamePlayerRepository gamePlayerRepository) : Controller
 {
     /// <summary>
-    /// Таблица лидеров
+    /// Таблица лидеров общая
     /// </summary>
     [HttpGet]
-    public async Task<LeaderboardResponse> GetLeaderboard(LeaderboardOrderByType? orderBy) =>
+    public async Task<LeaderboardResponse> GetLeaderboard() =>
         new()
         {
-            Leaderboard = await gamePlayerRepository.GetLeaderboard(orderBy ?? LeaderboardOrderByType.TotalWin)
+            Leaderboard = await gamePlayerRepository.GetLeaderboard()
+        };
+    
+    /// <summary>
+    /// Таблица лидеров среди игроков турнира 2x2
+    /// </summary>
+    [HttpGet("two-human-in-team")]
+    public async Task<LeaderboardResponse> GetTwoHumanInTeamLeaderboard() =>
+        new()
+        {
+            Leaderboard = await gamePlayerRepository.GetTwoHumanInTeamLeaderboard()
         };
 }

@@ -1,9 +1,10 @@
 using Jackal.Core.Players;
-using JackalWebHost2.Controllers.Models.Leaderboard;
 
 namespace JackalWebHost2.Data.Interfaces;
 
 public interface IGamePlayerRepository
 {
-    Task<List<GamePlayerStat>> GetLeaderboard(LeaderboardOrderByType orderBy);
+    Task<List<GamePlayerStat>> GetLeaderboard();
+    
+    Task<List<GamePlayerStat>> GetTwoHumanInTeamLeaderboard();
 }
