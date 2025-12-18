@@ -98,7 +98,7 @@ public class GameOverTests
     }
     
     [Fact]
-    public void TwoPlayersCoin1_EqualAmountOfCoinsThenSearchAllMap_ReturnGameOver()
+    public void TwoPlayersCoin1_EqualAmountOfCoinsNoCoinsOnMap_ReturnGameOver()
     {
         // Arrange
         var totalCoins = 2;
@@ -117,21 +117,10 @@ public class GameOverTests
         // переносим монету на корабль
         game.SetMoveAndTurn(2, 0, true);
         
-        // высадка с корабля на сундук с одной монетой
-        game.Turn();
-        
-        // идем вперед на маяк
-        game.SetMoveAndTurn(2, 2);
-        
-        // открываем маяком оставшиеся 3 закрытых клетки 
-        game.Turn();
-        game.Turn();
-        game.Turn();
-        
-        // Assert - два игрока, карта открыта, перенесли равные части золота = конец игры
+        // Assert - два игрока, карта не открыта, золота нет на карте, перенесли равные части золота = конец игры
         Assert.True(game.IsGameOver);
-        Assert.Equal("Победа дружбы путём исследования карты!", game.GameMessage);
-        Assert.Equal(4, game.TurnNumber);
+        Assert.Equal("Победа дружбы путём доминирования по золоту!", game.GameMessage);
+        Assert.Equal(2, game.TurnNumber);
     }
     
     [Fact]

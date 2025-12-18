@@ -62,7 +62,7 @@ public class IceTests
 
         // Скольжение на льду вверх
         game.Turn();
-        AssertPiratePosition( p32);
+        AssertPiratePosition(p32);
 
         // Ход влево
         game.Turn(GetMoveIndexToPosition(p22));
