@@ -34,26 +34,73 @@ function Controls() {
                 <div>
                     Номер хода: <span>{stat?.turnNumber}</span>
                 </div>
-                <div className={cn(classes.teams, 'container')}>
-                    {teamScores?.map((it) => (
-                        <div
-                            key={`ctrl_${it.teamId}`}
-                            className="row"
-                            style={{
-                                backgroundColor: it?.backColor ?? '',
-                                borderColor: it.teamId == stat?.currentTeamId ? 'gold' : (it?.backColor ?? ''),
-                            }}
-                        >
-                            <div className="col-8">{it?.name}</div>
-                            <div className="col-4">
-                                <PiBeerBottleThin style={{ marginRight: '2px' }} />
-                                {it.bottles}
-                                <PiCoinVerticalThin style={{ margin: '0 2px 0 4px' }} />
-                                {it.coins}
+                {gameMode != Constants.gameModeTypes.TwoPlayersInTeam && teamScores && (
+                    <div className={cn(classes.teams, 'container')}>
+                        {teamScores?.map((it) => (
+                            <div
+                                key={`ctrl_${it.teamId}`}
+                                className={cn(classes.user, 'row')}
+                                style={{
+                                    backgroundColor: it?.backColor ?? '',
+                                    borderColor: it.teamId == stat?.currentTeamId ? 'gold' : (it?.backColor ?? ''),
+                                }}
+                            >
+                                <div className="col-8">{it?.name}</div>
+                                <div className="col-4">
+                                    <PiBeerBottleThin style={{ marginRight: '2px' }} />
+                                    {it.bottles}
+                                    <PiCoinVerticalThin style={{ margin: '0 2px 0 4px' }} />
+                                    {it.coins}
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
+                {gameMode == Constants.gameModeTypes.TwoPlayersInTeam && teamScores && (
+                    <div className={cn(classes.teams, 'container')}>
+                        {[0, 1].map((num) => (
+                            <div
+                                key={`teamscore_${num}`}
+                                className={cn(classes.user, 'row')}
+                                style={{
+                                    backgroundColor: teamScores[num].backColor ?? '',
+                                    borderColor: teamScores[num].backColor ?? '',
+                                }}
+                            >
+                                <div className="col-8">
+                                    {[0, 2].map((addnum) => {
+                                        let scores = teamScores[num + addnum];
+                                        return (
+                                            <div
+                                                key={`ctrl_${scores.teamId}`}
+                                                className={cn('row')}
+                                                style={{
+                                                    padding: '1px',
+                                                    color: scores.backColor ?? '',
+                                                }}
+                                            >
+                                                <div
+                                                    style={{
+                                                        background:
+                                                            scores.teamId == stat?.currentTeamId ? 'gold' : 'white',
+                                                        borderRadius: '50rem',
+                                                    }}
+                                                >
+                                                    {scores.name}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <div className={cn(classes.scores, 'col-4')}>
+                                    <PiBeerBottleThin style={{ marginRight: '2px', color: 'white' }} />
+                                    <span style={{ color: 'white' }}>{teamScores[num].bottles}</span>
+                                    <div className={cn(classes.coinsCount, 'coins')}>{teamScores[num].coins}</div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {stat?.gameMessage != undefined && (
