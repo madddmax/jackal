@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { Button, Col, Container, ListGroup, Row } from 'react-bootstrap';
+import { Button, Col, Container, ListGroup, Row, Tab, Tabs } from 'react-bootstrap';
 import { PiEyesThin } from 'react-icons/pi';
 import { TbArrowsJoin } from 'react-icons/tb';
 import { VscDebugContinueSmall } from 'react-icons/vsc';
@@ -123,14 +123,16 @@ const GameList = () => {
                 </Col>
             </Row>
             <Row className="justify-content-center">
-                <Col lg={6} className="g-lg-2">
+                <Col className="g-lg-2">
                     <div className={classes.leaderboard}>
-                        <Leaderboard items={leaders} />
-                    </div>
-                </Col>
-                <Col xs={{ order: 'first' }} lg={{ span: 6, order: 'last' }} className="g-lg-2">
-                    <div className={classes.netLeaderboard}>
-                        <Leaderboard items={netLeaders} />
+                        <Tabs defaultActiveKey="netleaders" id="leaderboard-tab" className="mb-3">
+                            <Tab eventKey="leaders" title="Одиночный" style={{ overflowX: 'auto' }}>
+                                <Leaderboard items={leaders} />
+                            </Tab>
+                            <Tab eventKey="netleaders" title="Командный">
+                                <Leaderboard items={netLeaders} />
+                            </Tab>
+                        </Tabs>
                     </div>
                 </Col>
             </Row>
