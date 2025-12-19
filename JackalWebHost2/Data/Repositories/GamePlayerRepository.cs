@@ -55,7 +55,12 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
         var onlyHumanGameIds = jackalDbContext.GamePlayers
             .Where(g => g.Game.GameOver && g.Game.GameMode == GameModeType.TwoPlayersInTeam)
             .GroupBy(g => g.GameId)
-            .Where(g => g.Select(p => p.UserId).Distinct().Count() == 4)
+            .Where(g => g
+                .Where(p => p.UserId != null)
+                .Select(p => p.UserId)
+                .Distinct()
+                .Count() == 4
+            )
             .Select(g => g.Key);
         
         var bestWinningPlayers = await jackalDbContext.GamePlayers
