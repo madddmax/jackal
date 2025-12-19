@@ -6,4 +6,5 @@ export interface LobbyState {
     netgamelist: GameInfo[];
     netGame?: NetGameInfo;
     leaderBoard?: LeaderBoardItemResponse[];
+    netLeaderBoard?: LeaderBoardItemResponse[];
 }
