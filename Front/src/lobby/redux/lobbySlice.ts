@@ -14,6 +14,9 @@ export const lobbySlice = createSlice({
         applyLeaderBoard: (state, action: PayloadAction<LeaderBoardItemResponse[]>) => {
             state.leaderBoard = action.payload;
         },
+        applyNetLeaderBoard: (state, action: PayloadAction<LeaderBoardItemResponse[]>) => {
+            state.netLeaderBoard = action.payload;
+        },
         applyGamesList: (state, action: PayloadAction<LobbyGamesEntriesList>) => {
             state.gamelist = action.payload.gamesEntries.map((it) => ({
                 id: it.gameId,
@@ -43,14 +46,16 @@ export const lobbySlice = createSlice({
     },
     selectors: {
         getLeaderBoard: (state): LeaderBoardItemResponse[] | undefined => state.leaderBoard,
+        getNetLeaderBoard: (state): LeaderBoardItemResponse[] | undefined => state.netLeaderBoard,
         getGames: (state): GameInfo[] => state.gamelist,
         getNetGames: (state): GameInfo[] => state.netgamelist,
         getNetGame: (state): NetGameInfo | undefined => state.netGame,
     },
 });
 
-export const { applyLeaderBoard, applyGamesList, applyNetGamesList, applyNetGame } = lobbySlice.actions;
+export const { applyLeaderBoard, applyNetLeaderBoard, applyGamesList, applyNetGamesList, applyNetGame } =
+    lobbySlice.actions;
 
-export const { getLeaderBoard, getGames, getNetGames, getNetGame } = lobbySlice.selectors;
+export const { getLeaderBoard, getNetLeaderBoard, getGames, getNetGames, getNetGame } = lobbySlice.selectors;
 
 export default lobbySlice.reducer;

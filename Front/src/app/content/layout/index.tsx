@@ -50,6 +50,7 @@ const Layout = () => {
 
         dispatch({ type: sagaActions.GET_TILES_PACK_NAMES, payload: {} });
         dispatch({ type: sagaActions.LOBBY_GET_LEADERBOARD, payload: {} });
+        dispatch({ type: sagaActions.LOBBY_GET_NET_LEADERBOARD, payload: {} });
         dispatch({ type: sagaActions.AUTH_CHECK, payload: {} });
     }, [dispatch]);
 

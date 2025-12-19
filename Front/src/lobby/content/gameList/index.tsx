@@ -1,21 +1,23 @@
 import cn from 'classnames';
-import { Button, Col, Container, ListGroup, Row, Table } from 'react-bootstrap';
+import { Button, Col, Container, ListGroup, Row } from 'react-bootstrap';
 import { PiEyesThin } from 'react-icons/pi';
 import { TbArrowsJoin } from 'react-icons/tb';
 import { VscDebugContinueSmall } from 'react-icons/vsc';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { getGames, getLeaderBoard, getNetGames } from '../../redux/lobbySlice';
+import { getGames, getLeaderBoard, getNetGames, getNetLeaderBoard } from '../../redux/lobbySlice';
 import GameListItem from './components/gameListItem';
 import classes from './gamelist.module.less';
 import gameHub from '/game/hub/gameHub';
+import Leaderboard from '/lobby/content/gameList/components/leaderboard';
 
 const GameList = () => {
     const navigate = useNavigate();
     const list = useSelector(getGames);
     const netList = useSelector(getNetGames);
     const leaders = useSelector(getLeaderBoard);
+    const netLeaders = useSelector(getNetLeaderBoard);
 
     const continueNet = (gameId: number) => {
         navigate('/newpublic');
@@ -25,8 +27,6 @@ const GameList = () => {
     const loadGame = (gameId: number) => {
         gameHub.loadGame(gameId);
     };
-
-    let ratingNumber = 1;
 
     return (
         <Container>
@@ -123,47 +123,14 @@ const GameList = () => {
                 </Col>
             </Row>
             <Row className="justify-content-center">
-                <Col className="g-lg-2">
+                <Col lg={6} className="g-lg-2">
                     <div className={classes.leaderboard}>
-                        <Table striped>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th style={{ width: '100px' }}>Логин</th>
-                                    <th style={{ width: '100px' }}>Ранг</th>
-                                    <th>Игры сегодня</th>
-                                    <th>Игры недели</th>
-                                    <th>Игры месяца</th>
-                                    <th>Победы&nbsp;- Игры</th>
-                                    <th>Монеты</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {leaders &&
-                                    leaders.map((it) => (
-                                        <tr key={`leader_${ratingNumber}`}>
-                                            <td>{ratingNumber++}</td>
-                                            <td>{it.playerName}</td>
-                                            <td>
-                                                <img src={`ranks/${it.rank}.webp`} alt={it.rank} />
-                                            </td>
-                                            <td>
-                                                {it.winCountToday} - {it.gamesCountToday}
-                                            </td>
-                                            <td>
-                                                {it.winCountThisWeek} - {it.gamesCountThisWeek}
-                                            </td>
-                                            <td>
-                                                {it.winCountThisMonth} - {it.gamesCountThisMonth}
-                                            </td>
-                                            <td>
-                                                {it.totalWin} - {it.gamesCountTotal}
-                                            </td>
-                                            <td>{it.totalCoins}</td>
-                                        </tr>
-                                    ))}
-                            </tbody>
-                        </Table>
+                        <Leaderboard items={leaders} />
+                    </div>
+                </Col>
+                <Col xs={{ order: 'first' }} lg={{ span: 6, order: 'last' }} className="g-lg-2">
+                    <div className={classes.netLeaderboard}>
+                        <Leaderboard items={netLeaders} />
                     </div>
                 </Col>
             </Row>
