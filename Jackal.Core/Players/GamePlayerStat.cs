@@ -37,24 +37,24 @@ public class GamePlayerStat
     public string Rank => TotalWin.GetHeroes2Rank();
 
     /// <summary>
-    /// Количество проведенных игр за день
+    /// Количество поражений за день
     /// </summary>
-    public int GamesCountToday { get; set; }
+    public int LoseCountToday { get; set; }
     
     /// <summary>
-    /// Количество проведенных игр за неделю
+    /// Количество поражений за неделю
     /// </summary>
-    public int GamesCountThisWeek { get; set; }
+    public int LoseCountThisWeek { get; set; }
     
     /// <summary>
-    /// Количество проведенных игр за месяц
+    /// Количество поражений за месяц
     /// </summary>
-    public int GamesCountThisMonth { get; set; }
+    public int LoseCountThisMonth { get; set; }
     
     /// <summary>
     /// Количество проведенных игр за всё время
     /// </summary>
-    public int GamesCountTotal { get; set; }
+    public int TotalLose { get; set; }
     
     /// <summary>
     /// Суммарное количество добытых монет за все игры
@@ -64,10 +64,10 @@ public class GamePlayerStat
     /// <summary>
     /// Среднее количество побед за все игры
     /// </summary>
-    public double AverageWin => (double)TotalWin / GamesCountTotal;
+    public double AverageWin => (double)TotalWin / TotalLose;
         
     /// <summary>
     /// Среднее количество добытых монет за все игры
     /// </summary>
-    public double AverageCoins => (double)TotalCoins / GamesCountTotal;
+    public double AverageCoins => (double)TotalCoins / TotalLose;
 }

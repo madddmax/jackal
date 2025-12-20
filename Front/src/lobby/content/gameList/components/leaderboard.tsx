@@ -19,7 +19,7 @@ const Leaderboard = ({ items }: LeaderboardProps) => {
                     <th>Игры сегодня</th>
                     <th>Игры недели</th>
                     <th>Игры месяца</th>
-                    <th>Победы&nbsp;- Игры</th>
+                    <th>Победы&nbsp;- Поражения</th>
                     <th>Монеты</th>
                 </tr>
             </thead>
@@ -33,16 +33,16 @@ const Leaderboard = ({ items }: LeaderboardProps) => {
                                 <img src={`ranks/${it.rank}.webp`} alt={it.rank} />
                             </td>
                             <td>
-                                {it.winCountToday} - {it.gamesCountToday}
+                                {it.winCountToday} - {it.loseCountToday}
                             </td>
                             <td>
-                                {it.winCountThisWeek} - {it.gamesCountThisWeek}
+                                {it.winCountThisWeek} - {it.loseCountThisWeek}
                             </td>
                             <td>
-                                {it.winCountThisMonth} - {it.gamesCountThisMonth}
+                                {it.winCountThisMonth} - {it.loseCountThisMonth}
                             </td>
                             <td>
-                                {it.totalWin} - {it.gamesCountTotal}
+                                {it.totalWin} - {it.totalLose}
                             </td>
                             <td>{it.totalCoins}</td>
                         </tr>

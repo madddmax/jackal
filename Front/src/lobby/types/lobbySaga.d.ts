@@ -5,10 +5,10 @@ export interface LeaderBoardItemResponse {
     winCountThisWeek: number;
     winCountThisMonth: number;
     totalWin: number;
-    gamesCountToday: number;
-    gamesCountThisWeek: number;
-    gamesCountThisMonth: number;
-    gamesCountTotal: number;
+    loseCountToday: number;
+    loseCountThisWeek: number;
+    loseCountThisMonth: number;
+    totalLose: number;
     totalCoins: number;
 }
 
