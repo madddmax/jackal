@@ -72,10 +72,10 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
                 WinCountThisWeek = g.Count(x => x.Game.Created >= weekStartUtc && x.Winner),
                 WinCountThisMonth = g.Count(x => x.Game.Created >= monthStartUtc && x.Winner),
                 TotalWin = g.Count(x => x.Winner),
-                GamesCountToday = g.Count(x => x.Game.Created >= todayStartUtc),
-                GamesCountThisWeek = g.Count(x => x.Game.Created >= weekStartUtc),
-                GamesCountThisMonth = g.Count(x => x.Game.Created >= monthStartUtc),
-                GamesCountTotal = g.Count(),
+                LoseCountToday = g.Count(x => x.Game.Created >= todayStartUtc && !x.Winner),
+                LoseCountThisWeek = g.Count(x => x.Game.Created >= weekStartUtc && !x.Winner),
+                LoseCountThisMonth = g.Count(x => x.Game.Created >= monthStartUtc && !x.Winner),
+                TotalLose = g.Count(x => !x.Winner),
                 TotalCoins = g.Sum(x => x.Coins)
             })
             .ToListAsync();

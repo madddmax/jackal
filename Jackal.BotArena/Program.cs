@@ -94,7 +94,7 @@ internal static class Program
             }
             stat.TotalWin += team.Coins == maxCoins ? 1 : 0;
             stat.TotalCoins += team.Coins;
-            stat.GamesCountTotal += 1;
+            stat.TotalLose += 1;
         }
     }
 
@@ -108,7 +108,7 @@ internal static class Program
                 $"Player name = {gamePlayerStat.PlayerName} | " +
                 $"Average win = {gamePlayerStat.AverageWin:P} | " +
                 $"Total win = {gamePlayerStat.TotalWin} | " +
-                $"Games count = {gamePlayerStat.GamesCountTotal} | " +
+                $"Total lose = {gamePlayerStat.TotalLose} | " +
                 $"Average coins = {gamePlayerStat.AverageCoins:F} | " +
                 $"Total coins = {gamePlayerStat.TotalCoins}"
             );
