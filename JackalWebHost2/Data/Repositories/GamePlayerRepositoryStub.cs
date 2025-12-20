@@ -5,7 +5,12 @@ namespace JackalWebHost2.Data.Repositories;
 
 public class GamePlayerRepositoryStub : IGamePlayerRepository
 {
-    public Task<List<GamePlayerStat>> GetLeaderboard()
+    public Task<List<GamePlayerStat>> GetBotLeaderboard()
+    {
+        return Task.FromResult(new List<GamePlayerStat>());
+    }
+    
+    public Task<List<GamePlayerStat>> GetHumanLeaderboard()
     {
         return Task.FromResult(new List<GamePlayerStat>());
     }

@@ -1,5 +1,6 @@
 using Jackal.Core;
 using Jackal.Core.Players;
+using JackalWebHost2.Data.Entities;
 using JackalWebHost2.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,51 +8,36 @@ namespace JackalWebHost2.Data.Repositories;
 
 public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayerRepository
 {
-    public async Task<List<GamePlayerStat>> GetLeaderboard()
+    private static readonly TimeZoneInfo MskTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
+    
+    public async Task<List<GamePlayerStat>> GetBotLeaderboard()
     {
-        TimeZoneInfo mskTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
-        
-        DateTime nowUtc = DateTime.UtcNow;
-        DateTime todayStartMsk = TimeZoneInfo.ConvertTimeFromUtc(nowUtc, mskTimeZone).Date;
-        
-        DateTime todayStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk, mskTimeZone);
-        DateTime weekStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk.AddDays(-7), mskTimeZone);
-        DateTime monthStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk.AddDays(-30), mskTimeZone);
-        
-        var bestWinningPlayers = await jackalDbContext.GamePlayers
-            .Where(g => g.Game.GameOver)
-            .GroupBy(p => p.PlayerName)
-            .Select(g => new GamePlayerStat
-            {
-                PlayerName = g.Key,
-                WinCountToday = g.Count(x => x.Game.Created >= todayStartUtc && x.Winner),
-                WinCountThisWeek = g.Count(x => x.Game.Created >= weekStartUtc && x.Winner),
-                WinCountThisMonth = g.Count(x => x.Game.Created >= monthStartUtc && x.Winner),
-                TotalWin = g.Count(x => x.Winner),
-                GamesCountToday = g.Count(x => x.Game.Created >= todayStartUtc),
-                GamesCountThisWeek = g.Count(x => x.Game.Created >= weekStartUtc),
-                GamesCountThisMonth = g.Count(x => x.Game.Created >= monthStartUtc),
-                GamesCountTotal = g.Count(),
-                TotalCoins = g.Sum(x => x.Coins)
-            })
-            .ToListAsync();
+        var groupedBotPlayers = jackalDbContext.GamePlayers
+            .Where(p => p.UserId == null && p.Game.GameOver)
+            .GroupBy(p => p.PlayerName);
 
-        return bestWinningPlayers
+        var botStat = await SelectStat(groupedBotPlayers);
+        
+        return botStat
+            .OrderByDescending(g => g.TotalWin)
+            .ToList();
+    }
+
+    public async Task<List<GamePlayerStat>> GetHumanLeaderboard()
+    {
+        var groupedHumanPlayers = jackalDbContext.GamePlayers
+            .Where(p => p.UserId != null && p.Game.GameOver)
+            .GroupBy(p => p.PlayerName);
+
+        var humanStat = await SelectStat(groupedHumanPlayers);
+        
+        return humanStat
             .OrderByDescending(g => g.TotalWin)
             .ToList();
     }
     
     public async Task<List<GamePlayerStat>> GetTwoHumanInTeamLeaderboard()
     {
-        TimeZoneInfo mskTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
-        
-        DateTime nowUtc = DateTime.UtcNow;
-        DateTime todayStartMsk = TimeZoneInfo.ConvertTimeFromUtc(nowUtc, mskTimeZone).Date;
-        
-        DateTime todayStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk, mskTimeZone);
-        DateTime weekStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk.AddDays(-7), mskTimeZone);
-        DateTime monthStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk.AddDays(-30), mskTimeZone);
-
         var onlyHumanGameIds = jackalDbContext.GamePlayers
             .Where(g => g.Game.GameOver && g.Game.GameMode == GameModeType.TwoPlayersInTeam)
             .GroupBy(g => g.GameId)
@@ -63,9 +49,22 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
             )
             .Select(g => g.Key);
         
-        var bestWinningPlayers = await jackalDbContext.GamePlayers
+        var groupedTwoHumanInTeamPlayers = jackalDbContext.GamePlayers
             .Where(p => onlyHumanGameIds.Contains(p.GameId))
-            .GroupBy(p => p.PlayerName)
+            .GroupBy(p => p.PlayerName);
+        
+        var twoHumanInTeamStat = await SelectStat(groupedTwoHumanInTeamPlayers);
+
+        return twoHumanInTeamStat
+            .OrderByDescending(g => g.TotalWin)
+            .ToList();
+    }
+
+    private static async Task<List<GamePlayerStat>> SelectStat(IQueryable<IGrouping<string, GamePlayerEntity>> groupedPlayers)
+    {
+        var (todayStartUtc, weekStartUtc, monthStartUtc) = GetComparedDates();
+
+        return await groupedPlayers
             .Select(g => new GamePlayerStat
             {
                 PlayerName = g.Key,
@@ -80,9 +79,17 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
                 TotalCoins = g.Sum(x => x.Coins)
             })
             .ToListAsync();
+    }
 
-        return bestWinningPlayers
-            .OrderByDescending(g => g.TotalWin)
-            .ToList();
+    private static (DateTime todayStartUtc, DateTime weekStartUtc, DateTime monthStartUtc) GetComparedDates()
+    {
+        var nowUtc = DateTime.UtcNow;
+        var todayStartMsk = TimeZoneInfo.ConvertTimeFromUtc(nowUtc, MskTimeZone).Date;
+        
+        var todayStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk, MskTimeZone);
+        var weekStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk.AddDays(-7), MskTimeZone);
+        var monthStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayStartMsk.AddDays(-30), MskTimeZone);
+        
+        return new ValueTuple<DateTime, DateTime, DateTime>(todayStartUtc, weekStartUtc, monthStartUtc);
     }
 }
