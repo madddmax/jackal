@@ -62,12 +62,12 @@ public class GamePlayerStat
     public int TotalCoins { get; set; }
     
     /// <summary>
-    /// Среднее количество побед за все игры
+    /// Процент побед за все игры
     /// </summary>
-    public double AverageWin => (double)TotalWin / TotalLose;
+    public double WinPercent => (double)TotalWin * 100 / (TotalWin + TotalLose);
         
     /// <summary>
     /// Среднее количество добытых монет за все игры
     /// </summary>
-    public double AverageCoins => (double)TotalCoins / TotalLose;
+    public double AverageCoins => (double)TotalCoins / (TotalWin + TotalLose);
 }

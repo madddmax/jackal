@@ -16,11 +16,12 @@ const Leaderboard = ({ items }: LeaderboardProps) => {
                     <th>#</th>
                     <th style={{ width: '100px' }}>Логин</th>
                     <th style={{ width: '100px' }}>Ранг</th>
-                    <th>Игры сегодня</th>
-                    <th>Игры недели</th>
-                    <th>Игры месяца</th>
-                    <th>Победы&nbsp;- Поражения</th>
-                    <th>Монеты</th>
+                    <th>Игры&nbsp;сегодня</th>
+                    <th>Игры&nbsp;недели</th>
+                    <th>Игры&nbsp;месяца</th>
+                    <th>Игры&nbsp;всего</th>
+                    <th>Побед</th>
+                    <th>Монет</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,17 +34,22 @@ const Leaderboard = ({ items }: LeaderboardProps) => {
                                 <img src={`ranks/${it.rank}.webp`} alt={it.rank} />
                             </td>
                             <td>
-                                {it.winCountToday} - {it.loseCountToday}
+                                <span style={{ color: 'green' }}>{it.winCountToday}</span>&nbsp;-&nbsp;
+                                <span style={{ color: 'red' }}>{it.loseCountToday}</span>
                             </td>
                             <td>
-                                {it.winCountThisWeek} - {it.loseCountThisWeek}
+                                <span style={{ color: 'green' }}>{it.winCountThisWeek}</span>&nbsp;-&nbsp;
+                                <span style={{ color: 'red' }}>{it.loseCountThisWeek}</span>
                             </td>
                             <td>
-                                {it.winCountThisMonth} - {it.loseCountThisMonth}
+                                <span style={{ color: 'green' }}>{it.winCountThisMonth}</span>&nbsp;-&nbsp;
+                                <span style={{ color: 'red' }}>{it.loseCountThisMonth}</span>
                             </td>
                             <td>
-                                {it.totalWin} - {it.totalLose}
+                                <span style={{ color: 'green' }}>{it.totalWin}</span>&nbsp;-&nbsp;
+                                <span style={{ color: 'red' }}>{it.totalLose}</span>
                             </td>
+                            <td>{it.winPercent.toFixed(2)}%</td>
                             <td>{it.totalCoins}</td>
                         </tr>
                     ))}
