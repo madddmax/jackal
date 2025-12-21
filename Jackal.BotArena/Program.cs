@@ -101,12 +101,12 @@ internal static class Program
     private static void ShowStat(int gamesCount, TimeSpan timeElapsed)
     {
         Console.WriteLine($"Arena games count = {gamesCount} | Time elapsed {timeElapsed}");
-        var orderedBotStat = BotStat.OrderByDescending(p => p.Value.AverageWin);
+        var orderedBotStat = BotStat.OrderByDescending(p => p.Value.WinPercent);
         foreach (var (_, gamePlayerStat) in orderedBotStat)
         {
             Console.WriteLine(
                 $"Player name = {gamePlayerStat.PlayerName} | " +
-                $"Average win = {gamePlayerStat.AverageWin:P} | " +
+                $"Win percent = {gamePlayerStat.WinPercent:F}% | " +
                 $"Total win = {gamePlayerStat.TotalWin} | " +
                 $"Total lose = {gamePlayerStat.TotalLose} | " +
                 $"Average coins = {gamePlayerStat.AverageCoins:F} | " +

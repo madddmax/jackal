@@ -9,6 +9,7 @@ export interface LeaderBoardItemResponse {
     loseCountThisWeek: number;
     loseCountThisMonth: number;
     totalLose: number;
+    winPercent: number;
     totalCoins: number;
 }
 
