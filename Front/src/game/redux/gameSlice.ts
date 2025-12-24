@@ -42,6 +42,7 @@ export const gameSlice = createSlice({
                 Constants.groupIds.skulls,
             ],
             mapSize: 11,
+            hasChessBar: true,
             players: ['human', 'robot2', 'robot', 'robot2'],
             playersMode: 4,
             gameSpeed: 1,

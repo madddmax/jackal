@@ -7,9 +7,10 @@ import MapPirate from './mapPirate';
 interface MapPiratesProps {
     mapSize: number;
     cellSize: number;
+    chessBarSize: number;
 }
 
-const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
+const MapPirates = ({ mapSize, cellSize, chessBarSize }: MapPiratesProps) => {
     const piratesIds = useSelector(getPiratesIds);
     const { pirateSize } = useSelector(getGameSettings);
 
@@ -98,6 +99,7 @@ const MapPirates = ({ mapSize, cellSize }: MapPiratesProps) => {
                         getMarginLeft={getMarginLeft}
                         mapSize={mapSize}
                         cellSize={cellSize}
+                        chessBarSize={chessBarSize}
                     />
                 ))}
         </>
