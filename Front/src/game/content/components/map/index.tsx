@@ -16,7 +16,7 @@ function Map({ mapSize, cellSize }: MapProps) {
     const mapWidth = (cellSize + 1) * mapSize - 1;
     const actionsTooltip = useRef<TooltipRefProps>(null);
     const userSettings = useSelector(getUserSettings);
-    const chessBarSize = userSettings.hasChessBar || true ? 24 : 0;
+    const chessBarSize = userSettings.hasChessBar ? 24 : 0;
 
     return (
         <>
