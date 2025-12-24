@@ -13,9 +13,18 @@ interface MapPirateProps {
     getMarginLeft: (girl: GamePiratePosition) => number;
     mapSize: number;
     cellSize: number;
+    chessBarSize: number;
 }
 
-const MapPirate = ({ id, getMarginTop, getMarginLeft, cellSize, mapSize, pirateSize }: MapPirateProps) => {
+const MapPirate = ({
+    id,
+    getMarginTop,
+    getMarginLeft,
+    cellSize,
+    mapSize,
+    pirateSize,
+    chessBarSize,
+}: MapPirateProps) => {
     const pirate = useSelector<{ game: GameState }, GamePirate | undefined>((state) => getPirateById(state, id));
     const currentHumanTeam = useSelector<{ game: GameState }, TeamState | undefined>((state) =>
         getCurrentPlayerTeam(state),
@@ -45,8 +54,8 @@ const MapPirate = ({ id, getMarginTop, getMarginLeft, cellSize, mapSize, pirateS
 
     if (!pirate) return <></>;
 
-    const leftOffset = pirate.position.x * (cellSize + 1) + getMarginLeft(pirate);
-    const topOffset = (mapSize - 1 - pirate.position.y) * (cellSize + 1) + getMarginTop(pirate);
+    const leftOffset = pirate.position.x * (cellSize + 1) + getMarginLeft(pirate) + chessBarSize;
+    const topOffset = (mapSize - 1 - pirate.position.y) * (cellSize + 1) + getMarginTop(pirate) + chessBarSize;
 
     return (
         <AnimatePirate

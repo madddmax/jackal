@@ -35,6 +35,7 @@ export interface StorageState {
     players?: string[];
     playersMode?: number;
     mapSize: number;
+    hasChessBar: boolean;
     mapId?: number;
     tilesPackName?: string;
     gameSpeed: number;

@@ -74,6 +74,7 @@ const getState = (pirates: GamePirate[]): GameState => ({
             Constants.groupIds.skulls,
         ],
         mapSize: 11,
+        hasChessBar: false,
         players: ['human', 'robot2', 'robot', 'robot2'],
         playersMode: 4,
         gameSpeed: 0,
