@@ -28,6 +28,7 @@ function LeftSidebar() {
     const userSettings = useSelector(getUserSettings);
 
     const [gameSpeed, setGameSpeed] = useState<number>(userSettings.gameSpeed || 0);
+    const [hasChessBar, setHasChessBar] = useState<boolean>(userSettings.hasChessBar);
 
     const onClick = (girl: GamePirate, withCoinAction: boolean) => () =>
         dispatch(chooseHumanPirate({ pirate: girl.id, withCoinAction }));
@@ -57,6 +58,16 @@ function LeftSidebar() {
             }),
         );
         setGameSpeed((prev) => prev - 1);
+    };
+
+    const switchChessBar = () => {
+        dispatch(
+            saveMySettings({
+                ...userSettings,
+                hasChessBar: !hasChessBar,
+            }),
+        );
+        setHasChessBar((prev) => !prev);
     };
 
     return (
@@ -99,6 +110,15 @@ function LeftSidebar() {
                     label={<div style={{ width: '83px' }}>Автовыбор пиратки</div>}
                     checked={hasPirateAutoChange}
                     onChange={pirateAutoChangeToggle}
+                />
+                <Form.Check
+                    id="chess-bar-change-switch"
+                    className="photo-position float-end mb-3"
+                    style={{ marginLeft: 0 }}
+                    type="switch"
+                    label={<div style={{ width: '83px' }}>Шахматная нотация</div>}
+                    checked={hasChessBar}
+                    onChange={switchChessBar}
                 />
                 <div className="photo-position float-end mb-3">
                     <Form.Label>Задержка хода</Form.Label>
