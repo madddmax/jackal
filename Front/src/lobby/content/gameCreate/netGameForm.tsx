@@ -7,7 +7,7 @@ import { NetGameInfo } from '../../types/lobbySlice';
 import { Constants } from '/app/constants';
 import GameSettingsForm from '/app/content/layout/components/gameSettingsForm';
 import { PlayerInfo } from '/app/content/layout/components/types';
-import { convertToGamers, convertToMembers, convertToSettings, convertToUsers } from '/app/global';
+import { convertToGamers, convertToSettings, convertToUsers } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
 import gameHub from '/game/hub/gameHub';
 import { getUserSettings, saveMySettings } from '/game/redux/gameSlice';
@@ -52,10 +52,6 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
                 netGame.settings.gameMode === Constants.gameModeTypes.TwoPlayersInTeam
                     ? 8
                     : netGame.settings.players.length,
-            members: convertToMembers(
-                netGame.settings.players,
-                userSettings.players || ['human', 'robot2', 'robot', 'robot2'],
-            ),
             users: convertToUsers(netGame.settings.players, [
                 authInfo.user?.id ?? 0,
                 authInfo.user?.id ?? 0,
