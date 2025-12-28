@@ -8,6 +8,7 @@ const groupIds = {
     anime: 'anime',
     clover: 'clover',
     army: 'army',
+    space: 'space',
 };
 
 export const Constants = {
@@ -64,6 +65,11 @@ export const Constants = {
         },
         {
             id: groupIds.army,
+            photoMaxId: 4,
+            extension: '.jpg',
+        },
+        {
+            id: groupIds.space,
             photoMaxId: 4,
             extension: '.jpg',
         },
