@@ -6,10 +6,10 @@ using Jackal.Core.Domain;
 namespace Jackal.Core.Players;
 
 /// <summary>
-/// Игрок простой бот - выбирает ход алгоритмом бей-неси,
+/// Игрок очень простой бот 2025 года - выбирает ход алгоритмом бей-неси,
 /// рассчет дистанции упрощен через манхэттенское расстояние
 /// </summary>
-public class EasyPlayer : IPlayer
+public class VeryEasyPlayer : IPlayer
 {
     private Random _rnd = new();
     
@@ -60,52 +60,11 @@ public class EasyPlayer : IPlayer
             .Select(x => x.Position)
             .ToList();
 
-        // разыгрываем траву
-        // ИД игрока команды за которую ходят не равна ИД игрока который ходит
-        if (board.Teams[teamId].UserId != gameState.UserId)
-        {
-            // идем к людоеду
-            var cannibalMoves = gameState.AvailableMoves
-                .Where(x => cannibalPositions.Contains(x.To.Position))
-                .ToList();
-            
-            if (CheckGoodMove(cannibalMoves, gameState.AvailableMoves, out var badMoveNum))
-                return (badMoveNum, null);
-            
-            // бьемся об чужой корабль
-            var enemyShipMoves = gameState.AvailableMoves
-                .Where(x => enemyShipPositions.Contains(x.To.Position))
-                .ToList();
-            
-            if (CheckGoodMove(enemyShipMoves, gameState.AvailableMoves, out badMoveNum))
-                return (badMoveNum, null);   
-            
-            // топим монету
-            var waterMoves = gameState.AvailableMoves
-                .Where(x => x.WithCoin || x.WithBigCoin)
-                .Where(x => waterPositions.Contains(x.To.Position))
-                .ToList();
-            
-            if (CheckGoodMove(waterMoves, gameState.AvailableMoves, out badMoveNum))
-                return (badMoveNum, null);
-            
-            // уходим с воскрешения
-            var fromRespawnMoves = gameState.AvailableMoves
-                .Where(x => respawnPositions.Contains(x.From.Position))
-                .Where(x => !respawnPositions.Contains(x.To.Position))
-                .ToList();
-            
-            if (CheckGoodMove(fromRespawnMoves, gameState.AvailableMoves, out badMoveNum))
-                return (badMoveNum, null);
-            
-            return (_rnd.Next(gameState.AvailableMoves.Length), null);
-        }
-        
         // воскрешаемся если можем
         List<Move> goodMoves = gameState.AvailableMoves.Where(m => m.Type == MoveType.WithRespawn).ToList();
         if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out var goodMoveNum))
             return (goodMoveNum, null);
-        
+            
         // освобождаем пирата из ловушек
         foreach (var trapPosition in trapPositions)
         {

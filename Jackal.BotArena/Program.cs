@@ -29,16 +29,12 @@ internal static class Program
     private static readonly IPlayer[][] CombinationOfPlayers =
     [
         [
-            new EasyPlayer(),
-            new RandomPlayer()
+            new VeryEasyPlayer(),
+            new EasyPlayer()
         ],
         [
             new EasyPlayer(),
-            new OakioPlayer(),
-        ],
-        [
-            new OakioPlayer(),
-            new RandomPlayer()
+            new VeryEasyPlayer()
         ]
     ];
     
