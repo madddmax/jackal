@@ -54,11 +54,24 @@ public class EasyPlayer : IPlayer
             .AllTiles(x => x.Type == TileType.Trap)
             .Select(x => x.Position)
             .ToList();
+        
+        var holePositions = board
+            .AllTiles(x => x.Type == TileType.Hole)
+            .Select(x => x.Position)
+            .ToList();
+
+        var onlyOneHolePosition = holePositions.Count > 1 ? new List<Position>() : holePositions;
             
         var respawnPositions = board
             .AllTiles(x => x.Type == TileType.RespawnFort)
             .Select(x => x.Position)
             .ToList();
+        
+        var escapePositions = board.AllTiles(x => x.Type == TileType.Balloon)
+            .Select(x => x.Position)
+            .ToList();
+                
+        escapePositions.Add(shipPosition);
 
         // разыгрываем траву
         // ИД игрока команды за которую ходят не равна ИД игрока который ходит
@@ -124,15 +137,16 @@ public class EasyPlayer : IPlayer
         }
 
         // заносим золото на корабль
-        goodMoves = gameState.AvailableMoves.Where(move => move.WithCoin && TargetIsShip(board, teamId, move)).ToList();
+        goodMoves = gameState.AvailableMoves.Where(move => move.WithCoin && escapePositions.Contains(move.To.Position)).ToList();
         if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum))
             return (goodMoveNum, null);
             
-        // не ходим по чужим кораблям, людоедам и держим бабу
+        // не ходим по чужим кораблям, людоедам, не открытым дырам и держим бабу
         Move[] safeAvailableMoves = gameState.AvailableMoves
             .Where(x => x.To != x.From)
             .Where(x => !enemyShipPositions.Contains(x.To.Position))
             .Where(x => !cannibalPositions.Contains(x.To.Position))
+            .Where(x => !onlyOneHolePosition.Contains(x.To.Position))
             .Where(x => !respawnPositions.Contains(x.From.Position))
             .ToArray();
             
@@ -140,12 +154,6 @@ public class EasyPlayer : IPlayer
         if (hasMoveWithCoins)
         {
             // перемещаем золото ближе к кораблю
-            var escapePositions = board.AllTiles(x => x.Type == TileType.Balloon)
-                .Select(x => x.Position)
-                .ToList();
-                
-            escapePositions.Add(shipPosition);
-                
             List<Tuple<int, Move>> list = [];
             foreach (Move move in safeAvailableMoves
                          .Where(x => x.WithCoin || x.WithBigCoin)
@@ -178,6 +186,11 @@ public class EasyPlayer : IPlayer
             }
         }
 
+        // не ходим на корабль и по шарам без монеты
+        safeAvailableMoves = safeAvailableMoves
+            .Where(x => !escapePositions.Contains(x.To.Position))
+            .ToArray();
+        
         if (goodMoves.Count == 0)
         {
             // уничтожаем врага, если он рядом
@@ -185,7 +198,7 @@ public class EasyPlayer : IPlayer
             if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum))
                 return (goodMoveNum, null);
         }
-
+        
         if (goodMoves.Count == 0 && goldPositions.Count > 0 && !hasMoveWithCoins)
         {
             // идем к самому ближнему золоту
@@ -327,12 +340,6 @@ public class EasyPlayer : IPlayer
         }
             
         return false;
-    }
-
-    private static bool TargetIsShip(Board board, int teamId, Move move)
-    {
-        var shipPosition = board.Teams[teamId].ShipPosition;
-        return shipPosition == move.To.Position;
     }
         
     private static int MinDistance(List<Position> positions, Position to)
