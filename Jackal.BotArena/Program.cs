@@ -16,7 +16,7 @@ internal static class Program
     /// <summary>
     /// Количество запускаемых игр
     /// </summary>
-    private const int ArenaGamesCount = 120;
+    private const int ArenaGamesCount = 300;
 
     /// <summary>
     /// Размер карты
@@ -89,8 +89,8 @@ internal static class Program
                 BotStat.Add(team.Name, stat);
             }
             stat.TotalWin += team.Coins == maxCoins ? 1 : 0;
+            stat.TotalLose += team.Coins != maxCoins ? 1 : 0;
             stat.TotalCoins += team.Coins;
-            stat.TotalLose += 1;
         }
     }
 

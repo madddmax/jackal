@@ -52,7 +52,7 @@ public class GamePlayerStat
     public int LoseCountThisMonth { get; set; }
     
     /// <summary>
-    /// Количество проведенных игр за всё время
+    /// Количество поражений за всё время
     /// </summary>
     public int TotalLose { get; set; }
     
