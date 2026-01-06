@@ -44,7 +44,6 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
         .concat([
             { id: counter++, type: 'robot', userId: 0 } as PlayerInfo,
             { id: counter++, type: 'robot2', userId: 0 } as PlayerInfo,
-            { id: counter++, type: 'robot3', userId: 0 } as PlayerInfo,
         ]);
 
     const formData: GameSettingsFormData = {

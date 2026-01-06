@@ -14,5 +14,5 @@ public record AvailableMovesTask(int TeamId, TilePosition Source, TilePosition P
     /// <summary>
     /// Просмотренные позиции
     /// </summary>
-    public readonly List<CheckedPosition> AlreadyCheckedList = [];
+    public List<CheckedPosition> AlreadyCheckedList = [];
 }
