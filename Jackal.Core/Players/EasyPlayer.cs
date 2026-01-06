@@ -59,8 +59,13 @@ public class EasyPlayer : IPlayer
             .AllTiles(x => x.Type == TileType.Hole)
             .Select(x => x.Position)
             .ToList();
-
+        
         var onlyOneHolePosition = holePositions.Count > 1 ? new List<Position>() : holePositions;
+        
+        var cannonPositions = board
+            .AllTiles(x => x.Type == TileType.Cannon)
+            .Select(x => x.Position)
+            .ToList();
             
         var respawnPositions = board
             .AllTiles(x => x.Type == TileType.RespawnFort)
@@ -141,12 +146,18 @@ public class EasyPlayer : IPlayer
         if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum))
             return (goodMoveNum, null);
             
-        // не ходим по чужим кораблям, людоедам, не открытым дырам и держим бабу
+        // не ходим туда-обратно,
+        // не ходим по чужим кораблям,
+        // не ходим по людоедам,
+        // не ходим по не открытым дырам,
+        // не ходим по пушкам,
+        // держим бабу
         Move[] safeAvailableMoves = gameState.AvailableMoves
             .Where(x => x.To != x.From)
             .Where(x => !enemyShipPositions.Contains(x.To.Position))
             .Where(x => !cannibalPositions.Contains(x.To.Position))
             .Where(x => !onlyOneHolePosition.Contains(x.To.Position))
+            .Where(x => !cannonPositions.Contains(x.To.Position))
             .Where(x => !respawnPositions.Contains(x.From.Position))
             .ToArray();
             

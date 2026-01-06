@@ -6,7 +6,7 @@ using Jackal.Core.Domain;
 namespace Jackal.Core.Players;
 
 /// <summary>
-/// Игрок очень простой бот 2025 года - выбирает ход алгоритмом бей-неси,
+/// Игрок простой бот - выбирает ход алгоритмом бей-неси,
 /// рассчет дистанции упрощен через манхэттенское расстояние
 /// </summary>
 public class VeryEasyPlayer : IPlayer
@@ -54,17 +54,71 @@ public class VeryEasyPlayer : IPlayer
             .AllTiles(x => x.Type == TileType.Trap)
             .Select(x => x.Position)
             .ToList();
+        
+        var holePositions = board
+            .AllTiles(x => x.Type == TileType.Hole)
+            .Select(x => x.Position)
+            .ToList();
+
+        var onlyOneHolePosition = holePositions.Count > 1 ? new List<Position>() : holePositions;
             
         var respawnPositions = board
             .AllTiles(x => x.Type == TileType.RespawnFort)
             .Select(x => x.Position)
             .ToList();
+        
+        var escapePositions = board.AllTiles(x => x.Type == TileType.Balloon)
+            .Select(x => x.Position)
+            .ToList();
+                
+        escapePositions.Add(shipPosition);
 
+        // разыгрываем траву
+        // ИД игрока команды за которую ходят не равна ИД игрока который ходит
+        if (board.Teams[teamId].UserId != gameState.UserId)
+        {
+            // идем к людоеду
+            var cannibalMoves = gameState.AvailableMoves
+                .Where(x => cannibalPositions.Contains(x.To.Position))
+                .ToList();
+            
+            if (CheckGoodMove(cannibalMoves, gameState.AvailableMoves, out var badMoveNum))
+                return (badMoveNum, null);
+            
+            // бьемся об чужой корабль
+            var enemyShipMoves = gameState.AvailableMoves
+                .Where(x => enemyShipPositions.Contains(x.To.Position))
+                .ToList();
+            
+            if (CheckGoodMove(enemyShipMoves, gameState.AvailableMoves, out badMoveNum))
+                return (badMoveNum, null);   
+            
+            // топим монету
+            var waterMoves = gameState.AvailableMoves
+                .Where(x => x.WithCoin || x.WithBigCoin)
+                .Where(x => waterPositions.Contains(x.To.Position))
+                .ToList();
+            
+            if (CheckGoodMove(waterMoves, gameState.AvailableMoves, out badMoveNum))
+                return (badMoveNum, null);
+            
+            // уходим с воскрешения
+            var fromRespawnMoves = gameState.AvailableMoves
+                .Where(x => respawnPositions.Contains(x.From.Position))
+                .Where(x => !respawnPositions.Contains(x.To.Position))
+                .ToList();
+            
+            if (CheckGoodMove(fromRespawnMoves, gameState.AvailableMoves, out badMoveNum))
+                return (badMoveNum, null);
+            
+            return (_rnd.Next(gameState.AvailableMoves.Length), null);
+        }
+        
         // воскрешаемся если можем
         List<Move> goodMoves = gameState.AvailableMoves.Where(m => m.Type == MoveType.WithRespawn).ToList();
         if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out var goodMoveNum))
             return (goodMoveNum, null);
-            
+        
         // освобождаем пирата из ловушек
         foreach (var trapPosition in trapPositions)
         {
@@ -83,15 +137,16 @@ public class VeryEasyPlayer : IPlayer
         }
 
         // заносим золото на корабль
-        goodMoves = gameState.AvailableMoves.Where(move => move.WithCoin && TargetIsShip(board, teamId, move)).ToList();
+        goodMoves = gameState.AvailableMoves.Where(move => move.WithCoin && escapePositions.Contains(move.To.Position)).ToList();
         if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum))
             return (goodMoveNum, null);
             
-        // не ходим по чужим кораблям, людоедам и держим бабу
+        // не ходим по чужим кораблям, людоедам, не открытым дырам и держим бабу
         Move[] safeAvailableMoves = gameState.AvailableMoves
             .Where(x => x.To != x.From)
             .Where(x => !enemyShipPositions.Contains(x.To.Position))
             .Where(x => !cannibalPositions.Contains(x.To.Position))
+            .Where(x => !onlyOneHolePosition.Contains(x.To.Position))
             .Where(x => !respawnPositions.Contains(x.From.Position))
             .ToArray();
             
@@ -99,12 +154,6 @@ public class VeryEasyPlayer : IPlayer
         if (hasMoveWithCoins)
         {
             // перемещаем золото ближе к кораблю
-            var escapePositions = board.AllTiles(x => x.Type == TileType.Balloon)
-                .Select(x => x.Position)
-                .ToList();
-                
-            escapePositions.Add(shipPosition);
-                
             List<Tuple<int, Move>> list = [];
             foreach (Move move in safeAvailableMoves
                          .Where(x => x.WithCoin || x.WithBigCoin)
@@ -137,6 +186,11 @@ public class VeryEasyPlayer : IPlayer
             }
         }
 
+        // не ходим на корабль и по шарам без монеты
+        safeAvailableMoves = safeAvailableMoves
+            .Where(x => !escapePositions.Contains(x.To.Position))
+            .ToArray();
+        
         if (goodMoves.Count == 0)
         {
             // уничтожаем врага, если он рядом
@@ -144,7 +198,7 @@ public class VeryEasyPlayer : IPlayer
             if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum))
                 return (goodMoveNum, null);
         }
-
+        
         if (goodMoves.Count == 0 && goldPositions.Count > 0 && !hasMoveWithCoins)
         {
             // идем к самому ближнему золоту
@@ -286,12 +340,6 @@ public class VeryEasyPlayer : IPlayer
         }
             
         return false;
-    }
-
-    private static bool TargetIsShip(Board board, int teamId, Move move)
-    {
-        var shipPosition = board.Teams[teamId].ShipPosition;
-        return shipPosition == move.To.Position;
     }
         
     private static int MinDistance(List<Position> positions, Position to)
