@@ -30,7 +30,6 @@ const Newgame = () => {
         players: {
             mode: userSettings.playersMode || 4,
             users: [authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0],
-            members: userSettings.players || ['human', 'robot2', 'robot', 'robot2'],
             gamers: (userSettings.players || ['human', 'robot2', 'robot', 'robot2']).map(
                 (it) => gamers.find((gm) => gm.type === it) ?? gamers[0],
             ),
@@ -60,7 +59,7 @@ const Newgame = () => {
                 ...userSettings,
                 groups: formData.players.groups,
                 mapSize: formData.mapSize,
-                players: formData.players.members,
+                players: formData.players.gamers.map((it) => it.type),
                 playersMode: formData.players.mode,
                 mapId: formData.isStoredMap ? formData.mapId : undefined,
                 tilesPackName: formData.tilesPackName,

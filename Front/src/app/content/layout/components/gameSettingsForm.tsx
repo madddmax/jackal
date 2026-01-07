@@ -98,6 +98,38 @@ const GameSettingsForm = ({
         });
     };
 
+    const autosetting = () => {
+        if (!viewers || viewers.length == 0) return;
+
+        let clone = gameSettingsData.players.gamers.slice();
+        let freePositions: number[] = [];
+        for (let i = 0; i < clone.length; i++) {
+            if (clone[i].type != 'human') {
+                freePositions.push(i);
+            }
+        }
+        let busyUsers = clone.map((it) => it.userId);
+        let freeUsers = viewers.filter((man) => busyUsers.indexOf(man.id) === -1);
+
+        while (freePositions.length > 0 && freeUsers.length > 0) {
+            let freePos = Math.floor(Math.random() * freePositions.length);
+            let freeUser = Math.floor(Math.random() * freeUsers.length);
+
+            let lucky = gameSettingsData.gamers.find((it) => it.userId == freeUsers[freeUser].id);
+            if (lucky) {
+                clone[freePositions[freePos]] = lucky;
+                freePositions.splice(freePos, 1);
+            }
+            freeUsers.splice(freeUser, 1);
+        }
+
+        setPlayers({
+            ...gameSettingsData.players,
+            users: clone.map((it) => it.userId),
+            gamers: clone,
+        });
+    };
+
     return (
         <Form className={classes.newgame} onSubmit={(event) => event.preventDefault()}>
             {isPublic && (
@@ -133,6 +165,9 @@ const GameSettingsForm = ({
                 ) : (
                     <div className="badge rounded-pill bg-success">Частная игра</div>
                 )}
+                <Button className="float-end" variant="outline-secondary" size="sm" type="submit" onClick={autosetting}>
+                    Авторасстановка
+                </Button>
             </div>
             <div className="mt-3">
                 <div>
