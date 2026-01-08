@@ -161,13 +161,21 @@ const GameSettingsForm = ({
             />
             <div className="mt-3">
                 {isPublic ? (
-                    <div className="badge rounded-pill bg-warning text-dark">Публичная игра</div>
+                    <>
+                        <div className="badge rounded-pill bg-warning text-dark">Публичная игра</div>
+                        <Button
+                            className="float-end"
+                            variant="outline-secondary"
+                            size="sm"
+                            type="submit"
+                            onClick={autosetting}
+                        >
+                            Авторасстановка
+                        </Button>
+                    </>
                 ) : (
                     <div className="badge rounded-pill bg-success">Частная игра</div>
                 )}
-                <Button className="float-end" variant="outline-secondary" size="sm" type="submit" onClick={autosetting}>
-                    Авторасстановка
-                </Button>
             </div>
             <div className="mt-3">
                 <div>
