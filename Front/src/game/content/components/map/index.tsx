@@ -24,19 +24,19 @@ function Map({ mapSize, cellSize }: MapProps) {
                 <div
                     className="map"
                     style={{
-                        width: mapWidth + chessBarSize,
-                        height: mapWidth + chessBarSize,
+                        width: mapWidth + 2 * chessBarSize,
+                        height: mapWidth + 2 * chessBarSize,
                     }}
                 >
                     {chessBarSize > 0 && (
-                        <div className="map-row" key={`map-row-xnote`} style={{ height: chessBarSize }}>
-                            <div className="map-cell" key={`map-xnote`}>
+                        <div className="map-row" key={`map-row-xnote-top`} style={{ height: chessBarSize }}>
+                            <div className="map-cell" key={`map-xnote-top`}>
                                 <div style={{ width: chessBarSize }} />
                             </div>
                             {Array(mapSize)
                                 .fill(0)
                                 .map((_, cIndex) => (
-                                    <div className="map-cell" key={`map-xnote-${cIndex}`}>
+                                    <div className="map-cell" key={`map-xnote-top-${cIndex}`}>
                                         <div style={{ width: cellSize }}>{String.fromCharCode(65 + cIndex)}</div>
                                     </div>
                                 ))}
@@ -49,7 +49,7 @@ function Map({ mapSize, cellSize }: MapProps) {
                                 {chessBarSize > 0 && (
                                     <div
                                         className="map-cell"
-                                        key={`map-ynote-${rIndex}`}
+                                        key={`map-ynote-top-${rIndex}`}
                                         style={{ width: chessBarSize, verticalAlign: 'middle' }}
                                     >
                                         <div style={{ width: chessBarSize }}>{rIndex}</div>
@@ -62,8 +62,31 @@ function Map({ mapSize, cellSize }: MapProps) {
                                             <Cell col={cIndex} row={mapSize - 1 - rIndex} tooltipRef={actionsTooltip} />
                                         </div>
                                     ))}
+                                {chessBarSize > 0 && (
+                                    <div
+                                        className="map-cell"
+                                        key={`map-ynote-bottom-${rIndex}`}
+                                        style={{ width: chessBarSize, verticalAlign: 'middle' }}
+                                    >
+                                        <div style={{ width: chessBarSize }}>{rIndex}</div>
+                                    </div>
+                                )}
                             </div>
                         ))}
+                    {chessBarSize > 0 && (
+                        <div className="map-row" key={`map-row-xnote-bottom`} style={{ height: chessBarSize }}>
+                            <div className="map-cell" key={`map-xnote-bottom`}>
+                                <div style={{ width: chessBarSize }} />
+                            </div>
+                            {Array(mapSize)
+                                .fill(0)
+                                .map((_, cIndex) => (
+                                    <div className="map-cell" key={`map-xnote-bottom-${cIndex}`}>
+                                        <div style={{ width: cellSize }}>{String.fromCharCode(65 + cIndex)}</div>
+                                    </div>
+                                ))}
+                        </div>
+                    )}
                 </div>
                 <MapPirates mapSize={mapSize} cellSize={cellSize} chessBarSize={chessBarSize} />
             </div>
