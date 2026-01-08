@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import { Alert } from 'react-bootstrap';
-import { PiBeerBottleThin, PiCoinVerticalThin } from 'react-icons/pi';
+import { PiBeerBottleThin } from 'react-icons/pi';
 import { useSelector } from 'react-redux';
 
 import classes from './controls.module.less';
@@ -42,15 +42,31 @@ function Controls() {
                                 className={cn(classes.user, 'row')}
                                 style={{
                                     backgroundColor: it?.backColor ?? '',
-                                    borderColor: it.teamId == stat?.currentTeamId ? 'gold' : (it?.backColor ?? ''),
+                                    borderColor: it?.backColor ?? '',
                                 }}
                             >
-                                <div className="col-8">{it?.name}</div>
-                                <div className="col-4">
-                                    <PiBeerBottleThin style={{ marginRight: '2px' }} />
-                                    {it.bottles}
-                                    <PiCoinVerticalThin style={{ margin: '0 2px 0 4px' }} />
-                                    {it.coins}
+                                <div className="col-8" style={{ lineHeight: '28px' }}>
+                                    <div
+                                        className={cn('row')}
+                                        style={{
+                                            padding: '1px',
+                                            color: it?.backColor ?? '',
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                background: it.teamId == stat?.currentTeamId ? 'gold' : 'white',
+                                                borderRadius: '50rem',
+                                            }}
+                                        >
+                                            {it?.name}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={cn(classes.scores, 'col-4')}>
+                                    <PiBeerBottleThin style={{ marginRight: '2px', color: 'white' }} />
+                                    <span style={{ color: 'white' }}>{it.bottles}</span>
+                                    <div className={cn(classes.coinsCount, 'coins')}>{it.coins}</div>
                                 </div>
                             </div>
                         ))}
