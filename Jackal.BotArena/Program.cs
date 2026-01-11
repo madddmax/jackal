@@ -13,15 +13,17 @@ namespace Jackal.BotArena;
 /// </summary>
 internal static class Program
 {
+    private static readonly Random GlobalRandom = new();
+    
     /// <summary>
     /// Количество запускаемых игр
     /// </summary>
-    private const int ArenaGamesCount = 300;
+    private const int ArenaGamesCount = 900;
 
     /// <summary>
     /// Размер карты
     /// </summary>
-    private const int MapSize = 13;
+    private const int MapSize = 9;
     
     /// <summary>
     /// Комбинации игроков ботов и их позиций (зависит от порядка)
@@ -51,7 +53,7 @@ internal static class Program
         {
             while (gameNumber < ArenaGamesCount)
             {
-                var mapId = new Random().Next();
+                var mapId = GlobalRandom.Next();
                 var randomMap = new RandomMapGenerator(mapId, MapSize, TilesPackFactory.Extended);
 
                 foreach (var players in CombinationOfPlayers)
