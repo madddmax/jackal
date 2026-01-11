@@ -13,7 +13,7 @@ namespace Jackal.BotArena;
 /// </summary>
 internal static class Program
 {
-    private static readonly Random GlobalRandom = new();
+    private static readonly Random Rnd = new();
     
     /// <summary>
     /// Количество запускаемых игр
@@ -53,7 +53,7 @@ internal static class Program
         {
             while (gameNumber < ArenaGamesCount)
             {
-                var mapId = GlobalRandom.Next();
+                var mapId = Rnd.Next();
                 var randomMap = new RandomMapGenerator(mapId, MapSize, TilesPackFactory.Extended);
 
                 foreach (var players in CombinationOfPlayers)

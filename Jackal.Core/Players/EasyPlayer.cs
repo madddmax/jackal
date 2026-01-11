@@ -6,7 +6,6 @@ using Jackal.Core.Domain;
 namespace Jackal.Core.Players;
 
 // todo 1 - разлом, меняем самую хорошую клетку на берегу противника на самую плохую из карты
-// todo 2 - высадка врага = плохие клетки
 
 /// <summary>
 /// Игрок простой бот - выбирает ход алгоритмом бей-неси,
@@ -25,13 +24,14 @@ public class EasyPlayer : IPlayer
     {
         int teamId = gameState.TeamId;
         Board board = gameState.Board;
-        var shipPosition = board.Teams[teamId].ShipPosition;
+        Position shipPosition = board.Teams[teamId].ShipPosition; // todo учитывать союзный корабль
 
+        var enemyTeamIds = board.Teams[teamId].EnemyTeamIds;
         var enemyShipPositions = board.Teams
+            .Where(t => enemyTeamIds.Contains(t.Id))
             .Select(t => t.ShipPosition)
-            .Where(p => p != shipPosition)
             .ToList();
-            
+        
         var unknownPositions = board
             .AllTiles(x => x.Type == TileType.Unknown)
             .Select(x => x.Position)
@@ -352,14 +352,7 @@ public class EasyPlayer : IPlayer
                     return true;
                 }
                 
-                var task = new AvailableMovesTask(enemyPirate.TeamId, enemyPirate.Position, enemyPirate.Position);
-                var subTurnState = new SubTurnState { DrinkRumBottle = enemyTeam.RumBottles > 0 };
-                var moves = board.GetAllAvailableMoves(
-                    task,
-                    task.Source,
-                    task.Prev,
-                    subTurnState
-                );
+                var moves = GetAvailableMoves(board, enemyPirate.Position, enemyTeam);
 
                 if (moves.Any(m => m.To == moveTo))
                 {
@@ -396,6 +389,18 @@ public class EasyPlayer : IPlayer
         }
 
         return false;
+    }
+    
+    private static List<AvailableMove> GetAvailableMoves(Board board, TilePosition position, Team enemyTeam)
+    {
+        var task = new AvailableMovesTask(enemyTeam.Id, position, position);
+        var subTurnState = new SubTurnState { DrinkRumBottle = enemyTeam.RumBottles > 0 };
+        return board.GetAllAvailableMoves(
+            task,
+            task.Source,
+            task.Prev,
+            subTurnState
+        );
     }
         
     private static int MinDistance(List<Position> positions, Position to)
