@@ -1,6 +1,5 @@
 export interface PlayersInfo {
     mode: number;
-    users: number[];
     groups: string[];
     gamers: PlayerInfo[];
 }

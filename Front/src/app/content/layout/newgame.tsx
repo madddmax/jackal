@@ -30,7 +30,6 @@ const Newgame = () => {
     const [formData, setFormData] = useState<GameSettingsFormData>({
         players: {
             mode: userSettings.playersMode || 4,
-            users: [authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0],
             gamers: (
                 userSettings.players || [PlayerTypes.Human, PlayerTypes.Robot2, PlayerTypes.Robot, PlayerTypes.Robot2]
             ).map((it) => allowedGamers.find((gm) => gm.type === it) ?? allowedGamers[0]),

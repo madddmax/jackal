@@ -7,8 +7,7 @@ import { NetGameInfo } from '../../types/lobbySlice';
 import { Constants } from '/app/constants';
 import GameSettingsForm from '/app/content/layout/components/gameSettingsForm';
 import { PlayerInfo } from '/app/content/layout/components/types';
-import { convertToGamers, convertToSettings, convertToUsers } from '/app/global';
-import { getAuth } from '/auth/redux/authSlice';
+import { convertToGamers, convertToSettings } from '/app/global';
 import { PlayerTypes } from '/common/constants';
 import gameHub from '/game/hub/gameHub';
 import { getUserSettings, saveMySettings } from '/game/redux/gameSlice';
@@ -29,7 +28,6 @@ export interface NetGameFormProps {
 const NetGameForm = ({ netGame }: NetGameFormProps) => {
     const dispatch = useDispatch();
 
-    const authInfo = useSelector(getAuth);
     const userSettings = useSelector(getUserSettings);
     const netGames = useSelector(getNetGames);
 
@@ -53,12 +51,6 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
                 netGame.settings.gameMode === Constants.gameModeTypes.TwoPlayersInTeam
                     ? 8
                     : netGame.settings.players.length,
-            users: convertToUsers(netGame.settings.players, [
-                authInfo.user?.id ?? 0,
-                authInfo.user?.id ?? 0,
-                authInfo.user?.id ?? 0,
-                authInfo.user?.id ?? 0,
-            ]),
             gamers: convertToGamers(
                 netGame.settings.players,
                 allowedGamers,

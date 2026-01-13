@@ -124,10 +124,12 @@ const GameSettingsForm = ({
             freeUsers.splice(freeUser, 1);
         }
 
-        setPlayers({
-            ...gameSettingsData.players,
-            users: clone.map((it) => it.userId),
-            gamers: clone,
+        setGameSettingsData({
+            ...gameSettingsData,
+            players: {
+                ...gameSettingsData.players,
+                gamers: clone,
+            },
         });
     };
 

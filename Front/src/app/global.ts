@@ -100,13 +100,6 @@ export const convertToSettings = (data: GameSettingsFormData): GameSettings => (
     gameMode: data.players.mode == 8 ? Constants.gameModeTypes.TwoPlayersInTeam : Constants.gameModeTypes.FreeForAll,
 });
 
-export const convertToUsers = (data: GamePlayer[], defaults: number[]): number[] => {
-    if (data.length == 1) return data.map((it) => it.userId).concat(defaults.slice(1));
-    if (data.length == 2) {
-        return [data[0].userId, defaults[1], data[1].userId, defaults[3]];
-    } else return data.map((it) => it.userId);
-};
-
 export const convertToGamers = (data: GamePlayer[], gamers: PlayerInfo[], defaults: PlayerInfo[]): PlayerInfo[] => {
     if (data.length == 1) return data.map((it) => getGamerByPlayer(it, gamers)).concat(defaults.slice(1));
     if (data.length == 2) {
