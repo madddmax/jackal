@@ -13,6 +13,7 @@ namespace Jackal.Core.Players;
 /// </summary>
 public class EasyPlayer : IPlayer
 {
+    private const int MaxDepth = 7;
     private Random _rnd = new();
 
     private int _teamId;
@@ -54,6 +55,7 @@ public class EasyPlayer : IPlayer
             .Except(new[] { shipPosition })
             .ToList();
             
+        // todo проблема забрать золото из клетки вертушки
         var goldPositions = _board
             .AllTiles(x => x.Type != TileType.Water && (x.Coins > 0 || x.BigCoins > 0))
             .Select(x => x.Position)
@@ -189,23 +191,16 @@ public class EasyPlayer : IPlayer
                 var minDistance = escapePositions
                     .Select(p => Distance(move.To, new TilePosition(p)))
                     .Min();
-                    
-                var escapePosition = escapePositions
-                    .First(p => Distance(move.To, new TilePosition(p)) == minDistance);
-                    
-                // todo рефактор
-                int currentDistance = Distance(move.From, new TilePosition(escapePosition));
-                minDistance = Distance(move.To, new TilePosition(escapePosition));
-
-                if (currentDistance <= minDistance)
+                
+                if(minDistance == MaxDepth + 1)
                     continue;
-
+                
                 list.Add(new Tuple<int, Move>(minDistance, move));
             }
 
             if (list.Count > 0)
             {
-                int minDistance = list.Min(x => x.Item1);
+                var minDistance = list.Min(x => x.Item1);
                 goodMoves = list.Where(x => x.Item1 == minDistance)
                     .Select(x => x.Item2)
                     .ToList();
@@ -242,9 +237,6 @@ public class EasyPlayer : IPlayer
                          .Where(x => !waterPositions.Contains(x.From.Position))
                          .Where(x => IsEnemyNearDefense(x, _teamId) == false))
             {
-
-                // todo нужна ф-ия на вход List<Positions> и Move на выходе количество ходов до цели
-                // todo сохранять расчет статически на текущий ход
                 var minDistance = goldPositions
                     .Select(p => Distance(move.To, new TilePosition(p)))
                     .Min();
@@ -253,6 +245,10 @@ public class EasyPlayer : IPlayer
                     .First(p => Distance(move.To, new TilePosition(p)) == minDistance);
                     
                 minDistance = Distance(move.To, new TilePosition(goldPosition));
+                
+                if(minDistance == MaxDepth + 1)
+                    continue;
+                
                 list.Add(new Tuple<int, Move>(minDistance, move));
             }
 
@@ -281,7 +277,9 @@ public class EasyPlayer : IPlayer
             if (list.Count > 0)
             {
                 var minDistance = list.Min(x => x.Item1);
-                goodMoves = list.Where(x => x.Item1 == minDistance).Select(x => x.Item2).ToList();
+                goodMoves = list.Where(x => x.Item1 == minDistance)
+                    .Select(x => x.Item2)
+                    .ToList();
             }
         }
 
@@ -425,12 +423,11 @@ public class EasyPlayer : IPlayer
 
         var queue = new Queue<BFSNode>();
         queue.Enqueue(new BFSNode(from, 1));
-
-        int maxDepth = 5;
+        
         while (queue.Count > 0)
         {
             var currentNode = queue.Dequeue();
-            if (currentNode.Depth >= maxDepth)
+            if (currentNode.Depth >= MaxDepth)
             {
                 continue;
             }
@@ -454,17 +451,15 @@ public class EasyPlayer : IPlayer
                 queue.Enqueue(nextNode);
             }
         }
-
-        int deltaX = Math.Abs(from.X - to.X);
-        int deltaY = Math.Abs(from.Y - to.Y);
-        return Math.Max(deltaX, deltaY);
+        
+        return MaxDepth + 1;
     }
     
     private List<AvailableMove> GetAvailableMoves(TilePosition position, int teamId)
     {
         var team = _board.Teams[teamId];
         var task = new AvailableMovesTask(team.Id, position, position);
-        var subTurnState = new SubTurnState();
+        var subTurnState = new SubTurnState(); // todo нет состояния хождения в дыру
         return _board.GetAllAvailableMoves(
             task,
             task.Source,
