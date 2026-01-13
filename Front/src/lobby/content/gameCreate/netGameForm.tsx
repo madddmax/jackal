@@ -40,7 +40,7 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
     };
 
     let counter = 0;
-    const gamers: PlayerInfo[] = netGame.users
+    const allowedGamers: PlayerInfo[] = netGame.users
         .map((it) => ({ id: counter++, type: PlayerTypes.Human, userId: it.id, userName: it.login }) as PlayerInfo)
         .concat([
             { id: counter++, type: PlayerTypes.Robot, userId: 0 } as PlayerInfo,
@@ -61,7 +61,7 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
             ]),
             gamers: convertToGamers(
                 netGame.settings.players,
-                gamers,
+                allowedGamers,
                 (
                     userSettings.players || [
                         PlayerTypes.Human,
@@ -69,11 +69,11 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
                         PlayerTypes.Robot,
                         PlayerTypes.Robot2,
                     ]
-                ).map((it) => gamers.find((gm) => gm.type === it) ?? gamers[0]),
+                ).map((it) => allowedGamers.find((gm) => gm.type === it) ?? allowedGamers[0]),
             ),
             groups: groups,
         },
-        gamers,
+        allowedGamers,
         mapId: netGame.settings.mapId,
         mapSize: netGame.settings.mapSize,
         tilesPackName: netGame.settings.tilesPackName,

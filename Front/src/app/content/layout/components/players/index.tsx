@@ -11,18 +11,18 @@ const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.grou
 
 export interface PlayersProps {
     players: PlayersInfo;
-    gamers: PlayerInfo[];
+    allowedGamers: PlayerInfo[];
     setPlayers: (data: PlayersInfo) => void;
     mapInfo?: string[];
 }
 
-const Players = ({ players, gamers, setPlayers, mapInfo }: PlayersProps) => {
+const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) => {
     const [grps, setGrps] = useState<number[]>(convertGroups(players.groups));
 
     const changeGamer = (pos: number) => {
         const clone = [...players.gamers];
-        if (clone[pos].id + 1 >= gamers.length) clone[pos] = gamers[0];
-        else clone[pos] = gamers.find((it) => it.id === clone[pos].id + 1) ?? gamers[0];
+        if (clone[pos].id + 1 >= allowedGamers.length) clone[pos] = allowedGamers[0];
+        else clone[pos] = allowedGamers.find((it) => it.id === clone[pos].id + 1) ?? allowedGamers[0];
         setPlayers({
             ...players,
             gamers: clone,

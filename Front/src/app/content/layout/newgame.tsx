@@ -36,7 +36,7 @@ const Newgame = () => {
             ).map((it) => allowedGamers.find((gm) => gm.type === it) ?? allowedGamers[0]),
             groups: userSettings.groups,
         },
-        gamers: allowedGamers,
+        allowedGamers,
         mapId: userSettings.mapId,
         mapSize: userSettings.mapSize || 11,
         tilesPackName: userSettings.tilesPackName,

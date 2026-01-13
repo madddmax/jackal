@@ -116,7 +116,7 @@ const GameSettingsForm = ({
             let freePos = Math.floor(Math.random() * freePositions.length);
             let freeUser = Math.floor(Math.random() * freeUsers.length);
 
-            let lucky = gameSettingsData.gamers.find((it) => it.userId == freeUsers[freeUser].id);
+            let lucky = gameSettingsData.allowedGamers.find((it) => it.userId == freeUsers[freeUser].id);
             if (lucky) {
                 clone[freePositions[freePos]] = lucky;
                 freePositions.splice(freePos, 1);
@@ -156,7 +156,7 @@ const GameSettingsForm = ({
             )}
             <Players
                 players={gameSettingsData.players}
-                gamers={gameSettingsData.gamers}
+                allowedGamers={gameSettingsData.allowedGamers}
                 setPlayers={setPlayers}
                 mapInfo={mapForecasts}
             />
