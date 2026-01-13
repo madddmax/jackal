@@ -9,6 +9,7 @@ import GameSettingsForm from '/app/content/layout/components/gameSettingsForm';
 import { PlayerInfo } from '/app/content/layout/components/types';
 import { convertToGamers, convertToSettings, convertToUsers } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
+import { PlayerTypes } from '/common/constants';
 import gameHub from '/game/hub/gameHub';
 import { getUserSettings, saveMySettings } from '/game/redux/gameSlice';
 import { GameSettingsFormData } from '/game/types/hubContracts';
@@ -40,10 +41,10 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
 
     let counter = 0;
     const gamers: PlayerInfo[] = netGame.users
-        .map((it) => ({ id: counter++, type: 'human', userId: it.id, userName: it.login }) as PlayerInfo)
+        .map((it) => ({ id: counter++, type: PlayerTypes.Human, userId: it.id, userName: it.login }) as PlayerInfo)
         .concat([
-            { id: counter++, type: 'robot', userId: 0 } as PlayerInfo,
-            { id: counter++, type: 'robot2', userId: 0 } as PlayerInfo,
+            { id: counter++, type: PlayerTypes.Robot, userId: 0 } as PlayerInfo,
+            { id: counter++, type: PlayerTypes.Robot2, userId: 0 } as PlayerInfo,
         ]);
 
     const formData: GameSettingsFormData = {
@@ -61,9 +62,14 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
             gamers: convertToGamers(
                 netGame.settings.players,
                 gamers,
-                (userSettings.players || ['human', 'robot2', 'robot', 'robot2']).map(
-                    (it) => gamers.find((gm) => gm.type === it) ?? gamers[0],
-                ),
+                (
+                    userSettings.players || [
+                        PlayerTypes.Human,
+                        PlayerTypes.Robot2,
+                        PlayerTypes.Robot,
+                        PlayerTypes.Robot2,
+                    ]
+                ).map((it) => gamers.find((gm) => gm.type === it) ?? gamers[0]),
             ),
             groups: groups,
         },

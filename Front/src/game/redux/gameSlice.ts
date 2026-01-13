@@ -23,6 +23,7 @@ import {
 import { ScreenSizes, TeamScores } from './gameSlice.types';
 import { Constants } from '/app/constants';
 import { debugLog, getAnotherRandomValue } from '/app/global';
+import { PlayerTypes } from '/common/constants';
 
 export const gameSlice = createSlice({
     name: 'game',
@@ -43,7 +44,7 @@ export const gameSlice = createSlice({
             ],
             mapSize: 11,
             hasChessBar: true,
-            players: ['human', 'robot2', 'robot', 'robot2'],
+            players: [PlayerTypes.Human, PlayerTypes.Robot2, PlayerTypes.Robot, PlayerTypes.Robot2],
             playersMode: 4,
             gameSpeed: 1,
         },

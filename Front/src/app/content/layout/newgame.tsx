@@ -9,6 +9,7 @@ import { getUserSettings, saveMySettings } from '../../../game/redux/gameSlice';
 import GameSettingsForm from './components/gameSettingsForm';
 import { convertToSettings } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
+import { PlayerTypes } from '/common/constants';
 import gameHub from '/game/hub/gameHub';
 import { GameSettingsFormData } from '/game/types/hubContracts';
 
@@ -20,22 +21,22 @@ const Newgame = () => {
     const userSettings = useSelector(getUserSettings);
 
     let counter = 0;
-    const gamers = [
-        { id: counter++, type: 'human', userId: authInfo.user?.id ?? 0 },
-        { id: counter++, type: 'robot', userId: 0 },
-        { id: counter++, type: 'robot2', userId: 0 },
-    ];
+    const allowedGamers = Object.values(PlayerTypes).map((it) => ({
+        id: counter++,
+        type: it,
+        userId: it == PlayerTypes.Human ? (authInfo.user?.id ?? 0) : 0,
+    }));
 
     const [formData, setFormData] = useState<GameSettingsFormData>({
         players: {
             mode: userSettings.playersMode || 4,
             users: [authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0, authInfo.user?.id ?? 0],
-            gamers: (userSettings.players || ['human', 'robot2', 'robot', 'robot2']).map(
-                (it) => gamers.find((gm) => gm.type === it) ?? gamers[0],
-            ),
+            gamers: (
+                userSettings.players || [PlayerTypes.Human, PlayerTypes.Robot2, PlayerTypes.Robot, PlayerTypes.Robot2]
+            ).map((it) => allowedGamers.find((gm) => gm.type === it) ?? allowedGamers[0]),
             groups: userSettings.groups,
         },
-        gamers,
+        gamers: allowedGamers,
         mapId: userSettings.mapId,
         mapSize: userSettings.mapSize || 11,
         tilesPackName: userSettings.tilesPackName,

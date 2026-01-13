@@ -16,6 +16,7 @@ import reducer, {
 } from './gameSlice';
 import { getMapData } from './mapDataForTests';
 import { Constants } from '/app/constants';
+import { PlayerTypes } from '/common/constants';
 
 const testTeamId = 12;
 
@@ -152,7 +153,7 @@ const getState = (pirates: GamePirate[]): GameState => ({
         ],
         mapSize: 11,
         hasChessBar: false,
-        players: ['human', 'robot2', 'robot', 'robot2'],
+        players: [PlayerTypes.Human, PlayerTypes.Robot2, PlayerTypes.Robot, PlayerTypes.Robot2],
         playersMode: 4,
         gameSpeed: 0,
     },
