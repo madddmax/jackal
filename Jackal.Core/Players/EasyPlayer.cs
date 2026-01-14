@@ -6,6 +6,10 @@ using Jackal.Core.Domain;
 namespace Jackal.Core.Players;
 
 // todo 1 - разлом, меняем самую хорошую клетку на берегу противника на самую плохую из карты
+// todo 2 - посмотреть почему кораблю не двигает в поисках лучшей высадки
+// todo 3 - проверить поход по вертушкам
+// todo 4 - надо что-то придумать если проход закрыт неизвестными клетками, считать дистанцию манхэтеном
+// todo 5 - разделить ф-ию distance на инициализацию и взятие из кэша
 
 /// <summary>
 /// Игрок простой бот - выбирает ход алгоритмом бей-неси,
@@ -257,11 +261,6 @@ public class EasyPlayer : IPlayer
                     .Select(p => Distance(move.To, new TilePosition(p)))
                     .Min();
                     
-                var goldPosition = goldPositions
-                    .First(p => Distance(move.To, new TilePosition(p)) == minDistance);
-                    
-                minDistance = Distance(move.To, new TilePosition(goldPosition));
-                
                 if(minDistance == MaxDepth + 1)
                     continue;
                 
@@ -286,7 +285,13 @@ public class EasyPlayer : IPlayer
                          .Where(x => !waterPositions.Contains(x.From.Position))
                          .Where(x => IsEnemyNearDefense(x, _teamId) == false))
             {
-                var minDistance = MinDistance(move.To, unknownPositions);
+                var minDistance = unknownPositions
+                    .Select(p => Distance(move.To, new TilePosition(p)))
+                    .Min();
+                
+                if(minDistance == MaxDepth + 1)
+                    continue;
+                
                 list.Add(new Tuple<int, Move>(minDistance, move));
             }
 
@@ -468,11 +473,6 @@ public class EasyPlayer : IPlayer
                         }
                         
                         _routesFrom[from].Add(moveToNextHolePosition, depth);
-                        if (moveToNextHolePosition == to)
-                        {
-                            return depth;
-                        }
-                
                         var nextNode = new BFSNode(moveToNextHolePosition, depth);
                         queue.Enqueue(nextNode);
                     }
@@ -485,11 +485,11 @@ public class EasyPlayer : IPlayer
                     }
                     
                     _routesFrom[from].Add(move.To, depth);
-                    if (move.To == to)
+                    if (_board.Map[move.To.Position].Type == TileType.Unknown)
                     {
-                        return depth;
+                        continue;
                     }
-                
+                    
                     var nextNode = new BFSNode(move.To, depth);
                     queue.Enqueue(nextNode);
                 }
@@ -510,11 +510,6 @@ public class EasyPlayer : IPlayer
             task.Prev,
             subTurnState
         );
-    }
-        
-    private int MinDistance(TilePosition from, List<Position> positions)
-    {
-        return positions.ConvertAll(x => Distance(from, new TilePosition(x))).Min();
     }
         
     private static int WaterDistance(Position pos1, Position pos2)
