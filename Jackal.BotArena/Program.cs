@@ -23,7 +23,7 @@ internal static class Program
     /// <summary>
     /// Размер карты
     /// </summary>
-    private const int MapSize = 13;
+    private const int MapSize = 11;
     
     /// <summary>
     /// Комбинации игроков ботов и их позиций (зависит от порядка)

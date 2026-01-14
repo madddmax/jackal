@@ -19,6 +19,9 @@ public class EasyPlayer : IPlayer
     private int _teamId;
     private Board _board = null!;
     private Dictionary<TilePosition, Dictionary<TilePosition, int>> _routesFrom = null!;
+
+    private List<Position> _holePositions = new();
+    private List<Position> _openHolePositions = new();
     
     public void OnNewGame()
     {
@@ -39,9 +42,16 @@ public class EasyPlayer : IPlayer
         var shipPosition = _board.Teams[_teamId].ShipPosition; // todo учитывать союзный корабль
 
         var enemyTeamIds = _board.Teams[_teamId].EnemyTeamIds;
+        
         var enemyShipPositions = _board.Teams
             .Where(t => enemyTeamIds.Contains(t.Id))
             .Select(t => t.ShipPosition)
+            .ToList();
+        
+        var enemyPiratePositions = _board.AllPirates
+            .Where(p => enemyTeamIds.Contains(p.TeamId))
+            .Select(p => p.Position.Position)
+            .Distinct()
             .ToList();
         
         var unknownPositions = _board
@@ -71,12 +81,18 @@ public class EasyPlayer : IPlayer
             .Select(x => x.Position)
             .ToList();
         
-        var holePositions = _board
+        _holePositions = _board
             .AllTiles(x => x.Type == TileType.Hole)
             .Select(x => x.Position)
             .ToList();
         
-        var onlyOneHolePosition = holePositions.Count > 1 ? new List<Position>() : holePositions;
+        var onlyOneHolePosition = _holePositions.Count > 1 ? new List<Position>() : _holePositions;
+
+        _openHolePositions = _holePositions.Count > 1
+            ? _holePositions
+                .Where(p => !enemyPiratePositions.Contains(p))
+                .ToList()
+            : new List<Position>();
         
         var cannonPositions = _board
             .AllTiles(x => x.Type == TileType.Cannon)
@@ -435,20 +451,48 @@ public class EasyPlayer : IPlayer
             var nextPossibleMoves = GetAvailableMoves(currentNode.From, _teamId);
             foreach (var move in nextPossibleMoves)
             {
-                if(_routesFrom[from].ContainsKey(move.To))
-                {
-                    continue;
-                }
-
                 var depth = currentNode.Depth + 1;
-                _routesFrom[from].Add(move.To, depth);
-                if (move.To == to)
-                {
-                    return depth;
-                }
                 
-                var nextNode = new BFSNode(move.To, depth);
-                queue.Enqueue(nextNode);
+                if(_board.Map[move.To.Position].Type == TileType.Hole 
+                   && _holePositions.Count > 1
+                   && _openHolePositions.Count > 0) // todo рассмотреть случай если одна открытая позиция и мы туда идем
+                {
+                    foreach (var openHolePosition in _openHolePositions)
+                    {
+                        var moveToNextHolePosition = new TilePosition(openHolePosition);
+                        
+                        if(_routesFrom[from].ContainsKey(moveToNextHolePosition))
+                        {
+                            // ранее был найден путь короче
+                            break;
+                        }
+                        
+                        _routesFrom[from].Add(moveToNextHolePosition, depth);
+                        if (moveToNextHolePosition == to)
+                        {
+                            return depth;
+                        }
+                
+                        var nextNode = new BFSNode(moveToNextHolePosition, depth);
+                        queue.Enqueue(nextNode);
+                    }
+                }
+                else
+                {
+                    if(_routesFrom[from].ContainsKey(move.To))
+                    {
+                        continue;
+                    }
+                    
+                    _routesFrom[from].Add(move.To, depth);
+                    if (move.To == to)
+                    {
+                        return depth;
+                    }
+                
+                    var nextNode = new BFSNode(move.To, depth);
+                    queue.Enqueue(nextNode);
+                }
             }
         }
         
