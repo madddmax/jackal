@@ -227,7 +227,7 @@ public class EasyPlayer : IPlayer
             }
         }
 
-        // не ходим на корабль и по шарам без монеты
+        // не ходим на корабль и по шарам без монеты // todo можно отдельно обработать шар
         safeAvailableMoves = safeAvailableMoves
             .Where(x => !escapePositions.Contains(x.To.Position))
             .ToArray();
@@ -453,11 +453,10 @@ public class EasyPlayer : IPlayer
                 continue;
             }
             
+            var depth = currentNode.Depth + 1;
             var nextPossibleMoves = GetAvailableMoves(currentNode.From, _teamId);
             foreach (var move in nextPossibleMoves)
             {
-                var depth = currentNode.Depth + 1;
-                
                 if(_board.Map[move.To.Position].Type == TileType.Hole 
                    && _holePositions.Count > 1
                    && _openHolePositions.Count > 0) // todo рассмотреть случай если одна открытая позиция и мы туда идем
@@ -485,11 +484,6 @@ public class EasyPlayer : IPlayer
                     }
                     
                     _routesFrom[from].Add(move.To, depth);
-                    if (_board.Map[move.To.Position].Type == TileType.Unknown)
-                    {
-                        continue;
-                    }
-                    
                     var nextNode = new BFSNode(move.To, depth);
                     queue.Enqueue(nextNode);
                 }
