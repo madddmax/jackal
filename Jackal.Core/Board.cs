@@ -75,15 +75,13 @@ public class Board
         AvailableMovesTask task, 
         TilePosition source, 
         TilePosition prev, 
-        SubTurnState subTurn)
+        SubTurnState subTurn,
+        Position[] allyShips)
     {
         var sourceTile = Map[source.Position];
 
         var ourTeamId = task.TeamId;
         var ourTeam = Teams[ourTeamId];
-        var allyTeam = ourTeam.AllyTeamId.HasValue 
-            ? Teams[ourTeam.AllyTeamId.Value] 
-            : null;
 
         if (sourceTile.Type is TileType.Arrow or TileType.Horse or TileType.Ice or TileType.Crocodile)
         {
@@ -109,7 +107,7 @@ public class Board
         
         // места всех возможных ходов
         IEnumerable<TilePosition> positionsForCheck = GetAllTargetsForSubTurn(
-            source, prev, ourTeam, subTurn
+            source, prev, ourTeam, subTurn, allyShips
         );
 
         foreach (var newPosition in positionsForCheck)
@@ -153,8 +151,7 @@ public class Board
                     break;
 
                 case TileType.Water:
-                    if (ourTeam.ShipPosition == newPosition.Position ||
-                        (allyTeam != null && allyTeam.ShipPosition == newPosition.Position))
+                    if (allyShips.Contains(newPosition.Position))
                     {
                         // заходим на свой корабль
                         goodTargets.Add(usualMove);
@@ -202,7 +199,8 @@ public class Board
                             task,
                             newPosition,
                             source,
-                            subTurn
+                            subTurn,
+                            allyShips
                         )
                     );
                     break;
@@ -241,18 +239,14 @@ public class Board
         TilePosition source, 
         TilePosition prev, 
         Team ourTeam, 
-        SubTurnState subTurn)
+        SubTurnState subTurn,
+        Position[] allyShips)
     {
-        var allyTeam = ourTeam.AllyTeamId.HasValue 
-            ? Teams[ourTeam.AllyTeamId.Value] 
-            : null;
-
         var rez = GetNearDeltas(source.Position)
             .Where(IsValidMapPosition)
             .Where(x =>
                 Map[x].Type != TileType.Water ||
-                x == ourTeam.ShipPosition ||
-                (allyTeam != null && x == allyTeam.ShipPosition)
+                allyShips.Contains(x)
             )
             .Select(IncomeTilePosition);
             
@@ -292,13 +286,13 @@ public class Board
             case TileType.Airplane:
                 if (sourceTile.Used == false)
                 {
-                    rez = GetAirplaneMoves(ourTeam.ShipPosition, allyTeam?.ShipPosition);
+                    rez = GetAirplaneMoves(allyShips);
                 }
                 break;
             case TileType.Crocodile:
                 if (subTurn.AirplaneFlying)
                 {
-                    rez = GetAirplaneMoves(ourTeam.ShipPosition, allyTeam?.ShipPosition);
+                    rez = GetAirplaneMoves(allyShips);
                     break;
                 }
                     
@@ -307,7 +301,7 @@ public class Board
             case TileType.Ice:
                 if (subTurn.AirplaneFlying)
                 {
-                    rez = GetAirplaneMoves(ourTeam.ShipPosition, allyTeam?.ShipPosition);
+                    rez = GetAirplaneMoves(allyShips);
                     break;
                 }
                 
@@ -322,8 +316,7 @@ public class Board
                 }
                 break;
             case TileType.Water:
-                if (source.Position == ourTeam.ShipPosition ||
-                    (allyTeam != null && source.Position == allyTeam.ShipPosition))
+                if (allyShips.Contains(source.Position))
                 {
                     // со своего корабля
                     rez = GetPossibleShipMoves(source.Position, MapSize)
@@ -379,15 +372,14 @@ public class Board
         return tile;
     }
 
-    private IEnumerable<TilePosition> GetAirplaneMoves(Position ourShipPosition, Position? allyShipPosition) =>
+    private IEnumerable<TilePosition> GetAirplaneMoves(Position[] allyShips) =>
         AllTiles(x =>
                 x.Type != TileType.Ice &&
                 x.Type != TileType.Crocodile &&
                 x.Type != TileType.Horse &&
                 (
                     x.Type != TileType.Water ||
-                    x.Position == ourShipPosition ||
-                    x.Position == allyShipPosition
+                    allyShips.Contains(x.Position)
                 )
             )
             .Select(x => IncomeTilePosition(x.Position));
@@ -498,5 +490,12 @@ public class Board
         }
             
         return false;
+    }
+    
+    public static int Distance(Position pos1, Position pos2)
+    {
+        int deltaX = Math.Abs(pos1.X - pos2.X);
+        int deltaY = Math.Abs(pos1.Y - pos2.Y);
+        return Math.Max(deltaX, deltaY);
     }
 }

@@ -224,11 +224,17 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                                   game.SubTurn.AirplaneFlying);
 
             AvailableMovesTask task = new AvailableMovesTask(pirate.TeamId, To, prev);
+            
+            Position[] allyShips = allyTeam != null
+                ? [ourTeam.ShipPosition, allyTeam.ShipPosition]
+                : [ourTeam.ShipPosition];
+            
             List<AvailableMove> moves = game.Board.GetAllAvailableMoves(
                 task,
                 task.Source,
                 task.Prev,
-                new SubTurnState()
+                new SubTurnState(),
+                allyShips
             );
 
             if (moves.Count == 0 && 

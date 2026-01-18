@@ -18,12 +18,12 @@ internal static class Program
     /// <summary>
     /// Количество запускаемых игр
     /// </summary>
-    private const int ArenaGamesCount = 900;
+    private const int ArenaGamesCount = 20;
 
     /// <summary>
     /// Размер карты
     /// </summary>
-    private const int MapSize = 9;
+    private const int MapSize = 11;
     
     /// <summary>
     /// Комбинации игроков ботов и их позиций (зависит от порядка)
