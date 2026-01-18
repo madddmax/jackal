@@ -17,6 +17,7 @@ namespace Jackal.Core.Players;
 public class EasyPlayer : IPlayer
 {
     private const int MaxDepth = 7;
+    private const int TerminateDepth = int.MaxValue;
     private Random _rnd = new();
 
     private int _teamId;
@@ -49,7 +50,7 @@ public class EasyPlayer : IPlayer
                 newShipPosition = move.To.Position;
             }
 
-            CalcBfsRouteFrom(move.To, newShipPosition);
+            CalcBfsRouteFrom(move.To, newShipPosition, MaxDepth);
         }
         
         var enemyTeamIds = _board.Teams[_teamId].EnemyTeamIds;
@@ -76,12 +77,36 @@ public class EasyPlayer : IPlayer
             .Except(new[] { shipPosition })
             .ToList();
             
+        var escapePositions = _board.AllTiles(x => x.Type == TileType.Balloon)
+            .Select(x => x.Position)
+            .ToList();
+                
+        escapePositions.Add(shipPosition);
+        
         // todo проблема забрать золото из клетки вертушки
         var goldPositions = _board
             .AllTiles(x => x.Type != TileType.Water && (x.Coins > 0 || x.BigCoins > 0))
             .Select(x => x.Position)
             .ToList();
-            
+
+        var takenGoldPosition = new List<Position>();
+        foreach (var goldPosition in goldPositions)
+        {
+            var goldTilePosition = new TilePosition(goldPosition);
+            CalcBfsRouteFrom(goldTilePosition, shipPosition, MaxDepth);
+
+            foreach (var escapePosition in escapePositions)
+            {
+                var distance = Distance(goldTilePosition, new TilePosition(escapePosition));
+
+                if (distance == TerminateDepth)
+                    continue;
+                
+                takenGoldPosition.Add(goldPosition);
+                break;
+            }
+        }
+        
         var cannibalPositions = _board
             .AllTiles(x => x.Type == TileType.Cannibal)
             .Select(x => x.Position)
@@ -115,12 +140,6 @@ public class EasyPlayer : IPlayer
             .Select(x => x.Position)
             .ToList();
         
-        var escapePositions = _board.AllTiles(x => x.Type == TileType.Balloon)
-            .Select(x => x.Position)
-            .ToList();
-                
-        escapePositions.Add(shipPosition);
-
         // разыгрываем траву
         // ИД игрока команды за которую ходят не равна ИД игрока который ходит
         if (_board.Teams[_teamId].UserId != gameState.UserId)
@@ -219,7 +238,7 @@ public class EasyPlayer : IPlayer
                     .Select(p => Distance(move.To, new TilePosition(p)))
                     .Min();
                 
-                if(minDistance == MaxDepth + 1)
+                if(minDistance == TerminateDepth)
                     continue;
                 
                 list.Add(new Tuple<int, Move>(minDistance, move));
@@ -247,12 +266,12 @@ public class EasyPlayer : IPlayer
                 return (goodMoveNum, null);
         }
         
-        if (goodMoves.Count == 0 && goldPositions.Count > 0 && !hasMoveWithCoins)
+        if (goodMoves.Count == 0 && takenGoldPosition.Count > 0 && !hasMoveWithCoins)
         {
             // идем к самому ближнему золоту
             goodMoves = safeAvailableMoves
                 .Where(x => x is { WithCoin: false, WithBigCoin: false })
-                .Where(m => goldPositions.Contains(m.To.Position))
+                .Where(m => takenGoldPosition.Contains(m.To.Position))
                 .ToList();
                 
             if (CheckGoodMove(goodMoves, gameState.AvailableMoves, out goodMoveNum)) 
@@ -260,15 +279,15 @@ public class EasyPlayer : IPlayer
                 
             List<Tuple<int, Move>> list = [];
             foreach (Move move in safeAvailableMoves
-                         .Where(x => x.WithCoin == false)
+                         .Where(x => x is { WithCoin: false, WithBigCoin: false })
                          .Where(x => !waterPositions.Contains(x.From.Position))
                          .Where(x => IsEnemyNearDefense(x, _teamId) == false))
             {
-                var minDistance = goldPositions
+                var minDistance = takenGoldPosition
                     .Select(p => Distance(move.To, new TilePosition(p)))
                     .Min();
                     
-                if(minDistance == MaxDepth + 1)
+                if(minDistance == TerminateDepth)
                     continue;
                 
                 list.Add(new Tuple<int, Move>(minDistance, move));
@@ -288,7 +307,7 @@ public class EasyPlayer : IPlayer
             // идем к самой ближней неизвестной клетке
             List<Tuple<int, Move>> list = new List<Tuple<int, Move>>();
             foreach (Move move in safeAvailableMoves
-                         .Where(x => x.WithCoin == false)
+                         .Where(x => x is { WithCoin: false, WithBigCoin: false })
                          .Where(x => !waterPositions.Contains(x.From.Position))
                          .Where(x => IsEnemyNearDefense(x, _teamId) == false))
             {
@@ -296,7 +315,7 @@ public class EasyPlayer : IPlayer
                     .Select(p => Distance(move.To, new TilePosition(p)))
                     .Min();
                 
-                if(minDistance == MaxDepth + 1)
+                if(minDistance == TerminateDepth)
                     continue;
                 
                 list.Add(new Tuple<int, Move>(minDistance, move));
@@ -432,7 +451,7 @@ public class EasyPlayer : IPlayer
         return false;
     }
 
-    private void CalcBfsRouteFrom(TilePosition position, Position shipPosition)
+    private void CalcBfsRouteFrom(TilePosition position, Position shipPosition, int maxDepth)
     {
         if (_bfsRoutesFrom.ContainsKey(position))
         {
@@ -447,7 +466,7 @@ public class EasyPlayer : IPlayer
         while (queue.Count > 0)
         {
             var currentNode = queue.Dequeue();
-            if (currentNode.Depth >= MaxDepth)
+            if (currentNode.Depth == maxDepth)
             {
                 continue;
             }
@@ -506,7 +525,7 @@ public class EasyPlayer : IPlayer
             return distance;
         }
 
-        return MaxDepth + 1;
+        return TerminateDepth;
     }
 
     private List<AvailableMove> GetAvailableMoves(TilePosition position, int teamId, Position shipPosition)
