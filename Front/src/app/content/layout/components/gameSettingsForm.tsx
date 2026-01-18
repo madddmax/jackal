@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import classes from '../newgame.module.less';
 import Players from './players';
 import { PlayersInfo } from './types';
+import { PlayerTypes } from '/common/constants';
 import { sagaActions } from '/common/sagas';
 import { getGameSettings, getMapForecasts, setMapForecasts } from '/game/redux/gameSlice';
 import { GameSettingsFormData } from '/game/types/hubContracts';
@@ -104,7 +105,7 @@ const GameSettingsForm = ({
         let clone = gameSettingsData.players.gamers.slice();
         let freePositions: number[] = [];
         for (let i = 0; i < clone.length; i++) {
-            if (clone[i].type != 'human') {
+            if (clone[i].type != PlayerTypes.Human) {
                 freePositions.push(i);
             }
         }
@@ -115,7 +116,7 @@ const GameSettingsForm = ({
             let freePos = Math.floor(Math.random() * freePositions.length);
             let freeUser = Math.floor(Math.random() * freeUsers.length);
 
-            let lucky = gameSettingsData.gamers.find((it) => it.userId == freeUsers[freeUser].id);
+            let lucky = gameSettingsData.allowedGamers.find((it) => it.userId == freeUsers[freeUser].id);
             if (lucky) {
                 clone[freePositions[freePos]] = lucky;
                 freePositions.splice(freePos, 1);
@@ -123,10 +124,12 @@ const GameSettingsForm = ({
             freeUsers.splice(freeUser, 1);
         }
 
-        setPlayers({
-            ...gameSettingsData.players,
-            users: clone.map((it) => it.userId),
-            gamers: clone,
+        setGameSettingsData({
+            ...gameSettingsData,
+            players: {
+                ...gameSettingsData.players,
+                gamers: clone,
+            },
         });
     };
 
@@ -155,7 +158,7 @@ const GameSettingsForm = ({
             )}
             <Players
                 players={gameSettingsData.players}
-                gamers={gameSettingsData.gamers}
+                allowedGamers={gameSettingsData.allowedGamers}
                 setPlayers={setPlayers}
                 mapInfo={mapForecasts}
             />

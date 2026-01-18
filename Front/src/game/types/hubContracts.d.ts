@@ -8,7 +8,7 @@ export interface makeGameMoveRequestProps {
 
 export interface GameSettingsFormData {
     players: PlayersInfo;
-    gamers: PlayerInfo[];
+    allowedGamers: PlayerInfo[];
     mapId?: number;
     mapSize: number;
     tilesPackName?: string;

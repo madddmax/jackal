@@ -2,6 +2,7 @@ import Image from 'react-bootstrap/Image';
 
 import classes from './players.module.less';
 import { Constants } from '/app/constants';
+import { GetPlayerTypePicture } from '/common/constants';
 
 interface PlayerProps {
     position: number;
@@ -14,12 +15,6 @@ interface PlayerProps {
 }
 
 const Player = ({ position, type, userName, group, posInfo, changePlayer, changeGroup }: PlayerProps) => {
-    const getUrlByPlayer = (type: string) => {
-        if (type === 'human') return '/pictures/human.png';
-        else if (type === 'robot') return '/pictures/robot.png';
-        else if (type === 'robot2') return '/pictures/robot2.png';
-    };
-
     const getTopPosition = (pos: number) => {
         if (pos === 0) return 200;
         else if (pos === 2) return 0;
@@ -40,7 +35,7 @@ const Player = ({ position, type, userName, group, posInfo, changePlayer, change
                 left: getLeftPosition(position),
             }}
         >
-            <img className={classes.type} src={getUrlByPlayer(type)} onClick={changePlayer} />
+            <img className={classes.type} src={GetPlayerTypePicture(type)} onClick={changePlayer} />
             <Image
                 className={classes.group}
                 roundedCircle

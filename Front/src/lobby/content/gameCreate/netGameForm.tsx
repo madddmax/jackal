@@ -7,8 +7,8 @@ import { NetGameInfo } from '../../types/lobbySlice';
 import { Constants } from '/app/constants';
 import GameSettingsForm from '/app/content/layout/components/gameSettingsForm';
 import { PlayerInfo } from '/app/content/layout/components/types';
-import { convertToGamers, convertToSettings, convertToUsers } from '/app/global';
-import { getAuth } from '/auth/redux/authSlice';
+import { convertToGamers, convertToSettings } from '/app/global';
+import { PlayerTypes } from '/common/constants';
 import gameHub from '/game/hub/gameHub';
 import { getUserSettings, saveMySettings } from '/game/redux/gameSlice';
 import { GameSettingsFormData } from '/game/types/hubContracts';
@@ -28,7 +28,6 @@ export interface NetGameFormProps {
 const NetGameForm = ({ netGame }: NetGameFormProps) => {
     const dispatch = useDispatch();
 
-    const authInfo = useSelector(getAuth);
     const userSettings = useSelector(getUserSettings);
     const netGames = useSelector(getNetGames);
 
@@ -39,11 +38,11 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
     };
 
     let counter = 0;
-    const gamers: PlayerInfo[] = netGame.users
-        .map((it) => ({ id: counter++, type: 'human', userId: it.id, userName: it.login }) as PlayerInfo)
+    const allowedGamers: PlayerInfo[] = netGame.users
+        .map((it) => ({ id: counter++, type: PlayerTypes.Human, userId: it.id, userName: it.login }) as PlayerInfo)
         .concat([
-            { id: counter++, type: 'robot', userId: 0 } as PlayerInfo,
-            { id: counter++, type: 'robot2', userId: 0 } as PlayerInfo,
+            { id: counter++, type: PlayerTypes.Robot, userId: 0 } as PlayerInfo,
+            { id: counter++, type: PlayerTypes.Robot2, userId: 0 } as PlayerInfo,
         ]);
 
     const formData: GameSettingsFormData = {
@@ -52,22 +51,21 @@ const NetGameForm = ({ netGame }: NetGameFormProps) => {
                 netGame.settings.gameMode === Constants.gameModeTypes.TwoPlayersInTeam
                     ? 8
                     : netGame.settings.players.length,
-            users: convertToUsers(netGame.settings.players, [
-                authInfo.user?.id ?? 0,
-                authInfo.user?.id ?? 0,
-                authInfo.user?.id ?? 0,
-                authInfo.user?.id ?? 0,
-            ]),
             gamers: convertToGamers(
                 netGame.settings.players,
-                gamers,
-                (userSettings.players || ['human', 'robot2', 'robot', 'robot2']).map(
-                    (it) => gamers.find((gm) => gm.type === it) ?? gamers[0],
-                ),
+                allowedGamers,
+                (
+                    userSettings.players || [
+                        PlayerTypes.Human,
+                        PlayerTypes.Robot2,
+                        PlayerTypes.Robot,
+                        PlayerTypes.Robot2,
+                    ]
+                ).map((it) => allowedGamers.find((gm) => gm.type === it) ?? allowedGamers[0]),
             ),
             groups: groups,
         },
-        gamers,
+        allowedGamers,
         mapId: netGame.settings.mapId,
         mapSize: netGame.settings.mapSize,
         tilesPackName: netGame.settings.tilesPackName,

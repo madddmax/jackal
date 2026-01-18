@@ -7,6 +7,7 @@ import { getUserSettings } from '../../../game/redux/gameSlice';
 import { Constants } from '/app/constants';
 import { hubConnection } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
+import { PlayerTypes } from '/common/constants';
 import gameHub from '/game/hub/gameHub';
 
 const Quickstart = () => {
@@ -18,8 +19,8 @@ const Quickstart = () => {
     const speedStart = () => {
         gameHub.startGame({
             players: [
-                { userId: authInfo.user?.id ?? 0, type: 'human', position: Constants.positions[0] },
-                { userId: 0, type: 'robot2', position: Constants.positions[2] },
+                { userId: authInfo.user?.id ?? 0, type: PlayerTypes.Human, position: Constants.positions[0] },
+                { userId: 0, type: PlayerTypes.Robot2, position: Constants.positions[2] },
             ],
             mapId: userSettings.mapId,
             mapSize: 11,
