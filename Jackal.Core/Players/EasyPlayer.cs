@@ -22,7 +22,7 @@ public class EasyPlayer : IPlayer
 
     private int _teamId;
     private Board _board = null!;
-    private Dictionary<TilePosition, Dictionary<TilePosition, int>> _routesFrom = null!;
+    private Dictionary<TilePosition, Dictionary<TilePosition, int>> _bfsRoutesFrom = null!;
 
     private List<Position> _holePositions = new();
     private List<Position> _openHolePositions = new();
@@ -37,10 +37,10 @@ public class EasyPlayer : IPlayer
         _teamId = gameState.TeamId;
         _board = gameState.Board;
         
-        _routesFrom = new Dictionary<TilePosition, Dictionary<TilePosition, int>>();
+        _bfsRoutesFrom = new Dictionary<TilePosition, Dictionary<TilePosition, int>>();
         foreach (var move in gameState.AvailableMoves)
         {
-            Distance(move.To, new TilePosition(int.MaxValue, int.MaxValue));
+            CalcBfsRouteFrom(move.To);
         }
         
         var shipPosition = _board.Teams[_teamId].ShipPosition; // todo учитывать союзный корабль
@@ -422,28 +422,13 @@ public class EasyPlayer : IPlayer
 
         return false;
     }
-    
-    private int Distance(TilePosition from, TilePosition to)
-    {
-        if (from == to)
-        {
-            return 1;
-        }
-        
-        if (_routesFrom.TryGetValue(from, out var routesTo))
-        {
-            if (routesTo.TryGetValue(to, out var cachedDistance))
-            {
-                return cachedDistance;
-            }
-        }
-        else
-        {
-            _routesFrom[from] = new Dictionary<TilePosition, int>();
-        }
 
-        var queue = new Queue<BFSNode>();
-        queue.Enqueue(new BFSNode(from, 1));
+    private void CalcBfsRouteFrom(TilePosition position)
+    {
+        _bfsRoutesFrom[position] = new Dictionary<TilePosition, int>();
+
+        var queue = new Queue<BfsNode>();
+        queue.Enqueue(new BfsNode(position, 1));
         
         while (queue.Count > 0)
         {
@@ -454,7 +439,7 @@ public class EasyPlayer : IPlayer
             }
             
             var depth = currentNode.Depth + 1;
-            var nextPossibleMoves = GetAvailableMoves(currentNode.From, _teamId);
+            var nextPossibleMoves = GetAvailableMoves(currentNode.Position, _teamId);
             foreach (var move in nextPossibleMoves)
             {
                 if(_board.Map[move.To.Position].Type == TileType.Hole 
@@ -465,34 +450,48 @@ public class EasyPlayer : IPlayer
                     {
                         var moveToNextHolePosition = new TilePosition(openHolePosition);
                         
-                        if(_routesFrom[from].ContainsKey(moveToNextHolePosition))
+                        if(_bfsRoutesFrom[position].ContainsKey(moveToNextHolePosition))
                         {
                             // ранее был найден путь короче
                             break;
                         }
                         
-                        _routesFrom[from].Add(moveToNextHolePosition, depth);
-                        var nextNode = new BFSNode(moveToNextHolePosition, depth);
+                        _bfsRoutesFrom[position].Add(moveToNextHolePosition, depth);
+                        var nextNode = new BfsNode(moveToNextHolePosition, depth);
                         queue.Enqueue(nextNode);
                     }
                 }
                 else
                 {
-                    if(_routesFrom[from].ContainsKey(move.To))
+                    if(_bfsRoutesFrom[position].ContainsKey(move.To))
                     {
                         continue;
                     }
                     
-                    _routesFrom[from].Add(move.To, depth);
-                    var nextNode = new BFSNode(move.To, depth);
+                    _bfsRoutesFrom[position].Add(move.To, depth);
+                    var nextNode = new BfsNode(move.To, depth);
                     queue.Enqueue(nextNode);
                 }
             }
         }
-        
+    }
+
+    private int Distance(TilePosition from, TilePosition to)
+    {
+        if (from == to)
+        {
+            return 1;
+        }
+
+        if (_bfsRoutesFrom.TryGetValue(from, out var routesTo) &&
+            routesTo.TryGetValue(to, out var distance))
+        {
+            return distance;
+        }
+
         return MaxDepth + 1;
     }
-    
+
     private List<AvailableMove> GetAvailableMoves(TilePosition position, int teamId)
     {
         var team = _board.Teams[teamId];
@@ -514,4 +513,4 @@ public class EasyPlayer : IPlayer
     }
 }
 
-public record BFSNode(TilePosition From, int Depth);
+public record BfsNode(TilePosition Position, int Depth);
