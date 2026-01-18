@@ -52,6 +52,15 @@ const Layout = () => {
         dispatch({ type: sagaActions.LOBBY_GET_LEADERBOARD, payload: {} });
         dispatch({ type: sagaActions.LOBBY_GET_NET_LEADERBOARD, payload: {} });
         dispatch({ type: sagaActions.AUTH_CHECK, payload: {} });
+
+        const intervalId = setInterval(() => {
+            dispatch({ type: sagaActions.LOBBY_GET_LEADERBOARD, payload: {} });
+            dispatch({ type: sagaActions.LOBBY_GET_NET_LEADERBOARD, payload: {} });
+        }, 300000); // 5 minutes in ms
+
+        return () => {
+            clearInterval(intervalId);
+        };
     }, [dispatch]);
 
     return (
