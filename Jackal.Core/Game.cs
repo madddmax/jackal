@@ -162,20 +162,30 @@ public class Game : ICompletable
         var result = new AvailableMoveResult();
         var targets = new List<AvailableMove>();
             
-        Team team = Board.Teams[teamId];
+        Team ourTeam = Board.Teams[teamId];
+        Team? allyTeam = ourTeam.AllyTeamId.HasValue 
+            ? Board.Teams[ourTeam.AllyTeamId.Value] 
+            : null;
+        
         if (SubTurn.CannabisTurnCount == 0 && 
-            team.RumBottles > 0 && 
+            ourTeam.RumBottles > 0 && 
             NeedSubTurnPirate == null)
         {
-            IEnumerable<Pirate> piratesWithRumBottles = team.Pirates.Where(x => x.IsInTrap || x.Position.Level > 0);
+            IEnumerable<Pirate> piratesWithRumBottles = ourTeam.Pirates.Where(x => x.IsInTrap || x.Position.Level > 0);
             foreach (var pirate in piratesWithRumBottles)
             {
                 AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, pirate.Position);
+                
+                Position[] allyShips = allyTeam != null
+                    ? [ourTeam.ShipPosition, allyTeam.ShipPosition]
+                    : [ourTeam.ShipPosition];
+                
                 List<AvailableMove> moves = Board.GetAllAvailableMoves(
                     task,
                     task.Source,
                     task.Prev,
-                    new SubTurnState { DrinkRumBottle = true }
+                    new SubTurnState { DrinkRumBottle = true },
+                    allyShips
                 );
                 foreach (var move in moves)
                 {
@@ -195,17 +205,23 @@ public class Game : ICompletable
         
         IEnumerable<Pirate> activePirates = NeedSubTurnPirate != null
             ? new[] { NeedSubTurnPirate }
-            : team.Pirates.Where(x => x.IsActive);
+            : ourTeam.Pirates.Where(x => x.IsActive);
         
         foreach (var pirate in activePirates)
         {
             TilePosition prev = PrevSubTurnPosition ?? pirate.Position;
             AvailableMovesTask task = new AvailableMovesTask(teamId, pirate.Position, prev);
+            
+            Position[] allyShips = allyTeam != null
+                ? [ourTeam.ShipPosition, allyTeam.ShipPosition]
+                : [ourTeam.ShipPosition];
+            
             List<AvailableMove> moves = Board.GetAllAvailableMoves(
                 task,
                 task.Source,
                 task.Prev,
-                SubTurn
+                SubTurn,
+                allyShips
             );
             targets.AddRange(moves);
         }

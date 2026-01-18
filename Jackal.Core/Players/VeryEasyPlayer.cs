@@ -173,14 +173,14 @@ public class VeryEasyPlayer : IPlayer
             {
                 // идем к самому ближнему выходу
                 var minDistance = escapePositions
-                    .Select(p => Distance(p, move.To.Position) + move.To.Level)
+                    .Select(p => Board.Distance(p, move.To.Position) + move.To.Level)
                     .Min();
                     
                 var escapePosition = escapePositions
-                    .First(p => Distance(p, move.To.Position) + move.To.Level == minDistance);
+                    .First(p => Board.Distance(p, move.To.Position) + move.To.Level == minDistance);
                     
-                int currentDistance = Distance(escapePosition, move.From.Position) + move.From.Level;
-                minDistance = Distance(escapePosition, move.To.Position) + move.To.Level;
+                int currentDistance = Board.Distance(escapePosition, move.From.Position) + move.From.Level;
+                minDistance = Board.Distance(escapePosition, move.To.Position) + move.To.Level;
 
                 if (currentDistance <= minDistance)
                     continue;
@@ -229,13 +229,13 @@ public class VeryEasyPlayer : IPlayer
             {
 
                 var minDistance = goldPositions
-                    .Select(p => Distance(p, move.To.Position) + move.To.Level)
+                    .Select(p => Board.Distance(p, move.To.Position) + move.To.Level)
                     .Min();
                     
                 var goldPosition = goldPositions
-                    .First(p => Distance(p, move.To.Position) + move.To.Level == minDistance);
+                    .First(p => Board.Distance(p, move.To.Position) + move.To.Level == minDistance);
                     
-                minDistance = Distance(goldPosition, move.To.Position) + move.To.Level;
+                minDistance = Board.Distance(goldPosition, move.To.Position) + move.To.Level;
                 list.Add(new Tuple<int, Move>(minDistance, move));
             }
 
@@ -355,7 +355,8 @@ public class VeryEasyPlayer : IPlayer
                     task,
                     task.Source,
                     task.Prev,
-                    subTurnState
+                    subTurnState,
+                    [shipPosition]
                 );
 
                 if (moves.Any(m => m.To == moveTo))
@@ -397,14 +398,7 @@ public class VeryEasyPlayer : IPlayer
         
     private static int MinDistance(List<Position> positions, Position to)
     {
-        return positions.ConvertAll(x => Distance(x, to)).Min();
-    }
-        
-    private static int Distance(Position pos1, Position pos2)
-    {
-        int deltaX = Math.Abs(pos1.X - pos2.X);
-        int deltaY = Math.Abs(pos1.Y - pos2.Y);
-        return Math.Max(deltaX, deltaY);
+        return positions.ConvertAll(x => Board.Distance(x, to)).Min();
     }
         
     private static int WaterDistance(Position pos1, Position pos2)

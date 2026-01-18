@@ -9,7 +9,6 @@ namespace Jackal.Core.Players;
 // todo 2 - посмотреть почему кораблю не двигает в поисках лучшей высадки
 // todo 3 - проверить поход по вертушкам
 // todo 4 - надо что-то придумать если проход закрыт неизвестными клетками, считать дистанцию манхэтеном
-// todo 5 - разделить ф-ию distance на инициализацию и взятие из кэша
 
 /// <summary>
 /// Игрок простой бот - выбирает ход алгоритмом бей-неси,
@@ -36,15 +35,23 @@ public class EasyPlayer : IPlayer
     {
         _teamId = gameState.TeamId;
         _board = gameState.Board;
+        var shipPosition = _board.Teams[_teamId].ShipPosition; // todo учитывать союзный корабль
         
         _bfsRoutesFrom = new Dictionary<TilePosition, Dictionary<TilePosition, int>>();
         foreach (var move in gameState.AvailableMoves)
         {
-            CalcBfsRouteFrom(move.To);
+            var newShipPosition = shipPosition;
+            if (_board.Map[move.To.Position].Type == TileType.Water
+                && move.From.Position == shipPosition
+                && Board.Distance(move.From.Position, move.To.Position) == 1
+                && Board.GetPossibleShipMoves(shipPosition, _board.MapSize).Contains(move.To.Position))
+            {
+                newShipPosition = move.To.Position;
+            }
+
+            CalcBfsRouteFrom(move.To, newShipPosition);
         }
         
-        var shipPosition = _board.Teams[_teamId].ShipPosition; // todo учитывать союзный корабль
-
         var enemyTeamIds = _board.Teams[_teamId].EnemyTeamIds;
         
         var enemyShipPositions = _board.Teams
@@ -383,8 +390,10 @@ public class EasyPlayer : IPlayer
                 {
                     return true;
                 }
-                
-                var moves = GetAvailableMoves(enemyPirate.Position, enemyTeamId);
+
+                var moves = GetAvailableMoves(
+                    enemyPirate.Position, enemyTeamId, _board.Teams[enemyTeamId].ShipPosition
+                );
 
                 if (moves.Any(m => m.To == moveTo))
                 {
@@ -423,8 +432,13 @@ public class EasyPlayer : IPlayer
         return false;
     }
 
-    private void CalcBfsRouteFrom(TilePosition position)
+    private void CalcBfsRouteFrom(TilePosition position, Position shipPosition)
     {
+        if (_bfsRoutesFrom.ContainsKey(position))
+        {
+            return;
+        }
+        
         _bfsRoutesFrom[position] = new Dictionary<TilePosition, int>();
 
         var queue = new Queue<BfsNode>();
@@ -439,7 +453,10 @@ public class EasyPlayer : IPlayer
             }
             
             var depth = currentNode.Depth + 1;
-            var nextPossibleMoves = GetAvailableMoves(currentNode.Position, _teamId);
+            var nextPossibleMoves = GetAvailableMoves(
+                currentNode.Position, _teamId, shipPosition
+            );
+            
             foreach (var move in nextPossibleMoves)
             {
                 if(_board.Map[move.To.Position].Type == TileType.Hole 
@@ -492,7 +509,7 @@ public class EasyPlayer : IPlayer
         return MaxDepth + 1;
     }
 
-    private List<AvailableMove> GetAvailableMoves(TilePosition position, int teamId)
+    private List<AvailableMove> GetAvailableMoves(TilePosition position, int teamId, Position shipPosition)
     {
         var team = _board.Teams[teamId];
         var task = new AvailableMovesTask(team.Id, position, position);
@@ -501,7 +518,8 @@ public class EasyPlayer : IPlayer
             task,
             task.Source,
             task.Prev,
-            subTurnState
+            subTurnState,
+            [shipPosition]
         );
     }
         
