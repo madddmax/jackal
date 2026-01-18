@@ -8,7 +8,6 @@ namespace Jackal.Core.Players;
 // todo 1 - разлом, меняем самую хорошую клетку на берегу противника на самую плохую из карты
 // todo 2 - посмотреть почему кораблю не двигает в поисках лучшей высадки
 // todo 3 - проверить поход по вертушкам
-// todo 4 - надо что-то придумать если проход закрыт неизвестными клетками, считать дистанцию манхэтеном
 
 /// <summary>
 /// Игрок простой бот - выбирает ход алгоритмом бей-неси,
@@ -16,7 +15,7 @@ namespace Jackal.Core.Players;
 /// </summary>
 public class EasyPlayer : IPlayer
 {
-    private const int MaxDepth = 7;
+    private const int MaxDepth = 9;
     private const int TerminateDepth = int.MaxValue;
     private Random _rnd = new();
 
@@ -230,6 +229,7 @@ public class EasyPlayer : IPlayer
             List<Tuple<int, Move>> list = [];
             foreach (Move move in safeAvailableMoves
                          .Where(x => x.WithCoin || x.WithBigCoin)
+                         .Where(x => takenGoldPosition.Contains(x.From.Position))
                          .Where(x => !waterPositions.Contains(x.To.Position))
                          .Where(x => IsEnemyNearDefense(x, _teamId) == false))
             {
@@ -505,13 +505,24 @@ public class EasyPlayer : IPlayer
                     }
                     
                     _bfsRoutesFrom[position].Add(move.To, depth);
-                    var nextNode = new BfsNode(move.To, depth);
-                    queue.Enqueue(nextNode);
+
+                    if (_board.Map[move.To.Position].Type != TileType.Unknown
+                        && _board.Map[move.To.Position].Type != TileType.Balloon
+                        && _board.Map[move.To.Position].Type != TileType.Cannibal
+                        && _board.Map[move.To.Position].Type != TileType.Crocodile
+                        && _board.Map[move.To.Position].Type != TileType.Cannon
+                        && _board.Map[move.To.Position].Type != TileType.Fort
+                        && _board.Map[move.To.Position].Type != TileType.RespawnFort
+                        && _board.Map[move.To.Position].Type != TileType.Jungle)
+                    {
+                        var nextNode = new BfsNode(move.To, depth);
+                        queue.Enqueue(nextNode);
+                    }
                 }
             }
         }
     }
-
+    
     private int Distance(TilePosition from, TilePosition to)
     {
         if (from == to)
