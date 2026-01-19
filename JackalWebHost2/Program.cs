@@ -8,6 +8,7 @@ using JackalWebHost2.Data.Repositories;
 using JackalWebHost2.Infrastructure;
 using JackalWebHost2.Infrastructure.Auth;
 using JackalWebHost2.Infrastructure.Middleware;
+using JackalWebHost2.Interfaces;
 using JackalWebHost2.Models;
 using JackalWebHost2.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -177,6 +178,7 @@ public class Program
 
         services.AddSingleton<IStateRepository<Game>, StateRepositoryInMemory<Game>>();
         services.AddSingleton<IStateRepository<NetGameSettings>, StateRepositoryInMemory<NetGameSettings>>();
+        services.AddSingleton<IUsersOnlineService, UsersOnlineService>();
         services.AddScoped<ILobbyRepository, LobbyRepositoryInMemory>();
     }
 }

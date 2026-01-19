@@ -6,6 +6,7 @@ using JackalWebHost2.Controllers.Models.Services;
 using JackalWebHost2.Data.Entities;
 using JackalWebHost2.Data.Interfaces;
 using JackalWebHost2.Infrastructure.Auth;
+using JackalWebHost2.Interfaces;
 using JackalWebHost2.Models;
 using JackalWebHost2.Services;
 using Microsoft.AspNetCore.SignalR;
@@ -22,6 +23,7 @@ public class GameHub : Hub
     private const string CALLBACK_GET_START_DATA = "GetStartData";
     private const string CALLBACK_GET_MOVE_CHANGES = "GetMoveChanges";
     private const string CALLBACK_GET_ACTIVE_GAMES = "GetActiveGames";
+    private const string CALLBACK_GET_USERS_ONLINE = "GetUsersOnline";
 
     private const string CALLBACK_GET_NET_GAME_DATA = "GetNetGameData";
     private const string CALLBACK_GET_ACTIVE_NET_GAMES = "GetActiveNetGames";
@@ -29,17 +31,20 @@ public class GameHub : Hub
     private readonly IGameService _gameService;
     private readonly IStateRepository<Game> _gameStateRepository;
     private readonly IStateRepository<NetGameSettings> _netgameStateRepository;
+    private readonly IUsersOnlineService _usersOnlineService;
     private readonly Random _random;
 
 
     public GameHub(
         IGameService gameService, 
         IStateRepository<Game> gameStateRepository,
-        IStateRepository<NetGameSettings> netgameStateRepository)
+        IStateRepository<NetGameSettings> netgameStateRepository,
+        IUsersOnlineService usersOnlineService)
     {
         _gameService = gameService;
         _gameStateRepository = gameStateRepository;
         _netgameStateRepository = netgameStateRepository;
+        _usersOnlineService = usersOnlineService;
         _random = new Random(DateTime.Now.Millisecond);
     }
 
@@ -55,6 +60,9 @@ public class GameHub : Hub
         {
             GamesEntries = _netgameStateRepository.GetEntries().Select(ToActiveGame).ToList()
         });
+        await Clients.All.SendAsync(CALLBACK_GET_USERS_ONLINE, new UsersOnlineResponse(
+            Users:  _usersOnlineService.AddUser(user.Id)
+        ));
         await base.OnConnectedAsync();
     }
 
@@ -62,6 +70,9 @@ public class GameHub : Hub
     {
         var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
         await Clients.Others.SendAsync(CALLBACK_NOTIFY, $"{user.Login} покинул игру");
+        await Clients.All.SendAsync(CALLBACK_GET_USERS_ONLINE, new UsersOnlineResponse(
+            Users: _usersOnlineService.RemoveUser(user.Id)
+        ));
         await base.OnDisconnectedAsync(exception);
     }
 
