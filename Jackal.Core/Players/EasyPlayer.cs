@@ -230,8 +230,7 @@ public class EasyPlayer : IPlayer
             foreach (Move move in safeAvailableMoves
                          .Where(x => x.WithCoin || x.WithBigCoin)
                          .Where(x => takenGoldPosition.Contains(x.From.Position))
-                         .Where(x => !waterPositions.Contains(x.To.Position))
-                         .Where(x => IsEnemyNearDefense(x, _teamId) == false))
+                         .Where(x => !waterPositions.Contains(x.To.Position)))
             {
                 // идем к самому ближнему выходу
                 var minDistance = escapePositions
@@ -280,8 +279,7 @@ public class EasyPlayer : IPlayer
             List<Tuple<int, Move>> list = [];
             foreach (Move move in safeAvailableMoves
                          .Where(x => x is { WithCoin: false, WithBigCoin: false })
-                         .Where(x => !waterPositions.Contains(x.From.Position))
-                         .Where(x => IsEnemyNearDefense(x, _teamId) == false))
+                         .Where(x => !waterPositions.Contains(x.From.Position)))
             {
                 var minDistance = takenGoldPosition
                     .Select(p => Distance(move.To, new TilePosition(p)))
@@ -308,8 +306,7 @@ public class EasyPlayer : IPlayer
             List<Tuple<int, Move>> list = new List<Tuple<int, Move>>();
             foreach (Move move in safeAvailableMoves
                          .Where(x => x is { WithCoin: false, WithBigCoin: false })
-                         .Where(x => !waterPositions.Contains(x.From.Position))
-                         .Where(x => IsEnemyNearDefense(x, _teamId) == false))
+                         .Where(x => !waterPositions.Contains(x.From.Position)))
             {
                 var minDistance = unknownPositions
                     .Select(p => Distance(move.To, new TilePosition(p)))
@@ -381,60 +378,21 @@ public class EasyPlayer : IPlayer
     }
 
     /// <summary>
-    /// Враг в пределах одного хода
-    /// </summary>
-    private bool IsEnemyNearDefense(Move move, int teamId)
-    {
-        // не боимся если это наша зона высадки
-        var shipPosition = _board.Teams[teamId].ShipPosition;
-        if (move.From.Position == shipPosition)
-        {
-            return false;
-        }
-        
-        // не боимся если плаваем
-        var moveTo = move.To;
-        if (_board.Map[moveTo.Position].Type == TileType.Water)
-        {
-            return false;
-        }
-
-        var enemyTeamIds = _board.Teams[teamId].EnemyTeamIds;
-        foreach (var enemyTeamId in enemyTeamIds)
-        {
-            var enemyPirates = _board.Teams[enemyTeamId].Pirates.Where(x => x.IsActive);
-            foreach (var enemyPirate in enemyPirates)
-            {
-                if (enemyPirate.Position == moveTo)
-                {
-                    return true;
-                }
-
-                var moves = GetAvailableMoves(
-                    enemyPirate.Position, enemyTeamId, _board.Teams[enemyTeamId].ShipPosition
-                );
-
-                if (moves.Any(m => m.To == moveTo))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /// <summary>
     /// Можем ударить врага
     /// </summary>
     private static bool IsEnemyPositionAttack(Move move, Board board, int teamId)
     {
+        if (board.Map[move.To.Position].Type == TileType.Jungle)
+        {
+            return false;
+        }
+        
         var enemyTeamIds = board.Teams[teamId].EnemyTeamIds;
         foreach (var enemyTeamId in enemyTeamIds)
         {
             var enemyTeam = board.Teams[enemyTeamId];
             
-            // не атакуем вражескую зону высадки
+            // не атакуем вражеский корабль
             var enemyShipPosition = enemyTeam.ShipPosition;
             if (move.To.Position == enemyShipPosition)
             {
