@@ -382,12 +382,17 @@ public class EasyPlayer : IPlayer
     /// </summary>
     private static bool IsEnemyPositionAttack(Move move, Board board, int teamId)
     {
+        if (board.Map[move.To.Position].Type == TileType.Jungle)
+        {
+            return false;
+        }
+        
         var enemyTeamIds = board.Teams[teamId].EnemyTeamIds;
         foreach (var enemyTeamId in enemyTeamIds)
         {
             var enemyTeam = board.Teams[enemyTeamId];
             
-            // не атакуем вражескую зону высадки
+            // не атакуем вражеский корабль
             var enemyShipPosition = enemyTeam.ShipPosition;
             if (move.To.Position == enemyShipPosition)
             {
