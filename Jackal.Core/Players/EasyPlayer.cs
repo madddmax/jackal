@@ -15,7 +15,7 @@ namespace Jackal.Core.Players;
 /// </summary>
 public class EasyPlayer : IPlayer
 {
-    private const int MaxDepth = 9;
+    private const int MaxDepth = 12;
     private const int TerminateDepth = int.MaxValue;
     private Random _rnd = new();
 
@@ -458,6 +458,12 @@ public class EasyPlayer : IPlayer
                 else
                 {
                     if(_bfsRoutesFrom[position].ContainsKey(move.To))
+                    {
+                        continue;
+                    }
+
+                    if (_board.Map[move.To.Position].Type == TileType.Water
+                        && move.To.Position != shipPosition)
                     {
                         continue;
                     }
