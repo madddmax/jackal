@@ -52,10 +52,10 @@ public record Tile
 	public bool Used;
         
 	[JsonIgnore]
-	public int Coins => Levels[0].Coins;
+	public int Coins => Levels.Select(l => l.Coins).Count();
 	
 	[JsonIgnore]
-	public int BigCoins => Levels[0].BigCoins;
+	public int BigCoins => Levels.Select(l => l.BigCoins).Count();
 
 	[JsonIgnore]
 	public int? OccupationTeamId => Levels[0].OccupationTeamId;
