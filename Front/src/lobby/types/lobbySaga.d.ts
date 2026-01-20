@@ -22,6 +22,10 @@ export interface NetGameInfoResponse {
     users: UserInfo[];
 }
 
+export interface NetGameUsersOnlineResponse {
+    users: number[];
+}
+
 export interface NetGameListResponse {
     gamesEntries: NetGameEntryResponse[];
 }

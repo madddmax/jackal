@@ -6,7 +6,7 @@ import { VscDebugContinueSmall } from 'react-icons/vsc';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { getGames, getLeaders, getNetGames } from '../../redux/lobbySlice';
+import { getGames, getLeaders, getNetGames, getUsersOnline } from '../../redux/lobbySlice';
 import GameListItem from './components/gameListItem';
 import classes from './gamelist.module.less';
 import gameHub from '/game/hub/gameHub';
@@ -17,6 +17,7 @@ const GameList = () => {
     const list = useSelector(getGames);
     const netList = useSelector(getNetGames);
     const leaders = useSelector(getLeaders);
+    const usersOnline = useSelector(getUsersOnline);
 
     const continueNet = (gameId: number) => {
         navigate('/newpublic');
@@ -126,10 +127,13 @@ const GameList = () => {
                     <div className={classes.leaderboard}>
                         <Tabs defaultActiveKey="netleaders" id="leaderboard-tab" className="mb-3">
                             <Tab eventKey="leaders" title="Одиночный" style={{ overflowX: 'auto' }}>
-                                <Leaderboard items={leaders.localLeaders} />
+                                <Leaderboard items={leaders.localLeaders} usersOnline={usersOnline} />
                             </Tab>
                             <Tab eventKey="netleaders" title="Командный">
-                                <Leaderboard items={leaders.netLeaders} />
+                                <Leaderboard items={leaders.netLeaders} usersOnline={usersOnline} />
+                            </Tab>
+                            <Tab eventKey="botleaders" title="Роботы">
+                                <Leaderboard items={leaders.botLeaders} usersOnline={usersOnline} />
                             </Tab>
                         </Tabs>
                     </div>
