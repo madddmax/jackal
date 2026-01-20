@@ -67,6 +67,7 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
         return await groupedPlayers
             .Select(g => new GamePlayerStat
             {
+                PlayerId = g.First().Id,
                 PlayerName = g.Key,
                 WinCountToday = g.Count(x => x.Game.Created >= todayStartUtc && x.Winner),
                 WinCountThisWeek = g.Count(x => x.Game.Created >= weekStartUtc && x.Winner),

@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Jackal.Core.Players;
 
 /// <summary>
@@ -5,10 +7,13 @@ namespace Jackal.Core.Players;
 /// </summary>
 public class GamePlayerStat
 {
+    public long PlayerId { get; set; }
+
     /// <summary>
     /// Имя пользователя или бота
     /// </summary>
-    public string PlayerName { get; set; }
+    [Required]
+    public string? PlayerName { get; set; }
     
     /// <summary>
     /// Количество побед за день

@@ -1,9 +1,11 @@
 import { Table } from 'react-bootstrap';
+import { PiDotFill } from 'react-icons/pi';
 
 import { LeaderBoardItemResponse } from '/lobby/types/lobbySaga';
 
 interface LeaderboardProps {
     items: LeaderBoardItemResponse[] | undefined;
+    usersOnline: number[] | undefined;
 }
 
 const Leaderboard = ({ items }: LeaderboardProps) => {
@@ -14,6 +16,7 @@ const Leaderboard = ({ items }: LeaderboardProps) => {
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>On</th>
                     <th style={{ width: '100px' }}>Логин</th>
                     <th style={{ width: '100px' }}>Ранг</th>
                     <th>Игры&nbsp;сегодня</th>
@@ -29,6 +32,9 @@ const Leaderboard = ({ items }: LeaderboardProps) => {
                     items.map((it) => (
                         <tr key={`leader_${ratingNumber}`}>
                             <td>{ratingNumber++}</td>
+                            <td>
+                                <PiDotFill color="green" />
+                            </td>
                             <td>{it.playerName}</td>
                             <td>
                                 <img src={`ranks/${it.rank}.webp`} alt={it.rank} />

@@ -37,6 +37,7 @@ const gameHub = {
         { name: 'GetActiveGames', sagaAction: sagaActions.ACTIVE_GAMES_APPLY_DATA },
         { name: 'GetActiveNetGames', sagaAction: sagaActions.NET_GAMES_APPLY_DATA },
         { name: 'GetNetGameData', sagaAction: sagaActions.NET_GAME_APPLY_DATA },
+        { name: 'GetUsersOnline', sagaAction: sagaActions.NET_GAME_USERS_ONLINE },
     ],
 };
 

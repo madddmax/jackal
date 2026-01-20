@@ -6,10 +6,12 @@ export interface LobbyState {
     netgamelist: GameInfo[];
     netGame?: NetGameInfo;
     leaders: LeaderBoardsInfo;
+    usersOnline: number[];
 }
 
 export interface LeaderBoardsInfo {
     localLeaders: LeaderBoardItemResponse[];
     netLeaders: LeaderBoardItemResponse[];
+    botLeaders: LeaderBoardItemResponse[];
     timestamp: number;
 }

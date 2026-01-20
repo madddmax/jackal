@@ -2,13 +2,20 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
+    applyBotLeaderBoard,
     applyGamesList,
     applyLeaderBoard,
     applyNetGame,
     applyNetGamesList,
     applyNetLeaderBoard,
+    applyUsersOnline,
 } from '../redux/lobbySlice';
-import { LeaderBoardItemResponse, NetGameInfoResponse, NetGameListResponse } from '../types/lobbySaga';
+import {
+    LeaderBoardItemResponse,
+    NetGameInfoResponse,
+    NetGameListResponse,
+    NetGameUsersOnlineResponse,
+} from '../types/lobbySaga';
 import { getAuth } from '/auth/redux/authSlice';
 import { AuthState } from '/auth/types/auth';
 import { axiosInstance, errorsWrapper, sagaActions } from '/common/sagas';
@@ -35,6 +42,11 @@ export function* applyNetGameData(action: PayloadAction<NetGameInfoResponse>) {
     }
 }
 
+export function* applyNetGameUsersOnline(action: PayloadAction<NetGameUsersOnlineResponse>) {
+    const data = action.payload;
+    yield put(applyUsersOnline(data.users));
+}
+
 export function* getLeaderBoardData() {
     const result: { data: { leaderboard: LeaderBoardItemResponse[] } } = yield call(
         async () =>
@@ -57,10 +69,23 @@ export function* getNetLeaderBoardData() {
     yield put(applyNetLeaderBoard(result.data.leaderboard));
 }
 
+export function* getBotLeaderBoardData() {
+    const result: { data: { leaderboard: LeaderBoardItemResponse[] } } = yield call(
+        async () =>
+            await axiosInstance({
+                url: 'v1/leaderboard/bot-all',
+                method: 'get',
+            }),
+    );
+    yield put(applyBotLeaderBoard(result.data.leaderboard));
+}
+
 export default function* rootSaga() {
     yield takeEvery(sagaActions.ACTIVE_GAMES_APPLY_DATA, errorsWrapper(applyActiveGamesData));
     yield takeEvery(sagaActions.NET_GAMES_APPLY_DATA, errorsWrapper(applyNetGamesData));
     yield takeEvery(sagaActions.NET_GAME_APPLY_DATA, errorsWrapper(applyNetGameData));
+    yield takeEvery(sagaActions.NET_GAME_USERS_ONLINE, errorsWrapper(applyNetGameUsersOnline));
     yield takeEvery(sagaActions.LOBBY_GET_LEADERBOARD, errorsWrapper(getLeaderBoardData));
     yield takeEvery(sagaActions.LOBBY_GET_NET_LEADERBOARD, errorsWrapper(getNetLeaderBoardData));
+    yield takeEvery(sagaActions.LOBBY_GET_BOT_LEADERBOARD, errorsWrapper(getBotLeaderBoardData));
 }
