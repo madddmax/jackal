@@ -461,6 +461,12 @@ public class EasyPlayer : IPlayer
                     {
                         continue;
                     }
+
+                    if (_board.Map[move.To.Position].Type == TileType.Water
+                        && move.To.Position != shipPosition)
+                    {
+                        continue;
+                    }
                     
                     _bfsRoutesFrom[position].Add(move.To, depth);
 
