@@ -18,7 +18,7 @@ internal static class Program
     /// <summary>
     /// Количество запускаемых игр
     /// </summary>
-    private const int ArenaGamesCount = 20;
+    private const int ArenaGamesCount = 500;
 
     /// <summary>
     /// Размер карты
