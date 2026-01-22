@@ -7,7 +7,10 @@ namespace Jackal.Core.Players;
 /// </summary>
 public class GamePlayerStat
 {
-    public long PlayerId { get; set; }
+    /// <summary>
+    /// ИД пользователя, у бота отсутствует
+    /// </summary>
+    public long? UserId { get; set; }
 
     /// <summary>
     /// Имя пользователя или бота

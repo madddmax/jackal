@@ -51,11 +51,17 @@ public record Tile
 	[JsonProperty]
 	public bool Used;
         
+	/// <summary>
+	/// Количество монет (осторожно влияет на работоспособность разлома)
+	/// </summary>
 	[JsonIgnore]
-	public int Coins => Levels.Select(l => l.Coins).Count();
+	public int Coins => Levels[0].Coins;
 	
+	/// <summary>
+	/// Количество больших монет (осторожно влияет на работоспособность разлома)
+	/// </summary>
 	[JsonIgnore]
-	public int BigCoins => Levels.Select(l => l.BigCoins).Count();
+	public int BigCoins => Levels[0].BigCoins;
 
 	[JsonIgnore]
 	public int? OccupationTeamId => Levels[0].OccupationTeamId;
