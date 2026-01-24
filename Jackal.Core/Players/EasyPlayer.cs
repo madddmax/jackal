@@ -110,6 +110,28 @@ public class EasyPlayer : IPlayer
             
             return (_rnd.Next(gameState.AvailableMoves.Length), null);
         }
+
+        // разыгрываем маяк рядом со своим кораблем
+        if (gameState.AvailableMoves.Any(m => m.WithLighthouse))
+        {
+            int totalMinDistance = Int32.MaxValue;
+            Move withLighthouseMove = gameState.AvailableMoves[0];
+
+            foreach (var move in gameState.AvailableMoves)
+            {
+                int currentMinDistance = Board.Distance(shipPosition, move.To.Position);
+                if (currentMinDistance < totalMinDistance)
+                {
+                    withLighthouseMove = move;
+                    totalMinDistance = currentMinDistance;
+                }
+            }
+            
+            if (CheckGoodMove([withLighthouseMove], gameState.AvailableMoves, out var withLighthouseMoveNum))
+                return (withLighthouseMoveNum, null);
+            
+            return (_rnd.Next(gameState.AvailableMoves.Length), null);
+        }
         
         // воскрешаемся если можем
         List<Move> goodMoves = gameState.AvailableMoves.Where(m => m.Type == MoveType.WithRespawn).ToList();
@@ -249,7 +271,10 @@ public class EasyPlayer : IPlayer
                          .Where(x => !waterPositions.Contains(x.From.Position))
                          .Where(x => IsEnemyNearDefense(x, board, teamId) == false))
             {
-                var minDistance = MinDistance(unknownPositions, move.To.Position) + move.To.Level;
+                var minDistance = unknownPositions
+                    .Select(p => Board.Distance(p, move.To.Position) + move.To.Level)
+                    .Min();
+                
                 list.Add(new Tuple<int, Move>(minDistance, move));
             }
 
@@ -388,11 +413,6 @@ public class EasyPlayer : IPlayer
         }
 
         return false;
-    }
-        
-    private static int MinDistance(List<Position> positions, Position to)
-    {
-        return positions.ConvertAll(x => Board.Distance(x, to)).Min();
     }
         
     private static int WaterDistance(Position pos1, Position pos2)
