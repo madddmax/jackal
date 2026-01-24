@@ -87,7 +87,8 @@ public class Game : ICompletable
                 AvailableMoves = result.AvailableMoves.ToArray(),
                 Board = Board,
                 TeamId = CurrentTeamId,
-                UserId = Board.Teams[CurrentPlayerIndex].UserId
+                UserId = Board.Teams[CurrentPlayerIndex].UserId,
+                PlayerName = Board.Teams[CurrentPlayerIndex].Name
             };
             var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
 

@@ -14,7 +14,7 @@ public record Team
     public readonly int Id;
     
     /// <summary>
-    /// Имя команды
+    /// Имя игрока (пользователя/бота)
     /// </summary>
     public readonly string Name;
 

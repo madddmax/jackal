@@ -80,8 +80,8 @@ public class EasyPlayer : IPlayer
         escapePositions.Add(shipPosition);
 
         // разыгрываем траву
-        // ИД игрока команды за которую ходят не равна ИД игрока который ходит
-        if (board.Teams[teamId].UserId != gameState.UserId)
+        // Имя игрока за которого ходят не равен имени игрока который ходит
+        if (board.Teams[teamId].Name != gameState.PlayerName)
         {
             // идем к людоеду
             var cannibalMoves = gameState.AvailableMoves
@@ -106,15 +106,6 @@ public class EasyPlayer : IPlayer
                 .ToList();
             
             if (CheckGoodMove(waterMoves, gameState.AvailableMoves, out badMoveNum))
-                return (badMoveNum, null);
-            
-            // уходим с воскрешения
-            var fromRespawnMoves = gameState.AvailableMoves
-                .Where(x => respawnPositions.Contains(x.From.Position))
-                .Where(x => !respawnPositions.Contains(x.To.Position))
-                .ToList();
-            
-            if (CheckGoodMove(fromRespawnMoves, gameState.AvailableMoves, out badMoveNum))
                 return (badMoveNum, null);
             
             return (_rnd.Next(gameState.AvailableMoves.Length), null);

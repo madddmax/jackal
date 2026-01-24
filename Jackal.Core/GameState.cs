@@ -26,4 +26,9 @@ public class GameState
     /// ИД пользователя чей ход
     /// </summary>
     public long UserId;
+    
+    /// <summary>
+    /// Имя игрока (пользователя/бота) чей ход
+    /// </summary>
+    public string PlayerName { get; set; }
 }
