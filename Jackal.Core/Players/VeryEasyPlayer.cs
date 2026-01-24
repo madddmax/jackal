@@ -24,9 +24,10 @@ public class VeryEasyPlayer : IPlayer
         Board board = gameState.Board;
         var shipPosition = board.Teams[teamId].ShipPosition;
 
+        var enemyTeamIds = board.Teams[teamId].EnemyTeamIds;
         var enemyShipPositions = board.Teams
+            .Where(t => enemyTeamIds.Contains(t.Id))
             .Select(t => t.ShipPosition)
-            .Where(p => p != shipPosition)
             .ToList();
             
         var unknownPositions = board
@@ -79,8 +80,8 @@ public class VeryEasyPlayer : IPlayer
         escapePositions.Add(shipPosition);
 
         // разыгрываем траву
-        // ИД игрока команды за которую ходят не равна ИД игрока который ходит
-        if (board.Teams[teamId].UserId != gameState.UserId)
+        // Имя игрока за которого ходят не равен имени игрока который ходит
+        if (board.Teams[teamId].PlayerName != gameState.PlayerName)
         {
             // идем к людоеду
             var cannibalMoves = gameState.AvailableMoves
@@ -105,15 +106,6 @@ public class VeryEasyPlayer : IPlayer
                 .ToList();
             
             if (CheckGoodMove(waterMoves, gameState.AvailableMoves, out badMoveNum))
-                return (badMoveNum, null);
-            
-            // уходим с воскрешения
-            var fromRespawnMoves = gameState.AvailableMoves
-                .Where(x => respawnPositions.Contains(x.From.Position))
-                .Where(x => !respawnPositions.Contains(x.To.Position))
-                .ToList();
-            
-            if (CheckGoodMove(fromRespawnMoves, gameState.AvailableMoves, out badMoveNum))
                 return (badMoveNum, null);
             
             return (_rnd.Next(gameState.AvailableMoves.Length), null);
@@ -356,6 +348,8 @@ public class VeryEasyPlayer : IPlayer
                     task.Source,
                     task.Prev,
                     subTurnState,
+                    // удивительно но работает лучше при неправильной передаче
+                    // своего корабля вместо вражеского
                     [shipPosition]
                 );
 

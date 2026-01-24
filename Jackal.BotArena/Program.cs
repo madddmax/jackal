@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Jackal.Core;
 using Jackal.Core.MapGenerator;
@@ -44,6 +45,11 @@ internal static class Program
     /// </summary>
     private static readonly ConcurrentDictionary<string, GamePlayerStat> BotStat = new();
 
+    /// <summary>
+    /// Общее количество ходов
+    /// </summary>
+    private static long _totalTurns;
+    
     private static void Main()
     {
         int gameNumber = 0;
@@ -63,6 +69,7 @@ internal static class Program
                     while (game.IsGameOver == false)
                     {
                         game.Turn();
+                        Interlocked.Increment(ref _totalTurns);
                     }
 
                     CalcStat(game);
@@ -97,7 +104,7 @@ internal static class Program
 
     private static void ShowStat(int gamesCount, TimeSpan timeElapsed)
     {
-        Console.WriteLine($"Arena games count = {gamesCount} | Time elapsed {timeElapsed}");
+        Console.WriteLine($"Arena games count = {gamesCount} | Total turns {_totalTurns} | Time elapsed {timeElapsed}");
         var orderedBotStat = BotStat.OrderByDescending(p => p.Value.WinPercent);
         foreach (var (_, gamePlayerStat) in orderedBotStat)
         {
