@@ -12,7 +12,7 @@ public class DrawTeam(Team team)
     /// <summary>
     /// Имя команды
     /// </summary>
-    public readonly string Name = team.Name;
+    public readonly string Name = team.PlayerName;
     
     /// <summary>
     /// ИД пользователя

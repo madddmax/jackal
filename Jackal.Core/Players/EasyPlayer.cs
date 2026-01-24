@@ -5,8 +5,6 @@ using Jackal.Core.Domain;
 
 namespace Jackal.Core.Players;
 
-// todo 1 - разлом, меняем самую хорошую клетку на берегу противника на самую плохую из карты
-
 /// <summary>
 /// Игрок простой бот - выбирает ход алгоритмом бей-неси,
 /// рассчет дистанции упрощен через манхэттенское расстояние
@@ -15,23 +13,30 @@ public class EasyPlayer : IPlayer
 {
     private Random _rnd = new();
     
+    /// <summary>
+    /// Вторая фаза землетрясения,
+    /// выбор второй клетки на замену
+    /// </summary>
+    private bool _secondQuakePhase;
+    
     public void OnNewGame()
     {
         _rnd = new Random(1);
+        _secondQuakePhase = false;
     }
 
     public (int moveNum, Guid? pirateId) OnMove(GameState gameState)
     {
         int teamId = gameState.TeamId;
         Board board = gameState.Board;
-        Position shipPosition = board.Teams[teamId].ShipPosition; // todo учитывать союзный корабль
+        var shipPosition = board.Teams[teamId].ShipPosition;
 
         var enemyTeamIds = board.Teams[teamId].EnemyTeamIds;
         var enemyShipPositions = board.Teams
             .Where(t => enemyTeamIds.Contains(t.Id))
             .Select(t => t.ShipPosition)
             .ToList();
-        
+            
         var unknownPositions = board
             .AllTiles(x => x.Type == TileType.Unknown)
             .Select(x => x.Position)
@@ -82,8 +87,8 @@ public class EasyPlayer : IPlayer
         escapePositions.Add(shipPosition);
 
         // разыгрываем траву
-        // ИД игрока команды за которую ходят не равна ИД игрока который ходит
-        if (board.Teams[teamId].UserId != gameState.UserId)
+        // Имя игрока за которого ходят не равен имени игрока который ходит
+        if (board.Teams[teamId].PlayerName != gameState.PlayerName)
         {
             // идем к людоеду
             var cannibalMoves = gameState.AvailableMoves
@@ -110,14 +115,85 @@ public class EasyPlayer : IPlayer
             if (CheckGoodMove(waterMoves, gameState.AvailableMoves, out badMoveNum))
                 return (badMoveNum, null);
             
-            // уходим с воскрешения
-            var fromRespawnMoves = gameState.AvailableMoves
-                .Where(x => respawnPositions.Contains(x.From.Position))
-                .Where(x => !respawnPositions.Contains(x.To.Position))
-                .ToList();
+            return (_rnd.Next(gameState.AvailableMoves.Length), null);
+        }
+
+        // разыгрываем землятресение
+        if (!_secondQuakePhase && gameState.AvailableMoves.Any(m => m.WithQuake))
+        {
+            _secondQuakePhase = true;
+
+            bool hasHuman = board.Teams.Any(t => t.UserId != 0);
             
-            if (CheckGoodMove(fromRespawnMoves, gameState.AvailableMoves, out badMoveNum))
-                return (badMoveNum, null);
+            var takeGoodMoves = new List<Move>();
+            foreach (var enemyTeamId in enemyTeamIds)
+            {
+                var enemyTeam = board.Teams[enemyTeamId];
+                if (hasHuman && enemyTeam.UserId == 0)
+                {
+                    continue;
+                }
+
+                var shipLanding = board.GetShipLanding(enemyTeam.ShipPosition);
+                var shipLandingMove = gameState.AvailableMoves.FirstOrDefault(m => m.To.Position == shipLanding);
+                if (shipLandingMove != null)
+                {
+                    takeGoodMoves.Clear();
+                    takeGoodMoves.Add(shipLandingMove);
+                    break;
+                }
+
+                int totalMinDistance = Int32.MaxValue;
+                Move withQuakeMove = gameState.AvailableMoves[0];
+
+                foreach (var move in gameState.AvailableMoves)
+                {
+                    int currentMinDistance = Board.Distance(enemyTeam.ShipPosition, move.To.Position);
+                    if (currentMinDistance < totalMinDistance)
+                    {
+                        withQuakeMove = move;
+                        totalMinDistance = currentMinDistance;
+                    }
+                }
+                
+                takeGoodMoves.Add(withQuakeMove);
+            }
+
+            if (CheckGoodMove(takeGoodMoves, gameState.AvailableMoves, out var takeGoodMoveNum)) 
+                return (takeGoodMoveNum, null);
+        }
+        else if(_secondQuakePhase && gameState.AvailableMoves.Any(m => m.WithQuake))
+        {
+            _secondQuakePhase = false;
+
+            var takeBadMoves = gameState.AvailableMoves
+                .Where(move => board.Map[move.To.Position].Type == TileType.Cannibal ||
+                               board.Map[move.To.Position].Type == TileType.Cannon ||
+                               board.Map[move.To.Position].Type == TileType.Crocodile)
+                .ToList();
+
+            if (CheckGoodMove(takeBadMoves, gameState.AvailableMoves, out var takeBadMoveNum)) 
+                return (takeBadMoveNum, null);
+        }
+        
+        // разыгрываем маяк рядом со своим кораблем
+        if (gameState.AvailableMoves.Any(m => m.WithLighthouse))
+        {
+            int totalMinDistance = Int32.MaxValue;
+            Move withLighthouseMove = gameState.AvailableMoves[0];
+
+            foreach (var move in gameState.AvailableMoves)
+            {
+                int currentMinDistance = Board.Distance(shipPosition, move.To.Position);
+                if (currentMinDistance < totalMinDistance)
+                {
+                    withLighthouseMove = move;
+                    totalMinDistance = currentMinDistance;
+                }
+            }
+            
+            if (CheckGoodMove([withLighthouseMove], gameState.AvailableMoves, out var withLighthouseMoveNum))
+                return (withLighthouseMoveNum, null);
             
             return (_rnd.Next(gameState.AvailableMoves.Length), null);
         }
@@ -176,14 +252,14 @@ public class EasyPlayer : IPlayer
             {
                 // идем к самому ближнему выходу
                 var minDistance = escapePositions
-                    .Select(p => Distance(p, move.To.Position) + move.To.Level)
+                    .Select(p => Board.Distance(p, move.To.Position) + move.To.Level)
                     .Min();
                     
                 var escapePosition = escapePositions
-                    .First(p => Distance(p, move.To.Position) + move.To.Level == minDistance);
+                    .First(p => Board.Distance(p, move.To.Position) + move.To.Level == minDistance);
                     
-                int currentDistance = Distance(escapePosition, move.From.Position) + move.From.Level;
-                minDistance = Distance(escapePosition, move.To.Position) + move.To.Level;
+                int currentDistance = Board.Distance(escapePosition, move.From.Position) + move.From.Level;
+                minDistance = Board.Distance(escapePosition, move.To.Position) + move.To.Level;
 
                 if (currentDistance <= minDistance)
                     continue;
@@ -232,13 +308,13 @@ public class EasyPlayer : IPlayer
             {
 
                 var minDistance = goldPositions
-                    .Select(p => Distance(p, move.To.Position) + move.To.Level)
+                    .Select(p => Board.Distance(p, move.To.Position) + move.To.Level)
                     .Min();
                     
                 var goldPosition = goldPositions
-                    .First(p => Distance(p, move.To.Position) + move.To.Level == minDistance);
+                    .First(p => Board.Distance(p, move.To.Position) + move.To.Level == minDistance);
                     
-                minDistance = Distance(goldPosition, move.To.Position) + move.To.Level;
+                minDistance = Board.Distance(goldPosition, move.To.Position) + move.To.Level;
                 list.Add(new Tuple<int, Move>(minDistance, move));
             }
 
@@ -260,7 +336,10 @@ public class EasyPlayer : IPlayer
                          .Where(x => !waterPositions.Contains(x.From.Position))
                          .Where(x => IsEnemyNearDefense(x, board, teamId) == false))
             {
-                var minDistance = MinDistance(unknownPositions, move.To.Position) + move.To.Level;
+                var minDistance = unknownPositions
+                    .Select(p => Board.Distance(p, move.To.Position) + move.To.Level)
+                    .Min();
+                
                 list.Add(new Tuple<int, Move>(minDistance, move));
             }
 
@@ -352,7 +431,17 @@ public class EasyPlayer : IPlayer
                     return true;
                 }
                 
-                var moves = GetAvailableMoves(board, enemyPirate.Position, enemyTeam);
+                var task = new AvailableMovesTask(enemyPirate.TeamId, enemyPirate.Position, enemyPirate.Position);
+                var subTurnState = new SubTurnState { DrinkRumBottle = enemyTeam.RumBottles > 0 };
+                var moves = board.GetAllAvailableMoves(
+                    task,
+                    task.Source,
+                    task.Prev,
+                    subTurnState,
+                    // удивительно но работает лучше при неправильной передаче
+                    // своего корабля вместо вражеского
+                    [shipPosition]
+                );
 
                 if (moves.Any(m => m.To == moveTo))
                 {
@@ -389,31 +478,6 @@ public class EasyPlayer : IPlayer
         }
 
         return false;
-    }
-    
-    private static List<AvailableMove> GetAvailableMoves(Board board, TilePosition position, Team enemyTeam)
-    {
-        var task = new AvailableMovesTask(enemyTeam.Id, position, position);
-        var subTurnState = new SubTurnState { DrinkRumBottle = enemyTeam.RumBottles > 0 };
-        return board.GetAllAvailableMoves(
-            task,
-            task.Source,
-            task.Prev,
-            subTurnState,
-            [enemyTeam.ShipPosition]
-        );
-    }
-        
-    private static int MinDistance(List<Position> positions, Position to)
-    {
-        return positions.ConvertAll(x => Distance(x, to)).Min();
-    }
-        
-    private static int Distance(Position pos1, Position pos2)
-    {
-        int deltaX = Math.Abs(pos1.X - pos2.X);
-        int deltaY = Math.Abs(pos1.Y - pos2.Y);
-        return Math.Max(deltaX, deltaY);
     }
         
     private static int WaterDistance(Position pos1, Position pos2)

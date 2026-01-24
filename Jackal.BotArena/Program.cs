@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Jackal.Core;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.MapGenerator.TilesPack;
@@ -13,8 +15,6 @@ namespace Jackal.BotArena;
 /// </summary>
 internal static class Program
 {
-    private static readonly Random Rnd = new();
-    
     /// <summary>
     /// Количество запускаемых игр
     /// </summary>
@@ -43,37 +43,43 @@ internal static class Program
     /// <summary>
     /// Статистика по каждому игроку боту
     /// </summary>
-    private static readonly Dictionary<string, GamePlayerStat> BotStat = new();
+    private static readonly ConcurrentDictionary<string, GamePlayerStat> BotStat = new();
 
+    /// <summary>
+    /// Общее количество ходов
+    /// </summary>
+    private static long _totalTurns;
+    
     private static void Main()
     {
         int gameNumber = 0;
 
         var timeElapsed = StopwatchMeter.GetElapsed(() =>
         {
-            while (gameNumber < ArenaGamesCount)
+            for (int index = 1; gameNumber < ArenaGamesCount; index++)
             {
-                var mapId = Rnd.Next();
-                var randomMap = new RandomMapGenerator(mapId, MapSize, TilesPackFactory.Extended);
-
-                foreach (var players in CombinationOfPlayers)
+                var mapId = index;
+                
+                Parallel.ForEach(CombinationOfPlayers, (players, state) =>
                 {
+                    var randomMap = new RandomMapGenerator(mapId, MapSize, TilesPackFactory.Extended);
                     var gameRequest = new GameRequest(MapSize, randomMap, players);
                     var game = new Game(gameRequest);
 
                     while (game.IsGameOver == false)
                     {
                         game.Turn();
+                        Interlocked.Increment(ref _totalTurns);
                     }
 
                     CalcStat(game);
-                    
+
                     gameNumber++;
                     if (gameNumber == ArenaGamesCount)
                     {
-                        break;
+                        state.Break();
                     }
-                }
+                });
             }
         });
 
@@ -85,10 +91,10 @@ internal static class Program
         var maxCoins = game.Board.Teams.Max(x => x.Coins);
         foreach (var team in game.Board.Teams)
         {
-            if (!BotStat.TryGetValue(team.Name, out var stat))
+            if (!BotStat.TryGetValue(team.PlayerName, out var stat))
             {
-                stat = new GamePlayerStat { PlayerName = team.Name };
-                BotStat.Add(team.Name, stat);
+                stat = new GamePlayerStat { PlayerName = team.PlayerName };
+                BotStat.TryAdd(team.PlayerName, stat);
             }
             stat.TotalWin += team.Coins == maxCoins ? 1 : 0;
             stat.TotalLose += team.Coins != maxCoins ? 1 : 0;
@@ -98,7 +104,7 @@ internal static class Program
 
     private static void ShowStat(int gamesCount, TimeSpan timeElapsed)
     {
-        Console.WriteLine($"Arena games count = {gamesCount} | Time elapsed {timeElapsed}");
+        Console.WriteLine($"Arena games count = {gamesCount} | Total turns {_totalTurns} | Time elapsed {timeElapsed}");
         var orderedBotStat = BotStat.OrderByDescending(p => p.Value.WinPercent);
         foreach (var (_, gamePlayerStat) in orderedBotStat)
         {

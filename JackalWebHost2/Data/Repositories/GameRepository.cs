@@ -30,7 +30,7 @@ public class GameRepository(JackalDbContext jackalDbContext) : IGameRepository
                 GameId = gameEntity.Id,
                 TeamId = team.Id,
                 UserId = team.UserId != 0 ? team.UserId : null,
-                PlayerName = team.Name,
+                PlayerName = team.PlayerName,
                 MapPositionId = (byte)MapUtils.ToMapPositionId(team.ShipPosition, game.Board.MapSize)
             };
             await jackalDbContext.GamePlayers.AddAsync(gamePlayerEntity);
