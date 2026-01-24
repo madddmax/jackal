@@ -14,8 +14,6 @@ namespace Jackal.BotArena;
 /// </summary>
 internal static class Program
 {
-    private static readonly Random Rnd = new();
-    
     /// <summary>
     /// Количество запускаемых игр
     /// </summary>
@@ -52,9 +50,9 @@ internal static class Program
 
         var timeElapsed = StopwatchMeter.GetElapsed(() =>
         {
-            while (gameNumber < ArenaGamesCount)
+            for (int index = 1; gameNumber < ArenaGamesCount; index++)
             {
-                var mapId = Rnd.Next();
+                var mapId = index;
                 
                 Parallel.ForEach(CombinationOfPlayers, (players, state) =>
                 {
