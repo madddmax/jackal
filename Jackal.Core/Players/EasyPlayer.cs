@@ -175,13 +175,25 @@ public class EasyPlayer : IPlayer
         {
             _secondQuakePhase = false;
 
-            var takeBadMoves = gameState.AvailableMoves
+            var takeVeryBadMoves = gameState.AvailableMoves
                 .Where(move => board.Map[move.To.Position].Type == TileType.Cannibal ||
                                board.Map[move.To.Position].Type == TileType.Cannon ||
                                board.Map[move.To.Position].Type == TileType.Crocodile)
                 .ToList();
 
-            if (CheckGoodMove(takeBadMoves, gameState.AvailableMoves, out var takeBadMoveNum)) 
+            if (CheckGoodMove(takeVeryBadMoves, gameState.AvailableMoves, out var takeBadMoveNum)) 
+                return (takeBadMoveNum, null);
+            
+            var takeBadMoves = gameState.AvailableMoves
+                .Where(move => board.Map[move.To.Position].Type != TileType.Unknown)
+                .Where(move => board.Map[move.To.Position].Type != TileType.Ice)
+                .Where(move => board.Map[move.To.Position].Type != TileType.Arrow)
+                .Where(move => board.Map[move.To.Position].Type != TileType.Horse)
+                .Where(move => board.Map[move.To.Position].Type != TileType.Hole)
+                .Where(move => board.Map[move.To.Position].Type != TileType.Balloon)
+                .ToList();
+                
+            if (CheckGoodMove(takeBadMoves, gameState.AvailableMoves, out takeBadMoveNum)) 
                 return (takeBadMoveNum, null);
         }
         
