@@ -81,7 +81,7 @@ public class EasyPlayer : IPlayer
 
         // разыгрываем траву
         // Имя игрока за которого ходят не равен имени игрока который ходит
-        if (board.Teams[teamId].Name != gameState.PlayerName)
+        if (board.Teams[teamId].PlayerName != gameState.PlayerName)
         {
             // идем к людоеду
             var cannibalMoves = gameState.AvailableMoves

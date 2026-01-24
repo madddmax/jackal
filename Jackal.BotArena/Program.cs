@@ -84,10 +84,10 @@ internal static class Program
         var maxCoins = game.Board.Teams.Max(x => x.Coins);
         foreach (var team in game.Board.Teams)
         {
-            if (!BotStat.TryGetValue(team.Name, out var stat))
+            if (!BotStat.TryGetValue(team.PlayerName, out var stat))
             {
-                stat = new GamePlayerStat { PlayerName = team.Name };
-                BotStat.TryAdd(team.Name, stat);
+                stat = new GamePlayerStat { PlayerName = team.PlayerName };
+                BotStat.TryAdd(team.PlayerName, stat);
             }
             stat.TotalWin += team.Coins == maxCoins ? 1 : 0;
             stat.TotalLose += team.Coins != maxCoins ? 1 : 0;

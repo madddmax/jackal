@@ -88,7 +88,7 @@ public class Game : ICompletable
                 Board = Board,
                 TeamId = CurrentTeamId,
                 UserId = Board.Teams[CurrentPlayerIndex].UserId,
-                PlayerName = Board.Teams[CurrentPlayerIndex].Name
+                PlayerName = Board.Teams[CurrentPlayerIndex].PlayerName
             };
             var (moveNum, pirateId) = CurrentPlayer.OnMove(gameState);
 
@@ -122,7 +122,7 @@ public class Game : ICompletable
         {
             var maxCoins = Board.Teams.Max(x => x.Coins);
             var winners = Board.Teams.Length == 1 || Board.Teams.Any(x => x.Coins != maxCoins)
-                ? string.Join(" и ", Board.Teams.Where(x => x.Coins == maxCoins).Select(x => x.Name))
+                ? string.Join(" и ", Board.Teams.Where(x => x.Coins == maxCoins).Select(x => x.PlayerName))
                 : "дружбы";
             
             GameMessage = $"Победа {winners} путём {gameOverMessage}!";

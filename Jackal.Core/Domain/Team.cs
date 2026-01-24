@@ -16,7 +16,7 @@ public record Team
     /// <summary>
     /// Имя игрока (пользователя/бота)
     /// </summary>
-    public readonly string Name;
+    public readonly string PlayerName;
 
     /// <summary>
     /// ИД пользователя
@@ -54,10 +54,10 @@ public record Team
     public int RumBottles;
 
     [JsonConstructor]
-    public Team(int id, string name, long userId, Position shipPosition, Pirate[] pirates)
+    public Team(int id, string playerName, long userId, Position shipPosition, Pirate[] pirates)
     {
         Id = id;
-        Name = name;
+        PlayerName = playerName;
         UserId = userId;
         ShipPosition = shipPosition;
         Pirates = pirates;
@@ -71,12 +71,12 @@ public record Team
         if (player is IHumanPlayer humanPlayer)
         {
             UserId = humanPlayer.UserId;
-            Name = humanPlayer.Name;
+            PlayerName = humanPlayer.Name;
         }
         else
         {
             UserId = 0;
-            Name = player.GetType().Name;
+            PlayerName = player.GetType().Name;
         }
         
         Pirates = new Pirate[piratesPerPlayer];
