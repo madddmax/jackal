@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading.Tasks;
 using Jackal.Core;
 using Jackal.Core.MapGenerator;
 using Jackal.Core.MapGenerator.TilesPack;
@@ -43,7 +44,7 @@ internal static class Program
     /// <summary>
     /// Статистика по каждому игроку боту
     /// </summary>
-    private static readonly Dictionary<string, GamePlayerStat> BotStat = new();
+    private static readonly ConcurrentDictionary<string, GamePlayerStat> BotStat = new();
 
     private static void Main()
     {
@@ -54,10 +55,10 @@ internal static class Program
             while (gameNumber < ArenaGamesCount)
             {
                 var mapId = Rnd.Next();
-                var randomMap = new RandomMapGenerator(mapId, MapSize, TilesPackFactory.Extended);
-
-                foreach (var players in CombinationOfPlayers)
+                
+                Parallel.ForEach(CombinationOfPlayers, (players, state) =>
                 {
+                    var randomMap = new RandomMapGenerator(mapId, MapSize, TilesPackFactory.Extended);
                     var gameRequest = new GameRequest(MapSize, randomMap, players);
                     var game = new Game(gameRequest);
 
@@ -67,13 +68,13 @@ internal static class Program
                     }
 
                     CalcStat(game);
-                    
+
                     gameNumber++;
                     if (gameNumber == ArenaGamesCount)
                     {
-                        break;
+                        state.Break();
                     }
-                }
+                });
             }
         });
 
@@ -88,7 +89,7 @@ internal static class Program
             if (!BotStat.TryGetValue(team.Name, out var stat))
             {
                 stat = new GamePlayerStat { PlayerName = team.Name };
-                BotStat.Add(team.Name, stat);
+                BotStat.TryAdd(team.Name, stat);
             }
             stat.TotalWin += team.Coins == maxCoins ? 1 : 0;
             stat.TotalLose += team.Coins != maxCoins ? 1 : 0;
