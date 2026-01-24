@@ -5,8 +5,6 @@ using Jackal.Core.Domain;
 
 namespace Jackal.Core.Players;
 
-// todo 1 - разлом, меняем самую хорошую клетку на берегу противника на самую плохую из карты
-
 /// <summary>
 /// Игрок простой бот - выбирает ход алгоритмом бей-неси,
 /// рассчет дистанции упрощен через манхэттенское расстояние
@@ -24,14 +22,14 @@ public class EasyPlayer : IPlayer
     {
         int teamId = gameState.TeamId;
         Board board = gameState.Board;
-        Position shipPosition = board.Teams[teamId].ShipPosition; // todo учитывать союзный корабль
+        var shipPosition = board.Teams[teamId].ShipPosition;
 
         var enemyTeamIds = board.Teams[teamId].EnemyTeamIds;
         var enemyShipPositions = board.Teams
             .Where(t => enemyTeamIds.Contains(t.Id))
             .Select(t => t.ShipPosition)
             .ToList();
-        
+            
         var unknownPositions = board
             .AllTiles(x => x.Type == TileType.Unknown)
             .Select(x => x.Position)
@@ -176,14 +174,14 @@ public class EasyPlayer : IPlayer
             {
                 // идем к самому ближнему выходу
                 var minDistance = escapePositions
-                    .Select(p => Distance(p, move.To.Position) + move.To.Level)
+                    .Select(p => Board.Distance(p, move.To.Position) + move.To.Level)
                     .Min();
                     
                 var escapePosition = escapePositions
-                    .First(p => Distance(p, move.To.Position) + move.To.Level == minDistance);
+                    .First(p => Board.Distance(p, move.To.Position) + move.To.Level == minDistance);
                     
-                int currentDistance = Distance(escapePosition, move.From.Position) + move.From.Level;
-                minDistance = Distance(escapePosition, move.To.Position) + move.To.Level;
+                int currentDistance = Board.Distance(escapePosition, move.From.Position) + move.From.Level;
+                minDistance = Board.Distance(escapePosition, move.To.Position) + move.To.Level;
 
                 if (currentDistance <= minDistance)
                     continue;
@@ -232,13 +230,13 @@ public class EasyPlayer : IPlayer
             {
 
                 var minDistance = goldPositions
-                    .Select(p => Distance(p, move.To.Position) + move.To.Level)
+                    .Select(p => Board.Distance(p, move.To.Position) + move.To.Level)
                     .Min();
                     
                 var goldPosition = goldPositions
-                    .First(p => Distance(p, move.To.Position) + move.To.Level == minDistance);
+                    .First(p => Board.Distance(p, move.To.Position) + move.To.Level == minDistance);
                     
-                minDistance = Distance(goldPosition, move.To.Position) + move.To.Level;
+                minDistance = Board.Distance(goldPosition, move.To.Position) + move.To.Level;
                 list.Add(new Tuple<int, Move>(minDistance, move));
             }
 
@@ -352,7 +350,17 @@ public class EasyPlayer : IPlayer
                     return true;
                 }
                 
-                var moves = GetAvailableMoves(board, enemyPirate.Position, enemyTeam);
+                var task = new AvailableMovesTask(enemyPirate.TeamId, enemyPirate.Position, enemyPirate.Position);
+                var subTurnState = new SubTurnState { DrinkRumBottle = enemyTeam.RumBottles > 0 };
+                var moves = board.GetAllAvailableMoves(
+                    task,
+                    task.Source,
+                    task.Prev,
+                    subTurnState,
+                    // удивительно но работает лучше при неправильной передаче
+                    // своего корабля вместо вражеского
+                    [shipPosition]
+                );
 
                 if (moves.Any(m => m.To == moveTo))
                 {
@@ -390,30 +398,10 @@ public class EasyPlayer : IPlayer
 
         return false;
     }
-    
-    private static List<AvailableMove> GetAvailableMoves(Board board, TilePosition position, Team enemyTeam)
-    {
-        var task = new AvailableMovesTask(enemyTeam.Id, position, position);
-        var subTurnState = new SubTurnState { DrinkRumBottle = enemyTeam.RumBottles > 0 };
-        return board.GetAllAvailableMoves(
-            task,
-            task.Source,
-            task.Prev,
-            subTurnState,
-            [enemyTeam.ShipPosition]
-        );
-    }
         
     private static int MinDistance(List<Position> positions, Position to)
     {
-        return positions.ConvertAll(x => Distance(x, to)).Min();
-    }
-        
-    private static int Distance(Position pos1, Position pos2)
-    {
-        int deltaX = Math.Abs(pos1.X - pos2.X);
-        int deltaY = Math.Abs(pos1.Y - pos2.Y);
-        return Math.Max(deltaX, deltaY);
+        return positions.ConvertAll(x => Board.Distance(x, to)).Min();
     }
         
     private static int WaterDistance(Position pos1, Position pos2)
