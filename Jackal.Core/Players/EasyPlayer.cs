@@ -13,9 +13,16 @@ public class EasyPlayer : IPlayer
 {
     private Random _rnd = new();
     
+    /// <summary>
+    /// Вторая фаза землетрясения,
+    /// выбор второй клетки на замену
+    /// </summary>
+    private bool _secondQuakePhase;
+    
     public void OnNewGame()
     {
         _rnd = new Random(1);
+        _secondQuakePhase = false;
     }
 
     public (int moveNum, Guid? pirateId) OnMove(GameState gameState)
@@ -111,6 +118,64 @@ public class EasyPlayer : IPlayer
             return (_rnd.Next(gameState.AvailableMoves.Length), null);
         }
 
+        // разыгрываем землятресение
+        if (!_secondQuakePhase && gameState.AvailableMoves.Any(m => m.WithQuake))
+        {
+            _secondQuakePhase = true;
+
+            bool hasHuman = board.Teams.Any(t => t.UserId != 0);
+            
+            var takeGoodMoves = new List<Move>();
+            foreach (var enemyTeamId in enemyTeamIds)
+            {
+                var enemyTeam = board.Teams[enemyTeamId];
+                if (hasHuman && enemyTeam.UserId == 0)
+                {
+                    continue;
+                }
+
+                var shipLanding = board.GetShipLanding(enemyTeam.ShipPosition);
+                var shipLandingMove = gameState.AvailableMoves.FirstOrDefault(m => m.To.Position == shipLanding);
+                if (shipLandingMove != null)
+                {
+                    takeGoodMoves.Clear();
+                    takeGoodMoves.Add(shipLandingMove);
+                    break;
+                }
+
+                int totalMinDistance = Int32.MaxValue;
+                Move withQuakeMove = gameState.AvailableMoves[0];
+
+                foreach (var move in gameState.AvailableMoves)
+                {
+                    int currentMinDistance = Board.Distance(enemyTeam.ShipPosition, move.To.Position);
+                    if (currentMinDistance < totalMinDistance)
+                    {
+                        withQuakeMove = move;
+                        totalMinDistance = currentMinDistance;
+                    }
+                }
+                
+                takeGoodMoves.Add(withQuakeMove);
+            }
+
+            if (CheckGoodMove(takeGoodMoves, gameState.AvailableMoves, out var takeGoodMoveNum)) 
+                return (takeGoodMoveNum, null);
+        }
+        else if(_secondQuakePhase && gameState.AvailableMoves.Any(m => m.WithQuake))
+        {
+            _secondQuakePhase = false;
+
+            var takeBadMoves = gameState.AvailableMoves
+                .Where(move => board.Map[move.To.Position].Type == TileType.Cannibal ||
+                               board.Map[move.To.Position].Type == TileType.Cannon ||
+                               board.Map[move.To.Position].Type == TileType.Crocodile)
+                .ToList();
+
+            if (CheckGoodMove(takeBadMoves, gameState.AvailableMoves, out var takeBadMoveNum)) 
+                return (takeBadMoveNum, null);
+        }
+        
         // разыгрываем маяк рядом со своим кораблем
         if (gameState.AvailableMoves.Any(m => m.WithLighthouse))
         {

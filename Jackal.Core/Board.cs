@@ -445,7 +445,7 @@ public class Board
         }
     }
 
-    private Position GetShipLanding(Position pos)
+    public Position GetShipLanding(Position pos)
     {
         if (pos.X == 0)
             return new Position(1, pos.Y);
