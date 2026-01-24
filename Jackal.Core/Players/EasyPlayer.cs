@@ -114,6 +114,15 @@ public class EasyPlayer : IPlayer
             
             if (CheckGoodMove(waterMoves, gameState.AvailableMoves, out badMoveNum))
                 return (badMoveNum, null);
+
+            var badMoves = gameState.AvailableMoves
+                .Where(x => waterPositions.Contains(x.To.Position) ||
+                            cannonPositions.Contains(x.To.Position) ||
+                            trapPositions.Contains(x.To.Position))
+                .ToList();
+            
+            if (CheckGoodMove(badMoves, gameState.AvailableMoves, out badMoveNum))
+                return (badMoveNum, null);
             
             return (_rnd.Next(gameState.AvailableMoves.Length), null);
         }
@@ -143,7 +152,7 @@ public class EasyPlayer : IPlayer
                     break;
                 }
 
-                int totalMinDistance = Int32.MaxValue;
+                int totalMinDistance = int.MaxValue;
                 Move withQuakeMove = gameState.AvailableMoves[0];
 
                 foreach (var move in gameState.AvailableMoves)
