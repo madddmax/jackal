@@ -62,7 +62,7 @@ export const lobbySlice = createSlice({
         getGames: (state): GameInfo[] => state.gamelist,
         getNetGames: (state): GameInfo[] => state.netgamelist,
         getNetGame: (state): NetGameInfo | undefined => state.netGame,
-        getUsersOnline: (state): number[] | undefined => state.usersOnline,
+        getUsersOnline: (state): number[] => state.usersOnline,
     },
 });
 

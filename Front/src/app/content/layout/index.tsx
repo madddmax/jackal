@@ -58,6 +58,7 @@ const Layout = () => {
             dispatch({ type: sagaActions.LOBBY_GET_LEADERBOARD, payload: {} });
             dispatch({ type: sagaActions.LOBBY_GET_NET_LEADERBOARD, payload: {} });
             dispatch({ type: sagaActions.LOBBY_GET_BOT_LEADERBOARD, payload: {} });
+            dispatch({ type: sagaActions.AUTH_CHECK, payload: {} });
         }, 300000); // 5 minutes in ms
 
         return () => {

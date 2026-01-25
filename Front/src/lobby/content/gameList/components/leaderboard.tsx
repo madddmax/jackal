@@ -5,10 +5,10 @@ import { LeaderBoardItemResponse } from '/lobby/types/lobbySaga';
 
 interface LeaderboardProps {
     items: LeaderBoardItemResponse[] | undefined;
-    usersOnline: number[] | undefined;
+    usersOnline: number[];
 }
 
-const Leaderboard = ({ items }: LeaderboardProps) => {
+const Leaderboard = ({ items, usersOnline }: LeaderboardProps) => {
     let ratingNumber = 1;
 
     return (
@@ -33,7 +33,11 @@ const Leaderboard = ({ items }: LeaderboardProps) => {
                         <tr key={`leader_${ratingNumber}`}>
                             <td>{ratingNumber++}</td>
                             <td>
-                                <PiDotFill color="green" />
+                                {it.userId === undefined || usersOnline?.indexOf(it.userId) >= 0 ? (
+                                    <PiDotFill color="green" />
+                                ) : (
+                                    <PiDotFill color="orange" />
+                                )}
                             </td>
                             <td>{it.playerName}</td>
                             <td>
