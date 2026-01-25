@@ -5,6 +5,7 @@ import { NavigateFunction } from 'react-router-dom';
 import config from './config';
 import { Constants } from './constants';
 import { PlayerInfo, PlayersInfo } from './content/layout/components/types';
+import { PiratePhotoIdentity } from '/common/types/common';
 import { GamePlayer, GameSettings, GameSettingsFormData } from '/game/types/hubContracts';
 
 export const uuidGen = () => {
@@ -26,14 +27,25 @@ export const getRandomValues = (min: number, max: number, count: number): number
     return arr;
 };
 
-export const getAnotherRandomValue = (min: number, max: number, except: number[]): number => {
-    if (max - min + 1 <= except.length) return min;
+export const getAnotherRandomValue = (
+    min: number,
+    max: number,
+    except: number[],
+    photos?: number[],
+): PiratePhotoIdentity => {
+    if (max - min + 1 <= except.length) return { type: min, subtype: min, origin: min };
 
     let num = except.length > 0 ? except[0] : min;
     while (except.includes(num)) {
         num = Math.floor(Math.random() * (max - min + 1) + min);
     }
-    return num;
+
+    if (photos && photos.length > 0 && photos[num - 1] > 1) {
+        let subnum = Math.floor(Math.random() * photos[num - 1] + min);
+        return { type: num, subtype: subnum, origin: num * 10 + subnum };
+    }
+
+    return { type: num, subtype: num, origin: num };
 };
 
 export interface fromNowStruct {
