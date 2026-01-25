@@ -15,3 +15,9 @@ export interface ErrorInfo {
     errorCode: string;
     errorMessage: string;
 }
+
+export interface PiratePhotoIdentity {
+    type: number;
+    subtype: number;
+    origin: number;
+}
