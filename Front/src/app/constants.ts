@@ -9,6 +9,7 @@ const groupIds = {
     clover: 'clover',
     army: 'army',
     space: 'space',
+    badguys: 'badguys',
 };
 
 export const Constants = {
@@ -71,6 +72,12 @@ export const Constants = {
         {
             id: groupIds.space,
             photoMaxId: 4,
+            extension: '.jpg',
+        },
+        {
+            id: groupIds.badguys,
+            photoMaxId: 6,
+            photos: [1, 2, 1, 2, 1, 1],
             extension: '.jpg',
         },
     ],

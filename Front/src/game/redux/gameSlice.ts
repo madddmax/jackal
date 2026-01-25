@@ -145,6 +145,7 @@ export const gameSlice = createSlice({
                                 team.group.photoMaxId,
                                 state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ??
                                     [],
+                                team.group.photos,
                             );
                             extension = team.group.extension || '.png';
                         }
@@ -341,6 +342,7 @@ export const gameSlice = createSlice({
                             1,
                             team.group.photoMaxId,
                             state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ?? [],
+                            team.group.photos,
                         );
                         extension = team.group.extension || '.png';
                     }
