@@ -11,6 +11,7 @@ const groupIds = {
     space: 'space',
     badguys: 'badguys',
     resident: 'resident',
+    reAnime: 'resident anime',
 };
 
 export const Constants = {
@@ -84,7 +85,13 @@ export const Constants = {
         {
             id: groupIds.resident,
             photoMaxId: 9,
-            photos: [4, 2, 3, 1, 2, 1, 1, 2, 3],
+            photos: [5, 2, 3, 1, 2, 1, 1, 2, 3],
+            extension: '.jpg',
+        },
+        {
+            id: groupIds.reAnime,
+            photoMaxId: 7,
+            photos: [1, 1, 1, 1, 1, 1, 1],
             extension: '.jpg',
         },
     ],
