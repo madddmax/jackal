@@ -5,6 +5,7 @@ import { Constants } from '/app/constants';
 import { GetPlayerTypePicture } from '/common/constants';
 
 interface PlayerProps {
+    id: string;
     position: number;
     type: string;
     userName?: string;
@@ -14,7 +15,7 @@ interface PlayerProps {
     changeGroup: () => void;
 }
 
-const Player = ({ position, type, userName, group, posInfo, changePlayer, changeGroup }: PlayerProps) => {
+const Player = ({ id, position, type, userName, group, posInfo, changePlayer, changeGroup }: PlayerProps) => {
     const getTopPosition = (pos: number) => {
         if (pos === 0) return 200;
         else if (pos === 2) return 0;
@@ -29,6 +30,7 @@ const Player = ({ position, type, userName, group, posInfo, changePlayer, change
 
     return (
         <div
+            id={id}
             className={classes.player}
             style={{
                 top: getTopPosition(position),

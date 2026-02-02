@@ -1,5 +1,7 @@
 import cn from 'classnames';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import Image from 'react-bootstrap/Image';
+import { PlacesType, Tooltip, TooltipRefProps } from 'react-tooltip';
 
 import { PlayerInfo, PlayersInfo } from '../types';
 import Player from './player';
@@ -8,6 +10,8 @@ import { Constants } from '/app/constants';
 
 const convertGroups = (grps: string[]) => grps.map((gr) => Constants.groups.findIndex((it) => it.id == gr) || 0);
 const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.groups[num].id);
+const tooltipPositions: PlacesType[] = ['bottom', 'left', 'top', 'right'];
+const tooltipAnchors: string[] = ['#players_mode_cntrl', '#player_pos_3', '#player_pos_0', '#player_pos_1'];
 
 export interface PlayersProps {
     players: PlayersInfo;
@@ -18,6 +22,8 @@ export interface PlayersProps {
 
 const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) => {
     const [grps, setGrps] = useState<number[]>(convertGroups(players.groups));
+
+    const actionsTooltip = useRef<TooltipRefProps>(null);
 
     const changeGamer = (pos: number) => {
         const clone = [...players.gamers];
@@ -30,20 +36,34 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) 
     };
 
     const changeGroup = (pos: number) => {
-        const clone = [...grps];
-        let current = clone[pos];
-        while (clone.includes(current)) {
-            if (current + 1 >= Constants.groups.length) {
-                current = 0;
-            } else {
-                current += 1;
-            }
-        }
-        clone[pos] = current;
-        setGrps(clone);
-        setPlayers({
-            ...players,
-            groups: deconvertGroups(clone),
+        actionsTooltip.current?.open({
+            anchorSelect: tooltipAnchors[pos],
+            place: tooltipPositions[pos],
+            content: (
+                <div className={classes.content}>
+                    {Constants.groups.map((it, index) =>
+                        grps.includes(index) ? (
+                            <></>
+                        ) : (
+                            <Image
+                                className={classes.icon}
+                                roundedCircle
+                                src={`/pictures/${it.id}/logo.png`}
+                                onClick={() => {
+                                    actionsTooltip.current?.close();
+                                    const clone = [...grps];
+                                    clone[pos] = index;
+                                    setGrps(clone);
+                                    setPlayers({
+                                        ...players,
+                                        groups: deconvertGroups(clone),
+                                    });
+                                }}
+                            />
+                        ),
+                    )}
+                </div>
+            ),
         });
     };
 
@@ -68,6 +88,7 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) 
 
                     return (
                         <Player
+                            id={`player_pos_${index}`}
                             key={`player-pos-${index}`}
                             position={index}
                             type={gamer.type}
@@ -80,6 +101,7 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) 
                     );
                 })}
             <div
+                id="players_mode_cntrl"
                 className={classes.player}
                 onClick={() =>
                     setPlayers({
@@ -98,6 +120,16 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) 
             >
                 {players.mode == 8 ? '2x2' : players.mode}
             </div>
+            <Tooltip
+                ref={actionsTooltip}
+                className={classes.groupsTooltip}
+                classNameArrow={classes.groupsTooltipArrow}
+                style={{ backgroundColor: 'white', zIndex: 1000 }}
+                clickable
+                openEvents={{}}
+                closeEvents={{ blur: true }}
+                globalCloseEvents={{ clickOutsideAnchor: true, escape: true }}
+            />
         </div>
     );
 };
