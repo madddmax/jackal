@@ -12,6 +12,7 @@ const groupIds = {
     badguys: 'badguys',
     resident: 'resident',
     reAnime: 'resident anime',
+    reGirls: 'resident girls',
 };
 
 export const Constants = {
@@ -92,6 +93,12 @@ export const Constants = {
             id: groupIds.reAnime,
             photoMaxId: 7,
             photos: [1, 1, 1, 1, 1, 1, 1],
+            extension: '.jpg',
+        },
+        {
+            id: groupIds.reGirls,
+            photoMaxId: 3,
+            photos: [1, 1, 1],
             extension: '.jpg',
         },
     ],
