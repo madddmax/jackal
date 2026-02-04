@@ -28,7 +28,7 @@ export const getRandomValues = (min: number, max: number, count: number): number
 };
 
 export const getAnotherRandomValue = (photos: number[], except: number[]): PiratePhotoIdentity => {
-    if (photos.length < except.length) return { type: 1, subtype: 1, origin: 1 };
+    if (photos.length <= except.length) return { type: 1, subtype: 1, origin: 1 };
 
     let num = except.length > 0 ? except[0] : 1;
     while (except.includes(num)) {

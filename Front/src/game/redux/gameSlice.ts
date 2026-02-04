@@ -131,8 +131,8 @@ export const gameSlice = createSlice({
                             pnumber = getAnotherRandomValue(
                                 Constants.gannPhotos,
                                 state.pirates
-                                    ?.filter((pr) => pr.type == Constants.pirateTypes.BenGunn)
-                                    .map((pr) => pr.photoId ?? 0) ?? [],
+                                    ?.filter((pr) => pr.type == Constants.pirateTypes.BenGunn && pr.photoId > 0)
+                                    .map((pr) => pr.photoId) ?? [],
                             );
                         } else if (it.type == Constants.pirateTypes.Friday) {
                             pname = 'commonfridays/friday';
@@ -141,8 +141,9 @@ export const gameSlice = createSlice({
                             pname = `${team.group.id}/pirate`;
                             pnumber = getAnotherRandomValue(
                                 team.group.photos,
-                                state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ??
-                                    [],
+                                state.pirates
+                                    ?.filter((pr) => pr.teamId == it.teamId && pr.photoId > 0)
+                                    .map((pr) => pr.photoId) ?? [],
                             );
                             extension = team.group.extension || '.png';
                         }
@@ -326,8 +327,8 @@ export const gameSlice = createSlice({
                         pnumber = getAnotherRandomValue(
                             Constants.gannPhotos,
                             state.pirates
-                                ?.filter((pr) => pr.type == Constants.pirateTypes.BenGunn)
-                                .map((pr) => pr.photoId ?? 0) ?? [],
+                                ?.filter((pr) => pr.type == Constants.pirateTypes.BenGunn && pr.photoId > 0)
+                                .map((pr) => pr.photoId) ?? [],
                         );
                     } else if (it.type == Constants.pirateTypes.Friday) {
                         pname = 'commonfridays/friday';
@@ -336,7 +337,9 @@ export const gameSlice = createSlice({
                         pname = `${team.group.id}/pirate`;
                         pnumber = getAnotherRandomValue(
                             team.group.photos,
-                            state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ?? [],
+                            state.pirates
+                                ?.filter((pr) => pr.teamId == it.teamId && pr.photoId > 0)
+                                .map((pr) => pr.photoId) ?? [],
                         );
                         extension = team.group.extension || '.png';
                     }
