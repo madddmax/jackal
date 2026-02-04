@@ -1,7 +1,14 @@
-﻿namespace JackalWebHost2.Models;
+﻿using Jackal.Core.Domain;
+
+namespace JackalWebHost2.Models;
 
 public class TileChange
 {
+    /// <summary>
+    /// Тип клетки
+    /// </summary>
+    public TileType Type;
+    
     public string BackgroundImageSrc;
     public int Rotate;
     

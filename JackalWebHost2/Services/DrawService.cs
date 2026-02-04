@@ -284,7 +284,8 @@ public class DrawService : IDrawService
             default:
                 throw new NotSupportedException();
         }
-        
+
+        tileChange.Type = tile.Type;
         tileChange.BackgroundImageSrc = $"/fields/{filename}.png";
         tileChange.Rotate = (int)tile.Direction;
     }
