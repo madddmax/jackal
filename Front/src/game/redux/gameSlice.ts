@@ -129,23 +129,20 @@ export const gameSlice = createSlice({
                         if (it.type == Constants.pirateTypes.BenGunn) {
                             pname = 'commonganns/gann';
                             pnumber = getAnotherRandomValue(
-                                1,
-                                Constants.commonGannMaxId,
+                                Constants.gannPhotos,
                                 state.pirates
                                     ?.filter((pr) => pr.type == Constants.pirateTypes.BenGunn)
                                     .map((pr) => pr.photoId ?? 0) ?? [],
                             );
                         } else if (it.type == Constants.pirateTypes.Friday) {
                             pname = 'commonfridays/friday';
-                            pnumber = getAnotherRandomValue(1, Constants.commonFridayMaxId, []);
+                            pnumber = getAnotherRandomValue(Constants.fridayPhotos, []);
                         } else {
                             pname = `${team.group.id}/pirate`;
                             pnumber = getAnotherRandomValue(
-                                1,
-                                team.group.photoMaxId,
+                                team.group.photos,
                                 state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ??
                                     [],
-                                team.group.photos,
                             );
                             extension = team.group.extension || '.png';
                         }
@@ -327,22 +324,19 @@ export const gameSlice = createSlice({
                     if (it.type == Constants.pirateTypes.BenGunn) {
                         pname = 'commonganns/gann';
                         pnumber = getAnotherRandomValue(
-                            1,
-                            Constants.commonGannMaxId,
+                            Constants.gannPhotos,
                             state.pirates
                                 ?.filter((pr) => pr.type == Constants.pirateTypes.BenGunn)
                                 .map((pr) => pr.photoId ?? 0) ?? [],
                         );
                     } else if (it.type == Constants.pirateTypes.Friday) {
                         pname = 'commonfridays/friday';
-                        pnumber = getAnotherRandomValue(1, Constants.commonFridayMaxId, []);
+                        pnumber = getAnotherRandomValue(Constants.fridayPhotos, []);
                     } else {
                         pname = `${team.group.id}/pirate`;
                         pnumber = getAnotherRandomValue(
-                            1,
-                            team.group.photoMaxId,
-                            state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ?? [],
                             team.group.photos,
+                            state.pirates?.filter((pr) => pr.teamId == it.teamId).map((pr) => pr.photoId ?? 0) ?? [],
                         );
                         extension = team.group.extension || '.png';
                     }
