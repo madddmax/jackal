@@ -384,8 +384,8 @@ describe('redux basic tests', () => {
             backColor: 'DarkBlue',
             group: {
                 id: Constants.groupIds.orcs,
+                photos: [1, 1, 1, 1, 1, 1],
                 extension: '.jpg',
-                photoMaxId: 6,
             },
             name: 'boys',
             id: testTeamId,

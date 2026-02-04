@@ -27,21 +27,16 @@ export const getRandomValues = (min: number, max: number, count: number): number
     return arr;
 };
 
-export const getAnotherRandomValue = (
-    min: number,
-    max: number,
-    except: number[],
-    photos?: number[],
-): PiratePhotoIdentity => {
-    if (max - min + 1 < except.length) return { type: min, subtype: min, origin: min };
+export const getAnotherRandomValue = (photos: number[], except: number[]): PiratePhotoIdentity => {
+    if (photos.length <= except.length) return { type: 1, subtype: 1, origin: 1 };
 
-    let num = except.length > 0 ? except[0] : min;
+    let num = except.length > 0 ? except[0] : 1;
     while (except.includes(num)) {
-        num = Math.floor(Math.random() * (max - min + 1) + min);
+        num = Math.floor(Math.random() * photos.length + 1);
     }
 
-    if (photos && photos.length > 0 && photos[num - 1] > 1) {
-        let subnum = Math.floor(Math.random() * photos[num - 1] + min);
+    if (photos.length > 0 && photos[num - 1] > 1) {
+        let subnum = Math.floor(Math.random() * photos[num - 1] + 1);
         return { type: num, subtype: subnum, origin: num * 10 + subnum };
     }
 

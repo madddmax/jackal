@@ -10,7 +10,6 @@ interface TeamState {
 
 interface TeamGroup {
     id: string;
-    photoMaxId: number;
-    photos?: number[];
+    photos: number[];
     extension?: string;
 }
