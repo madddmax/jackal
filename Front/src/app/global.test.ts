@@ -16,7 +16,15 @@ describe('global functions tests', () => {
                 girls.filter((pr) => pr.photo && pr.photo.type > 0).map((pr) => pr.photo!.type) ?? [],
             );
         });
-        expect(girls.map((it) => it.photo?.type).sort()).toEqual([1, 2, 3]);
+
+        let old = 0;
+        girls
+            .map((it) => it.photo?.type)
+            .sort()
+            .forEach((it) => {
+                expect(it).not.toEqual(old);
+                old = it!;
+            });
 
         girls.push({
             photo: getAnotherRandomValue(
@@ -25,7 +33,7 @@ describe('global functions tests', () => {
             ),
         });
 
-        expect(girls.map((it) => it.photo?.type).sort()).toEqual([1, 1, 2, 3]);
+        expect(girls.map((it) => it.photo?.type).sort()).toEqual([1, 2, 3, 4]);
     });
 
     test('Подбираем разных пираток 2', () => {
@@ -37,8 +45,14 @@ describe('global functions tests', () => {
                 girls.filter((pr) => pr.photo && pr.photo.type > 0).map((pr) => pr.photo?.type ?? 0) ?? [],
             );
         });
-        expect(girls[0].photo?.type).not.toEqual(girls[1].photo?.type);
-        expect(girls[0].photo?.type).not.toEqual(girls[2].photo?.type);
-        expect(girls[1].photo?.type).not.toEqual(girls[2].photo?.type);
+
+        let old = 0;
+        girls
+            .map((it) => it.photo?.type)
+            .sort()
+            .forEach((it) => {
+                expect(it).not.toEqual(old);
+                old = it!;
+            });
     });
 });
