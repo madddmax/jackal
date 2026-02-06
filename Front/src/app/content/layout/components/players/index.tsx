@@ -1,7 +1,5 @@
 import cn from 'classnames';
-import { useRef, useState } from 'react';
-import Image from 'react-bootstrap/Image';
-import { PlacesType, Tooltip, TooltipRefProps } from 'react-tooltip';
+import { useState } from 'react';
 
 import { PlayerInfo, PlayersInfo } from '../types';
 import Player from './player';
@@ -10,8 +8,6 @@ import { Constants } from '/app/constants';
 
 const convertGroups = (grps: string[]) => grps.map((gr) => Constants.groups.findIndex((it) => it.id == gr) || 0);
 const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.groups[num].id);
-const tooltipPositions: PlacesType[] = ['bottom', 'left', 'top', 'right'];
-const tooltipAnchors: string[] = ['#players_mode_cntrl', '#player_pos_3', '#player_pos_0', '#player_pos_1'];
 
 export interface PlayersProps {
     players: PlayersInfo;
@@ -23,8 +19,6 @@ export interface PlayersProps {
 const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) => {
     const [grps, setGrps] = useState<number[]>(convertGroups(players.groups));
 
-    const actionsTooltip = useRef<TooltipRefProps>(null);
-
     const changeGamer = (pos: number) => {
         const clone = [...players.gamers];
         if (clone[pos].id + 1 >= allowedGamers.length) clone[pos] = allowedGamers[0];
@@ -35,35 +29,15 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) 
         });
     };
 
-    const changeGroup = (pos: number) => {
-        actionsTooltip.current?.open({
-            anchorSelect: tooltipAnchors[pos],
-            place: tooltipPositions[pos],
-            content: (
-                <div className={classes.content}>
-                    {Constants.groups.map((it, index) =>
-                        grps.includes(index) ? (
-                            <></>
-                        ) : (
-                            <Image
-                                className={classes.icon}
-                                roundedCircle
-                                src={`/pictures/${it.id}/logo.png`}
-                                onClick={() => {
-                                    actionsTooltip.current?.close();
-                                    const clone = [...grps];
-                                    clone[pos] = index;
-                                    setGrps(clone);
-                                    setPlayers({
-                                        ...players,
-                                        groups: deconvertGroups(clone),
-                                    });
-                                }}
-                            />
-                        ),
-                    )}
-                </div>
-            ),
+    const isIgnoredGroup = (pos: number): boolean => grps.includes(pos);
+
+    const changeGroup = (pos: number, grpId: number) => {
+        const clone = [...grps];
+        clone[pos] = grpId;
+        setGrps(clone);
+        setPlayers({
+            ...players,
+            groups: deconvertGroups(clone),
         });
     };
 
@@ -96,7 +70,8 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) 
                             group={grps[index]}
                             posInfo={mapInfo && mapInfo[index]}
                             changePlayer={() => changeGamer(index)}
-                            changeGroup={() => changeGroup(index)}
+                            changeGroup={(id) => changeGroup(index, id)}
+                            isIgnoredGroup={isIgnoredGroup}
                         />
                     );
                 })}
@@ -120,16 +95,6 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) 
             >
                 {players.mode == 8 ? '2x2' : players.mode}
             </div>
-            <Tooltip
-                ref={actionsTooltip}
-                className={classes.groupsTooltip}
-                classNameArrow={classes.groupsTooltipArrow}
-                style={{ backgroundColor: 'white', zIndex: 1000 }}
-                clickable
-                openEvents={{}}
-                closeEvents={{ blur: true }}
-                globalCloseEvents={{ clickOutsideAnchor: true, escape: true }}
-            />
         </div>
     );
 };
