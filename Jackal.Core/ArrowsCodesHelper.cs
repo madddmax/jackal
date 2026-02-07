@@ -46,7 +46,7 @@ public static class ArrowsCodesHelper
     /// Последовательность типов стрелок не менять,
     /// используется для выбора номера картинки
     /// </summary>
-    private static readonly int[] ArrowsTypes =
+    private static readonly int[] ArrowTypes =
     [
         OneArrowUp,
         TwoArrowsDiagonal,
@@ -57,27 +57,35 @@ public static class ArrowsCodesHelper
         TwoArrowsLeftRight
     ];
 
-    public class ArrowSearchResult
-    {
-        public int ArrowType;
-        public int RotateCount;
-    }
+    private static readonly string[] ArrowNames =
+    [
+        "one_arrow_up",
+        "two_arrows_diagonal",
+        "one_arrow_diagonal",
+        "four_arrows_diagonal",
+        "four_arrows_perpendicular",
+        "three_arrows",
+        "two_arrows_left_right"
+    ];
 
-    public static ArrowSearchResult Search(int code)
+    public static string GetArrowName(int code)
     {
-        for (int arrowType = 0; arrowType < ArrowsTypes.Length; arrowType++)
+        for (int arrowType = 0; arrowType < ArrowTypes.Length; arrowType++)
         {
-            int arrowsCode = ArrowsTypes[arrowType];
+            int arrowsCode = ArrowTypes[arrowType];
             for (int rotateCount = 0; rotateCount <= 3; rotateCount++)
             {
-                if (arrowsCode == code) return new ArrowSearchResult {ArrowType = arrowType, RotateCount = rotateCount};
+                if (arrowsCode == code)
+                    return ArrowNames[arrowType];
+                
                 arrowsCode = DoRotate(arrowsCode);
             }
         }
+        
         throw new Exception("Unknown arrow type");
     }
 
-    public static int GetCodeFromString(string str)
+    private static int GetCodeFromString(string str)
     {
         if (str.Length != 8) throw new ArgumentException("str");
         str = new string(str.Reverse().ToArray());

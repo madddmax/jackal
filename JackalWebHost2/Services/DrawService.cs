@@ -277,15 +277,14 @@ public class DrawService : IDrawService
                 }
                 break;
             case TileType.Arrow:
-                var search = ArrowsCodesHelper.Search(tile.Code);
-                filename = $"arrow{search.ArrowType + 1}";
+                filename = ArrowsCodesHelper.GetArrowName(tile.Code);
                 break;
             
             default:
                 throw new NotSupportedException();
         }
-
-        tileChange.Type = tile.Type;
+        
+        tileChange.Type = filename;
         tileChange.BackgroundImageSrc = $"/fields/{filename}.png";
         tileChange.Rotate = (int)tile.Direction;
     }
