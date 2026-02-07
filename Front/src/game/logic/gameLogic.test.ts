@@ -11,6 +11,7 @@ import { getMapData } from '../redux/mapDataForTests';
 import { GameState } from '../types';
 import { GameTeamResponse } from '../types/gameSaga';
 import { CalcTooltipType } from './components/calcTooltipType';
+import { InitPiratesPhoto } from './components/initPiratesPhoto';
 import { Constants } from '/app/constants';
 import { PlayerTypes } from '/common/constants';
 
@@ -97,7 +98,7 @@ const getState = (pirates: GamePirate[]): GameState => ({
     includeMovesWithRum: false,
 });
 
-describe('cell logic tests', () => {
+describe('CalcTooltipType tests', () => {
     let defaultState: GameState;
 
     beforeAll(() => {
@@ -206,5 +207,83 @@ describe('cell logic tests', () => {
             state: defaultState,
         });
         expect(result).toEqual(TooltipTypes.NoTooltip);
+    });
+});
+
+describe('InitPiratesPhoto tests', () => {
+    test('добавляем бенгана и пирата', () => {
+        const groupId = 'test girls';
+        const groupInfo = {
+            id: groupId,
+            photos: [1, 1, 1],
+            extension: '.jpg',
+        };
+        const gannPhotos = [1, 1, 1];
+        const girls: GamePiratePhotoInitiation[] = [
+            {
+                teamId: 1,
+                photoId: 0,
+                type: Constants.pirateTypes.Usual,
+            },
+            {
+                teamId: 1,
+                photoId: 0,
+                type: Constants.pirateTypes.Usual,
+            },
+            {
+                teamId: 2,
+                photoId: 1,
+                type: Constants.pirateTypes.BenGunn,
+            },
+            {
+                teamId: 2,
+                photoId: 2,
+                type: Constants.pirateTypes.BenGunn,
+            },
+        ];
+        girls.forEach((it) => {
+            const initPhoto = InitPiratesPhoto({
+                girlType: it.type,
+                allGirls: girls,
+                teamId: 1,
+                teamGroup: groupInfo,
+                gannPhotos,
+            });
+            it.photoId = initPhoto.photoId;
+        });
+
+        girls.push({
+            teamId: 1,
+            photoId: InitPiratesPhoto({
+                girlType: Constants.pirateTypes.BenGunn,
+                allGirls: girls,
+                teamId: 1,
+                teamGroup: groupInfo,
+                gannPhotos,
+            }).photoId,
+            type: Constants.pirateTypes.BenGunn,
+        });
+
+        girls.push({
+            teamId: 1,
+            photoId: InitPiratesPhoto({
+                girlType: Constants.pirateTypes.Usual,
+                allGirls: girls,
+                teamId: 1,
+                teamGroup: groupInfo,
+                gannPhotos,
+            }).photoId,
+            type: Constants.pirateTypes.Usual,
+        });
+
+        let old = 0;
+        girls
+            .filter((it) => it.type === Constants.pirateTypes.Usual)
+            .map((it) => it.photoId)
+            .sort()
+            .forEach((it) => {
+                expect(it).not.toEqual(old);
+                old = it!;
+            });
     });
 });

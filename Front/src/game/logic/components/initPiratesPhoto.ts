@@ -3,9 +3,10 @@ import { getAnotherRandomValue } from '/app/global';
 
 export interface InitPiratesPhotoProps {
     girlType: string;
-    allGirls?: GamePirate[];
+    allGirls?: GamePiratePhotoInitiation[];
     teamId: number;
     teamGroup: TeamGroup;
+    gannPhotos?: number[];
 }
 
 export interface PiratePhotoDto {
@@ -13,7 +14,13 @@ export interface PiratePhotoDto {
     photoId: number;
 }
 
-export const InitPiratesPhoto = ({ girlType, allGirls, teamId, teamGroup }: InitPiratesPhotoProps): PiratePhotoDto => {
+export const InitPiratesPhoto = ({
+    girlType,
+    allGirls,
+    teamId,
+    teamGroup,
+    gannPhotos,
+}: InitPiratesPhotoProps): PiratePhotoDto => {
     let pname;
     let pnumber;
     let extension = '.png';
@@ -21,7 +28,7 @@ export const InitPiratesPhoto = ({ girlType, allGirls, teamId, teamGroup }: Init
     if (girlType == Constants.pirateTypes.BenGunn) {
         pname = 'commonganns/gann';
         pnumber = getAnotherRandomValue(
-            Constants.gannPhotos,
+            gannPhotos ?? Constants.gannPhotos,
             allGirls
                 ?.filter((pr) => pr.type == Constants.pirateTypes.BenGunn && pr.photoId > 0)
                 .map((pr) => pr.photoId) ?? [],
@@ -33,7 +40,9 @@ export const InitPiratesPhoto = ({ girlType, allGirls, teamId, teamGroup }: Init
         pname = `${teamGroup.id}/pirate`;
         pnumber = getAnotherRandomValue(
             teamGroup.photos,
-            allGirls?.filter((pr) => pr.teamId == teamId && pr.photoId > 0).map((pr) => pr.photoId) ?? [],
+            allGirls
+                ?.filter((pr) => pr.teamId == teamId && pr.type == Constants.pirateTypes.Usual && pr.photoId > 0)
+                .map((pr) => pr.photoId) ?? [],
         );
         extension = teamGroup.extension || '.png';
     }
