@@ -1,4 +1,4 @@
-interface GamePirate extends GamePiratePosition {
+interface GamePirate extends GamePiratePosition, GamePiratePhotoInitiation {
     teamId: number;
     withCoin?: boolean;
     withBigCoin?: boolean;
@@ -7,10 +7,15 @@ interface GamePirate extends GamePiratePosition {
     isInHole?: boolean;
     groupId: string;
     photo: string;
-    photoId: number;
     type: string;
     isActive?: boolean;
     backgroundColor?: string;
+}
+
+interface GamePiratePhotoInitiation {
+    teamId: number;
+    type: string;
+    photoId: number;
 }
 
 interface GamePiratePosition {
