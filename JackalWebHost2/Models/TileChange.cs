@@ -7,7 +7,7 @@ public class TileChange
     /// <summary>
     /// Тип клетки
     /// </summary>
-    public TileType Type;
+    public string Type;
     
     public string BackgroundImageSrc;
     public int Rotate;
