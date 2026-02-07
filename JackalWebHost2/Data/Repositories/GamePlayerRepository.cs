@@ -8,12 +8,14 @@ namespace JackalWebHost2.Data.Repositories;
 
 public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayerRepository
 {
+    private static readonly long?[] BotUserIds = [null, 40, 45];
+    
     private static readonly TimeZoneInfo MskTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
     
     public async Task<List<GamePlayerStat>> GetBotLeaderboard()
     {
         var groupedBotPlayers = jackalDbContext.GamePlayers
-            .Where(p => p.UserId == null && p.Game.GameOver)
+            .Where(p => p.Game.GameOver && BotUserIds.Contains(p.UserId))
             .GroupBy(p => p.PlayerName);
 
         var botStat = await SelectStat(groupedBotPlayers);
@@ -26,7 +28,7 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
     public async Task<List<GamePlayerStat>> GetHumanLeaderboard()
     {
         var groupedHumanPlayers = jackalDbContext.GamePlayers
-            .Where(p => p.UserId != null && p.Game.GameOver)
+            .Where(p => p.Game.GameOver && !BotUserIds.Contains(p.UserId))
             .GroupBy(p => p.PlayerName);
 
         var humanStat = await SelectStat(groupedHumanPlayers);
