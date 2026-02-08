@@ -27,7 +27,7 @@ export interface GameMapResponse {
 }
 
 interface CellDiffResponse {
-    backgroundImageSrc: string;
+    tileType: string;
     rotate: number;
     levels: LevelInfoResponse[];
     x: number;

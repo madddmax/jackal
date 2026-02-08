@@ -284,8 +284,7 @@ public class DrawService : IDrawService
                 throw new NotSupportedException();
         }
         
-        tileChange.Type = filename;
-        tileChange.BackgroundImageSrc = $"/fields/{filename}.png";
+        tileChange.TileType = filename;
         tileChange.Rotate = (int)tile.Direction;
     }
 }

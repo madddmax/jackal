@@ -5,7 +5,7 @@ export const getMapData: GameMapResponse = {
     width: 5,
     changes: [
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -18,7 +18,7 @@ export const getMapData: GameMapResponse = {
             y: 0,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -31,7 +31,7 @@ export const getMapData: GameMapResponse = {
             y: 0,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -44,7 +44,7 @@ export const getMapData: GameMapResponse = {
             y: 0,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -57,7 +57,7 @@ export const getMapData: GameMapResponse = {
             y: 0,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -70,7 +70,7 @@ export const getMapData: GameMapResponse = {
             y: 0,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -83,7 +83,7 @@ export const getMapData: GameMapResponse = {
             y: 1,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -96,7 +96,7 @@ export const getMapData: GameMapResponse = {
             y: 1,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -109,7 +109,7 @@ export const getMapData: GameMapResponse = {
             y: 1,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -122,7 +122,7 @@ export const getMapData: GameMapResponse = {
             y: 1,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -135,7 +135,7 @@ export const getMapData: GameMapResponse = {
             y: 1,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -148,7 +148,7 @@ export const getMapData: GameMapResponse = {
             y: 2,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -161,7 +161,7 @@ export const getMapData: GameMapResponse = {
             y: 2,
         },
         {
-            backgroundImageSrc: '/fields/ground.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -174,7 +174,7 @@ export const getMapData: GameMapResponse = {
             y: 2,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -187,7 +187,7 @@ export const getMapData: GameMapResponse = {
             y: 2,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -200,7 +200,7 @@ export const getMapData: GameMapResponse = {
             y: 2,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -213,7 +213,7 @@ export const getMapData: GameMapResponse = {
             y: 3,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -226,7 +226,7 @@ export const getMapData: GameMapResponse = {
             y: 3,
         },
         {
-            backgroundImageSrc: '/fields/cannon.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -239,7 +239,7 @@ export const getMapData: GameMapResponse = {
             y: 3,
         },
         {
-            backgroundImageSrc: '/fields/cannon.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -252,7 +252,7 @@ export const getMapData: GameMapResponse = {
             y: 3,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -265,7 +265,7 @@ export const getMapData: GameMapResponse = {
             y: 3,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -278,7 +278,7 @@ export const getMapData: GameMapResponse = {
             y: 4,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -291,7 +291,7 @@ export const getMapData: GameMapResponse = {
             y: 4,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -304,7 +304,7 @@ export const getMapData: GameMapResponse = {
             y: 4,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {
@@ -317,7 +317,7 @@ export const getMapData: GameMapResponse = {
             y: 4,
         },
         {
-            backgroundImageSrc: '/fields/water.png',
+            tileType: 'water',
             rotate: 0,
             levels: [
                 {

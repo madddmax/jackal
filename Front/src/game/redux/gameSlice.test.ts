@@ -559,7 +559,7 @@ describe('redux logic tests', () => {
             previousState,
             applyChanges([
                 {
-                    backgroundImageSrc: '/fields/forest.png',
+                    tileType: 'forest',
                     rotate: 2,
                     levels: [
                         { level: 0, coins: 0, bigCoins: 0 },

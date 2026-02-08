@@ -91,7 +91,7 @@ export const gameSlice = createSlice({
                 for (let col = 0; col < action.payload.width; col++) {
                     const change = action.payload.changes[j];
                     row.push({
-                        image: change.backgroundImageSrc,
+                        image: '/fields/' + change.tileType + '.png',
                         rotate: change.rotate,
                         levels: change.levels.map(constructGameLevel),
                         availableMoves: [],
@@ -394,8 +394,9 @@ export const gameSlice = createSlice({
         applyChanges: (state, action: PayloadAction<CellDiffResponse[]>) => {
             action.payload.forEach((it) => {
                 const cell = state.fields[it.y][it.x];
-                if (cell.image != it.backgroundImageSrc) {
-                    cell.image = it.backgroundImageSrc;
+                const backgroundImageSrc = '/fields/' + it.tileType + '.png';
+                if (cell.image != backgroundImageSrc) {
+                    cell.image = backgroundImageSrc;
                     cell.rotate = it.rotate;
                 }
                 if (state.stat?.isGameOver) {
