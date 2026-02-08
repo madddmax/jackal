@@ -194,7 +194,7 @@ public class DrawService : IDrawService
                 filename = teamShip != null ? $"ship_{teamShip.Id + 1}" : "water";
                 break;
             case TileType.Empty:
-                filename = $"empty{tile.Code}";
+                filename = $"empty_{tile.Code}";
                 break;
             case TileType.Coin:
             case TileType.BigCoin:
@@ -210,7 +210,7 @@ public class DrawService : IDrawService
                 filename = "rumbar";
                 break;
             case TileType.RumBottle:
-                filename = tile.Used ? $"used_rum{tile.Code}" : $"rum{tile.Code}";
+                filename = tile.Used ? $"used_rum_{tile.Code}" : $"rum_{tile.Code}";
                 break;
             case TileType.Horse:
                 filename = "horse";
@@ -284,8 +284,7 @@ public class DrawService : IDrawService
                 throw new NotSupportedException();
         }
         
-        tileChange.Type = filename;
-        tileChange.BackgroundImageSrc = $"/fields/{filename}.png";
+        tileChange.TileType = filename;
         tileChange.Rotate = (int)tile.Direction;
     }
 }

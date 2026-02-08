@@ -62,7 +62,7 @@ public static class ArrowsCodesHelper
         "one_arrow_up",
         "two_arrows_diagonal",
         "one_arrow_diagonal",
-        "arrows4",
+        "four_arrows_diagonal",
         "four_arrows_perpendicular",
         "three_arrows",
         "two_arrows_left_right"

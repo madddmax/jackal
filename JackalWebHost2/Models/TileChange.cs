@@ -7,9 +7,8 @@ public class TileChange
     /// <summary>
     /// Тип клетки
     /// </summary>
-    public string Type;
+    public string TileType;
     
-    public string BackgroundImageSrc;
     public int Rotate;
     
     public bool IsUnknown;
