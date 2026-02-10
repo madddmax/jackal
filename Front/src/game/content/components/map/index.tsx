@@ -52,7 +52,7 @@ function Map({ mapSize, cellSize }: MapProps) {
                                         key={`map-ynote-top-${rIndex}`}
                                         style={{ width: chessBarSize, verticalAlign: 'middle' }}
                                     >
-                                        <div style={{ width: chessBarSize }}>{rIndex}</div>
+                                        <div style={{ width: chessBarSize }}>{mapSize - rIndex}</div>
                                     </div>
                                 )}
                                 {Array(mapSize)
@@ -68,7 +68,7 @@ function Map({ mapSize, cellSize }: MapProps) {
                                         key={`map-ynote-bottom-${rIndex}`}
                                         style={{ width: chessBarSize, verticalAlign: 'middle' }}
                                     >
-                                        <div style={{ width: chessBarSize }}>{rIndex}</div>
+                                        <div style={{ width: chessBarSize }}>{mapSize - rIndex}</div>
                                     </div>
                                 )}
                             </div>
