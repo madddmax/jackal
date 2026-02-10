@@ -79,7 +79,7 @@ export const Constants = {
         },
         {
             id: groupIds.badguys,
-            photos: [1, 2, 1, 2, 1, 1],
+            photos: [1, 2, 1, 2, 1, 1, 1],
             extension: '.jpg',
         },
         {
