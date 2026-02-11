@@ -4,6 +4,7 @@ import { PlacesType, Tooltip, TooltipRefProps } from 'react-tooltip';
 
 import classes from './players.module.less';
 import { Constants } from '/app/constants';
+import { PlayerInfo } from '/app/content/layout/components/types';
 import { GetPlayerTypePicture } from '/common/constants';
 
 const tooltipPositions: PlacesType[] = ['bottom', 'left', 'top', 'right'];
@@ -16,9 +17,10 @@ interface PlayerProps {
     userName?: string;
     group: number;
     posInfo?: string;
-    changePlayer: () => void;
+    changePlayer: (pos: number) => void;
     changeGroup: (pos: number) => void;
     isIgnoredGroup: (pos: number) => boolean;
+    allowedGamers: PlayerInfo[];
 }
 
 const Player = ({
@@ -31,6 +33,7 @@ const Player = ({
     changePlayer,
     changeGroup,
     isIgnoredGroup,
+    allowedGamers,
 }: PlayerProps) => {
     const actionsTooltip = useRef<TooltipRefProps>(null);
 
@@ -70,6 +73,29 @@ const Player = ({
         });
     };
 
+    const showPlayerModal = () => {
+        actionsTooltip.current?.open({
+            content: (
+                <div className={classes.content}>
+                    {allowedGamers.map((it, index) => (
+                        <div>
+                            <Image
+                                className={classes.icon}
+                                roundedCircle
+                                src={GetPlayerTypePicture(it.type)}
+                                onClick={() => {
+                                    actionsTooltip.current?.close();
+                                    changePlayer(index);
+                                }}
+                            />
+                            {it.userName && <span className={classes.userModalName}>{it.userName}</span>}
+                        </div>
+                    ))}
+                </div>
+            ),
+        });
+    };
+
     return (
         <>
             <div
@@ -80,7 +106,7 @@ const Player = ({
                     left: getLeftPosition(position),
                 }}
             >
-                <img className={classes.type} src={GetPlayerTypePicture(type)} onClick={changePlayer} />
+                <img className={classes.type} src={GetPlayerTypePicture(type)} onClick={showPlayerModal} />
                 <Image
                     className={classes.group}
                     roundedCircle

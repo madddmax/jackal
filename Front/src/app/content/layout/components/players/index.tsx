@@ -19,10 +19,9 @@ export interface PlayersProps {
 const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) => {
     const [grps, setGrps] = useState<number[]>(convertGroups(players.groups));
 
-    const changeGamer = (pos: number) => {
+    const changeGamer = (pos: number, playerId: number) => {
         const clone = [...players.gamers];
-        if (clone[pos].id + 1 >= allowedGamers.length) clone[pos] = allowedGamers[0];
-        else clone[pos] = allowedGamers.find((it) => it.id === clone[pos].id + 1) ?? allowedGamers[0];
+        clone[pos] = allowedGamers[playerId];
         setPlayers({
             ...players,
             gamers: clone,
@@ -69,9 +68,10 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) 
                             userName={gamer.userId > 0 ? gamer.userName : undefined}
                             group={grps[index]}
                             posInfo={mapInfo && mapInfo[index]}
-                            changePlayer={() => changeGamer(index)}
+                            changePlayer={(id) => changeGamer(index, id)}
                             changeGroup={(id) => changeGroup(index, id)}
                             isIgnoredGroup={isIgnoredGroup}
+                            allowedGamers={allowedGamers}
                         />
                     );
                 })}
