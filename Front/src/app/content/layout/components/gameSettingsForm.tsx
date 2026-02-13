@@ -161,6 +161,7 @@ const GameSettingsForm = ({
                 allowedGamers={gameSettingsData.allowedGamers}
                 setPlayers={setPlayers}
                 mapInfo={mapForecasts}
+                isPublic={isPublic || false}
             />
             <div className="mt-3">
                 {isPublic ? (
