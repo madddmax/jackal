@@ -94,7 +94,7 @@ export const Constants = {
         },
         {
             id: groupIds.reGirls,
-            photos: [1, 1, 3, 1],
+            photos: [1, 1, 3, 1, 1],
             extension: '.jpg',
         },
     ],
