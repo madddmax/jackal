@@ -161,7 +161,7 @@ export const getMapData: GameMapResponse = {
             y: 2,
         },
         {
-            tileType: 'water',
+            tileType: 'ground',
             rotate: 0,
             levels: [
                 {
@@ -226,7 +226,7 @@ export const getMapData: GameMapResponse = {
             y: 3,
         },
         {
-            tileType: 'water',
+            tileType: 'cannon',
             rotate: 0,
             levels: [
                 {
@@ -239,7 +239,7 @@ export const getMapData: GameMapResponse = {
             y: 3,
         },
         {
-            tileType: 'water',
+            tileType: 'cannon',
             rotate: 0,
             levels: [
                 {
