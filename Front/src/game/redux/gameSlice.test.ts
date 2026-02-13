@@ -13,6 +13,7 @@ import reducer, {
     initTeams,
     removeHumanMoves,
     setCurrentHumanTeam,
+    takeOrPutCoin,
 } from './gameSlice';
 import { getMapData } from './mapDataForTests';
 import { Constants, ImagesPacksIds } from '/app/constants';
@@ -367,7 +368,7 @@ describe('redux basic tests', () => {
     });
 
     test('Выбираем активного пирата', () => {
-        const result = reducer(previousState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
+        const result = reducer(previousState, chooseHumanPirate({ pirate: '200' }));
         expect(result.teams.find((it) => it.id === testTeamId)?.activePirate).toEqual('200');
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);
@@ -378,8 +379,8 @@ describe('redux basic tests', () => {
     });
 
     test('Меняем активного пирата', () => {
-        const currentState = reducer(previousState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
-        const result = reducer(currentState, chooseHumanPirate({ pirate: '300', withCoinAction: true }));
+        const currentState = reducer(previousState, chooseHumanPirate({ pirate: '200' }));
+        const result = reducer(currentState, chooseHumanPirate({ pirate: '300' }));
         expect(result.teams).toContainEqual({
             activePirate: '300',
             backColor: 'DarkBlue',
@@ -402,7 +403,7 @@ describe('redux basic tests', () => {
     });
 
     test('Уходим с клетки, на клетке - никого', () => {
-        const currentState = reducer(previousState, chooseHumanPirate({ pirate: '100', withCoinAction: true }));
+        const currentState = reducer(previousState, chooseHumanPirate({ pirate: '100' }));
         const result = reducer(
             currentState,
             applyPirateChanges({
@@ -497,7 +498,7 @@ describe('redux money actions tests', () => {
 
     test('Кладём монету', () => {
         let currentState = reducer(previousState, setCurrentHumanTeam());
-        currentState = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
+        currentState = reducer(currentState, chooseHumanPirate({ pirate: '200' }));
         expect(currentState.highlight_x).toEqual(2);
         expect(currentState.highlight_y).toEqual(4);
         const preLevel = currentState.fields[4][2].levels[0];
@@ -512,7 +513,7 @@ describe('redux money actions tests', () => {
         });
         expect(hasFreeMoney(preLevel)).toEqual(true);
 
-        const result = reducer(currentState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
+        const result = reducer(currentState, takeOrPutCoin({ pirate: '200' }));
 
         const boy = result.pirates?.find((it) => it.id == '200');
         expect(boy?.withCoin).toBeFalsy();
@@ -552,7 +553,7 @@ describe('redux logic tests', () => {
             }),
         );
         previousState = reducer(previousState, setCurrentHumanTeam());
-        previousState = reducer(previousState, chooseHumanPirate({ pirate: '200', withCoinAction: true }));
+        previousState = reducer(previousState, chooseHumanPirate({ pirate: '200' }));
     });
 
     test('Производим изменения на карте', () => {

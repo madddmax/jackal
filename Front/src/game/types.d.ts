@@ -75,5 +75,8 @@ export interface HighlightHumanMovesActionProps {
 
 export interface ChooseHumanPirateActionProps {
     pirate: string;
-    withCoinAction: bool;
+}
+
+export interface TakeOrPutCoinActionProps {
+    pirate: string;
 }

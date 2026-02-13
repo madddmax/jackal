@@ -11,6 +11,7 @@ import {
     GameStateSettings,
     HighlightHumanMovesActionProps,
     StorageState,
+    TakeOrPutCoinActionProps,
 } from '../types';
 import { GameLevel, GameLevelFeature } from '../types/gameContent';
 import {
@@ -176,6 +177,7 @@ export const gameSlice = createSlice({
         chooseHumanPirate: (state, action: PayloadAction<ChooseHumanPirateActionProps>) => {
             const selectors = gameSlice.getSelectors();
             const pirate = selectors.getPirateById(state, action.payload.pirate)!;
+
             const currentPlayerTeam = selectors.getCurrentPlayerTeam(state)!;
             const hasPirateChanging = currentPlayerTeam.activePirate !== pirate.id;
             if (hasPirateChanging) {
@@ -188,9 +190,12 @@ export const gameSlice = createSlice({
                 gameSlice.caseReducers.highlightHumanMoves(state, highlightHumanMoves({}));
                 return;
             }
+        },
+        takeOrPutCoin: (state, action: PayloadAction<TakeOrPutCoinActionProps>) => {
+            const selectors = gameSlice.getSelectors();
+            const pirate = selectors.getPirateById(state, action.payload.pirate)!;
 
-            const hasCoinChanging =
-                action.payload.withCoinAction && (pirate.withCoin !== undefined || pirate.withBigCoin !== undefined);
+            const hasCoinChanging = pirate.withCoin !== undefined || pirate.withBigCoin !== undefined;
             if (hasCoinChanging) {
                 const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
                 if (pirate.withBigCoin) {
@@ -524,6 +529,7 @@ export const {
     setPirateAutoChange,
     setIncludeMovesWithRum,
     chooseHumanPirate,
+    takeOrPutCoin,
     highlightPirate,
     highlightHumanMoves,
     removeHumanMoves,
