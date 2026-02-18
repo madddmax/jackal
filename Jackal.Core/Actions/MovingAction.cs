@@ -318,13 +318,14 @@ internal class MovingAction(TilePosition from, TilePosition to, TilePosition pre
                 return;
         }
     }
-        
+
     private static TilePosition GetCannonFly(DirectionType direction, Position pos, int mapSize) =>
         direction switch
         {
-            DirectionType.Up => new TilePosition(pos.X, mapSize - 1),
-            DirectionType.Right => new TilePosition(mapSize - 1, pos.Y),
-            DirectionType.Down => new TilePosition(pos.X, 0),
-            _ => new TilePosition(0, pos.Y)
+            DirectionType.Up => new TilePosition(pos.X, (pos.X == 1 || pos.X == mapSize - 2) ? mapSize - 2 : mapSize - 1),
+            DirectionType.Right => new TilePosition((pos.Y == 1 || pos.Y == mapSize - 2) ? mapSize - 2 : mapSize - 1, pos.Y),
+            DirectionType.Down => new TilePosition(pos.X, (pos.X == 1 || pos.X == mapSize - 2) ? 1 : 0),
+            //DirectionType.Left
+            _ => new TilePosition((pos.Y == 1 || pos.Y == mapSize - 2) ? 1 : 0, pos.Y)
         };
 }
