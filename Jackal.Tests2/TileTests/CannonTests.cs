@@ -174,4 +174,44 @@ public class CannonTests
         );
         Assert.Equal(1, game.TurnNumber);
     }
+
+    [Fact]
+    public void CannonMove_FlyToCorner()
+    {
+        // Arrange
+        var map = new TwoTileMapGenerator(TileParams.Cannon(DirectionType.Left), TileParams.Empty());
+        var game = new TestGame(map, 7);
+
+        Assert.Single(game.Board.AllPirates);
+
+        var p11 = new Position(1, 1);
+        var p31 = new Position(3, 1);
+        var p51 = new Position(5, 1);
+
+        List<int> GetMovesIndexesToPosition(Position position)
+        {
+            var moves = game.GetAvailableMoves();
+            var movesIndexes = moves.Select((move, index) => new { move, index })
+                .Where(x => x.move.To.Position == position)
+                .Select(x => x.index)
+                .ToList();
+            return movesIndexes;
+        }
+
+        int GetMoveIndexToPosition(Position position)
+        {
+            var indexes = GetMovesIndexesToPosition(position);
+            Assert.NotEmpty(indexes);
+            return indexes.First();
+        }
+
+        void AssertPiratePosition(Position position)
+        {
+            Assert.Equal(new TilePosition(position), game.Board.AllPirates[0].Position);
+        }
+
+        // Высадка с корабля на пушку влево, летим в ближайшую воду в углу острова
+        game.Turn(GetMoveIndexToPosition(p31));
+        AssertPiratePosition(p11);
+    }
 }
