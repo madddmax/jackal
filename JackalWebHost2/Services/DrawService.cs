@@ -234,7 +234,7 @@ public class DrawService : IDrawService
                 filename = "trap";
                 break;
             case TileType.Cannibal:
-                filename = "canibal";
+                filename = "cannibal";
                 break;
             case TileType.Lighthouse:
                 filename = "lighthouse";

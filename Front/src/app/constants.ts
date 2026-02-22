@@ -16,6 +16,7 @@ const groupIds = {
 };
 
 export const Constants = {
+    fieldsPath: '/fields_space/',
     gameModeTypes: {
         FreeForAll: 'FreeForAll',
         TwoPlayersInTeam: 'TwoPlayersInTeam',
