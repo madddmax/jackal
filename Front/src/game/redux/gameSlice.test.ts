@@ -15,7 +15,7 @@ import reducer, {
     setCurrentHumanTeam,
 } from './gameSlice';
 import { getMapData } from './mapDataForTests';
-import { Constants } from '/app/constants';
+import { Constants, ImagesPacksIds } from '/app/constants';
 import { PlayerTypes } from '/common/constants';
 
 const testTeamId = 12;
@@ -156,6 +156,7 @@ const getState = (pirates: GamePirate[]): GameState => ({
         players: [PlayerTypes.Human, PlayerTypes.Robot2, PlayerTypes.Robot, PlayerTypes.Robot2],
         playersMode: 4,
         gameSpeed: 0,
+        imagesPackName: ImagesPacksIds.classic,
     },
     stat: {
         turnNumber: 1,
