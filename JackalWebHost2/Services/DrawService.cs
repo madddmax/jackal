@@ -255,7 +255,7 @@ public class DrawService : IDrawService
                 filename = "quake";
                 break;
             case TileType.Cannabis:
-                filename = "cannabis";
+                filename = tile.Used ? "used_cannabis" : "cannabis";
                 break;
             case TileType.Spinning:
                 switch (tile.SpinningCount)
