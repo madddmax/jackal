@@ -127,7 +127,8 @@ public class RandomMapGenerator : IMapGenerator
                 tempDef.Type != TileType.Coin &&
                 tempDef.Type != TileType.BigCoin &&
                 tempDef.Type != TileType.Ice &&
-                tempDef.Type != TileType.Hole)
+                tempDef.Type != TileType.Hole &&
+                tempDef.Type != TileType.RumBarrel)
             {
                 // клетки не указанные в условии - вращаем при отображении на карте
                 tempDef.Direction = (DirectionType)_rand.Next(4);
