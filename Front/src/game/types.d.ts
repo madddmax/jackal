@@ -1,3 +1,4 @@
+import { ImagesPacksIds } from '/app/constants';
 import { GameLevel } from '/game/types/gameContent';
 
 export interface GameState {
@@ -37,6 +38,7 @@ export interface StorageState {
     mapSize: number;
     hasChessBar: boolean;
     mapId?: number;
+    imagesPackName: ImagesPacksIds;
     tilesPackName?: string;
     gameSpeed: number;
 }
@@ -47,6 +49,7 @@ export interface GamePlace {
 }
 
 export interface FieldState {
+    tileType: string;
     image?: string;
     rotate?: number;
     levels: GameLevel[];

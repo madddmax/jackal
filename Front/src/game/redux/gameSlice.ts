@@ -22,7 +22,7 @@ import {
     GameTeamResponse,
 } from '../types/gameSaga';
 import { ScreenSizes, TeamScores } from './gameSlice.types';
-import { Constants } from '/app/constants';
+import { Constants, ImagesPacksIds } from '/app/constants';
 import { debugLog } from '/app/global';
 import { PlayerTypes } from '/common/constants';
 
@@ -48,6 +48,7 @@ export const gameSlice = createSlice({
             players: [PlayerTypes.Human, PlayerTypes.Robot2, PlayerTypes.Robot, PlayerTypes.Robot2],
             playersMode: 4,
             gameSpeed: 1,
+            imagesPackName: ImagesPacksIds.classic,
         },
         teams: [],
         currentHumanTeamId: 0,
@@ -91,7 +92,8 @@ export const gameSlice = createSlice({
                 for (let col = 0; col < action.payload.width; col++) {
                     const change = action.payload.changes[j];
                     row.push({
-                        image: Constants.fieldsPath + change.tileType + '.png',
+                        tileType: change.tileType,
+                        image: Constants.imagesPacks[state.userSettings.imagesPackName] + change.tileType + '.png',
                         rotate: change.rotate,
                         levels: change.levels.map(constructGameLevel),
                         availableMoves: [],
@@ -102,6 +104,13 @@ export const gameSlice = createSlice({
             }
             state.gameSettings.mapSize = action.payload.width;
             state.fields = map;
+        },
+        refreshMap: (state) => {
+            state.fields.map((col) => {
+                col.map((it) => {
+                    it.image = Constants.imagesPacks[state.userSettings.imagesPackName] + it.tileType + '.png';
+                });
+            });
         },
         initTeams: (state, action: PayloadAction<GameTeamResponse[]>) => {
             state.teams = action.payload.map((it, idx, arr) => {
@@ -394,7 +403,8 @@ export const gameSlice = createSlice({
         applyChanges: (state, action: PayloadAction<CellDiffResponse[]>) => {
             action.payload.forEach((it) => {
                 const cell = state.fields[it.y][it.x];
-                const backgroundImageSrc = Constants.fieldsPath + it.tileType + '.png';
+                const backgroundImageSrc =
+                    Constants.imagesPacks[state.userSettings.imagesPackName] + it.tileType + '.png';
                 if (cell.image != backgroundImageSrc) {
                     cell.image = backgroundImageSrc;
                     cell.rotate = it.rotate;
@@ -504,6 +514,7 @@ export const {
     initMySettings,
     saveMySettings,
     initMap,
+    refreshMap,
     initGame,
     initTeams,
     initPhotos,

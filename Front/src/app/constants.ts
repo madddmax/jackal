@@ -15,8 +15,16 @@ const groupIds = {
     reGirls: 'resident girls',
 };
 
+export enum ImagesPacksIds {
+    classic = 'classic',
+    space = 'space',
+}
+
 export const Constants = {
-    fieldsPath: '/fields_space/',
+    imagesPacks: {
+        [ImagesPacksIds.classic]: '/fields/',
+        [ImagesPacksIds.space]: '/fields_space/',
+    },
     gameModeTypes: {
         FreeForAll: 'FreeForAll',
         TwoPlayersInTeam: 'TwoPlayersInTeam',
