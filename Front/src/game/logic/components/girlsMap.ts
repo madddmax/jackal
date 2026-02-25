@@ -11,7 +11,7 @@ const girlsMap: GirlsPositions = {
             this.Map[cachedId] = {
                 level: it.position.level,
                 levelsCountInCell: levelsCount,
-                girls: [{ id: it.id, order: 0 }],
+                girls: [{ id: it.id, teamId: it.teamId, order: 0 }],
             };
         } else {
             if (level.girls) {
@@ -23,9 +23,9 @@ const girlsMap: GirlsPositions = {
                         break;
                     }
                 }
-                level.girls.push({ id: it.id, order: ord });
+                level.girls.push({ id: it.id, teamId: it.teamId, order: ord });
             } else {
-                level.girls = [{ id: it.id, order: 0 }];
+                level.girls = [{ id: it.id, teamId: it.teamId, order: 0 }];
             }
         }
     },

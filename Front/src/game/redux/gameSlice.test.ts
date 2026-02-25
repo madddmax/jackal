@@ -97,7 +97,7 @@ const fourTeamsData: GameTeamResponse[] = [
 const getPirates = (data: GamePiratePosition[]): GamePirate[] => {
     return data.map((it) => ({
         id: it.id,
-        teamId: testTeamId,
+        teamId: it.teamId,
         position: it.position,
         groupId: '',
         photo: '',
@@ -250,8 +250,8 @@ describe('redux init tests', () => {
         reducer(defaultState, initPiratePositions());
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
-                '20': { girls: [{ id: '100', order: 0 }], level: 0, levelsCountInCell: 1 },
-                '4020': { girls: [{ id: '200', order: 0 }], level: 0, levelsCountInCell: 1 },
+                '20': { girls: [{ id: '100', teamId: 5, order: 0 }], level: 0, levelsCountInCell: 1 },
+                '4020': { girls: [{ id: '200', teamId: testTeamId, order: 0 }], level: 0, levelsCountInCell: 1 },
             }),
         );
     });
@@ -269,8 +269,8 @@ describe('redux init tests', () => {
         expect(result.pirates).toHaveLength(2);
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
-                '20': { girls: [{ id: '100', order: 0 }], level: 0, levelsCountInCell: 1 },
-                '4020': { girls: [{ id: '200', order: 0 }], level: 0, levelsCountInCell: 1 },
+                '20': { girls: [{ id: '100', teamId: 5, order: 0 }], level: 0, levelsCountInCell: 1 },
+                '4020': { girls: [{ id: '200', teamId: testTeamId, order: 0 }], level: 0, levelsCountInCell: 1 },
             }),
         );
     });
@@ -290,9 +290,9 @@ describe('redux basic tests', () => {
 
     beforeAll(() => {
         const pirates = getPirates([
-            { id: '100', position: { level: 0, x: 2, y: 0 } },
-            { id: '200', position: { level: 0, x: 2, y: 4 } },
-            { id: '300', position: { level: 0, x: 2, y: 4 } },
+            { id: '100', teamId: 5, position: { level: 0, x: 2, y: 0 } },
+            { id: '200', teamId: testTeamId, position: { level: 0, x: 2, y: 4 } },
+            { id: '300', teamId: testTeamId, position: { level: 0, x: 2, y: 4 } },
         ]);
 
         previousState = getState(pirates);
@@ -403,13 +403,13 @@ describe('redux basic tests', () => {
     });
 
     test('Уходим с клетки, на клетке - никого', () => {
-        const currentState = reducer(previousState, chooseHumanPirate({ pirate: '100' }));
+        const currentState = reducer(previousState, chooseHumanPirate({ pirate: '300' }));
         const result = reducer(
             currentState,
             applyPirateChanges({
                 changes: [
                     {
-                        id: '100',
+                        id: '300',
                         type: Constants.pirateTypes.Usual,
                         teamId: testTeamId,
                         position: { level: 0, x: 2, y: 2 },
@@ -420,19 +420,13 @@ describe('redux basic tests', () => {
         );
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(2);
-        const boy = result.pirates?.find((it) => it.id == '100');
+        const boy = result.pirates?.find((it) => it.id == '300');
         expect(boy?.position).toEqual({ level: 0, x: 2, y: 2 });
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
-                '2020': { girls: [{ id: '100', order: 0 }], level: 0, levelsCountInCell: 1 },
-                '4020': {
-                    girls: [
-                        { id: '200', order: 0 },
-                        { id: '300', order: 1 },
-                    ],
-                    level: 0,
-                    levelsCountInCell: 1,
-                },
+                '20': { girls: [{ id: '100', teamId: 5, order: 0 }], level: 0, levelsCountInCell: 1 },
+                '2020': { girls: [{ id: '300', teamId: testTeamId, order: 0 }], level: 0, levelsCountInCell: 1 },
+                '4020': { girls: [{ id: '200', teamId: testTeamId, order: 0 }], level: 0, levelsCountInCell: 1 },
             }),
         );
     });
@@ -443,9 +437,9 @@ describe('redux money actions tests', () => {
 
     beforeAll(() => {
         const pirates = getPirates([
-            { id: '100', position: { level: 0, x: 2, y: 0 } },
-            { id: '200', position: { level: 0, x: 2, y: 4 } },
-            { id: '300', position: { level: 0, x: 2, y: 4 } },
+            { id: '100', teamId: 5, position: { level: 0, x: 2, y: 0 } },
+            { id: '200', teamId: testTeamId, position: { level: 0, x: 2, y: 4 } },
+            { id: '300', teamId: testTeamId, position: { level: 0, x: 2, y: 4 } },
         ]);
 
         previousState = getState(pirates);
@@ -537,9 +531,9 @@ describe('redux logic tests', () => {
 
     beforeAll(() => {
         const pirates = getPirates([
-            { id: '100', position: { level: 0, x: 2, y: 0 } },
-            { id: '200', position: { level: 0, x: 2, y: 4 } },
-            { id: '300', position: { level: 0, x: 2, y: 4 } },
+            { id: '100', teamId: 5, position: { level: 0, x: 2, y: 0 } },
+            { id: '200', teamId: testTeamId, position: { level: 0, x: 2, y: 4 } },
+            { id: '300', teamId: testTeamId, position: { level: 0, x: 2, y: 4 } },
         ]);
 
         previousState = getState(pirates);
@@ -646,16 +640,16 @@ describe('redux logic tests', () => {
 
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
-                '20': { girls: [{ id: '100', order: 0 }], level: 0, levelsCountInCell: 1 },
+                '20': { girls: [{ id: '100', teamId: 5, order: 0 }], level: 0, levelsCountInCell: 1 },
                 '3020': {
                     girls: [
-                        { id: '200', order: 0 },
-                        { id: '400', order: 1 },
+                        { id: '200', teamId: testTeamId, order: 0 },
+                        { id: '400', teamId: testTeamId, order: 1 },
                     ],
                     level: 0,
                     levelsCountInCell: 1,
                 },
-                '4020': { girls: [{ id: '300', order: 1 }], level: 0, levelsCountInCell: 1 },
+                '4020': { girls: [{ id: '300', teamId: testTeamId, order: 1 }], level: 0, levelsCountInCell: 1 },
             }),
         );
     });
@@ -704,8 +698,8 @@ describe('redux logic tests', () => {
 
         expect(girlsMap.Map).toEqual(
             expect.objectContaining({
-                '20': { girls: [{ id: '100', order: 0 }], level: 0, levelsCountInCell: 1 },
-                '4020': { girls: [{ id: '300', order: 1 }], level: 0, levelsCountInCell: 1 },
+                '20': { girls: [{ id: '100', teamId: 5, order: 0 }], level: 0, levelsCountInCell: 1 },
+                '4020': { girls: [{ id: '300', teamId: testTeamId, order: 1 }], level: 0, levelsCountInCell: 1 },
             }),
         );
     });

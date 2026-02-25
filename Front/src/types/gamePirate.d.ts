@@ -1,5 +1,4 @@
 interface GamePirate extends GamePiratePosition, GamePiratePhotoInitiation {
-    teamId: number;
     withCoin?: boolean;
     withBigCoin?: boolean;
     isDrunk?: boolean;
@@ -19,6 +18,7 @@ interface GamePiratePhotoInitiation {
 }
 
 interface GamePiratePosition {
+    teamId: number;
     id: string;
     position: {
         level: number;
