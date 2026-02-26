@@ -11,6 +11,7 @@ import {
     GameStateSettings,
     HighlightHumanMovesActionProps,
     StorageState,
+    TakeOrPutCoinActionProps,
 } from '../types';
 import { GameLevel, GameLevelFeature } from '../types/gameContent';
 import {
@@ -176,6 +177,7 @@ export const gameSlice = createSlice({
         chooseHumanPirate: (state, action: PayloadAction<ChooseHumanPirateActionProps>) => {
             const selectors = gameSlice.getSelectors();
             const pirate = selectors.getPirateById(state, action.payload.pirate)!;
+
             const currentPlayerTeam = selectors.getCurrentPlayerTeam(state)!;
             const hasPirateChanging = currentPlayerTeam.activePirate !== pirate.id;
             if (hasPirateChanging) {
@@ -188,9 +190,12 @@ export const gameSlice = createSlice({
                 gameSlice.caseReducers.highlightHumanMoves(state, highlightHumanMoves({}));
                 return;
             }
+        },
+        takeOrPutCoin: (state, action: PayloadAction<TakeOrPutCoinActionProps>) => {
+            const selectors = gameSlice.getSelectors();
+            const pirate = selectors.getPirateById(state, action.payload.pirate)!;
 
-            const hasCoinChanging =
-                action.payload.withCoinAction && (pirate.withCoin !== undefined || pirate.withBigCoin !== undefined);
+            const hasCoinChanging = pirate.withCoin !== undefined || pirate.withBigCoin !== undefined;
             if (hasCoinChanging) {
                 const level = state.fields[pirate.position.y][pirate.position.x].levels[pirate.position.level];
                 if (pirate.withBigCoin) {
@@ -200,10 +205,40 @@ export const gameSlice = createSlice({
                     }
                 } else if (pirate.withCoin) {
                     pirate.withCoin = false;
-                } else if (level.pirates.bigCoins < level.info.bigCoins) {
-                    pirate.withBigCoin = true;
-                } else if (level.pirates.coins < level.info.coins) {
-                    pirate.withCoin = true;
+                } else if (level.info.bigCoins > 0) {
+                    if (level.pirates.bigCoins < level.info.bigCoins) {
+                        // поднимаем лежачую большую монету
+                        pirate.withBigCoin = true;
+                    } else {
+                        // нет лежачих - отнимаем у товарища
+                        const cell = girlsMap.GetPosition(pirate);
+                        const girls = selectors.getPiratesByIds(
+                            state,
+                            cell!.girls!.map((x) => x.id),
+                        );
+                        const bcGirl = girls?.find((it) => it.withBigCoin);
+                        if (bcGirl) {
+                            bcGirl.withBigCoin = false;
+                            pirate.withBigCoin = true;
+                        }
+                    }
+                } else if (level.info.coins > 0) {
+                    if (level.pirates.coins < level.info.coins) {
+                        // поднимаем лежачую монету
+                        pirate.withCoin = true;
+                    } else {
+                        // нет лежачих - отнимаем у товарища
+                        const cell = girlsMap.GetPosition(pirate);
+                        const girls = selectors.getPiratesByIds(
+                            state,
+                            cell!.girls!.map((x) => x.id),
+                        );
+                        const bcGirl = girls?.find((it) => it.withCoin);
+                        if (bcGirl) {
+                            bcGirl.withCoin = false;
+                            pirate.withCoin = true;
+                        }
+                    }
                 }
                 gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
                 gameSlice.caseReducers.highlightHumanMoves(state, highlightHumanMoves({}));
@@ -473,6 +508,8 @@ export const gameSlice = createSlice({
         getPiratesIds: memoize((state): string[] | undefined => state.pirates?.map((it) => it.id)),
         getPirateById: (state, pirateId: string): GamePirate | undefined =>
             state.pirates?.find((it) => it.id === pirateId),
+        getPiratesByIds: (state, pirateIds: string[]): GamePirate[] | undefined =>
+            state.pirates?.filter((it) => pirateIds.indexOf(it.id) >= 0),
         getPirateCell: (state, pirateId: string): GamePlace | undefined => {
             const gamePirate = gameSlice.getSelectors().getPirateById(state, pirateId);
             if (!gamePirate) return undefined;
@@ -524,6 +561,7 @@ export const {
     setPirateAutoChange,
     setIncludeMovesWithRum,
     chooseHumanPirate,
+    takeOrPutCoin,
     highlightPirate,
     highlightHumanMoves,
     removeHumanMoves,
@@ -541,6 +579,7 @@ export const {
     getCurrentPlayerPirates,
     getPiratesIds,
     getPirateById,
+    getPiratesByIds,
     getGameField,
     getGameSettings,
     getUserSettings,

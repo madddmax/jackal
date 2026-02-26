@@ -15,6 +15,7 @@ import {
     saveMySettings,
     setIncludeMovesWithRum,
     setPirateAutoChange,
+    takeOrPutCoin,
 } from '../../../redux/gameSlice';
 import './leftSidebar.less';
 import PirateIcon from './pirateIcon';
@@ -33,8 +34,8 @@ function LeftSidebar() {
     const [gameSpeed, setGameSpeed] = useState<number>(userSettings.gameSpeed || 0);
     const [hasChessBar, setHasChessBar] = useState<boolean>(userSettings.hasChessBar);
 
-    const onClick = (girl: GamePirate, withCoinAction: boolean) => () =>
-        dispatch(chooseHumanPirate({ pirate: girl.id, withCoinAction }));
+    const onClick = (girl: GamePirate) => () => dispatch(chooseHumanPirate({ pirate: girl.id }));
+    const onCoinClick = (girl: GamePirate) => () => dispatch(takeOrPutCoin({ pirate: girl.id }));
 
     const toggleSettings = () => setIsOpenSettings((prev) => !prev);
 
@@ -95,8 +96,8 @@ function LeftSidebar() {
                     <PirateIcon
                         key={`pirate_${index}`}
                         pirate={girl}
-                        onClick={onClick(girl, false)}
-                        onCoinClick={onClick(girl, true)}
+                        onClick={onClick(girl)}
+                        onCoinClick={onCoinClick(girl)}
                     />
                 ))}
 

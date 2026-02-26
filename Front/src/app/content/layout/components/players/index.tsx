@@ -14,9 +14,10 @@ export interface PlayersProps {
     allowedGamers: PlayerInfo[];
     setPlayers: (data: PlayersInfo) => void;
     mapInfo?: string[];
+    isPublic: boolean;
 }
 
-const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) => {
+const Players = ({ players, allowedGamers, setPlayers, mapInfo, isPublic }: PlayersProps) => {
     const [grps, setGrps] = useState<number[]>(convertGroups(players.groups));
 
     const changeGamer = (pos: number, playerId: number) => {
@@ -72,6 +73,7 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo }: PlayersProps) 
                             changeGroup={(id) => changeGroup(index, id)}
                             isIgnoredGroup={isIgnoredGroup}
                             allowedGamers={allowedGamers}
+                            isPublic={isPublic}
                         />
                     );
                 })}

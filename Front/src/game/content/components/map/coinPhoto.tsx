@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 
-import { chooseHumanPirate } from '../../../redux/gameSlice';
+import { takeOrPutCoin } from '../../../redux/gameSlice';
 import { GameLevel } from '/game/types/gameContent';
 
 interface CoinPhotoCalcs {
@@ -29,7 +29,7 @@ const CoinPhoto = ({ level, pirateSize }: CoinPhotoProps) => {
     const coinSize = pirateSize * 0.6;
 
     const onClick = (girlId: string) => {
-        dispatch(chooseHumanPirate({ pirate: girlId, withCoinAction: true }));
+        dispatch(takeOrPutCoin({ pirate: girlId }));
     };
 
     return level.freeCoinGirlId ? (

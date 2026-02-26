@@ -49,7 +49,8 @@ const PiratePhoto = ({ pirate, pirateSize, isCurrentPlayerGirl, onTeamPirateClic
                         const allowChoosingPirate =
                             level.pirates.coins === level.info.coins &&
                             level.pirates.bigCoins === level.info.bigCoins &&
-                            (mapLevel?.girls?.length || 0) > level.info.coins + level.info.bigCoins;
+                            (mapLevel?.girls?.filter((x) => x.teamId === pirate.teamId).length || 0) >
+                                level.info.coins + level.info.bigCoins;
                         onTeamPirateClick(pirate, allowChoosingPirate);
                     }
                 }}

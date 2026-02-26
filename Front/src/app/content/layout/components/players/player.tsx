@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import { useRef } from 'react';
 import Image from 'react-bootstrap/Image';
 import { PlacesType, Tooltip, TooltipRefProps } from 'react-tooltip';
@@ -21,6 +22,7 @@ interface PlayerProps {
     changeGroup: (pos: number) => void;
     isIgnoredGroup: (pos: number) => boolean;
     allowedGamers: PlayerInfo[];
+    isPublic: boolean;
 }
 
 const Player = ({
@@ -34,6 +36,7 @@ const Player = ({
     changeGroup,
     isIgnoredGroup,
     allowedGamers,
+    isPublic,
 }: PlayerProps) => {
     const actionsTooltip = useRef<TooltipRefProps>(null);
 
@@ -76,9 +79,27 @@ const Player = ({
     const showPlayerModal = () => {
         actionsTooltip.current?.open({
             content: (
-                <div className={classes.content}>
-                    {allowedGamers.map((it, index) => (
-                        <div>
+                <div
+                    className={cn({
+                        [classes.content]: isPublic,
+                        [classes.contentSmall]: !isPublic,
+                    })}
+                >
+                    {allowedGamers.map((it, index) =>
+                        isPublic ? (
+                            <div>
+                                <Image
+                                    className={classes.icon}
+                                    roundedCircle
+                                    src={GetPlayerTypePicture(it.type)}
+                                    onClick={() => {
+                                        actionsTooltip.current?.close();
+                                        changePlayer(index);
+                                    }}
+                                />
+                                {it.userName && <span className={classes.userModalName}>{it.userName}</span>}
+                            </div>
+                        ) : (
                             <Image
                                 className={classes.icon}
                                 roundedCircle
@@ -88,9 +109,8 @@ const Player = ({
                                     changePlayer(index);
                                 }}
                             />
-                            {it.userName && <span className={classes.userModalName}>{it.userName}</span>}
-                        </div>
-                    ))}
+                        ),
+                    )}
                 </div>
             ),
         });

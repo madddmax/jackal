@@ -2,7 +2,13 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { girlsMap } from '../../../logic/gameLogic';
-import { chooseHumanPirate, getCurrentPlayerTeam, getPirateById, getUserSettings } from '../../../redux/gameSlice';
+import {
+    chooseHumanPirate,
+    getCurrentPlayerTeam,
+    getPirateById,
+    getUserSettings,
+    takeOrPutCoin,
+} from '../../../redux/gameSlice';
 import AnimatePirate from './animatePirate';
 import { GameState } from '/game/types';
 
@@ -42,12 +48,12 @@ const MapPirate = ({
             if (willChangePirate) {
                 girlsMap.ScrollGirls(mapLevel);
             }
-            dispatch(
-                chooseHumanPirate({
-                    pirate: willChangePirate ? mapLevel.girls[mapLevel.girls.length - 1]?.id : girl.id,
-                    withCoinAction: true,
-                }),
-            );
+            const curGirl = willChangePirate ? mapLevel.girls[mapLevel.girls.length - 1]?.id : girl.id;
+            if (!girl.isActive || willChangePirate) {
+                dispatch(chooseHumanPirate({ pirate: curGirl }));
+            } else {
+                dispatch(takeOrPutCoin({ pirate: curGirl }));
+            }
         },
         [dispatch],
     );

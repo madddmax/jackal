@@ -14,5 +14,6 @@ export interface GirlsPositions {
 
 export interface GirlsLogicPosition {
     id: string;
+    teamId: number;
     order: number;
 }
