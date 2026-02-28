@@ -9,4 +9,5 @@ public class TeamScore(Team team)
     public int Coins = team.Coins;
 
     public int RumBottles = team.RumBottles;
+    public double WasteTime => team.WasteTime.TotalSeconds;
 }

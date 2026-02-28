@@ -1,4 +1,5 @@
-﻿using Jackal.Core.Players;
+﻿using System;
+using Jackal.Core.Players;
 using Newtonsoft.Json;
 
 namespace Jackal.Core.Domain;
@@ -53,6 +54,11 @@ public record Team
     /// </summary>
     public int RumBottles;
 
+    /// <summary>
+    /// Время раздумий
+    /// </summary>
+    public TimeSpan WasteTime;
+
     [JsonConstructor]
     public Team(int id, string playerName, long userId, Position shipPosition, Pirate[] pirates)
     {
@@ -84,5 +90,7 @@ public record Team
         {
             Pirates[i] = new Pirate(id, new TilePosition(ShipPosition), PirateType.Usual);
         }
+
+        WasteTime = TimeSpan.Zero;
     }
 }
