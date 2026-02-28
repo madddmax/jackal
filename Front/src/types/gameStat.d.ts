@@ -11,4 +11,5 @@ interface GameScore {
     teamId: number;
     coins: number;
     rumBottles: number;
+    wasteTime: number;
 }
