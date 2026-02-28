@@ -28,4 +28,9 @@ public class DrawTeam(Team team)
     /// Позиция корабля
     /// </summary>
     public DrawPosition Ship = new(team.ShipPosition);
+
+    /// <summary>
+    /// Потраченное время
+    /// </summary>
+    public double WasteTime => team.WasteTime.TotalSeconds;
 }

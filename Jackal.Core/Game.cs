@@ -57,6 +57,8 @@ public class Game : ICompletable
     /// </summary>
     [JsonIgnore]
     public string GameMessage { get; private set; }
+
+    public DateTime LastTurnTime;
     
     public Game(GameRequest request)
     {
@@ -70,6 +72,7 @@ public class Game : ICompletable
 
         Board = new Board(request);
         GameMessage = GameMessages.Kit[MessagesKitIndex][0];
+        LastTurnTime = DateTime.Now;
     }
 
     public void Turn()
@@ -102,6 +105,10 @@ public class Game : ICompletable
             IGameAction action = result.Actions[moveNum];
             action.Act(this, pirate);
         }
+
+        Team ourTeam = Board.Teams[CurrentTeamId];
+        ourTeam.WasteTime += DateTime.Now - LastTurnTime;
+        LastTurnTime = DateTime.Now;
 
         if (NeedSubTurnPirate == null)
         {
