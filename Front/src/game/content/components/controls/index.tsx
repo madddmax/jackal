@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import { PiBeerBottleThin, PiCoinsLight, PiTimer } from 'react-icons/pi';
 import { useSelector } from 'react-redux';
@@ -7,16 +7,12 @@ import { useSelector } from 'react-redux';
 import classes from './controls.module.less';
 import { Constants } from '/app/constants';
 import { getGameSettings, getGameStatistics, getTeamScores } from '/game/redux/gameSlice';
-import { TeamScores } from '/game/redux/gameSlice.types';
 
-const initTimes = (ts: TeamScores[] | undefined, mode: string | undefined): Record<number, number> => {
-    const times: Record<number, number> = {};
-    if (mode == Constants.gameModeTypes.TwoPlayersInTeam) {
-        [0, 1].forEach((it) => (times[it] = 0));
-    } else {
-        ts?.forEach((it) => (times[it.teamId] = 0));
-    }
-    return times;
+const toTimeSpan = (totalSeconds: number) => {
+    const hours = Math.floor(totalSeconds / (60 * 60));
+    const minutes = Math.floor((totalSeconds / 60) % 60);
+    const seconds = Math.floor(totalSeconds % 60);
+    return hours + ':' + (minutes < 10 ? 0 : '') + minutes + ':' + (seconds < 10 ? 0 : '') + seconds;
 };
 
 function Controls() {
@@ -27,7 +23,6 @@ function Controls() {
     const [showTiming, setShowTiming] = useState<boolean>(false);
     const [timing, setTiming] = useState<number>(0);
     const [curTeamId, setCurTeamId] = useState<number | undefined>(stat?.currentTeamId);
-    const times = useRef<Record<number, number>>(initTimes(teamScores, gameMode));
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -40,16 +35,16 @@ function Controls() {
     }, [timing]);
 
     useEffect(() => {
-        if (stat?.currentTeamId !== undefined) {
-            setCurTeamId((prev) => {
-                if (prev !== undefined) {
-                    if (gameMode == Constants.gameModeTypes.TwoPlayersInTeam) {
-                        times.current[prev % 2] = timing;
-                        setTiming(times.current[stat.currentTeamId % 2] || 0);
+        if (stat?.currentTeamId !== undefined && teamScores) {
+            setCurTeamId(() => {
+                if (gameMode == Constants.gameModeTypes.TwoPlayersInTeam) {
+                    if (stat?.currentTeamId % 2) {
+                        setTiming(Math.floor(teamScores[1].wasteTime + teamScores[3].wasteTime));
                     } else {
-                        times.current[prev] = timing;
-                        setTiming(times.current[stat.currentTeamId] || 0);
+                        setTiming(Math.floor(teamScores[0].wasteTime + teamScores[2].wasteTime));
                     }
+                } else {
+                    setTiming(Math.floor(teamScores[stat?.currentTeamId].wasteTime));
                 }
                 return stat.currentTeamId;
             });
@@ -125,7 +120,7 @@ function Controls() {
                                         <>
                                             <PiTimer style={{ marginRight: '2px', color: 'white' }} />
                                             <span style={{ color: 'white' }}>
-                                                {curTeamId === it.teamId ? timing : times.current[it.teamId]}
+                                                {toTimeSpan(curTeamId === it.teamId ? timing : it.wasteTime)}
                                             </span>
                                         </>
                                     ) : (
@@ -180,7 +175,11 @@ function Controls() {
                                         <>
                                             <PiTimer style={{ marginRight: '2px', color: 'white' }} />
                                             <span style={{ color: 'white' }}>
-                                                {(curTeamId ?? 0) % 2 === num ? timing : times.current[num]}
+                                                {toTimeSpan(
+                                                    (curTeamId ?? 0) % 2 === num
+                                                        ? timing
+                                                        : teamScores[num].wasteTime + teamScores[num + 2].wasteTime,
+                                                )}
                                             </span>
                                         </>
                                     ) : (

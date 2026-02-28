@@ -9,4 +9,5 @@ export interface TeamScores {
     backColor: string;
     coins: number;
     bottles: number;
+    wasteTime: number;
 }
