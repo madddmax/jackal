@@ -72,18 +72,22 @@ function Controls() {
                 </div>
                 <div>
                     Номер хода: <span>{stat?.turnNumber}</span>
-                    {showTiming ? (
-                        <PiCoinsLight
-                            size={24}
-                            style={{ float: 'right', cursor: 'pointer' }}
-                            onClick={() => setShowTiming(false)}
-                        />
-                    ) : (
-                        <PiTimer
-                            size={24}
-                            style={{ float: 'right', cursor: 'pointer' }}
-                            onClick={() => setShowTiming(true)}
-                        />
+                    {gameMode != Constants.gameModeTypes.TwoPlayersInTeam && (
+                        <>
+                            {showTiming ? (
+                                <PiCoinsLight
+                                    size={24}
+                                    style={{ float: 'right', cursor: 'pointer' }}
+                                    onClick={() => setShowTiming(false)}
+                                />
+                            ) : (
+                                <PiTimer
+                                    size={24}
+                                    style={{ float: 'right', cursor: 'pointer' }}
+                                    onClick={() => setShowTiming(true)}
+                                />
+                            )}
+                        </>
                     )}
                 </div>
                 {gameMode != Constants.gameModeTypes.TwoPlayersInTeam && teamScores && (
@@ -138,61 +142,60 @@ function Controls() {
                 {gameMode == Constants.gameModeTypes.TwoPlayersInTeam && teamScores && (
                     <div className={cn(classes.teams, 'container')}>
                         {[0, 1].map((num) => (
-                            <div
-                                key={`teamscore_${num}`}
-                                className={cn(classes.user, 'row')}
-                                style={{
-                                    backgroundColor: teamScores[num].backColor ?? '',
-                                    borderColor: teamScores[num].backColor ?? '',
-                                }}
-                            >
-                                <div className="col-8">
-                                    {[0, 2].map((addnum) => {
-                                        let scores = teamScores[num + addnum];
-                                        return (
-                                            <div
-                                                key={`ctrl_${scores.teamId}`}
-                                                className={cn('row')}
-                                                style={{
-                                                    padding: '1px',
-                                                    color: scores.backColor ?? '',
-                                                }}
-                                            >
+                            <>
+                                <div key={`teamstimer_${num}`} className="col-12 mb-1" style={{ fontWeight: 'bold' }}>
+                                    <PiTimer
+                                        size={24}
+                                        style={{ marginRight: '2px', color: teamScores[num].backColor }}
+                                    />
+                                    <span style={{ color: teamScores[num].backColor, verticalAlign: 'middle' }}>
+                                        {toTimeSpan(
+                                            (curTeamId ?? 0) % 2 === num
+                                                ? timing
+                                                : teamScores[num].wasteTime + teamScores[num + 2].wasteTime,
+                                        )}
+                                    </span>
+                                </div>
+
+                                <div
+                                    key={`teamscore_${num}`}
+                                    className={cn(classes.user, 'row')}
+                                    style={{
+                                        backgroundColor: teamScores[num].backColor ?? '',
+                                        borderColor: teamScores[num].backColor ?? '',
+                                    }}
+                                >
+                                    <div className="col-8">
+                                        {[0, 2].map((addnum) => {
+                                            let scores = teamScores[num + addnum];
+                                            return (
                                                 <div
+                                                    key={`ctrl_${scores.teamId}`}
+                                                    className={cn('row')}
                                                     style={{
-                                                        background: scores.teamId == curTeamId ? 'gold' : 'white',
-                                                        borderRadius: '50rem',
+                                                        padding: '1px',
+                                                        color: scores.backColor ?? '',
                                                     }}
                                                 >
-                                                    {scores.name}
+                                                    <div
+                                                        style={{
+                                                            background: scores.teamId == curTeamId ? 'gold' : 'white',
+                                                            borderRadius: '50rem',
+                                                        }}
+                                                    >
+                                                        {scores.name}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    })}
+                                            );
+                                        })}
+                                    </div>
+                                    <div className={cn(classes.scores, 'col-4')}>
+                                        <PiBeerBottleThin style={{ marginRight: '2px', color: 'white' }} />
+                                        <span style={{ color: 'white' }}>{teamScores[num].bottles}</span>
+                                        <div className={cn(classes.coinsCount, 'coins')}>{teamScores[num].coins}</div>
+                                    </div>
                                 </div>
-                                <div className={cn(classes.scores, 'col-4')}>
-                                    {showTiming ? (
-                                        <>
-                                            <PiTimer style={{ marginRight: '2px', color: 'white' }} />
-                                            <span style={{ color: 'white' }}>
-                                                {toTimeSpan(
-                                                    (curTeamId ?? 0) % 2 === num
-                                                        ? timing
-                                                        : teamScores[num].wasteTime + teamScores[num + 2].wasteTime,
-                                                )}
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <PiBeerBottleThin style={{ marginRight: '2px', color: 'white' }} />
-                                            <span style={{ color: 'white' }}>{teamScores[num].bottles}</span>
-                                            <div className={cn(classes.coinsCount, 'coins')}>
-                                                {teamScores[num].coins}
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
+                            </>
                         ))}
                     </div>
                 )}
