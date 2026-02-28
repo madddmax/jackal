@@ -202,8 +202,13 @@ public class TileParams : IClonable<TileParams>
     /// <summary>
     /// Пушка
     /// </summary>
+    public static TileParams Cannon() => new(TileType.Cannon);
+    
+    /// <summary>
+    /// Пушка
+    /// </summary>
     /// <param name="direction">Направление задаётся для тестов, в игре выбирается рэндомом</param>
-    public static TileParams Cannon(DirectionType direction = DirectionType.Up) =>
+    public static TileParams Cannon(DirectionType direction) =>
         new(TileType.Cannon) { Direction = direction };
     
     /// <summary>

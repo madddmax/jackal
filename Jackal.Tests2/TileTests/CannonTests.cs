@@ -12,7 +12,7 @@ public class CannonTests
     public void OneCannonUp_GetAvailableMoves_ReturnOnlyWaterMoves()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(TileParams.Cannon());
+        var cannonOnlyMap = new OneTileMapGenerator(TileParams.Cannon(DirectionType.Up));
         var game = new TestGame(cannonOnlyMap);
         
         // Act - высадка с корабля на пушку
@@ -40,7 +40,7 @@ public class CannonTests
     public void OneCannonUp_MoveOnEnemyShipByCannon_ReturnDeadOwnPirate()
     {
         // Arrange
-        var cannonOnlyMap = new OneTileMapGenerator(TileParams.Cannon());
+        var cannonOnlyMap = new OneTileMapGenerator(TileParams.Cannon(DirectionType.Up));
         var game = new TestGame(cannonOnlyMap);
         
         // добавляем пирата противника на корабль противника в место куда прилетает наш пират на пушке
@@ -70,13 +70,14 @@ public class CannonTests
         
         // Assert - следующий ход, оказываемся справа в воде
         // доступно передвижение только по воде
-        Assert.Equal(3, moves.Count);
-        Assert.Equal(new TilePosition(4, 1), moves.First().From);
+        Assert.Equal(4, moves.Count);
+        Assert.Equal(new TilePosition(3, 1), moves.First().From);
         Assert.Equivalent(new List<TilePosition>
             {
-                new(4, 2), // вверх
-                new(3, 1), // влево
-                new(3, 0), // влево вниз
+                new(4, 1), // вправо
+                new(4, 2), // вправо вверх
+                new(3, 0), // вниз
+                new(2, 0), // влево вниз
 
             },
             moves.Select(m => m.To)
@@ -92,7 +93,7 @@ public class CannonTests
         var game = new TestGame(cannonOnlyMap);
         
         // добавляем пирата противника в воду в место куда прилетает наш пират на пушке
-        game.AddEnemyTeamAndPirate(new TilePosition(4, 1));
+        game.AddEnemyTeamAndPirate(new TilePosition(3, 1));
         
         // Act - высадка с корабля на пушку
         game.Turn();
@@ -162,13 +163,14 @@ public class CannonTests
         
         // Assert - следующий ход, оказываемся слева в воде
         // доступно передвижение только по воде
-        Assert.Equal(3, moves.Count);
-        Assert.Equal(new TilePosition(0, 1), moves.First().From);
+        Assert.Equal(4, moves.Count);
+        Assert.Equal(new TilePosition(1, 1), moves.First().From);
         Assert.Equivalent(new List<TilePosition>
             {
-                new(0, 2), // вверх
-                new(1, 1), // вправо
-                new(1, 0) // вправо вниз
+                new(0, 1), // влево
+                new(0, 2), // влево вверх
+                new(1, 0), // вниз
+                new(2, 0) // вправо вниз
             },
             moves.Select(m => m.To)
         );
@@ -186,7 +188,6 @@ public class CannonTests
 
         var p11 = new Position(1, 1);
         var p31 = new Position(3, 1);
-        var p51 = new Position(5, 1);
 
         List<int> GetMovesIndexesToPosition(Position position)
         {
