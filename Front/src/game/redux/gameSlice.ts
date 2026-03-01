@@ -536,6 +536,7 @@ export const gameSlice = createSlice({
                     backColor: team?.backColor,
                     coins: it.coins,
                     bottles: it.rumBottles,
+                    wasteTime: it.wasteTime,
                 } as TeamScores;
             });
         },
