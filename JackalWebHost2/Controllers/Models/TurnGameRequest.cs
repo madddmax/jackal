@@ -7,4 +7,6 @@ public class TurnGameRequest
     public int? MoveNum { get; set; }
     
     public Guid? PirateId { get; set; }
+    
+    public int? TurnNumber { get; set; }
 }

@@ -188,7 +188,8 @@ public class GameHub : Hub
         {
             GameId = request.GameId,
             MoveNum = request.MoveNum,
-            PirateId = request.PirateId
+            PirateId = request.PirateId,
+            TurnNumber = request.TurnNumber
         };
         var result = await _gameService.MakeGameTurn(user.Id, turnGameModel);
 

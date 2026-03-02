@@ -135,6 +135,12 @@ public class GameService : IGameService
         {
             throw new GameNotFoundException();
         }
+
+        if (request.TurnNumber != null && 
+            request.TurnNumber != game.TurnNumber)
+        {
+            throw new InvalidTurnNumberException();
+        }
         
         if (game.IsGameOver)
         {
