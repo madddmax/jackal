@@ -135,6 +135,12 @@ public class GameService : IGameService
         {
             throw new GameNotFoundException();
         }
+
+        if (request.TurnNumber != null && 
+            request.TurnNumber != game.TurnNumber)
+        {
+            throw new InvalidTurnNumberException();
+        }
         
         if (game.IsGameOver)
         {
@@ -157,9 +163,9 @@ public class GameService : IGameService
                 throw new PlayerNotFoundException();
             }
 
-            if (request.TurnNum.HasValue)
+            if (request.MoveNum.HasValue)
             {
-                humanPlayer.SetMove(request.TurnNum.Value, request.PirateId);
+                humanPlayer.SetMove(request.MoveNum.Value, request.PirateId);
             }
         }
 

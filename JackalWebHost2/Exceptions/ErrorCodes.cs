@@ -4,6 +4,7 @@ public static class ErrorCodes
 {
     public const string ValidationError = "ValidationError";
     public const string GameNotFound = "GameNotFound";
+    public const string InvalidTurnNumber = "InvalidTurnNumber";
     public const string LobbyNotFound = "LobbyNotFound";
     public const string LobbyIsFull = "LobbyIsFull";
     public const string UserIsNotLobbyMember = "UserIsNotLobbyMember";

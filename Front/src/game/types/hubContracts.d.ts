@@ -2,7 +2,7 @@ import { PlayerInfo, PlayersInfo } from '/app/content/layout/components/types';
 
 export interface makeGameMoveRequestProps {
     gameId: number;
-    turnNum: number;
+    moveNum: number;
     pirateId: string;
 }
 
