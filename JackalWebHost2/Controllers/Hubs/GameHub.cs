@@ -177,8 +177,7 @@ public class GameHub : Hub
         });
         _gameStateRepository.ResetChanges();
     }
-
-
+    
     /// <summary>
     /// Ход игры
     /// </summary>
@@ -188,7 +187,7 @@ public class GameHub : Hub
         var turnGameModel = new TurnGameModel
         {
             GameId = request.GameId,
-            TurnNum = request.TurnNum,
+            MoveNum = request.MoveNum,
             PirateId = request.PirateId
         };
         var result = await _gameService.MakeGameTurn(user.Id, turnGameModel);

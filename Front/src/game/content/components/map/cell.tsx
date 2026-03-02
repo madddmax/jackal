@@ -49,7 +49,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
         const makeMove = (move: AvailableMove) => {
             gameHub.makeGameMove({
                 gameId: gameId,
-                turnNum: move.num,
+                moveNum: move.num,
                 pirateId: move.pirateId,
             });
         };

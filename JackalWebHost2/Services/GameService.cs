@@ -157,9 +157,9 @@ public class GameService : IGameService
                 throw new PlayerNotFoundException();
             }
 
-            if (request.TurnNum.HasValue)
+            if (request.MoveNum.HasValue)
             {
-                humanPlayer.SetMove(request.TurnNum.Value, request.PirateId);
+                humanPlayer.SetMove(request.MoveNum.Value, request.PirateId);
             }
         }
 
