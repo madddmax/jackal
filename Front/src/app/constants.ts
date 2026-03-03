@@ -17,12 +17,14 @@ const groupIds = {
 
 export enum ImagesPacksIds {
     classic = 'classic',
-    space = 'space',
+    anime = "anime",
+    space = 'space'
 }
 
 export const Constants = {
     imagesPacks: {
         [ImagesPacksIds.classic]: '/fields/',
+        [ImagesPacksIds.anime]: '/fields_anime/',
         [ImagesPacksIds.space]: '/fields_space/',
     },
     gameModeTypes: {
