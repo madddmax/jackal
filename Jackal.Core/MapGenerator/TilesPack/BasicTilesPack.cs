@@ -3,9 +3,9 @@ using Jackal.Core.Domain;
 namespace Jackal.Core.MapGenerator.TilesPack;
 
 /// <summary>
-/// Классический игровой набор
+/// Базовый игровой набор
 /// </summary>
-public class ClassicTilesPack : ITilesPack
+public class BasicTilesPack : ITilesPack
 {
     /// <summary>
     /// 117 клеток
