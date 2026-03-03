@@ -98,7 +98,7 @@ export const Constants = {
         },
         {
             id: groupIds.reAnime,
-            photos: [2, 1, 1, 2, 1, 1, 1],
+            photos: [1, 1, 1, 1, 1, 1, 1],
             extension: '.jpg',
         },
         {
