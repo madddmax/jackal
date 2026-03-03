@@ -4,7 +4,6 @@ interface GamePirate extends GamePiratePosition, GamePiratePhotoInitiation {
     isDrunk?: boolean;
     isInTrap?: boolean;
     isInHole?: boolean;
-    groupId: string;
     photo: string;
     type: string;
     isActive?: boolean;

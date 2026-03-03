@@ -1,4 +1,4 @@
-import { ImagesPacksIds } from '/app/constants';
+import { ImageGroupsIds, ImagesPacksIds } from '/app/constants';
 import { GameLevel } from '/game/types/gameContent';
 
 export interface GameState {
@@ -9,7 +9,7 @@ export interface GameState {
     includeMovesWithRum: boolean;
 
     gameSettings: GameStateSettings;
-    userSettings: StorageState;
+    userSettings: BrowserStorage;
     fields: FieldState[][];
     pirates?: GamePirate[];
     lastMoves: GameMove[];
@@ -31,8 +31,8 @@ export interface GameStateSettings {
     tilesPackNames: string[];
 }
 
-export interface StorageState {
-    groups: string[];
+export interface BrowserStorage {
+    groups: ImageGroupsIds[];
     players?: string[];
     playersMode?: number;
     mapSize: number;
@@ -41,6 +41,16 @@ export interface StorageState {
     imagesPackName: ImagesPacksIds;
     tilesPackName?: string;
     gameSpeed: number;
+}
+
+export interface TeamState {
+    id: number;
+    isCurrentUser?: boolean;
+    activePirate: string;
+    name: string;
+    backColor: string;
+    imageGroupId: ImageGroupsIds;
+    isHuman: boolean;
 }
 
 export interface GamePlace {

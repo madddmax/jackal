@@ -18,7 +18,7 @@ import { sagaActions } from '/common/sagas';
 import Playground from '/game/content/playground';
 import gameHub from '/game/hub/gameHub';
 import { initMySettings } from '/game/redux/gameSlice';
-import { StorageState } from '/game/types';
+import { BrowserStorage } from '/game/types';
 import NetGameCreate from '/lobby/content/gameCreate';
 import GameList from '/lobby/content/gameList';
 
@@ -42,7 +42,7 @@ const Layout = () => {
     useEffect(() => {
         const myStateStr = localStorage.getItem('state');
         if (myStateStr) {
-            const myState: StorageState = JSON.parse(myStateStr);
+            const myState: BrowserStorage = JSON.parse(myStateStr);
             if (myState) {
                 dispatch(initMySettings(myState));
             }

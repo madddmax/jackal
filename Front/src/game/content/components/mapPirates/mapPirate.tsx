@@ -10,7 +10,7 @@ import {
     takeOrPutCoin,
 } from '../../../redux/gameSlice';
 import AnimatePirate from './animatePirate';
-import { GameState } from '/game/types';
+import { GameState, TeamState } from '/game/types';
 
 interface MapPirateProps {
     id: string;

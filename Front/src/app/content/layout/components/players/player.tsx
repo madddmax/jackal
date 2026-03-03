@@ -4,7 +4,7 @@ import Image from 'react-bootstrap/Image';
 import { PlacesType, Tooltip, TooltipRefProps } from 'react-tooltip';
 
 import classes from './players.module.less';
-import { Constants } from '/app/constants';
+import { ImageGroupsIds } from '/app/constants';
 import { PlayerInfo } from '/app/content/layout/components/types';
 import { GetPlayerTypePicture } from '/common/constants';
 
@@ -16,11 +16,11 @@ interface PlayerProps {
     position: number;
     type: string;
     userName?: string;
-    group: number;
+    imageGroupId: ImageGroupsIds;
     posInfo?: string;
     changePlayer: (pos: number) => void;
-    changeGroup: (pos: number) => void;
-    isIgnoredGroup: (pos: number) => boolean;
+    changeGroup: (grpId: ImageGroupsIds) => void;
+    isIgnoredGroup: (grpId: ImageGroupsIds) => boolean;
     allowedGamers: PlayerInfo[];
     isPublic: boolean;
 }
@@ -30,7 +30,7 @@ const Player = ({
     position,
     type,
     userName,
-    group,
+    imageGroupId,
     posInfo,
     changePlayer,
     changeGroup,
@@ -56,17 +56,17 @@ const Player = ({
         actionsTooltip.current?.open({
             content: (
                 <div className={classes.content}>
-                    {Constants.groups.map((it, index) =>
-                        isIgnoredGroup(index) ? (
+                    {Object.values(ImageGroupsIds).map((grpId) =>
+                        isIgnoredGroup(grpId) ? (
                             <></>
                         ) : (
                             <Image
                                 className={classes.icon}
                                 roundedCircle
-                                src={`/pictures/${it.id}/logo.png`}
+                                src={`/pictures/${grpId}/logo.png`}
                                 onClick={() => {
                                     actionsTooltip.current?.close();
-                                    changeGroup(index);
+                                    changeGroup(grpId);
                                 }}
                             />
                         ),
@@ -130,8 +130,8 @@ const Player = ({
                 <Image
                     className={classes.group}
                     roundedCircle
-                    src={`/pictures/${Constants.groups[group].id}/logo.png`}
-                    alt={Constants.groups[group].id}
+                    src={`/pictures/${imageGroupId}/logo.png`}
+                    alt={imageGroupId}
                     onClick={showGroupModal}
                 />
                 {userName && <div className={classes.userName}>{userName}</div>}

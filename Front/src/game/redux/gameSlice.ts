@@ -4,14 +4,15 @@ import { memoize } from 'proxy-memoize';
 import { InitPiratesPhoto } from '../logic/components/initPiratesPhoto';
 import { constructGameLevel, girlsMap } from '../logic/gameLogic';
 import {
+    BrowserStorage,
     ChooseHumanPirateActionProps,
     FieldState,
     GamePlace,
     GameState,
     GameStateSettings,
     HighlightHumanMovesActionProps,
-    StorageState,
     TakeOrPutCoinActionProps,
+    TeamState,
 } from '../types';
 import { GameLevel, GameLevelFeature } from '../types/gameContent';
 import {
@@ -23,7 +24,7 @@ import {
     GameTeamResponse,
 } from '../types/gameSaga';
 import { ScreenSizes, TeamScores } from './gameSlice.types';
-import { Constants, ImagesPacksIds } from '/app/constants';
+import { Constants, ImageGroupsIds, ImagesPacksIds } from '/app/constants';
 import { debugLog } from '/app/global';
 import { PlayerTypes } from '/common/constants';
 
@@ -38,12 +39,7 @@ export const gameSlice = createSlice({
             tilesPackNames: [],
         },
         userSettings: {
-            groups: [
-                Constants.groupIds.girls,
-                Constants.groupIds.redalert,
-                Constants.groupIds.orcs,
-                Constants.groupIds.skulls,
-            ],
+            groups: [ImageGroupsIds.girls, ImageGroupsIds.redalert, ImageGroupsIds.orcs, ImageGroupsIds.skulls],
             mapSize: 11,
             hasChessBar: true,
             players: [PlayerTypes.Human, PlayerTypes.Robot2, PlayerTypes.Robot, PlayerTypes.Robot2],
@@ -59,10 +55,10 @@ export const gameSlice = createSlice({
         includeMovesWithRum: false,
     } satisfies GameState as GameState,
     reducers: {
-        initMySettings: (state, action: PayloadAction<StorageState>) => {
+        initMySettings: (state, action: PayloadAction<BrowserStorage>) => {
             Object.assign(state.userSettings, action.payload);
         },
-        saveMySettings: (state, action: PayloadAction<StorageState>) => {
+        saveMySettings: (state, action: PayloadAction<BrowserStorage>) => {
             localStorage.state = JSON.stringify(action.payload, null, 2);
             Object.assign(state.userSettings, action.payload);
         },
@@ -123,9 +119,8 @@ export const gameSlice = createSlice({
                     backColor: Constants.teamColors[idx] ?? '',
                     name: it.name,
                     isHuman: it.isHuman,
-                    group:
-                        Constants.groups.find((gr) => gr.id == state.userSettings.groups[grId]) || Constants.groups[0],
-                };
+                    imageGroupId: state.userSettings.groups[grId] || ImageGroupsIds.girls,
+                } as TeamState;
             });
         },
         initPhotos: (state) => {
@@ -137,11 +132,12 @@ export const gameSlice = createSlice({
                             girlType: it.type,
                             allGirls: state.pirates,
                             teamId: it.teamId,
-                            teamGroup: team.group,
+                            imageGroupId: team.imageGroupId,
+                            teamGroup: Constants.imageGroups[team.imageGroupId],
                         });
+
                         it.photo = initPhoto.photo;
                         it.photoId = initPhoto.photoId;
-                        it.groupId = team.group.id;
                         it.backgroundColor = team.backColor;
                     });
             });
@@ -347,14 +343,14 @@ export const gameSlice = createSlice({
                         girlType: it.type,
                         allGirls: state.pirates,
                         teamId: it.teamId,
-                        teamGroup: team.group,
+                        imageGroupId: team.imageGroupId,
+                        teamGroup: Constants.imageGroups[team.imageGroupId],
                     });
 
                     state.pirates?.push({
                         id: it.id,
                         teamId: it.teamId,
                         position: it.position,
-                        groupId: team.group.id,
                         photo: initPhoto.photo,
                         photoId: initPhoto.photoId,
                         type: it.type,
@@ -520,7 +516,7 @@ export const gameSlice = createSlice({
                 level,
             };
         },
-        getUserSettings: (state): StorageState => state.userSettings,
+        getUserSettings: (state): BrowserStorage => state.userSettings,
         getGameSettings: (state): GameStateSettings => state.gameSettings,
         getGameField: (state, row: number, col: number): FieldState => state.fields[row][col],
         getMapForecasts: (state): string[] | undefined => state.mapForecasts,

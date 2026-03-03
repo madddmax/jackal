@@ -17,3 +17,8 @@ export interface GirlsLogicPosition {
     teamId: number;
     order: number;
 }
+
+export interface TeamGroup {
+    photos: number[];
+    extension?: string;
+}

@@ -1,5 +1,5 @@
 import { girlsMap, hasFreeMoney } from '../logic/gameLogic';
-import { GameState } from '../types';
+import { GameState, TeamState } from '../types';
 import { GameTeamResponse } from '../types/gameSaga';
 import reducer, {
     applyChanges,
@@ -16,7 +16,7 @@ import reducer, {
     takeOrPutCoin,
 } from './gameSlice';
 import { getMapData } from './mapDataForTests';
-import { Constants, ImagesPacksIds } from '/app/constants';
+import { Constants, ImageGroupsIds, ImagesPacksIds } from '/app/constants';
 import { PlayerTypes } from '/common/constants';
 
 const testTeamId = 12;
@@ -95,16 +95,18 @@ const fourTeamsData: GameTeamResponse[] = [
 ];
 
 const getPirates = (data: GamePiratePosition[]): GamePirate[] => {
-    return data.map((it) => ({
-        id: it.id,
-        teamId: it.teamId,
-        position: it.position,
-        groupId: '',
-        photo: '',
-        photoId: 0,
-        withCoin: false,
-        type: Constants.pirateTypes.Usual,
-    }));
+    return data.map(
+        (it) =>
+            ({
+                id: it.id,
+                teamId: it.teamId,
+                position: it.position,
+                photo: '',
+                photoId: 0,
+                withCoin: false,
+                type: Constants.pirateTypes.Usual,
+            }) as GamePirate,
+    );
 };
 
 const testPirates: GamePirate[] = [
@@ -116,7 +118,6 @@ const testPirates: GamePirate[] = [
             x: 2,
             y: 0,
         },
-        groupId: '',
         photo: '',
         photoId: 0,
         type: Constants.pirateTypes.Usual,
@@ -129,7 +130,6 @@ const testPirates: GamePirate[] = [
             x: 2,
             y: 4,
         },
-        groupId: '',
         photo: '',
         photoId: 0,
         type: Constants.pirateTypes.Usual,
@@ -146,12 +146,7 @@ const getState = (pirates: GamePirate[]): GameState => ({
         tilesPackNames: [],
     },
     userSettings: {
-        groups: [
-            Constants.groupIds.girls,
-            Constants.groupIds.redalert,
-            Constants.groupIds.orcs,
-            Constants.groupIds.skulls,
-        ],
+        groups: [ImageGroupsIds.girls, ImageGroupsIds.redalert, ImageGroupsIds.orcs, ImageGroupsIds.skulls],
         mapSize: 11,
         hasChessBar: false,
         players: [PlayerTypes.Human, PlayerTypes.Robot2, PlayerTypes.Robot, PlayerTypes.Robot2],
@@ -195,15 +190,15 @@ describe('redux init tests', () => {
     test('Инициализируем команды для игры 1х1', () => {
         const result = reducer(defaultState, initTeams(twoTeamsData));
         expect(result.teams).toHaveLength(2);
-        expect(result.teams[0].group.id).toEqual(Constants.groupIds.girls);
-        expect(result.teams[1].group.id).toEqual(Constants.groupIds.orcs);
+        expect(result.teams[0].imageGroupId).toEqual(ImageGroupsIds.girls);
+        expect(result.teams[1].imageGroupId).toEqual(ImageGroupsIds.orcs);
     });
 
     test('Инициализируем команды для игры 2х2', () => {
         const result = reducer(defaultState, initTeams(fourTeamsData));
         expect(result.teams).toHaveLength(4);
-        expect(result.teams[0].group.id).toEqual(Constants.groupIds.girls);
-        expect(result.teams[1].group.id).toEqual(Constants.groupIds.redalert);
+        expect(result.teams[0].imageGroupId).toEqual(ImageGroupsIds.girls);
+        expect(result.teams[1].imageGroupId).toEqual(ImageGroupsIds.redalert);
     });
 
     test('Определяем фотки пираток', () => {
@@ -215,11 +210,9 @@ describe('redux init tests', () => {
         result.pirates!.forEach((it) => {
             expect(it.photoId).toBeGreaterThan(0);
         });
-        expect(result.pirates![0].groupId).toEqual(Constants.groupIds.girls);
-        expect(result.pirates![0].photo).toContain(Constants.groupIds.girls + '/pirate_');
+        expect(result.pirates![0].photo).toContain(ImageGroupsIds.girls + '/pirate_');
         expect(result.pirates![0].backgroundColor).toEqual('DarkRed');
-        expect(result.pirates![1].groupId).toEqual(Constants.groupIds.orcs);
-        expect(result.pirates![1].photo).toContain(Constants.groupIds.orcs + '/pirate_');
+        expect(result.pirates![1].photo).toContain(ImageGroupsIds.orcs + '/pirate_');
         expect(result.pirates![1].backgroundColor).toEqual('DarkBlue');
     });
 
@@ -384,16 +377,12 @@ describe('redux basic tests', () => {
         expect(result.teams).toContainEqual({
             activePirate: '300',
             backColor: 'DarkBlue',
-            group: {
-                id: Constants.groupIds.orcs,
-                photos: [1, 1, 1, 1, 1, 1],
-                extension: '.jpg',
-            },
+            imageGroupId: ImageGroupsIds.orcs,
             name: 'boys',
             id: testTeamId,
             isHuman: true,
             isCurrentUser: true,
-        });
+        } as TeamState);
         expect(result.highlight_x).toEqual(2);
         expect(result.highlight_y).toEqual(4);
         const pboy = result.pirates?.find((it) => it.id == '200');
