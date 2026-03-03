@@ -4,6 +4,7 @@ export interface makeGameMoveRequestProps {
     gameId: number;
     moveNum: number;
     pirateId: string;
+    turnNumber?: number;
 }
 
 export interface GameSettingsFormData {

@@ -6,7 +6,7 @@ import { TooltipRefProps } from 'react-tooltip';
 import { TooltipTypes } from '../../../constants';
 import gameHub from '../../../hub/gameHub';
 import { CalcTooltipType } from '../../../logic/components/calcTooltipType';
-import { getGameField, getGameSettings } from '../../../redux/gameSlice';
+import { getGameField, getGameSettings, getGameStatistics } from '../../../redux/gameSlice';
 import { AvailableMove, FieldState, GameState } from '../../../types';
 import './cell.less';
 import Level from './level';
@@ -28,6 +28,7 @@ interface CellProps {
 
 function Cell({ row, col, tooltipRef }: CellProps) {
     const field = useSelector<{ game: GameState }, FieldState>((state) => getGameField(state, row, col));
+    const gameStat = useSelector(getGameStatistics);
     const { gameId, cellSize, pirateSize } = useSelector(getGameSettings);
     const hasMove = field.availableMoves.length > 0;
 
@@ -51,6 +52,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
                 gameId: gameId,
                 moveNum: move.num,
                 pirateId: move.pirateId,
+                turnNumber: gameStat?.turnNumber,
             });
         };
         const tooltipOnClick = (move: AvailableMove) => () => {
