@@ -1,10 +1,12 @@
-import { Constants } from '/app/constants';
+import { TeamGroup } from '../gameLogic.types';
+import { Constants, ImageGroupsIds } from '/app/constants';
 import { getAnotherRandomValue } from '/app/global';
 
 export interface InitPiratesPhotoProps {
     girlType: string;
     allGirls?: GamePiratePhotoInitiation[];
     teamId: number;
+    imageGroupId: ImageGroupsIds;
     teamGroup: TeamGroup;
     gannPhotos?: number[];
 }
@@ -18,6 +20,7 @@ export const InitPiratesPhoto = ({
     girlType,
     allGirls,
     teamId,
+    imageGroupId,
     teamGroup,
     gannPhotos,
 }: InitPiratesPhotoProps): PiratePhotoDto => {
@@ -37,7 +40,7 @@ export const InitPiratesPhoto = ({
         pname = 'commonfridays/friday';
         pnumber = getAnotherRandomValue(Constants.fridayPhotos, []);
     } else {
-        pname = `${teamGroup.id}/pirate`;
+        pname = `${imageGroupId}/pirate`;
         pnumber = getAnotherRandomValue(
             teamGroup.photos,
             allGirls

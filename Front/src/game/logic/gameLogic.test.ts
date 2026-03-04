@@ -12,7 +12,7 @@ import { GameState } from '../types';
 import { GameTeamResponse } from '../types/gameSaga';
 import { CalcTooltipType } from './components/calcTooltipType';
 import { InitPiratesPhoto } from './components/initPiratesPhoto';
-import { Constants, ImagesPacksIds } from '/app/constants';
+import { Constants, ImageGroupsIds, ImagesPacksIds } from '/app/constants';
 import { PlayerTypes } from '/common/constants';
 
 const testTeamId = 12;
@@ -52,7 +52,6 @@ const testPirates: GamePirate[] = [
             x: 2,
             y: 0,
         },
-        groupId: '',
         photo: '',
         photoId: 0,
         type: Constants.pirateTypes.Usual,
@@ -69,12 +68,7 @@ const getState = (pirates: GamePirate[]): GameState => ({
         tilesPackNames: [],
     },
     userSettings: {
-        groups: [
-            Constants.groupIds.girls,
-            Constants.groupIds.redalert,
-            Constants.groupIds.orcs,
-            Constants.groupIds.skulls,
-        ],
+        groups: [ImageGroupsIds.girls, ImageGroupsIds.redalert, ImageGroupsIds.orcs, ImageGroupsIds.skulls],
         mapSize: 11,
         hasChessBar: false,
         players: [PlayerTypes.Human, PlayerTypes.Robot2, PlayerTypes.Robot, PlayerTypes.Robot2],
@@ -213,9 +207,7 @@ describe('CalcTooltipType tests', () => {
 
 describe('InitPiratesPhoto tests', () => {
     test('добавляем бенгана и пирата', () => {
-        const groupId = 'test girls';
         const groupInfo = {
-            id: groupId,
             photos: [1, 1, 1],
             extension: '.jpg',
         };
@@ -247,6 +239,7 @@ describe('InitPiratesPhoto tests', () => {
                 girlType: it.type,
                 allGirls: girls,
                 teamId: 1,
+                imageGroupId: ImageGroupsIds.anime,
                 teamGroup: groupInfo,
                 gannPhotos,
             });
@@ -259,6 +252,7 @@ describe('InitPiratesPhoto tests', () => {
                 girlType: Constants.pirateTypes.BenGunn,
                 allGirls: girls,
                 teamId: 1,
+                imageGroupId: ImageGroupsIds.anime,
                 teamGroup: groupInfo,
                 gannPhotos,
             }).photoId,
@@ -271,6 +265,7 @@ describe('InitPiratesPhoto tests', () => {
                 girlType: Constants.pirateTypes.Usual,
                 allGirls: girls,
                 teamId: 1,
+                imageGroupId: ImageGroupsIds.anime,
                 teamGroup: groupInfo,
                 gannPhotos,
             }).photoId,

@@ -1,24 +1,24 @@
-const groupIds = {
-    girls: 'girls',
-    caribian: 'caribian',
-    somali: 'somali',
-    skulls: 'skulls',
-    redalert: 'redalert',
-    orcs: 'orcs',
-    anime: 'anime',
-    clover: 'clover',
-    army: 'army',
-    space: 'space',
-    badguys: 'badguys',
-    resident: 'resident',
-    reAnime: 'resident anime',
-    reGirls: 'resident girls',
-};
-
 export enum ImagesPacksIds {
     classic = 'classic',
     anime = "anime",
     space = 'space'
+}
+
+export enum ImageGroupsIds {
+    girls = 'girls',
+    caribian = 'caribian',
+    somali = 'somali',
+    skulls = 'skulls',
+    redalert = 'redalert',
+    orcs = 'orcs',
+    anime = 'anime',
+    clover = 'clover',
+    army = 'army',
+    space = 'space',
+    badguys = 'badguys',
+    resident = 'resident',
+    reAnime = 'resident anime',
+    reGirls = 'resident girls',
 }
 
 export const Constants = {
@@ -40,73 +40,59 @@ export const Constants = {
     positions: ['Down', 'Left', 'Up', 'Right'],
     gannPhotos: [1, 1, 1, 1],
     fridayPhotos: [1],
-    groupIds,
-    groups: [
-        {
-            id: groupIds.girls,
+    imageGroups: {
+        [ImageGroupsIds.girls]: {
             photos: [1, 1, 1, 1, 1, 1],
+            extension: '',
         },
-        {
-            id: groupIds.caribian,
+        [ImageGroupsIds.caribian]: {
             photos: [2, 5, 3, 1],
         },
-        {
-            id: groupIds.somali,
+        [ImageGroupsIds.somali]: {
             photos: [1, 1, 1, 1, 1, 1, 1, 1],
         },
-        {
-            id: groupIds.redalert,
+        [ImageGroupsIds.redalert]: {
             photos: [1, 1, 1, 1, 1],
             extension: '.jpg',
         },
-        {
-            id: groupIds.orcs,
+        [ImageGroupsIds.orcs]: {
             photos: [1, 1, 1, 1, 1, 1],
             extension: '.jpg',
         },
-        {
-            id: groupIds.skulls,
+        [ImageGroupsIds.skulls]: {
             photos: [1, 1, 1, 1, 1],
         },
-        {
-            id: groupIds.anime,
+        [ImageGroupsIds.anime]: {
             photos: [1, 1, 1, 1, 1],
             extension: '.jpg',
         },
-        {
-            id: groupIds.clover,
+        [ImageGroupsIds.clover]: {
             photos: [1, 1, 1, 1],
             extension: '.jpg',
         },
-        {
-            id: groupIds.army,
+        [ImageGroupsIds.army]: {
             photos: [1, 1, 1, 1],
             extension: '.jpg',
         },
-        {
-            id: groupIds.space,
+        [ImageGroupsIds.space]: {
             photos: [1, 1, 1, 1],
             extension: '.jpg',
         },
-        {
-            id: groupIds.badguys,
+        [ImageGroupsIds.badguys]: {
             photos: [1, 2, 1, 2, 1, 1, 1],
             extension: '.jpg',
         },
-        {
-            id: groupIds.resident,
+        [ImageGroupsIds.resident]: {
             photos: [5, 2, 3, 1, 2, 1, 1, 2, 3],
             extension: '.jpg',
         },
-        {
-            id: groupIds.reAnime,
+        [ImageGroupsIds.reAnime]: {
             photos: [1, 1, 1, 1, 1, 1, 1],
             extension: '.jpg',
         },
-        {
-            id: groupIds.reGirls,
+        [ImageGroupsIds.reGirls]: {
             photos: [1, 1, 3, 1, 1],
             extension: '.jpg',
         },
-    ],
+    },
 };

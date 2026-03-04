@@ -12,7 +12,7 @@ import {
     initGame,
     removeHumanMoves,
 } from '../redux/gameSlice';
-import { StorageState } from '../types';
+import { BrowserStorage } from '../types';
 import { GameStartResponse, GameTurnResponse } from '../types/gameSaga';
 import { history } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
@@ -75,7 +75,7 @@ export function* applyTurnData(action: PayloadAction<GameTurnResponse>) {
     const prevStat: GameStat | undefined = yield select(getGameStatistics);
     const auth: AuthState = yield select(getAuth);
     result.data.stats.isCurrentUsersMove = result.data.stats.currentUserId === auth.user?.id;
-    const { gameSpeed: speed }: StorageState = yield select(getUserSettings);
+    const { gameSpeed: speed }: BrowserStorage = yield select(getUserSettings);
 
     yield put(removeHumanMoves());
     if (!prevStat?.isCurrentUsersMove) {

@@ -1,6 +1,8 @@
+import { ImageGroupsIds } from '/app/constants';
+
 export interface PlayersInfo {
     mode: number;
-    groups: string[];
+    groups: ImageGroupsIds[];
     gamers: PlayerInfo[];
 }
 

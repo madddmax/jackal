@@ -1,4 +1,4 @@
-import { Constants } from './constants';
+import { Constants, ImageGroupsIds } from './constants';
 import { getAnotherRandomValue } from './global';
 import { PiratePhotoIdentity } from '/common/types/common';
 
@@ -37,7 +37,7 @@ describe('global functions tests', () => {
     });
 
     test('Подбираем разных пираток 2', () => {
-        const group = Constants.groups.find((it) => it.id === Constants.groupIds.reAnime)!;
+        const group = Constants.imageGroups[ImageGroupsIds.reAnime];
         const girls: GroupTest[] = [{}, {}, {}];
         girls.forEach((it) => {
             it.photo = getAnotherRandomValue(

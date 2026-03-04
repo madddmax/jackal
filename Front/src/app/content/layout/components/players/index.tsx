@@ -4,10 +4,7 @@ import { useState } from 'react';
 import { PlayerInfo, PlayersInfo } from '../types';
 import Player from './player';
 import classes from './players.module.less';
-import { Constants } from '/app/constants';
-
-const convertGroups = (grps: string[]) => grps.map((gr) => Constants.groups.findIndex((it) => it.id == gr) || 0);
-const deconvertGroups = (groups: number[]) => groups.map((num) => Constants.groups[num].id);
+import { ImageGroupsIds } from '/app/constants';
 
 export interface PlayersProps {
     players: PlayersInfo;
@@ -18,7 +15,7 @@ export interface PlayersProps {
 }
 
 const Players = ({ players, allowedGamers, setPlayers, mapInfo, isPublic }: PlayersProps) => {
-    const [grps, setGrps] = useState<number[]>(convertGroups(players.groups));
+    const [grps, setGrps] = useState<ImageGroupsIds[]>(players.groups);
 
     const changeGamer = (pos: number, playerId: number) => {
         const clone = [...players.gamers];
@@ -29,15 +26,15 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo, isPublic }: Play
         });
     };
 
-    const isIgnoredGroup = (pos: number): boolean => grps.includes(pos);
+    const isIgnoredGroup = (grpId: ImageGroupsIds): boolean => grps.includes(grpId);
 
-    const changeGroup = (pos: number, grpId: number) => {
+    const changeGroup = (pos: number, grpId: ImageGroupsIds) => {
         const clone = [...grps];
         clone[pos] = grpId;
         setGrps(clone);
         setPlayers({
             ...players,
-            groups: deconvertGroups(clone),
+            groups: clone,
         });
     };
 
@@ -67,10 +64,10 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo, isPublic }: Play
                             position={index}
                             type={gamer.type}
                             userName={gamer.userId > 0 ? gamer.userName : undefined}
-                            group={grps[index]}
+                            imageGroupId={grps[index]}
                             posInfo={mapInfo && mapInfo[index]}
                             changePlayer={(id) => changeGamer(index, id)}
-                            changeGroup={(id) => changeGroup(index, id)}
+                            changeGroup={(grpId) => changeGroup(index, grpId)}
                             isIgnoredGroup={isIgnoredGroup}
                             allowedGamers={allowedGamers}
                             isPublic={isPublic}
