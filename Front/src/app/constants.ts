@@ -1,7 +1,7 @@
 export enum ImagesPacksIds {
     classic = 'classic',
-    anime = "anime",
-    space = 'space'
+    space = 'space',
+    dendy_8_bit = 'dendy_8_bit'
 }
 
 export enum ImageGroupsIds {
@@ -24,8 +24,8 @@ export enum ImageGroupsIds {
 export const Constants = {
     imagesPacks: {
         [ImagesPacksIds.classic]: '/fields/',
-        [ImagesPacksIds.anime]: '/fields_anime/',
         [ImagesPacksIds.space]: '/fields_space/',
+        [ImagesPacksIds.dendy_8_bit]: '/fields_dendy_8_bit/',
     },
     gameModeTypes: {
         FreeForAll: 'FreeForAll',
