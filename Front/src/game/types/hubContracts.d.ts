@@ -1,4 +1,4 @@
-import { PlayerInfo, PlayersInfo } from '/app/content/layout/components/types';
+import { PlayerInfo, PlayersInfo } from '/common/types/players';
 
 export interface makeGameMoveRequestProps {
     gameId: number;

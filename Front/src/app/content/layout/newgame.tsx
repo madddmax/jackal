@@ -5,12 +5,12 @@ import Row from 'react-bootstrap/Row';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { getUserSettings, saveMySettings } from '../../../game/redux/gameSlice';
-import GameSettingsForm from './components/gameSettingsForm';
 import { convertToSettings } from '/app/global';
 import { getAuth } from '/auth/redux/authSlice';
 import { PlayerTypes } from '/common/constants';
+import GameSettingsForm from '/common/content/gameSettingsForm';
 import gameHub from '/game/hub/gameHub';
+import { getUserSettings, saveMySettings } from '/game/redux/gameSlice';
 import { GameSettingsFormData } from '/game/types/hubContracts';
 
 const Newgame = () => {

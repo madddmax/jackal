@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { useState } from 'react';
 
-import { PlayerInfo, PlayersInfo } from '../types';
+import { PlayerInfo, PlayersInfo } from '../../../types/players';
 import Player from './player';
 import classes from './players.module.less';
 import { ImageGroupsIds } from '/app/constants';

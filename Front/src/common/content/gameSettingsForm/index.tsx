@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
-import classes from '../newgame.module.less';
+import { PlayerTypes } from '../../constants';
+import { sagaActions } from '../../sagas';
+import { PlayersInfo } from '../../types/players';
+import classes from './newgame.module.less';
 import Players from './players';
-import { PlayersInfo } from './types';
-import { PlayerTypes } from '/common/constants';
-import { sagaActions } from '/common/sagas';
 import { getGameSettings, getMapForecasts, setMapForecasts } from '/game/redux/gameSlice';
 import { GameSettingsFormData } from '/game/types/hubContracts';
 
