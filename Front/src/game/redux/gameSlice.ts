@@ -290,6 +290,7 @@ export const gameSlice = createSlice({
                         num: move.moveNum,
                         isRespawn: move.withRespawn,
                         isQuake: move.withQuake,
+                        isLighthouse: move.withLighthouse,
                         pirateId: pirate.id,
                         prev: move.prev,
                     });

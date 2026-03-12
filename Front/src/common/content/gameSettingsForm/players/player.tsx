@@ -3,10 +3,10 @@ import { useRef } from 'react';
 import Image from 'react-bootstrap/Image';
 import { PlacesType, Tooltip, TooltipRefProps } from 'react-tooltip';
 
+import { GetPlayerTypePicture } from '../../../constants';
+import { PlayerInfo } from '../../../types/players';
 import classes from './players.module.less';
 import { ImageGroupsIds } from '/app/constants';
-import { PlayerInfo } from '/app/content/layout/components/types';
-import { GetPlayerTypePicture } from '/common/constants';
 
 const tooltipPositions: PlacesType[] = ['bottom', 'left', 'top', 'right'];
 const tooltipAnchors: string[] = ['#players_mode_cntrl', '#player_pos_3', '#player_pos_0', '#player_pos_1'];

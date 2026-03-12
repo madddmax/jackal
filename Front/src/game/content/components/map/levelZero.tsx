@@ -39,6 +39,7 @@ const LevelZero = ({ cellSize, pirateSize, data, onClick }: LevelZeroProps) => {
                     style={{
                         position: 'absolute',
                         zIndex: 0,
+                        textAlign: 'center',
                         width: cellSize,
                         cursor: onClick ? 'pointer' : 'default',
                     }}

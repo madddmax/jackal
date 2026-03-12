@@ -4,8 +4,8 @@ import { NavigateFunction } from 'react-router-dom';
 
 import config from './config';
 import { Constants } from './constants';
-import { PlayerInfo, PlayersInfo } from './content/layout/components/types';
 import { PiratePhotoIdentity } from '/common/types/common';
+import { PlayerInfo, PlayersInfo } from '/common/types/players';
 import { GamePlayer, GameSettings, GameSettingsFormData } from '/game/types/hubContracts';
 
 export const uuidGen = () => {

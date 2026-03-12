@@ -1,5 +1,7 @@
 import cn from 'classnames';
 import { RefObject } from 'react';
+import { GiFootprint } from 'react-icons/gi';
+import { PiEyeBold, PiHandArrowUpBold } from 'react-icons/pi';
 import { useDispatch, useSelector } from 'react-redux';
 import { TooltipRefProps } from 'react-tooltip';
 
@@ -31,6 +33,8 @@ function Cell({ row, col, tooltipRef }: CellProps) {
     const gameStat = useSelector(getGameStatistics);
     const { gameId, cellSize, pirateSize } = useSelector(getGameSettings);
     const hasMove = field.availableMoves.length > 0;
+    const isQuake = field.availableMoves.length > 0 && field.availableMoves[0].isQuake;
+    const isLighthouse = field.availableMoves.length > 0 && field.availableMoves[0].isLighthouse;
 
     const dispatch = useDispatch();
 
@@ -124,6 +128,15 @@ function Cell({ row, col, tooltipRef }: CellProps) {
 
     return (
         <>
+            {hasMove && (
+                <>
+                    {isQuake && <PiHandArrowUpBold size={20} style={{ position: 'absolute', color: 'gray' }} />}
+                    {isLighthouse && <PiEyeBold size={20} style={{ position: 'absolute', color: 'dimGray' }} />}
+                    {!isQuake && !isLighthouse && (
+                        <GiFootprint size={20} style={{ position: 'absolute', color: 'dimGray' }} />
+                    )}
+                </>
+            )}
             <div
                 key="main_cell"
                 id={`cell_${col}_${row}`}
