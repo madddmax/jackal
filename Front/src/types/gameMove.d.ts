@@ -11,6 +11,7 @@ interface GameMove {
     withRespawn: boolean;
     withRumBottle: boolean;
     withQuake: boolean;
+    withLighthouse: boolean;
 }
 
 interface GameMovePosition {

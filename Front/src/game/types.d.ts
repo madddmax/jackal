@@ -72,6 +72,7 @@ export interface AvailableMove {
     num: number;
     isRespawn: boolean;
     isQuake: boolean;
+    isLighthouse: boolean;
     pirateId: string;
     prev?: {
         x: number;
