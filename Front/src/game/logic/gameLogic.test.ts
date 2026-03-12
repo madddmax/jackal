@@ -115,6 +115,7 @@ describe('CalcTooltipType tests', () => {
                         withRespawn: false,
                         withRumBottle: false,
                         withQuake: false,
+                        withLighthouse: false,
                     },
                     {
                         moveNum: 2,
@@ -125,6 +126,7 @@ describe('CalcTooltipType tests', () => {
                         withRespawn: false,
                         withRumBottle: false,
                         withQuake: false,
+                        withLighthouse: false,
                     },
                     {
                         moveNum: 3,
@@ -135,6 +137,7 @@ describe('CalcTooltipType tests', () => {
                         withRespawn: false,
                         withRumBottle: false,
                         withQuake: true,
+                        withLighthouse: false,
                     },
                 ],
             }),
