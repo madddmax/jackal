@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { RefObject } from 'react';
+import { FaArrowAltCircleUp, FaRegEye } from 'react-icons/fa';
 import { GiFootprint } from 'react-icons/gi';
-import { PiEyeBold, PiHandArrowUpBold } from 'react-icons/pi';
 import { useDispatch, useSelector } from 'react-redux';
 import { TooltipRefProps } from 'react-tooltip';
 
@@ -130,8 +130,8 @@ function Cell({ row, col, tooltipRef }: CellProps) {
         <>
             {hasMove && (
                 <>
-                    {isQuake && <PiHandArrowUpBold size={20} style={{ position: 'absolute', color: 'gray' }} />}
-                    {isLighthouse && <PiEyeBold size={20} style={{ position: 'absolute', color: 'dimGray' }} />}
+                    {isQuake && <FaArrowAltCircleUp size={20} style={{ position: 'absolute', color: 'gray' }} />}
+                    {isLighthouse && <FaRegEye size={20} style={{ position: 'absolute', color: 'dimGray' }} />}
                     {!isQuake && !isLighthouse && (
                         <GiFootprint size={20} style={{ position: 'absolute', color: 'dimGray' }} />
                     )}

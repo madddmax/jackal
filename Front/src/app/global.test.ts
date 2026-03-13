@@ -8,7 +8,20 @@ interface GroupTest {
 
 describe('global functions tests', () => {
     test('Подбираем разных пираток', () => {
-        const groupPhotos = [1, 1, 1, 1];
+        const groupPhotos = [
+            {
+                subTypeCount: 1,
+            },
+            {
+                subTypeCount: 1,
+            },
+            {
+                subTypeCount: 1,
+            },
+            {
+                subTypeCount: 1,
+            },
+        ];
         const girls: GroupTest[] = [{}, {}, {}];
         girls.forEach((it) => {
             it.photo = getAnotherRandomValue(

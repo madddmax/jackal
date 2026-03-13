@@ -11,7 +11,7 @@ import { getMapData } from '../redux/mapDataForTests';
 import { GameState } from '../types';
 import { GameTeamResponse } from '../types/gameSaga';
 import { CalcTooltipType } from './components/calcTooltipType';
-import { InitPiratesPhoto } from './components/initPiratesPhoto';
+import { InitPirate } from './components/initPirate';
 import { Constants, ImageGroupsIds, ImagesPacksIds } from '/app/constants';
 import { PlayerTypes } from '/common/constants';
 
@@ -208,14 +208,34 @@ describe('CalcTooltipType tests', () => {
     });
 });
 
-describe('InitPiratesPhoto tests', () => {
+describe('InitPirates tests', () => {
     test('добавляем бенгана и пирата', () => {
         const groupInfo = {
-            photos: [1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '.jpg',
         };
-        const gannPhotos = [1, 1, 1];
-        const girls: GamePiratePhotoInitiation[] = [
+        const gannPhotos = [
+            {
+                subTypeCount: 1,
+            },
+            {
+                subTypeCount: 1,
+            },
+            {
+                subTypeCount: 1,
+            },
+        ];
+        const girls: GamePirateInitiation[] = [
             {
                 teamId: 1,
                 photoId: 0,
@@ -238,7 +258,7 @@ describe('InitPiratesPhoto tests', () => {
             },
         ];
         girls.forEach((it) => {
-            const initPhoto = InitPiratesPhoto({
+            const initPhoto = InitPirate({
                 girlType: it.type,
                 allGirls: girls,
                 teamId: 1,
@@ -251,7 +271,7 @@ describe('InitPiratesPhoto tests', () => {
 
         girls.push({
             teamId: 1,
-            photoId: InitPiratesPhoto({
+            photoId: InitPirate({
                 girlType: Constants.pirateTypes.BenGunn,
                 allGirls: girls,
                 teamId: 1,
@@ -264,7 +284,7 @@ describe('InitPiratesPhoto tests', () => {
 
         girls.push({
             teamId: 1,
-            photoId: InitPiratesPhoto({
+            photoId: InitPirate({
                 girlType: Constants.pirateTypes.Usual,
                 allGirls: girls,
                 teamId: 1,

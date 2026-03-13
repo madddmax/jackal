@@ -1,7 +1,7 @@
 export enum ImagesPacksIds {
     classic = 'classic',
     space = 'space',
-    dendy_8_bit = 'dendy_8_bit'
+    dendy_8_bit = 'dendy_8_bit',
 }
 
 export enum ImageGroupsIds {
@@ -38,60 +38,333 @@ export const Constants = {
         Friday: 'Friday',
     },
     positions: ['Down', 'Left', 'Up', 'Right'],
-    gannPhotos: [1, 1, 1, 1],
-    fridayPhotos: [1],
+    gannPhotos: [
+        {
+            subTypeCount: 1,
+        },
+        {
+            subTypeCount: 1,
+        },
+        {
+            subTypeCount: 1,
+        },
+        {
+            subTypeCount: 1,
+        },
+    ],
+    fridayPhotos: [
+        {
+            subTypeCount: 1,
+        },
+    ],
     imageGroups: {
         [ImageGroupsIds.girls]: {
-            photos: [1, 1, 1, 1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '',
         },
         [ImageGroupsIds.caribian]: {
-            photos: [2, 5, 3, 1],
+            photos: [
+                {
+                    subTypeCount: 2,
+                },
+                {
+                    subTypeCount: 5,
+                },
+                {
+                    subTypeCount: 3,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
         },
         [ImageGroupsIds.somali]: {
-            photos: [1, 1, 1, 1, 1, 1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
         },
         [ImageGroupsIds.redalert]: {
-            photos: [1, 1, 1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '.jpg',
         },
         [ImageGroupsIds.orcs]: {
-            photos: [1, 1, 1, 1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '.jpg',
         },
         [ImageGroupsIds.skulls]: {
-            photos: [1, 1, 1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
         },
         [ImageGroupsIds.anime]: {
-            photos: [1, 1, 1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '.jpg',
         },
         [ImageGroupsIds.clover]: {
-            photos: [1, 1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '.jpg',
         },
         [ImageGroupsIds.army]: {
-            photos: [1, 1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '.jpg',
         },
         [ImageGroupsIds.space]: {
-            photos: [1, 1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '.jpg',
         },
         [ImageGroupsIds.badguys]: {
-            photos: [1, 2, 1, 2, 1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 2,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 2,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '.jpg',
         },
         [ImageGroupsIds.resident]: {
-            photos: [5, 2, 3, 1, 2, 1, 1, 2, 3],
+            photos: [
+                {
+                    subTypeCount: 5,
+                },
+                {
+                    subTypeCount: 2,
+                },
+                {
+                    subTypeCount: 3,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 2,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 2,
+                },
+                {
+                    subTypeCount: 3,
+                },
+            ],
             extension: '.jpg',
         },
         [ImageGroupsIds.reAnime]: {
-            photos: [1, 1, 1, 1, 1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '.jpg',
         },
         [ImageGroupsIds.reGirls]: {
-            photos: [1, 1, 3, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 3,
+                    name: 'Ребекка',
+                    description: 'советник Альянса Противодействия Биотерроризму (АПБ) и бывший медик в отряде «Браво»',
+                },
+                {
+                    subTypeCount: 1,
+                    name: 'Ада',
+                    description:
+                        'О прошлом Ады ничего неизвестно, как и о том, где и когда она родилась. Отличается уникальными физическими данными, сильным характером и острым умом.',
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '.jpg',
         },
     },
