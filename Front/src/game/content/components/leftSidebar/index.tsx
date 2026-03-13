@@ -1,8 +1,10 @@
 import cn from 'classnames';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button, Form, InputGroup, Modal } from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
+import { FaInfoCircle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
+import { Tooltip, TooltipRefProps } from 'react-tooltip';
 
 import {
     chooseHumanPirate,
@@ -23,6 +25,7 @@ import { Constants, ImagesPacksIds } from '/app/constants';
 
 function LeftSidebar() {
     const dispatch = useDispatch();
+    const pirateTooltip = useRef<TooltipRefProps>(null);
 
     const currentPlayerPirates = useSelector(getCurrentPlayerPirates);
     const hasPirateAutoChange = useSelector(getPirateAutoChange);
@@ -93,18 +96,55 @@ function LeftSidebar() {
         <>
             {currentPlayerPirates &&
                 currentPlayerPirates.map((girl, index) => (
-                    <PirateIcon
-                        key={`pirate_${index}`}
-                        pirate={girl}
-                        onClick={onClick(girl)}
-                        onCoinClick={onCoinClick(girl)}
-                    />
+                    <>
+                        <PirateIcon
+                            key={`pirate_${index}`}
+                            pirate={girl}
+                            onClick={onClick(girl)}
+                            onCoinClick={onCoinClick(girl)}
+                        >
+                            <>
+                                {girl.name && (
+                                    <div className="photo-name">
+                                        <div className="badge rounded-pill bg-warning text-dark">
+                                            {girl.name}
+                                            {girl.description && (
+                                                <FaInfoCircle
+                                                    id={`pirate-${index}-info`}
+                                                    size={16}
+                                                    style={{ cursor: 'pointer', marginLeft: '5px' }}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        </PirateIcon>
+                        {girl.name && girl.description && (
+                            <Tooltip
+                                ref={pirateTooltip}
+                                anchorSelect={`#pirate-${index}-info`}
+                                place="right"
+                                content={girl.description}
+                                border="1px solid black"
+                                opacity={1}
+                                style={{
+                                    backgroundColor: 'white',
+                                    color: 'black',
+                                    width: '300px',
+                                    zIndex: 1000,
+                                }}
+                                openEvents={{ mouseenter: true }}
+                                closeEvents={{ mouseleave: true }}
+                            />
+                        )}
+                    </>
                 ))}
 
             <Form.Group controlId="formBasicCheckbox">
                 <Form.Check
                     id="rum-bottle-switch"
-                    className="photo-position float-end mb-3"
+                    className="photo-position float-end mb-3 mt-2"
                     style={{ marginLeft: 0 }}
                     type="switch"
                     label={
