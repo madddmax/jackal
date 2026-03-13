@@ -1,6 +1,7 @@
 import { TeamGroup } from '../gameLogic.types';
 import { Constants, ImageGroupsIds } from '/app/constants';
 import { getAnotherRandomValue } from '/app/global';
+import { PirateIdentity } from '/common/types/common';
 
 export interface InitPiratesPhotoProps {
     girlType: string;
@@ -8,7 +9,7 @@ export interface InitPiratesPhotoProps {
     teamId: number;
     imageGroupId: ImageGroupsIds;
     teamGroup: TeamGroup;
-    gannPhotos?: number[];
+    gannPhotos?: PirateIdentity[];
 }
 
 export interface PiratePhotoDto {

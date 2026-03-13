@@ -16,6 +16,10 @@ export interface ErrorInfo {
     errorMessage: string;
 }
 
+export interface PirateIdentity {
+    subTypeCount: number;
+}
+
 export interface PiratePhotoIdentity {
     type: number;
     subtype: number;

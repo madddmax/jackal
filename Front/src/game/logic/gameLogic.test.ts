@@ -211,10 +211,30 @@ describe('CalcTooltipType tests', () => {
 describe('InitPiratesPhoto tests', () => {
     test('добавляем бенгана и пирата', () => {
         const groupInfo = {
-            photos: [1, 1, 1],
+            photos: [
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+                {
+                    subTypeCount: 1,
+                },
+            ],
             extension: '.jpg',
         };
-        const gannPhotos = [1, 1, 1];
+        const gannPhotos = [
+            {
+                subTypeCount: 1,
+            },
+            {
+                subTypeCount: 1,
+            },
+            {
+                subTypeCount: 1,
+            },
+        ];
         const girls: GamePiratePhotoInitiation[] = [
             {
                 teamId: 1,

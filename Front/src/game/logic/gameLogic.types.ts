@@ -1,3 +1,5 @@
+import { PirateIdentity } from '/common/types/common';
+
 export interface GirlsLevel {
     level: number;
     levelsCountInCell: number;
@@ -19,6 +21,6 @@ export interface GirlsLogicPosition {
 }
 
 export interface TeamGroup {
-    photos: number[];
+    photos: PirateIdentity[];
     extension?: string;
 }
