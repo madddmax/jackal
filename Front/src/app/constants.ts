@@ -352,6 +352,8 @@ export const Constants = {
                 },
                 {
                     subTypeCount: 3,
+                    name: 'Ребекка',
+                    description: 'советник Альянса Противодействия Биотерроризму (АПБ) и бывший медик в отряде «Браво»',
                 },
                 {
                     subTypeCount: 1,

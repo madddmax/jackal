@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
 import { memoize } from 'proxy-memoize';
 
-import { InitPiratesPhoto } from '../logic/components/initPiratesPhoto';
+import { InitPirate } from '../logic/components/initPirate';
 import { constructGameLevel, girlsMap } from '../logic/gameLogic';
 import {
     BrowserStorage,
@@ -128,7 +128,7 @@ export const gameSlice = createSlice({
                 state.pirates
                     ?.filter((it) => it.teamId == team.id)
                     .forEach((it) => {
-                        const initPhoto = InitPiratesPhoto({
+                        const newGirl = InitPirate({
                             girlType: it.type,
                             allGirls: state.pirates,
                             teamId: it.teamId,
@@ -136,8 +136,10 @@ export const gameSlice = createSlice({
                             teamGroup: Constants.imageGroups[team.imageGroupId],
                         });
 
-                        it.photo = initPhoto.photo;
-                        it.photoId = initPhoto.photoId;
+                        it.photo = newGirl.photo;
+                        it.photoId = newGirl.photoId;
+                        it.name = newGirl.name;
+                        it.description = newGirl.description;
                         it.backgroundColor = team.backColor;
                     });
             });
@@ -340,7 +342,7 @@ export const gameSlice = createSlice({
                     girlsMap.RemovePosition(pirate);
                     gameSlice.caseReducers.updateLevelCoinsData(state, updateLevelCoinsData(pirate));
                 } else if (it.isAlive === true) {
-                    const initPhoto = InitPiratesPhoto({
+                    const newGirl = InitPirate({
                         girlType: it.type,
                         allGirls: state.pirates,
                         teamId: it.teamId,
@@ -352,8 +354,10 @@ export const gameSlice = createSlice({
                         id: it.id,
                         teamId: it.teamId,
                         position: it.position,
-                        photo: initPhoto.photo,
-                        photoId: initPhoto.photoId,
+                        photo: newGirl.photo,
+                        photoId: newGirl.photoId,
+                        name: newGirl.name,
+                        description: newGirl.description,
                         type: it.type,
                         isActive: it.id === team.activePirate,
                         backgroundColor: team.backColor,

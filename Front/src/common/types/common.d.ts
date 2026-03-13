@@ -18,6 +18,8 @@ export interface ErrorInfo {
 
 export interface PirateIdentity {
     subTypeCount: number;
+    name?: string;
+    description?: string;
 }
 
 export interface PiratePhotoIdentity {
