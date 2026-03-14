@@ -210,7 +210,7 @@ public class DrawService : IDrawService
                 filename = "rumbar";
                 break;
             case TileType.RumBottle:
-                filename = tile.Used ? $"used_rum_{tile.Code}" : $"rum_{tile.Code}";
+                filename = tile.Used ? $"rum_{tile.Code}_used" : $"rum_{tile.Code}";
                 break;
             case TileType.Horse:
                 filename = "horse";
@@ -222,7 +222,7 @@ public class DrawService : IDrawService
                 filename = "croc";
                 break;
             case TileType.Airplane:
-                filename = tile.Used ? "used_airplane" : "airplane";
+                filename = tile.Used ? "airplane_used" : "airplane";
                 break;
             case TileType.Balloon:
                 filename = "balloon";
@@ -240,7 +240,7 @@ public class DrawService : IDrawService
                 filename = "lighthouse";
                 break;
             case TileType.BenGunn:
-                filename = tile.Used ? "used_bengunn" : "bengunn";
+                filename = tile.Used ? "bengunn_used" : "bengunn";
                 break;
             case TileType.Caramba:
                 filename = "caramba";
@@ -255,7 +255,7 @@ public class DrawService : IDrawService
                 filename = "quake";
                 break;
             case TileType.Cannabis:
-                filename = tile.Used ? "used_cannabis" : "cannabis";
+                filename = tile.Used ? "cannabis_used" : "cannabis";
                 break;
             case TileType.Spinning:
                 switch (tile.SpinningCount)
