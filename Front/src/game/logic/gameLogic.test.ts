@@ -117,6 +117,7 @@ describe('CalcTooltipType tests', () => {
                         withLighthouse: false,
                         withQuakeFirst: false,
                         withQuakeLast: false,
+                        withCannabis: false,
                     },
                     {
                         moveNum: 2,
@@ -129,6 +130,7 @@ describe('CalcTooltipType tests', () => {
                         withLighthouse: false,
                         withQuakeFirst: false,
                         withQuakeLast: false,
+                        withCannabis: false,
                     },
                     {
                         moveNum: 3,
@@ -141,6 +143,7 @@ describe('CalcTooltipType tests', () => {
                         withLighthouse: false,
                         withQuakeFirst: true,
                         withQuakeLast: false,
+                        withCannabis: false,
                     },
                 ],
             }),

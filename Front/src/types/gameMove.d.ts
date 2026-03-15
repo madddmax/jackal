@@ -13,6 +13,7 @@ interface GameMove {
     withLighthouse: boolean;
     withQuakeFirst: boolean;
     withQuakeLast: boolean;
+    withCannabis: boolean;
 }
 
 interface GameMovePosition {

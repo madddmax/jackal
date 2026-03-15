@@ -13,4 +13,5 @@ public class DrawMove
     public bool WithLighthouse;
     public bool WithQuakeFirst;
     public bool WithQuakeLast;
+    public bool WithCannabis;
 }

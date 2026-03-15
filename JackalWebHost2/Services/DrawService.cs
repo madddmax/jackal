@@ -120,6 +120,7 @@ public class DrawService : IDrawService
                 WithLighthouse = move.WithLighthouse,
                 WithQuakeFirst = move.WithQuakeFirst,
                 WithQuakeLast = move.WithQuakeLast,
+                WithCannabis = game.CurrentTeamId != game.CurrentPlayerIndex,
                 From = pirate,
                 To = new PiratePosition
                 {
