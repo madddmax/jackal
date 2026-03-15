@@ -13,16 +13,9 @@ public class EasyPlayer : IPlayer
 {
     private Random _rnd = new();
     
-    /// <summary>
-    /// Вторая фаза землетрясения,
-    /// выбор второй клетки на замену
-    /// </summary>
-    private bool _secondQuakePhase;
-    
     public void OnNewGame()
     {
         _rnd = new Random(1);
-        _secondQuakePhase = false;
     }
 
     public (int moveNum, Guid? pirateId) OnMove(GameState gameState)
@@ -132,10 +125,8 @@ public class EasyPlayer : IPlayer
             .Where(t => enemyTeamIds.Contains(t.Id))
             .MaxBy(t => t.Coins);
         
-        if (!_secondQuakePhase && richestEnemyTeam != null && gameState.AvailableMoves.Any(m => m.WithQuake))
+        if (richestEnemyTeam != null && gameState.AvailableMoves.Any(m => m.WithQuakeFirst))
         {
-            _secondQuakePhase = true;
-            
             var takeGoodMoves = new List<Move>();
 
             var shipLanding = board.GetShipLanding(richestEnemyTeam.ShipPosition);
@@ -165,10 +156,8 @@ public class EasyPlayer : IPlayer
             if (CheckGoodMove(takeGoodMoves, gameState.AvailableMoves, out var takeGoodMoveNum)) 
                 return (takeGoodMoveNum, null);
         }
-        else if(_secondQuakePhase && gameState.AvailableMoves.Any(m => m.WithQuake))
+        else if(gameState.AvailableMoves.Any(m => m.WithQuakeLast))
         {
-            _secondQuakePhase = false;
-
             var takeVeryBadMoves = gameState.AvailableMoves
                 .Where(move => board.Map[move.To.Position].Type == TileType.Cannibal ||
                                board.Map[move.To.Position].Type == TileType.Cannon ||

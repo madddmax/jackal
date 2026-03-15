@@ -113,12 +113,13 @@ public class DrawService : IDrawService
             result.Add(new DrawMove
             {
                 MoveNum = index++,
-                WithRumBottle = move.WithRumBottle,
                 WithCoin = move.WithCoin,
                 WithBigCoin = move.WithBigCoin,
+                WithRumBottle = move.WithRumBottle,
                 WithRespawn = move.WithRespawn,
                 WithLighthouse = move.WithLighthouse,
-                WithQuake = move.WithQuake,
+                WithQuakeFirst = move.WithQuakeFirst,
+                WithQuakeLast = move.WithQuakeLast,
                 From = pirate,
                 To = new PiratePosition
                 {

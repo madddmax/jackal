@@ -127,7 +127,7 @@ public class Board
             if (subTurn.QuakePhase > 0)
             {
                 // разыгрываем ход разлома
-                var quakeMove = AvailableMoveFactory.QuakeMove(task.Source, newPosition, prev);
+                var quakeMove = AvailableMoveFactory.QuakeMove(task.Source, newPosition, prev, subTurn.QuakePhase);
                 goodTargets.Add(quakeMove);
                 continue;
             }
