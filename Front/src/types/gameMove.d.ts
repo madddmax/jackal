@@ -8,10 +8,12 @@ interface GameMove {
     };
     withCoin: boolean;
     withBigCoin: boolean;
-    withRespawn: boolean;
     withRumBottle: boolean;
-    withQuake: boolean;
+    withRespawn: boolean;
     withLighthouse: boolean;
+    withQuakeFirst: boolean;
+    withQuakeLast: boolean;
+    withCannabis: boolean;
 }
 
 interface GameMovePosition {

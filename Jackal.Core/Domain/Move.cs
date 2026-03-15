@@ -60,7 +60,12 @@ public record Move(TilePosition From, TilePosition To, Position? Prev, MoveType 
     public bool WithLighthouse => Type == MoveType.WithLighthouse;
 
     /// <summary>
-    /// Выбор клетки для разлома
+    /// Выбор первой клетки для разлома
     /// </summary>
-    public bool WithQuake => Type == MoveType.WithQuake;
+    public bool WithQuakeFirst => Type == MoveType.WithQuakeFirst;
+    
+    /// <summary>
+    /// Выбор второй клетки для разлома
+    /// </summary>
+    public bool WithQuakeLast => Type == MoveType.WithQuakeLast;
 }

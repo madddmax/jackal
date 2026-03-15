@@ -6,10 +6,12 @@ public class DrawMove
     public PiratePosition From;
     public PiratePosition To;
     public DrawPosition? Prev;
-    public bool WithRumBottle;
     public bool WithCoin;
     public bool WithBigCoin;
+    public bool WithRumBottle;
     public bool WithRespawn;
     public bool WithLighthouse;
-    public bool WithQuake;
+    public bool WithQuakeFirst;
+    public bool WithQuakeLast;
+    public bool WithCannabis;
 }

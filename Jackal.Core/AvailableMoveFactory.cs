@@ -14,12 +14,12 @@ public static class AvailableMoveFactory
         };
     }
 
-    public static AvailableMove QuakeMove(TilePosition from, TilePosition to, TilePosition prev)
+    public static AvailableMove QuakeMove(TilePosition from, TilePosition to, TilePosition prev, int quakePhase)
     {
         var quakeAction = new QuakeAction(prev, to);
         return new AvailableMove(from, to, quakeAction)
         {
-            MoveType = MoveType.WithQuake
+            MoveType = quakePhase == 2 ? MoveType.WithQuakeFirst : MoveType.WithQuakeLast
         };
     }
 
