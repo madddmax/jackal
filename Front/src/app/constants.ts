@@ -282,9 +282,11 @@ export const Constants = {
                 },
                 {
                     subTypeCount: 1,
+                    name: 'Винсент Вега',
                 },
                 {
                     subTypeCount: 1,
+                    name: 'Джулс Виннфилд',
                 },
                 {
                     subTypeCount: 1,

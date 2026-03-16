@@ -17,7 +17,7 @@ const PirateIcon = ({ pirate, onClick, onCoinClick, children }: PirateProps) => 
     if (pirate.withBigCoin) coinImg = '/pictures/gold_ruble.png';
 
     return (
-        <div className="photo-position float-end">
+        <div className="photo-position">
             <Image
                 src={`/pictures/${pirate.photo}`}
                 roundedCircle

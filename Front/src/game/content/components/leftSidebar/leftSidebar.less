@@ -1,8 +1,13 @@
+@import '/common/content/common.less';
+
 .photo-position {
     position: relative;
     width: 100px;
     & > input {
         margin-left: 0 !important;
+    }
+    @media (max-width: @screen-md-max) {
+        float: right !important;
     }
 }
 
