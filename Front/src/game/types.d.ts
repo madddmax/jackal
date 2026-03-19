@@ -91,3 +91,8 @@ export interface ChooseHumanPirateActionProps {
 export interface TakeOrPutCoinActionProps {
     pirate: string;
 }
+
+export interface ChangeTeamImageGroupActionProps {
+    teamId: number;
+    imageGroupId: ImageGroupsIds;
+}

@@ -5,6 +5,7 @@ import { InitPirate } from '../logic/components/initPirate';
 import { constructGameLevel, girlsMap } from '../logic/gameLogic';
 import {
     BrowserStorage,
+    ChangeTeamImageGroupActionProps,
     ChooseHumanPirateActionProps,
     FieldState,
     GamePlace,
@@ -125,6 +126,20 @@ export const gameSlice = createSlice({
         },
         initPhotos: (state) => {
             state.teams.forEach((team) => {
+                gameSlice.caseReducers.initTeamPhotos(state, initTeamPhotos(team.id));
+            });
+        },
+        changeTeamImageGroup: (state, action: PayloadAction<ChangeTeamImageGroupActionProps>) => {
+            const team = state.teams.find((it) => it.id == action.payload.teamId);
+            if (team) {
+                state.pirates?.filter((it) => it.teamId === team.id).forEach((it) => (it.photoId = 0));
+                team.imageGroupId = action.payload.imageGroupId;
+                gameSlice.caseReducers.initTeamPhotos(state, initTeamPhotos(team.id));
+            }
+        },
+        initTeamPhotos: (state, action: PayloadAction<number>) => {
+            const team = state.teams.find((it) => it.id == action.payload);
+            if (team) {
                 state.pirates
                     ?.filter((it) => it.teamId == team.id)
                     .forEach((it) => {
@@ -142,7 +157,7 @@ export const gameSlice = createSlice({
                         it.description = newGirl.description;
                         it.backgroundColor = team.backColor;
                     });
-            });
+            }
         },
         initSizes: (state, action: PayloadAction<ScreenSizes>) => {
             const width = action.payload.width;
@@ -535,6 +550,7 @@ export const gameSlice = createSlice({
                     teamId: team?.id,
                     name: team?.name,
                     backColor: team?.backColor,
+                    imageGroupId: team?.imageGroupId,
                     coins: it.coins,
                     bottles: it.rumBottles,
                     wasteTime: it.wasteTime,
@@ -557,6 +573,8 @@ export const {
     initGame,
     initTeams,
     initPhotos,
+    changeTeamImageGroup,
+    initTeamPhotos,
     initSizes,
     initPiratePositions,
     setCurrentHumanTeam,
