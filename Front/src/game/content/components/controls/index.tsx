@@ -1,12 +1,13 @@
 import cn from 'classnames';
-import { useEffect, useState } from 'react';
-import { Alert } from 'react-bootstrap';
+import { useEffect, useRef, useState } from 'react';
+import { Alert, Image } from 'react-bootstrap';
 import { PiBeerBottleThin, PiCoinsLight, PiTimer } from 'react-icons/pi';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Tooltip, TooltipRefProps } from 'react-tooltip';
 
 import classes from './controls.module.less';
-import { Constants } from '/app/constants';
-import { getGameSettings, getGameStatistics, getTeamScores } from '/game/redux/gameSlice';
+import { Constants, ImageGroupsIds } from '/app/constants';
+import { changeTeamImageGroup, getGameSettings, getGameStatistics, getTeamScores } from '/game/redux/gameSlice';
 
 const toTimeSpan = (totalSeconds: number) => {
     const hours = Math.floor(totalSeconds / (60 * 60));
@@ -16,6 +17,9 @@ const toTimeSpan = (totalSeconds: number) => {
 };
 
 function Controls() {
+    const actionsTooltip = useRef<TooltipRefProps>(null);
+    const dispatch = useDispatch();
+
     const { gameId, mapSize, mapId, tilesPackName, gameMode } = useSelector(getGameSettings);
     const stat = useSelector(getGameStatistics);
     const teamScores = useSelector(getTeamScores);
@@ -50,6 +54,31 @@ function Controls() {
             });
         }
     }, [stat?.currentTeamId]);
+
+    const showGroupModal = (teamId: number) => {
+        actionsTooltip.current?.open({
+            anchorSelect: `#ctrl_${teamId}_group_img`,
+            content: (
+                <div className={classes.content}>
+                    {Object.values(ImageGroupsIds).map((grpId) =>
+                        teamScores?.some((it) => it.imageGroupId == grpId) ? (
+                            <></>
+                        ) : (
+                            <Image
+                                className={classes.icon}
+                                roundedCircle
+                                src={`/pictures/${grpId}/logo.png`}
+                                onClick={() => {
+                                    actionsTooltip.current?.close();
+                                    dispatch(changeTeamImageGroup({ teamId, imageGroupId: grpId }));
+                                }}
+                            />
+                        ),
+                    )}
+                </div>
+            ),
+        });
+    };
 
     return (
         <>
@@ -115,6 +144,14 @@ function Controls() {
                                                 borderRadius: '50rem',
                                             }}
                                         >
+                                            <Image
+                                                id={`ctrl_${it.teamId}_group_img`}
+                                                className={classes.group}
+                                                roundedCircle
+                                                src={`/pictures/${it.imageGroupId}/logo.png`}
+                                                alt={it.imageGroupId}
+                                                onClick={() => showGroupModal(it.teamId)}
+                                            />
                                             {it?.name}
                                         </div>
                                     </div>
@@ -183,6 +220,14 @@ function Controls() {
                                                             borderRadius: '50rem',
                                                         }}
                                                     >
+                                                        <Image
+                                                            id={`ctrl_${scores.teamId}_group_img`}
+                                                            className={classes.group}
+                                                            roundedCircle
+                                                            src={`/pictures/${scores.imageGroupId}/logo.png`}
+                                                            alt={scores.imageGroupId}
+                                                            onClick={() => showGroupModal(scores.teamId)}
+                                                        />
                                                         {scores.name}
                                                     </div>
                                                 </div>
@@ -206,6 +251,17 @@ function Controls() {
                     {stat?.gameMessage}
                 </Alert>
             )}
+
+            <Tooltip
+                ref={actionsTooltip}
+                className={classes.groupsTooltip}
+                classNameArrow={classes.groupsTooltipArrow}
+                style={{ backgroundColor: 'white', zIndex: 1000 }}
+                clickable
+                openEvents={{}}
+                closeEvents={{ blur: true }}
+                globalCloseEvents={{ clickOutsideAnchor: true, escape: true }}
+            />
         </>
     );
 }
