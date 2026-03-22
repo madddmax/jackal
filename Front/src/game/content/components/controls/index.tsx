@@ -60,21 +60,17 @@ function Controls() {
             anchorSelect: `#ctrl_${teamId}_group_img`,
             content: (
                 <div className={classes.content}>
-                    {Object.values(ImageGroupsIds).map((grpId) =>
-                        teamScores?.some((it) => it.imageGroupId == grpId) ? (
-                            <></>
-                        ) : (
-                            <Image
-                                className={classes.icon}
-                                roundedCircle
-                                src={`/pictures/${grpId}/logo.png`}
-                                onClick={() => {
-                                    actionsTooltip.current?.close();
-                                    dispatch(changeTeamImageGroup({ teamId, imageGroupId: grpId }));
-                                }}
-                            />
-                        ),
-                    )}
+                    {Object.values(ImageGroupsIds).map((grpId) => (
+                        <Image
+                            className={classes.icon}
+                            roundedCircle
+                            src={`/pictures/${grpId}/logo.png`}
+                            onClick={() => {
+                                actionsTooltip.current?.close();
+                                dispatch(changeTeamImageGroup({ teamId, imageGroupId: grpId }));
+                            }}
+                        />
+                    ))}
                 </div>
             ),
         });
