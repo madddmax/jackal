@@ -20,7 +20,6 @@ interface PlayerProps {
     posInfo?: string;
     changePlayer: (pos: number) => void;
     changeGroup: (grpId: ImageGroupsIds) => void;
-    isIgnoredGroup: (grpId: ImageGroupsIds) => boolean;
     allowedGamers: PlayerInfo[];
     isPublic: boolean;
 }
@@ -34,7 +33,6 @@ const Player = ({
     posInfo,
     changePlayer,
     changeGroup,
-    isIgnoredGroup,
     allowedGamers,
     isPublic,
 }: PlayerProps) => {
@@ -56,21 +54,17 @@ const Player = ({
         actionsTooltip.current?.open({
             content: (
                 <div className={classes.content}>
-                    {Object.values(ImageGroupsIds).map((grpId) =>
-                        isIgnoredGroup(grpId) ? (
-                            <></>
-                        ) : (
-                            <Image
-                                className={classes.icon}
-                                roundedCircle
-                                src={`/pictures/${grpId}/logo.png`}
-                                onClick={() => {
-                                    actionsTooltip.current?.close();
-                                    changeGroup(grpId);
-                                }}
-                            />
-                        ),
-                    )}
+                    {Object.values(ImageGroupsIds).map((grpId) => (
+                        <Image
+                            className={classes.icon}
+                            roundedCircle
+                            src={`/pictures/${grpId}/logo.png`}
+                            onClick={() => {
+                                actionsTooltip.current?.close();
+                                changeGroup(grpId);
+                            }}
+                        />
+                    ))}
                 </div>
             ),
         });
@@ -143,7 +137,7 @@ const Player = ({
                 place={tooltipPositions[position]}
                 className={classes.groupsTooltip}
                 classNameArrow={classes.groupsTooltipArrow}
-                style={{ backgroundColor: 'white', zIndex: 1000 }}
+                style={{ backgroundColor: 'white', zIndex: 1000, padding: 0 }}
                 clickable
                 openEvents={{}}
                 closeEvents={{ blur: true }}
