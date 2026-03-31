@@ -26,7 +26,7 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo, isPublic }: Play
         });
     };
 
-    const isIgnoredGroup = (grpId: ImageGroupsIds): boolean => grps.includes(grpId);
+    //    const isIgnoredGroup = (grpId: ImageGroupsIds): boolean => grps.includes(grpId);
 
     const changeGroup = (pos: number, grpId: ImageGroupsIds) => {
         const clone = [...grps];
@@ -68,7 +68,6 @@ const Players = ({ players, allowedGamers, setPlayers, mapInfo, isPublic }: Play
                             posInfo={mapInfo && mapInfo[index]}
                             changePlayer={(id) => changeGamer(index, id)}
                             changeGroup={(grpId) => changeGroup(index, grpId)}
-                            isIgnoredGroup={isIgnoredGroup}
                             allowedGamers={allowedGamers}
                             isPublic={isPublic}
                         />
