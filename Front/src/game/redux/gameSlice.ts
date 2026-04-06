@@ -306,7 +306,8 @@ export const gameSlice = createSlice({
                     cell.availableMoves.push({
                         num: move.moveNum,
                         isRespawn: move.withRespawn,
-                        isQuake: move.withQuakeFirst || move.withQuakeLast,
+                        isQuakeBegin: move.withQuakeFirst,
+                        isQuakeEnd: move.withQuakeLast,
                         isLighthouse: move.withLighthouse,
                         pirateId: pirate.id,
                         prev: move.prev,

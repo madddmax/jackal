@@ -71,7 +71,8 @@ export interface FieldState {
 export interface AvailableMove {
     num: number;
     isRespawn: boolean;
-    isQuake: boolean;
+    isQuakeBegin: boolean;
+    isQuakeEnd: boolean;
     isLighthouse: boolean;
     pirateId: string;
     prev?: {

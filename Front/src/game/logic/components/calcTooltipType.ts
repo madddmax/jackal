@@ -33,7 +33,7 @@ export const CalcTooltipType = ({ row, col, field, state }: CalcTooltipTypeProps
             !pirateField?.image?.includes('ship_3.png') &&
             !pirateField?.image?.includes('ship_4.png') &&
             !pirateField?.image?.includes('water.png')) || // and jump from beach
-            (field.image?.includes('cannon.png') && !move.isQuake))
+            (field.image?.includes('cannon.png') && !move.isQuakeBegin && !move.isQuakeEnd))
     ) {
         return TooltipTypes.Seajump;
     }
