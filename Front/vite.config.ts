@@ -23,13 +23,14 @@ export default defineConfig(({ mode }) => {
         resolve: {
             alias: {
                 '/app': fileURLToPath(new URL('./src/app', import.meta.url)),
-                '/content': fileURLToPath(new URL('./src/content', import.meta.url)),
-                '/hubs': fileURLToPath(new URL('./src/hubs', import.meta.url)),
-                '/redux': fileURLToPath(new URL('./src/redux', import.meta.url)),
                 '/auth': fileURLToPath(new URL('./src/auth', import.meta.url)),
                 '/common': fileURLToPath(new URL('./src/common', import.meta.url)),
+                '/content': fileURLToPath(new URL('./src/content', import.meta.url)),
+                '/docs': fileURLToPath(new URL('./src/docs', import.meta.url)),
                 '/game': fileURLToPath(new URL('./src/game', import.meta.url)),
+                '/hubs': fileURLToPath(new URL('./src/hubs', import.meta.url)),
                 '/lobby': fileURLToPath(new URL('./src/lobby', import.meta.url)),
+                '/redux': fileURLToPath(new URL('./src/redux', import.meta.url)),
             },
         },
     };

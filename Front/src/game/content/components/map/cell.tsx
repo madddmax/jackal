@@ -1,6 +1,6 @@
 import cn from 'classnames';
-import { RefObject } from 'react';
-import { FaArrowAltCircleUp, FaRegEye } from 'react-icons/fa';
+import { ReactNode, RefObject } from 'react';
+import { FaArrowAltCircleDown, FaArrowAltCircleUp, FaRegEye } from 'react-icons/fa';
 import { GiFootprint } from 'react-icons/gi';
 import { useDispatch, useSelector } from 'react-redux';
 import { TooltipRefProps } from 'react-tooltip';
@@ -28,13 +28,22 @@ interface CellProps {
     tooltipRef: RefObject<TooltipRefProps>;
 }
 
+const TurnIcon = ({ moves }: { moves: AvailableMove[] }): ReactNode => {
+    if (moves.length > 0) {
+        if (moves[0].isQuakeBegin)
+            return <FaArrowAltCircleUp size={20} style={{ position: 'absolute', color: 'gray' }} />;
+        if (moves[0].isQuakeEnd)
+            return <FaArrowAltCircleDown size={20} style={{ position: 'absolute', color: 'gray' }} />;
+        if (moves[0].isLighthouse) return <FaRegEye size={20} style={{ position: 'absolute', color: 'dimGray' }} />;
+    }
+    return <GiFootprint size={20} style={{ position: 'absolute', color: 'dimGray' }} />;
+};
+
 function Cell({ row, col, tooltipRef }: CellProps) {
     const field = useSelector<{ game: GameState }, FieldState>((state) => getGameField(state, row, col));
     const gameStat = useSelector(getGameStatistics);
     const { gameId, cellSize, pirateSize } = useSelector(getGameSettings);
     const hasMove = field.availableMoves.length > 0;
-    const isQuake = field.availableMoves.length > 0 && field.availableMoves[0].isQuake;
-    const isLighthouse = field.availableMoves.length > 0 && field.availableMoves[0].isLighthouse;
 
     const dispatch = useDispatch();
 
@@ -128,15 +137,7 @@ function Cell({ row, col, tooltipRef }: CellProps) {
 
     return (
         <>
-            {hasMove && (
-                <>
-                    {isQuake && <FaArrowAltCircleUp size={20} style={{ position: 'absolute', color: 'gray' }} />}
-                    {isLighthouse && <FaRegEye size={20} style={{ position: 'absolute', color: 'dimGray' }} />}
-                    {!isQuake && !isLighthouse && (
-                        <GiFootprint size={20} style={{ position: 'absolute', color: 'dimGray' }} />
-                    )}
-                </>
-            )}
+            {hasMove && <TurnIcon moves={field.availableMoves} />}
             <div
                 key="main_cell"
                 id={`cell_${col}_${row}`}
