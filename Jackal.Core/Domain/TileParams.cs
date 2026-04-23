@@ -16,7 +16,7 @@ public class TileParams : IClonable<TileParams>
         
     /// <summary>
     /// Код клетки:
-    /// задаёт подтип клетки для стрелок и пустых клеток,
+    /// задаёт подтип клетки для стрелок,
     /// задаёт количество для клеток с монетами и бутылками
     /// </summary>
     public int Code;
@@ -64,17 +64,7 @@ public class TileParams : IClonable<TileParams>
     /// <summary>
     /// Пустая клетка
     /// </summary>
-    /// <param name="imageNumber">Номер изображения</param>
-    public static TileParams Empty(int imageNumber = 1)
-    {
-        if (imageNumber < 1 || imageNumber > 4)
-            throw new ArgumentException(
-                "Номер изображения для TileType.Empty должен быть от 1 до 4 включительно",
-                nameof(imageNumber)
-            );
-        
-        return new TileParams(TileType.Empty, imageNumber);
-    }
+    public static TileParams Empty() => new(TileType.Empty);
 
     /// <summary>
     /// Монета
