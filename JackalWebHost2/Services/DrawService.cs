@@ -196,7 +196,7 @@ public class DrawService : IDrawService
                 filename = teamShip != null ? $"ship_{teamShip.Id + 1}" : "water";
                 break;
             case TileType.Empty:
-                filename = $"empty_{tile.Code}";
+                filename = $"empty";
                 break;
             case TileType.Coin:
             case TileType.BigCoin:

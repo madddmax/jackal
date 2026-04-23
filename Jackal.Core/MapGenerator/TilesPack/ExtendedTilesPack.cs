@@ -125,14 +125,14 @@ public class ExtendedTilesPack : ITilesPack
         TileParams.Empty(),
         TileParams.Empty(),
         TileParams.Empty(),
-        TileParams.Empty(2),
-        TileParams.Empty(2),
-        TileParams.Empty(2),
-        TileParams.Empty(3),
-        TileParams.Empty(3),
-        TileParams.Empty(3),
-        TileParams.Empty(4),
-        TileParams.Empty(4),
-        TileParams.Empty(4)
+        TileParams.Empty(),
+        TileParams.Empty(),
+        TileParams.Empty(),
+        TileParams.Empty(),
+        TileParams.Empty(),
+        TileParams.Empty(),
+        TileParams.Empty(),
+        TileParams.Empty(),
+        TileParams.Empty()
     ];
 }
