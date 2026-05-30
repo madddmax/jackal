@@ -188,7 +188,7 @@ function LeftSidebar() {
                             <Form.Check
                                 id="pirate-auto-change-switch"
                                 type="switch"
-                                label="Автовыбор пиратки"
+                                label="Автовыбор персонажа"
                                 checked={hasPirateAutoChange}
                                 onChange={pirateAutoChangeToggle}
                             />
