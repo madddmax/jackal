@@ -301,7 +301,7 @@ describe('redux basic tests', () => {
         previousState = reducer(previousState, setCurrentHumanTeam());
     });
 
-    test('Автовыбор пиратки, для которой возможны ходы, и подсвечивание её ходов', () => {
+    test('Автовыбор персонажа, для которого возможны ходы, и подсвечивание его ходов', () => {
         expect(previousState.fields[2][2].availableMoves).toHaveLength(0);
         expect(previousState.highlight_x).toEqual(0);
         expect(previousState.highlight_y).toEqual(0);
