@@ -3,6 +3,8 @@ import { Col, Form, Row } from 'react-bootstrap';
 
 import Cell from './components/cell';
 import { Constants, ImagesPacksIds } from '/app/constants';
+import { PiratePhotoMemoized } from '/game/content/components/mapPirates/piratePhotoMemoized';
+import girlsMap from '/game/logic/components/girlsMap';
 
 const TileTypes = [
     'airplane',
@@ -19,10 +21,7 @@ const TileTypes = [
     'chest',
     'croc',
     'desert',
-    'empty_1',
-    'empty_2',
-    'empty_3',
-    'empty_4',
+    'empty',
     'forest',
     'fort',
     'four_arrows_diagonal',
@@ -46,17 +45,14 @@ const TileTypes = [
     'rum_3',
     'rum_3_used',
     'rumbar',
-    'ship_1',
-    'ship_2',
-    'ship_3',
-    'ship_4',
     'swamp',
     'three_arrows',
     'trap',
     'two_arrows_diagonal',
     'two_arrows_left_right',
-    'water',
 ];
+
+//const BorderTileTypes = ['ship_1', 'ship_2', 'ship_3', 'ship_4', 'water'];
 
 const MapRenderer = () => {
     const [mapSize, setMapSize] = useState<number>(9);
@@ -70,12 +66,50 @@ const MapRenderer = () => {
     };
 
     const cellSize = 70;
-    const mapWidth = (cellSize + 1) * mapSize - 1;
+    const pirateSize = 15;
+    const mapWidth = (cellSize + 1) * (mapSize + 2) - 1;
+
+    const pirate: GamePirate = {
+        id: '100',
+        teamId: 0,
+        position: {
+            level: 0,
+            x: 2,
+            y: 0,
+        },
+        photo: '',
+        photoId: 0,
+        type: Constants.pirateTypes.Usual,
+    };
+
+    girlsMap.AddPosition(pirate, 1);
 
     const tiles = [...TileTypes];
+
+    const customTilesConfig: { [index: string]: number } = Constants.imagesPackTiles[imagesPackName];
+    if (customTilesConfig) {
+        Object.entries(customTilesConfig).forEach(([key, value], _) => {
+            for (let i = 1; i <= value; i++) {
+                tiles.push(`${key}_${i}`);
+            }
+        });
+    }
+
     while (tiles.length < mapSize * mapSize) {
         tiles.push(TileTypes[Math.floor(Math.random() * TileTypes.length)]);
     }
+
+    const calcTileType = (row: number, col: number, mapsize: number) => {
+        if (row == 0 || row == mapsize + 1) {
+            if (col == (mapsize - 1) / 2 + 1) return row == 0 ? 'ship_1' : 'ship_2';
+            return 'water';
+        }
+        if (col == 0 || col == mapsize + 1) {
+            if (row == (mapsize - 1) / 2 + 1) return col == 0 ? 'ship_3' : 'ship_4';
+            return 'water';
+        }
+        return tiles[(row - 1) * mapSize + col - 1];
+    };
 
     return (
         <Row className="justify-content-center">
@@ -121,19 +155,19 @@ const MapRenderer = () => {
                         height: mapWidth,
                     }}
                 >
-                    {Array(mapSize)
+                    {Array(mapSize + 2)
                         .fill(0)
                         .map((_, rIndex) => (
                             <div className="map-row" key={`map-row-${mapSize - 1 - rIndex}`}>
-                                {Array(mapSize)
+                                {Array(mapSize + 2)
                                     .fill(0)
                                     .map((_, cIndex) => (
                                         <div className="map-cell" key={`map-cell-${cIndex}`}>
                                             <Cell
                                                 col={cIndex}
-                                                row={mapSize - 1 - rIndex}
+                                                row={rIndex}
                                                 cellSize={cellSize}
-                                                tileType={tiles[rIndex * mapSize + cIndex]}
+                                                tileType={calcTileType(rIndex, cIndex, mapSize)}
                                                 imagesPackName={imagesPackName}
                                             />
                                         </div>
@@ -141,6 +175,24 @@ const MapRenderer = () => {
                             </div>
                         ))}
                 </div>
+                <div
+                    className="level"
+                    style={{
+                        top: girlsMap.CalcTopOffset(pirate, mapSize, cellSize, pirateSize),
+                        left: girlsMap.CalcLeftOffset(pirate, cellSize, pirateSize),
+                        zIndex: 10,
+                        pointerEvents: 'auto',
+                    }}
+                >
+                    <PiratePhotoMemoized
+                        pirate={pirate}
+                        pirateSize={pirateSize}
+                        isCurrentPlayerGirl
+                        onTeamPirateClick={() => {}}
+                    />
+                </div>
+
+                {/* <MapPirates mapSize={mapSize} cellSize={cellSize} chessBarSize={chessBarSize} /> */}
             </Col>
         </Row>
     );

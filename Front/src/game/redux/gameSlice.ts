@@ -26,7 +26,7 @@ import {
 } from '../types/gameSaga';
 import { ScreenSizes, TeamScores } from './gameSlice.types';
 import { Constants, ImageGroupsIds, ImagesPacksIds } from '/app/constants';
-import { debugLog } from '/app/global';
+import { debugLog, getVersionsImage } from '/app/global';
 import { PlayerTypes } from '/common/constants';
 
 export const gameSlice = createSlice({
@@ -85,13 +85,18 @@ export const gameSlice = createSlice({
         initMap: (state, action: PayloadAction<GameMapResponse>) => {
             const map = [];
             let j = 0;
+            const customTilesConfig: { [index: string]: number } =
+                Constants.imagesPackTiles[state.userSettings.imagesPackName];
             for (let i = 0; i < action.payload.height; i++) {
                 const row: FieldState[] = [];
                 for (let col = 0; col < action.payload.width; col++) {
                     const change = action.payload.changes[j];
                     row.push({
                         tileType: change.tileType,
-                        image: Constants.imagesPacks[state.userSettings.imagesPackName] + change.tileType + '.png',
+                        image:
+                            Constants.imagesPacks[state.userSettings.imagesPackName] +
+                            getVersionsImage(customTilesConfig, change.tileType) +
+                            '.png',
                         rotate: change.rotate,
                         levels: change.levels.map(constructGameLevel),
                         availableMoves: [],
@@ -104,9 +109,14 @@ export const gameSlice = createSlice({
             state.fields = map;
         },
         refreshMap: (state) => {
+            const customTilesConfig: { [index: string]: number } =
+                Constants.imagesPackTiles[state.userSettings.imagesPackName];
             state.fields.map((col) => {
                 col.map((it) => {
-                    it.image = Constants.imagesPacks[state.userSettings.imagesPackName] + it.tileType + '.png';
+                    it.image =
+                        Constants.imagesPacks[state.userSettings.imagesPackName] +
+                        getVersionsImage(customTilesConfig, it.tileType) +
+                        '.png';
                 });
             });
         },
@@ -453,10 +463,14 @@ export const gameSlice = createSlice({
             }
         },
         applyChanges: (state, action: PayloadAction<CellDiffResponse[]>) => {
+            const customTilesConfig: { [index: string]: number } =
+                Constants.imagesPackTiles[state.userSettings.imagesPackName];
             action.payload.forEach((it) => {
                 const cell = state.fields[it.y][it.x];
                 const backgroundImageSrc =
-                    Constants.imagesPacks[state.userSettings.imagesPackName] + it.tileType + '.png';
+                    Constants.imagesPacks[state.userSettings.imagesPackName] +
+                    getVersionsImage(customTilesConfig, it.tileType) +
+                    '.png';
                 if (cell.image != backgroundImageSrc) {
                     cell.image = backgroundImageSrc;
                     cell.rotate = it.rotate;

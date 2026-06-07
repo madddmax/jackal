@@ -119,3 +119,9 @@ const getGamerByPlayer = (man: GamePlayer, gamers: PlayerInfo[]) => {
         ? (gamers.find((gm) => gm.userId === man.userId) ?? gamers[0])
         : (gamers.find((gm) => gm.type === man.type.toLocaleLowerCase()) ?? gamers[0]);
 };
+
+export const getVersionsImage = (config: { [index: string]: number }, tileType: string) => {
+    const counter = config[tileType];
+    const tileVersionsCount = counter ? `_${Math.floor(Math.random() * counter) + 1}` : '';
+    return tileType + tileVersionsCount;
+};

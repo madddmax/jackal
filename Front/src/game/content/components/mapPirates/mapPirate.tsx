@@ -15,22 +15,12 @@ import { GameState, TeamState } from '/game/types';
 interface MapPirateProps {
     id: string;
     pirateSize: number;
-    getMarginTop: (girl: GamePiratePosition) => number;
-    getMarginLeft: (girl: GamePiratePosition) => number;
     mapSize: number;
     cellSize: number;
     chessBarSize: number;
 }
 
-const MapPirate = ({
-    id,
-    getMarginTop,
-    getMarginLeft,
-    cellSize,
-    mapSize,
-    pirateSize,
-    chessBarSize,
-}: MapPirateProps) => {
+const MapPirate = ({ id, cellSize, mapSize, pirateSize, chessBarSize }: MapPirateProps) => {
     const pirate = useSelector<{ game: GameState }, GamePirate | undefined>((state) => getPirateById(state, id));
     const currentHumanTeam = useSelector<{ game: GameState }, TeamState | undefined>((state) =>
         getCurrentPlayerTeam(state),
@@ -60,16 +50,13 @@ const MapPirate = ({
 
     if (!pirate) return <></>;
 
-    const leftOffset = pirate.position.x * (cellSize + 1) + getMarginLeft(pirate) + chessBarSize;
-    const topOffset = (mapSize - 1 - pirate.position.y) * (cellSize + 1) + getMarginTop(pirate) + chessBarSize;
-
     return (
         <AnimatePirate
             pirate={pirate}
             pirateSize={pirateSize}
             speed={speed}
-            left={leftOffset}
-            top={topOffset}
+            left={girlsMap.CalcLeftOffset(pirate, cellSize, pirateSize) + chessBarSize}
+            top={girlsMap.CalcTopOffset(pirate, mapSize, cellSize, pirateSize) + chessBarSize}
             isCurrentPlayerGirl={pirate.teamId === currentHumanTeam?.id}
             onTeamPirateClick={onTeamPirateClick}
         />

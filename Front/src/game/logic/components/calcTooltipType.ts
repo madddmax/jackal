@@ -17,7 +17,7 @@ export const CalcTooltipType = ({ row, col, field, state }: CalcTooltipTypeProps
 
     if (field.levels.length == 1 && activePirate?.position.y === row && activePirate?.position.x === col) {
         if (move.isRespawn) return TooltipTypes.Respawn;
-        if (field.image?.includes('hole.png')) return TooltipTypes.GroundHole;
+        if (field.tileType == 'hole') return TooltipTypes.GroundHole;
         return TooltipTypes.SkipMove;
     }
 
@@ -27,13 +27,13 @@ export const CalcTooltipType = ({ row, col, field, state }: CalcTooltipTypeProps
 
     if (
         state.lastMoves.length > 1 &&
-        ((field.image?.includes('water.png') &&
+        ((field.tileType == 'water' &&
             !pirateField?.image?.includes('ship_1.png') &&
             !pirateField?.image?.includes('ship_2.png') &&
             !pirateField?.image?.includes('ship_3.png') &&
             !pirateField?.image?.includes('ship_4.png') &&
             !pirateField?.image?.includes('water.png')) || // and jump from beach
-            (field.image?.includes('cannon.png') && !move.isQuakeBegin && !move.isQuakeEnd))
+            (field.tileType == 'cannon' && !move.isQuakeBegin && !move.isQuakeEnd))
     ) {
         return TooltipTypes.Seajump;
     }
