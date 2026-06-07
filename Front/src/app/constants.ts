@@ -30,6 +30,14 @@ export const Constants = {
         [ImagesPacksIds.dendy_8_bit]: '/fields_dendy_8_bit/',
         [ImagesPacksIds.black_and_white]: '/fields_black_and_white/',
     },
+    imagesPackTiles: {
+        [ImagesPacksIds.classic]: {
+            empty: 4,
+        },
+        [ImagesPacksIds.space]: {},
+        [ImagesPacksIds.dendy_8_bit]: {},
+        [ImagesPacksIds.black_and_white]: {},
+    },
     gameModeTypes: {
         FreeForAll: 'FreeForAll',
         TwoPlayersInTeam: 'TwoPlayersInTeam',

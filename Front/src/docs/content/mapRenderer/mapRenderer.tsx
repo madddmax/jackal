@@ -21,10 +21,7 @@ const TileTypes = [
     'chest',
     'croc',
     'desert',
-    'empty_1',
-    'empty_2',
-    'empty_3',
-    'empty_4',
+    'empty',
     'forest',
     'fort',
     'four_arrows_diagonal',
@@ -88,6 +85,16 @@ const MapRenderer = () => {
     girlsMap.AddPosition(pirate, 1);
 
     const tiles = [...TileTypes];
+
+    const customTilesConfig: { [index: string]: number } = Constants.imagesPackTiles[imagesPackName];
+    if (customTilesConfig) {
+        Object.entries(customTilesConfig).forEach(([key, value], _) => {
+            for (let i = 1; i <= value; i++) {
+                tiles.push(`${key}_${i}`);
+            }
+        });
+    }
+
     while (tiles.length < mapSize * mapSize) {
         tiles.push(TileTypes[Math.floor(Math.random() * TileTypes.length)]);
     }

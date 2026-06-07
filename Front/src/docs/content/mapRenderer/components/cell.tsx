@@ -1,6 +1,7 @@
 import cn from 'classnames';
 
 import { Constants, ImagesPacksIds } from '/app/constants';
+import { getVersionsImage } from '/app/global';
 import { FieldState } from '/game/types';
 
 interface CellProps {
@@ -14,9 +15,10 @@ interface CellProps {
 const Cell = ({ row, col, cellSize, tileType, imagesPackName }: CellProps) => {
     const hasMove = false;
 
+    const customTilesConfig: { [index: string]: number } = Constants.imagesPackTiles[imagesPackName];
     const field: FieldState = {
         tileType,
-        image: Constants.imagesPacks[imagesPackName] + tileType + '.png',
+        image: Constants.imagesPacks[imagesPackName] + getVersionsImage(customTilesConfig, tileType) + '.png',
         levels: [
             {
                 info: {
