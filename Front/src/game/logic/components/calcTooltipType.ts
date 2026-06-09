@@ -28,11 +28,9 @@ export const CalcTooltipType = ({ row, col, field, state }: CalcTooltipTypeProps
     if (
         state.lastMoves.length > 1 &&
         ((field.tileType == 'water' &&
-            !pirateField?.image?.includes('ship_1.png') &&
-            !pirateField?.image?.includes('ship_2.png') &&
-            !pirateField?.image?.includes('ship_3.png') &&
-            !pirateField?.image?.includes('ship_4.png') &&
-            !pirateField?.image?.includes('water.png')) || // and jump from beach
+            !field?.image?.includes('ship_') &&
+            !pirateField?.image?.includes('ship_') &&
+            !pirateField?.image?.includes('water.png')) || // and jump from beach to water
             (field.tileType == 'cannon' && !move.isQuakeBegin && !move.isQuakeEnd))
     ) {
         return TooltipTypes.Seajump;
