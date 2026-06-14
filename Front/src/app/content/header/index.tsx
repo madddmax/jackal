@@ -79,7 +79,7 @@ const Header = () => {
                             </Nav.Link>
                             <Nav.Link as={Link} to="/docs" eventKey="docs">
                                 <FaBookSkull size={20} className="menu-link" />
-                                Обучение
+                                Информация
                             </Nav.Link>
                         </Nav>
                     </Offcanvas.Body>
