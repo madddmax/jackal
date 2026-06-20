@@ -1,4 +1,6 @@
+import cn from 'classnames';
 import { Constants } from '/app/constants';
+import Image from 'react-bootstrap/Image';
 
 const PirateGallery = () => {
 
@@ -11,12 +13,12 @@ const PirateGallery = () => {
       {Object.entries(imageGroups).map(([groupId, group]) => (
         <div key={groupId} style={styles.groupContainer}>
 
-          {/* Проверяем, есть ли имя у группы */}
+          {/* Название команды */}
           {group.name && (
             <h2 style={styles.groupTitle}>{group.name}</h2>
           )}
 
-          {/* Проверяем, есть ли описание */}
+          {/* Описание команды */}
           {group.description && (
             <p style={styles.groupDescription}>{group.description}</p>
           )}
@@ -24,18 +26,19 @@ const PirateGallery = () => {
           {/* Сетка карточек пиратов */}
           <div style={styles.photosGrid}>
             {group.photos.map((photo, index) => (
-              // Фильтруем пустые записи
-              photo.name ? (
-                <div key={index} style={styles.pirateCard}>
-                  <h3 style={styles.pirateName}>{photo.name}</h3>
-                  <p style={styles.pirateDescription}>{photo.description}</p>
-                  <div style={styles.pirateStats}>
-                    <span style={styles.statBadge}>
-                      👥 {photo.subTypeCount} {photo.subTypeCount === 1 ? 'версия' : photo.subTypeCount < 5 ? 'версии' : 'версий'}
-                    </span>
-                  </div>
+              <div key={index} style={styles.pirateCard}>
+                <h3 style={styles.pirateName}>{photo.name}</h3>
+                <p style={styles.pirateDescription}>{photo.description}</p>
+                <div style={styles.pirateStats}>
+                  <Image
+                    src={`/pictures/${groupId}/pirate_${index + 1}${photo.subTypeCount > 1 ? '1' : ''}${group.extension || '.png'}`}
+                    roundedCircle
+                    className={cn('photo', {
+                      'photo-active': true,
+                    })}
+                  />
                 </div>
-              ) : null
+              </div>
             ))}
           </div>
         </div>
@@ -111,29 +114,6 @@ const styles = {
   pirateStats: {
     display: 'flex',
     justifyContent: 'flex-end',
-  },
-  statBadge: {
-    backgroundColor: '#8b4513',
-    color: 'white',
-    padding: '5px 12px',
-    borderRadius: '20px',
-    fontSize: '0.9rem',
-    fontWeight: 'bold',
-  },
-  emptyMessage: {
-    textAlign: 'center',
-    color: '#999',
-    fontStyle: 'italic',
-    padding: '40px',
-    fontSize: '1.2rem',
-  },
-  errorMessage: {
-    textAlign: 'center',
-    color: '#e74c3c',
-    fontSize: '1.2rem',
-    padding: '40px',
-    backgroundColor: '#fadbd8',
-    borderRadius: '10px',
   },
 };
 
