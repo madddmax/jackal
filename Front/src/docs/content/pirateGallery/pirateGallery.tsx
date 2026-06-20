@@ -8,8 +8,6 @@ const PirateGallery = () => {
 
   return (
     <div style={styles.mainContainer}>
-      <h1 style={styles.mainTitle}>🏴‍☠️ Пиратская галерея</h1>
-
       {Object.entries(imageGroups).map(([groupId, group]) => (
         <div key={groupId} style={styles.groupContainer}>
 
@@ -47,20 +45,13 @@ const PirateGallery = () => {
   );
 };
 
-// Стили (можно вынести в отдельный CSS файл)
+// Стили (вынести в отдельный CSS файл)
 const styles = {
   mainContainer: {
     maxWidth: '1200px',
     margin: '0 auto',
     padding: '20px',
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-  },
-  mainTitle: {
-    fontSize: '2.5rem',
-    color: '#2c3e50',
-    marginBottom: '40px',
-    borderBottom: '3px solid #8b4513',
-    paddingBottom: '20px',
   },
   groupContainer: {
     marginBottom: '50px',
