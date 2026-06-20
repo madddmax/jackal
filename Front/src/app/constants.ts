@@ -125,7 +125,7 @@ export const Constants = {
                         'Главный инкассатор команды. Молодая, ловкая гимнастка с легким заплечным мешком для добычи. Хвастливая, азартная, невероятно быстрая на руку.',
                 },
             ],
-            extension: '',
+            extension: '.png',
         },
         [ImageGroupsIds.caribian]: {
             name: '',
@@ -156,6 +156,7 @@ export const Constants = {
                         'Сын Прихлопа Билла, муж Элизабет Суонн, отец Генри. Рос без отца, веря что он служит честным матросом, а не пиратом. В память об отце, носил присланный им золотой медальон — недостающую монету из проклятого клада ацтеков. Цитвтв: "Пушки к бою готовь!!"',
                 },
             ],
+            extension: '.png',
         },
         [ImageGroupsIds.somali]: {
             name: '',
@@ -202,6 +203,7 @@ export const Constants = {
                     description: '',
                 },
             ],
+            extension: '.png',
         },
         [ImageGroupsIds.redalert]: {
             name: '',
@@ -302,6 +304,7 @@ export const Constants = {
                     description: 'Канонир и оружейник. Вспыльчивый, громко щёлкает челюстью от злости, обожает устраивать хаос.',
                 },
             ],
+            extension: '.png',
         },
         [ImageGroupsIds.anime]: {
             name: '',
