@@ -9,10 +9,18 @@ const PirateGallery = () => {
     <div style={styles.mainContainer}>
       {Object.entries(imageGroups).map(([groupId, group]) => (
         <div key={groupId} style={styles.groupContainer}>
-          {/* Название команды */}
-          {group.name && (
-            <h2 style={styles.groupTitle}>{group.name}</h2>
-          )}
+          {/* Заголовок команды с логотипом слева */}
+          <div style={styles.teamHeader}>
+            <Image
+              className={cn('icon')}
+              roundedCircle
+              src={`/pictures/${groupId}/logo.png`}
+              style={styles.teamLogo}
+            />
+            {group.name && (
+              <h2 style={styles.groupTitle}>{group.name}</h2>
+            )}
+          </div>
 
           {/* Описание команды */}
           {group.description && (
@@ -26,9 +34,8 @@ const PirateGallery = () => {
                 <div style={styles.cardTop}>
                   <div style={styles.imageContainer}>
                     <Image
-                      src={`/pictures/${groupId}/pirate_${index + 1}${
-                        photo.subTypeCount > 1 ? '1' : ''
-                      }${group.extension || '.png'}`}
+                      src={`/pictures/${groupId}/pirate_${index + 1}${photo.subTypeCount > 1 ? '1' : ''
+                        }${group.extension || '.png'}`}
                       roundedCircle
                       className={cn('photo', {
                         'photo-active': true,
@@ -62,12 +69,24 @@ const styles = {
     borderRadius: '15px',
     boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
   },
-  groupTitle: {
-    fontSize: '2rem',
-    color: '#8b4513',
+  teamHeader: {
+    display: 'flex',
+    alignItems: 'center',
     marginBottom: '15px',
     paddingBottom: '10px',
     borderBottom: '2px solid #d4a574',
+  },
+  teamLogo: {
+    width: '40px',
+    height: '40px',
+    objectFit: 'cover' as const,
+    borderRadius: '50%',
+    marginRight: '15px', // отступ справа от логотипа
+  },
+  groupTitle: {
+    fontSize: '2rem',
+    color: '#8b4513',
+    margin: 0,
   },
   groupDescription: {
     fontSize: '1.1rem',
