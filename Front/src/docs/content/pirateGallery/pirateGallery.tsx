@@ -1,56 +1,96 @@
 import cn from 'classnames';
 import { Constants } from '/app/constants';
 import Image from 'react-bootstrap/Image';
+import { useState } from 'react';
 
 const PirateGallery = () => {
   const imageGroups = Constants.imageGroups;
+  const [expandedGroups, setExpandedGroups] = useState({});
+
+  const toggleGroup = (groupId) => {
+    setExpandedGroups(prev => ({
+      ...prev,
+      [groupId]: !prev[groupId]
+    }));
+  };
 
   return (
     <div style={styles.mainContainer}>
-      {Object.entries(imageGroups).map(([groupId, group]) => (
-        <div key={groupId} style={styles.groupContainer}>
-          {/* Заголовок команды с логотипом слева */}
-          <div style={styles.teamHeader}>
-            <Image
-              className={cn('icon')}
-              roundedCircle
-              src={`/pictures/${groupId}/logo.png`}
-              style={styles.teamLogo}
-            />
-            {group.name && (
-              <h2 style={styles.groupTitle}>{group.name}</h2>
-            )}
-          </div>
+      {Object.entries(imageGroups).map(([groupId, group]) => {
+        const isExpanded = expandedGroups[groupId] || false;
 
-          {/* Описание команды */}
-          {group.description && (
-            <p style={styles.groupDescription}>{group.description}</p>
-          )}
+        return (
+          <div key={groupId} style={styles.groupContainer}>
+            {/* Заголовок команды с логотипом слева - кликабельно */}
+            <div 
+              style={styles.teamHeader} 
+              onClick={() => toggleGroup(groupId)}
+              className="team-header-clickable"
+            >
+              <Image
+                className={cn('icon')}
+                roundedCircle
+                src={`/pictures/${groupId}/logo.png`}
+                style={styles.teamLogo}
+              />
+              {group.name && (
+                <h2 style={styles.groupTitle}>{group.name}</h2>
+              )}
+              <span style={styles.expandIndicator}>
+                {isExpanded ? '▲' : '▼'}
+              </span>
+            </div>
 
-          {/* Сетка карточек пиратов */}
-          <div style={styles.photosGrid}>
-            {group.photos.map((photo, index) => (
-              <div key={index} style={styles.pirateCard}>
-                <div style={styles.cardTop}>
-                  <div style={styles.imageContainer}>
-                    <Image
-                      src={`/pictures/${groupId}/pirate_${index + 1}${photo.subTypeCount > 1 ? '1' : ''
-                        }${group.extension || '.png'}`}
-                      roundedCircle
-                      className={cn('photo', {
-                        'photo-active': true,
-                      })}
-                      style={styles.pirateImage}
-                    />
+            {/* Контент группы (описание + карточки) - сворачивается */}
+            <div style={{
+              maxHeight: isExpanded ? '5000px' : '0',
+              overflow: 'hidden',
+              transition: 'max-height 0.4s ease',
+            }}>
+              {/* Описание команды */}
+              {group.description && (
+                <p style={styles.groupDescription}>{group.description}</p>
+              )}
+
+              {/* Сетка карточек пиратов */}
+              <div style={styles.photosGrid}>
+                {group.photos.map((photo, index) => (
+                  <div key={index} style={styles.pirateCard}>
+                    <div style={styles.cardTop}>
+                      <div style={styles.imageContainer}>
+                        <Image
+                          src={`/pictures/${groupId}/pirate_${index + 1}${photo.subTypeCount > 1 ? '1' : ''
+                            }${group.extension || '.png'}`}
+                          roundedCircle
+                          className={cn('photo', {
+                            'photo-active': true,
+                          })}
+                          style={styles.pirateImage}
+                        />
+                      </div>
+                      <h3 style={styles.pirateName}>{photo.name}</h3>
+                    </div>
+                    <p style={styles.pirateDescription}>{photo.description}</p>
                   </div>
-                  <h3 style={styles.pirateName}>{photo.name}</h3>
-                </div>
-                <p style={styles.pirateDescription}>{photo.description}</p>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
+
+      {/* Стили для курсора при наведении на заголовок */}
+      <style>
+        {`
+          .team-header-clickable {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+          }
+          .team-header-clickable:hover {
+            opacity: 0.8;
+          }
+        `}
+      </style>
     </div>
   );
 };
@@ -72,21 +112,26 @@ const styles = {
   teamHeader: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: '15px',
-    paddingBottom: '10px',
-    borderBottom: '2px solid #d4a574',
+    marginBottom: '0',
+    userSelect: 'none' as const,
   },
   teamLogo: {
     width: '40px',
     height: '40px',
     objectFit: 'cover' as const,
     borderRadius: '50%',
-    marginRight: '15px', // отступ справа от логотипа
+    marginRight: '15px',
   },
   groupTitle: {
     fontSize: '2rem',
     color: '#8b4513',
     margin: 0,
+    flex: 1,
+  },
+  expandIndicator: {
+    fontSize: '1.2rem',
+    color: '#8b4513',
+    marginLeft: '10px',
   },
   groupDescription: {
     fontSize: '1.1rem',
@@ -94,6 +139,7 @@ const styles = {
     lineHeight: '1.6',
     marginBottom: '30px',
     fontStyle: 'italic',
+    marginTop: '20px',
   },
   photosGrid: {
     display: 'grid',
