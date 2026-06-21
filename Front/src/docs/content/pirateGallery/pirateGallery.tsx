@@ -3,11 +3,26 @@ import { Constants } from '/app/constants';
 import Image from 'react-bootstrap/Image';
 import { useState } from 'react';
 
-const PirateGallery = () => {
-  const imageGroups = Constants.imageGroups;
-  const [expandedGroups, setExpandedGroups] = useState({});
+interface ImageGroup {
+  name?: string;
+  description?: string;
+  extension?: string;
+  photos: Array<{
+    name: string;
+    description: string;
+    subTypeCount?: number;
+  }>;
+}
 
-  const toggleGroup = (groupId) => {
+interface ExpandedGroups {
+  [key: string]: boolean;
+}
+
+const PirateGallery = () => {
+  const imageGroups: Record<string, ImageGroup> = Constants.imageGroups;
+  const [expandedGroups, setExpandedGroups] = useState<ExpandedGroups>({});
+
+  const toggleGroup = (groupId: string) => {
     setExpandedGroups(prev => ({
       ...prev,
       [groupId]: !prev[groupId]
@@ -16,7 +31,7 @@ const PirateGallery = () => {
 
   return (
     <div style={styles.mainContainer}>
-      {Object.entries(imageGroups).map(([groupId, group]) => {
+      {Object.entries(imageGroups).map(([groupId, group]: [string, ImageGroup]) => {
         const isExpanded = expandedGroups[groupId] || false;
 
         return (
@@ -59,7 +74,7 @@ const PirateGallery = () => {
                     <div style={styles.cardTop}>
                       <div style={styles.imageContainer}>
                         <Image
-                          src={`/pictures/${groupId}/pirate_${index + 1}${photo.subTypeCount > 1 ? '1' : ''
+                          src={`/pictures/${groupId}/pirate_${index + 1}${photo.subTypeCount && photo.subTypeCount > 1 ? '1' : ''
                             }${group.extension || '.png'}`}
                           roundedCircle
                           className={cn('photo', {
