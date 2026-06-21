@@ -3,14 +3,12 @@ import { Constants } from '/app/constants';
 import Image from 'react-bootstrap/Image';
 
 const PirateGallery = () => {
-
   const imageGroups = Constants.imageGroups;
 
   return (
     <div style={styles.mainContainer}>
       {Object.entries(imageGroups).map(([groupId, group]) => (
         <div key={groupId} style={styles.groupContainer}>
-
           {/* Название команды */}
           {group.name && (
             <h2 style={styles.groupTitle}>{group.name}</h2>
@@ -25,17 +23,22 @@ const PirateGallery = () => {
           <div style={styles.photosGrid}>
             {group.photos.map((photo, index) => (
               <div key={index} style={styles.pirateCard}>
-                <h3 style={styles.pirateName}>{photo.name}</h3>
-                <p style={styles.pirateDescription}>{photo.description}</p>
-                <div style={styles.pirateStats}>
-                  <Image
-                    src={`/pictures/${groupId}/pirate_${index + 1}${photo.subTypeCount > 1 ? '1' : ''}${group.extension || '.png'}`}
-                    roundedCircle
-                    className={cn('photo', {
-                      'photo-active': true,
-                    })}
-                  />
+                <div style={styles.cardTop}>
+                  <div style={styles.imageContainer}>
+                    <Image
+                      src={`/pictures/${groupId}/pirate_${index + 1}${
+                        photo.subTypeCount > 1 ? '1' : ''
+                      }${group.extension || '.png'}`}
+                      roundedCircle
+                      className={cn('photo', {
+                        'photo-active': true,
+                      })}
+                      style={styles.pirateImage}
+                    />
+                  </div>
+                  <h3 style={styles.pirateName}>{photo.name}</h3>
                 </div>
+                <p style={styles.pirateDescription}>{photo.description}</p>
               </div>
             ))}
           </div>
@@ -45,7 +48,6 @@ const PirateGallery = () => {
   );
 };
 
-// Стили (вынести в отдельный CSS файл)
 const styles = {
   mainContainer: {
     maxWidth: '1200px',
@@ -88,23 +90,37 @@ const styles = {
     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
     cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column' as const,
+  },
+  cardTop: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '15px',
+  },
+  imageContainer: {
+    flexShrink: 0,
+    marginRight: '15px',
+  },
+  pirateImage: {
+    width: '80px',
+    height: '80px',
+    objectFit: 'cover' as const,
+    borderRadius: '50%',
   },
   pirateName: {
     fontSize: '1.3rem',
     color: '#2c3e50',
-    marginBottom: '12px',
-    borderBottom: '2px solid #ecf0f1',
-    paddingBottom: '8px',
+    margin: 0,
+    flex: 1,
+    wordBreak: 'break-word' as const,
   },
   pirateDescription: {
     fontSize: '0.95rem',
     color: '#666',
     lineHeight: '1.5',
-    marginBottom: '15px',
-  },
-  pirateStats: {
-    display: 'flex',
-    justifyContent: 'flex-end',
+    margin: 0,
+    width: '100%',
   },
 };
 
