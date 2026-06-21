@@ -128,7 +128,7 @@ export const Constants = {
             extension: '.png',
         },
         [ImageGroupsIds.caribian]: {
-            name: '',
+            name: 'Карибские пираты',
             description: '',
             photos: [
                 {
@@ -159,7 +159,7 @@ export const Constants = {
             extension: '.png',
         },
         [ImageGroupsIds.somali]: {
-            name: '',
+            name: 'Сомалийские пираты',
             description: '',
             photos: [
                 {
@@ -206,7 +206,7 @@ export const Constants = {
             extension: '.png',
         },
         [ImageGroupsIds.redalert]: {
-            name: '',
+            name: 'Красный прилив',
             description: '',
             photos: [
                 {
@@ -238,7 +238,7 @@ export const Constants = {
             extension: '.jpg',
         },
         [ImageGroupsIds.orcs]: {
-            name: 'Орда',
+            name: 'Оркский ужас',
             description: 'Эта банда представляет собой союз грубой силы и мелкого коварства. Орки здесь выступают в роли живых таранов и главной ударной мощи, в то время как гоблины отвечают за разведку, кражу золота из-под носа соперников и грязные трюки. Они постоянно спорят друг с другом, но ради звонкой монеты готовы временно действовать сообща.',
             photos: [
                 {
@@ -307,7 +307,7 @@ export const Constants = {
             extension: '.png',
         },
         [ImageGroupsIds.anime]: {
-            name: '',
+            name: 'Беспощадные милашки',
             description: '',
             photos: [
                 {
@@ -339,7 +339,7 @@ export const Constants = {
             extension: '.jpg',
         },
         [ImageGroupsIds.clover]: {
-            name: '',
+            name: 'Ирландские феи',
             description: '',
             photos: [
                 {
@@ -366,7 +366,7 @@ export const Constants = {
             extension: '.jpg',
         },
         [ImageGroupsIds.army]: {
-            name: '',
+            name: 'Штормовой гарнизон',
             description: '',
             photos: [
                 {
@@ -393,7 +393,7 @@ export const Constants = {
             extension: '.jpg',
         },
         [ImageGroupsIds.space]: {
-            name: '',
+            name: 'Космические странники',
             description: '',
             photos: [
                 {
