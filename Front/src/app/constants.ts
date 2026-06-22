@@ -153,7 +153,7 @@ export const Constants = {
                     subTypeCount: 1,
                     name: 'Уильям Тёрнер',
                     description:
-                        'Сын Прихлопа Билла, муж Элизабет Суонн, отец Генри. Рос без отца, веря что он служит честным матросом, а не пиратом. В память об отце, носил присланный им золотой медальон — недостающую монету из проклятого клада ацтеков. Цитвтв: "Пушки к бою готовь!!"',
+                        'Сын Прихлопа Билла, муж Элизабет Суонн, отец Генри. Рос без отца, веря что он служит честным матросом, а не пиратом. В память об отце, носил присланный им золотой медальон — недостающую монету из проклятого клада ацтеков. Любимая фраза: "Пушки к бою готовь!"',
                 },
             ],
             extension: '.png',
@@ -164,42 +164,42 @@ export const Constants = {
             photos: [
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Абдували',
                     description: '',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Хасан',
                     description: '',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Фарах',
                     description: '',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Юсуф',
                     description: '',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Ибрагим',
                     description: '',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Гулед',
                     description: '',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Осман',
                     description: '',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Либан',
                     description: '',
                 },
             ],
@@ -211,27 +211,27 @@ export const Constants = {
             photos: [
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Таня',
                     description: '',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Наташа',
                     description: '',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Ева',
                     description: '',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Ольга',
                     description: '',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
+                    name: 'Жанна',
                     description: '',
                 },
             ],
@@ -312,28 +312,28 @@ export const Constants = {
             photos: [
                 {
                     subTypeCount: 1,
-                    name: '',
-                    description: '',
+                    name: 'Мирабель',
+                    description: 'Мирабель «Буревестник» — бесстрашный лидер милашек, мастер фехтования и навигации.',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
-                    description: '',
+                    name: 'Лили',
+                    description: 'Лили «Смертельный Поцелуй» — очаровательная девушка, которая управляется с пушками лучше любого бывалого корсара.',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
-                    description: '',
+                    name: 'Фиона',
+                    description: 'Фиона «Гроза Морей» — читает штормовые ветра и безупречно ведет корабль сквозь любые рифы.',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
-                    description: '',
+                    name: 'Софи',
+                    description: 'Софи «Ангельский Глаз» — никогда не промахивается из своего мушкета, стреляя прямо в цель.',
                 },
                 {
                     subTypeCount: 1,
-                    name: '',
-                    description: '',
+                    name: 'Ванесса',
+                    description: ' Ванесса «Сладкая Гильотина» — берет вражеские суда на абордаж с милой улыбкой и саблей наголо.',
                 },
             ],
             extension: '.jpg',
