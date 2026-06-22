@@ -114,13 +114,13 @@ const styles = {
   mainContainer: {
     maxWidth: '1200px',
     margin: '0 auto',
-    padding: '20px',
+    padding: '10px',
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   },
   groupContainer: {
-    marginBottom: '50px',
+    marginBottom: '30px',
     backgroundColor: '#f9f3e8',
-    padding: '30px',
+    padding: '20px',
     borderRadius: '15px',
     boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
   },
@@ -158,7 +158,7 @@ const styles = {
   },
   photosGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
     gap: '25px',
     marginTop: '20px',
   },
