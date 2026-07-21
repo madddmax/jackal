@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { DocsState } from '../types/types';
+import docsLogic from '../logic/docsLogic';
+import { DocsPiratePosition, DocsState } from '../types/types';
 import { Constants, ImageGroupsIds } from '/app/constants';
 
 export const docsSlice = createSlice({
@@ -23,23 +24,13 @@ export const docsSlice = createSlice({
         stepOpacity: 0.5,
     } satisfies DocsState as DocsState,
     reducers: {
-        setPiratePosition: (state, action: PayloadAction<GamePiratePosition>) => {
+        setPiratePosition: (state, action: PayloadAction<DocsPiratePosition>) => {
             state.pirate.position = action.payload.position;
-            const availMoves = [
-                [-1, -1],
-                [-1, 0],
-                [-1, 1],
-                [0, 1],
-                [1, 1],
-                [1, 0],
-                [1, -1],
-                [0, -1],
-            ];
-            state.availableMoves = availMoves.map((pos) => ({
+            state.availableMoves = docsLogic.CalcAvailableMoves(action.payload).map((pos) => ({
                 pirateIds: [],
                 level: 0,
-                x: state.pirate.position.x + pos[0],
-                y: state.pirate.position.y + pos[1],
+                x: pos[0],
+                y: pos[1],
             }));
         },
         setStepOpacity: (state, action: PayloadAction<number>) => {

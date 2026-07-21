@@ -11,7 +11,7 @@ interface CellPhotoProps {
     col: number;
     cellSize: number;
     field: FieldState;
-    onClick: () => void;
+    onClick: (img: string | undefined) => void;
 }
 
 const CellPhoto = ({ row, col, cellSize, field, onClick }: CellPhotoProps) => {
@@ -37,7 +37,9 @@ const CellPhoto = ({ row, col, cellSize, field, onClick }: CellPhotoProps) => {
                     opacity: hasMove ? opacity : '1',
                     cursor: hasMove ? 'pointer' : 'default',
                 }}
-                onClick={onClick}
+                onClick={() => {
+                    onClick(field.image);
+                }}
             ></div>
         </>
     );

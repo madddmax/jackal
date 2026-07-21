@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -90,20 +90,21 @@ const MapRenderer = () => {
 
     const cellSize = 70;
     const mapWidth = (cellSize + 1) * (mapSize + 2) - 1;
-    const tiles = [...TileTypes];
-
-    const customTilesConfig: { [index: string]: number } = Constants.imagesPackTiles[imagesPackName];
-    if (customTilesConfig) {
-        Object.entries(customTilesConfig).forEach(([key, value], _) => {
-            for (let i = 1; i <= value; i++) {
-                tiles.push(`${key}_${i}`);
-            }
-        });
-    }
-
-    while (tiles.length < mapSize * mapSize) {
-        tiles.push(TileTypes[Math.floor(Math.random() * TileTypes.length)]);
-    }
+    const tiles = useMemo(() => {
+        let tt = [...TileTypes];
+        const customTilesConfig: { [index: string]: number } = Constants.imagesPackTiles[imagesPackName];
+        if (customTilesConfig) {
+            Object.entries(customTilesConfig).forEach(([key, value], _) => {
+                for (let i = 1; i <= value; i++) {
+                    tt.push(`${key}_${i}`);
+                }
+            });
+        }
+        while (tt.length < mapSize * mapSize) {
+            tt.push(TileTypes[Math.floor(Math.random() * TileTypes.length)]);
+        }
+        return tt;
+    }, [imagesPackName, mapSize]);
 
     const calcTileType = (row: number, col: number, mapsize: number) => {
         if (row == 0 || row == mapsize + 1) {
@@ -178,11 +179,12 @@ const MapRenderer = () => {
                                                 cellSize={cellSize}
                                                 tileType={calcTileType(rIndex, cIndex, mapSize)}
                                                 imagesPackName={imagesPackName}
-                                                onClick={() => {
+                                                onClick={(img: string | undefined) => {
                                                     dispatch(
                                                         setPiratePosition({
-                                                            teamId: 0,
-                                                            id: '100',
+                                                            mapSize,
+                                                            tiles,
+                                                            img,
                                                             position: {
                                                                 level: 0,
                                                                 x: cIndex,

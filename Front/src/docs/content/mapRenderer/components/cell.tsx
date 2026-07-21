@@ -9,7 +9,7 @@ interface CellProps {
     cellSize: number;
     tileType: string;
     imagesPackName: ImagesPacksIds;
-    onClick: () => void;
+    onClick: (img: string | undefined) => void;
 }
 
 const Cell = ({ row, col, onClick, cellSize, tileType, imagesPackName }: CellProps) => {
