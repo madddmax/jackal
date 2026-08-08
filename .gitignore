@@ -37,3 +37,4 @@ Output*/
 
 # Rider
 .idea/
+/JackalWebHost2/appsettings.Production.json
