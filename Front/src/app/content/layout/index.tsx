@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
+import Rating from '../../../rating/content';
 import GameDocuments from '../../../docs/content';
 import useClientMethod from '../../hubs/useClientMethod';
 import useHub from '../../hubs/useHub';
@@ -82,6 +83,7 @@ const Layout = () => {
         <>
             <Routes>
                 {/* Public Routes */}
+                <Route path="/rating" element={<Rating />} />
                 <Route path="/docs/:tabId" element={<GameDocuments />} />
                 <Route path="/docs" element={<Navigate to="/docs/rules" replace />} />
                 <Route path="/login" element={<Login />}></Route>

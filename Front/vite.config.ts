@@ -26,6 +26,7 @@ export default defineConfig(({ mode }) => {
                 '/auth': fileURLToPath(new URL('./src/auth', import.meta.url)),
                 '/common': fileURLToPath(new URL('./src/common', import.meta.url)),
                 '/content': fileURLToPath(new URL('./src/content', import.meta.url)),
+                '/rating': fileURLToPath(new URL('./src/rating', import.meta.url)),
                 '/docs': fileURLToPath(new URL('./src/docs', import.meta.url)),
                 '/game': fileURLToPath(new URL('./src/game', import.meta.url)),
                 '/hubs': fileURLToPath(new URL('./src/hubs', import.meta.url)),
