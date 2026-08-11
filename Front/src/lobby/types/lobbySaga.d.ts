@@ -1,19 +1,3 @@
-export interface LeaderBoardItemResponse {
-    userId: number;
-    playerName: string;
-    rank: string;
-    winCountToday: number;
-    winCountThisWeek: number;
-    winCountThisMonth: number;
-    totalWin: number;
-    loseCountToday: number;
-    loseCountThisWeek: number;
-    loseCountThisMonth: number;
-    totalLose: number;
-    winPercent: number;
-    totalCoins: number;
-}
-
 export interface NetGameInfoResponse {
     id: number;
     gameId?: number;
@@ -21,10 +5,6 @@ export interface NetGameInfoResponse {
     settings: GameSettings;
     viewers: number[];
     users: UserInfo[];
-}
-
-export interface NetGameUsersOnlineResponse {
-    users: number[];
 }
 
 export interface NetGameListResponse {

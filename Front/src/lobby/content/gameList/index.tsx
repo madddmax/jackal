@@ -1,23 +1,20 @@
 import cn from 'classnames';
-import { Button, Col, Container, ListGroup, Row, Tab, Tabs } from 'react-bootstrap';
+import { Button, Col, Container, ListGroup, Row } from 'react-bootstrap';
 import { PiEyesThin } from 'react-icons/pi';
 import { TbArrowsJoin } from 'react-icons/tb';
 import { VscDebugContinueSmall } from 'react-icons/vsc';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { getGames, getLeaders, getNetGames, getUsersOnline } from '../../redux/lobbySlice';
+import { getGames, getNetGames } from '../../redux/lobbySlice';
 import GameListItem from './components/gameListItem';
 import classes from './gamelist.module.less';
 import gameHub from '/game/hub/gameHub';
-import Leaderboard from '/lobby/content/gameList/components/leaderboard';
 
 const GameList = () => {
     const navigate = useNavigate();
     const list = useSelector(getGames);
     const netList = useSelector(getNetGames);
-    const leaders = useSelector(getLeaders);
-    const usersOnline = useSelector(getUsersOnline);
 
     const continueNet = (gameId: number) => {
         navigate('/newpublic');
@@ -119,23 +116,6 @@ const GameList = () => {
                                     </GameListItem>
                                 ))}
                         </ListGroup>
-                    </div>
-                </Col>
-            </Row>
-            <Row className="justify-content-center">
-                <Col className="g-lg-2">
-                    <div className={classes.leaderboard}>
-                        <Tabs defaultActiveKey="netleaders" id="leaderboard-tab" className="mb-3">
-                            <Tab eventKey="leaders" title="Одиночный" style={{ overflowX: 'auto' }}>
-                                <Leaderboard items={leaders.localLeaders} usersOnline={usersOnline} />
-                            </Tab>
-                            <Tab eventKey="netleaders" title="Командный">
-                                <Leaderboard items={leaders.netLeaders} usersOnline={usersOnline} />
-                            </Tab>
-                            <Tab eventKey="botleaders" title="Роботы">
-                                <Leaderboard items={leaders.botLeaders} usersOnline={usersOnline} />
-                            </Tab>
-                        </Tabs>
                     </div>
                 </Col>
             </Row>
