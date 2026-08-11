@@ -43,7 +43,9 @@ public class UserRepository(JackalDbContext jackalDbContext) : IUserRepository
         var userEntity = new UserEntity
         {
             Login = login,
-            Created = DateTime.UtcNow
+            Created = DateTime.UtcNow,
+            Games = [],
+            GamePlayers = []
         };
 
         await jackalDbContext.Users.AddAsync(userEntity, token);
