@@ -6,9 +6,10 @@ import classes from './gamedocuments.module.less';
 import DocRules from '/docs/content/docRules/docRules';
 import MapRenderer from '/docs/content/mapRenderer/mapRenderer';
 import PirateGallery from '/docs/content/pirateGallery/pirateGallery';
+import PeopleGallery from '/docs/content/peopleGallery/peopleGallery';
 
 // Определяем тип для ключей вкладок
-type TabKey = 'rules' | 'pirateGallery' | 'mapRenderer';
+type TabKey = 'rules' | 'pirateGallery' | 'peopleGallery' | 'mapRenderer';
 
 // Определяем тип для конфигурации вкладки
 interface TabConfig {
@@ -25,6 +26,10 @@ const TABS_CONFIG: Record<TabKey, TabConfig> = {
     pirateGallery: {
         title: 'Команды пиратов',
         component: PirateGallery
+    },
+    peopleGallery: {
+        title: 'Жители острова',
+        component: PeopleGallery
     },
     mapRenderer: {
         title: 'Отрисовщик карты',
