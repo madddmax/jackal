@@ -10,42 +10,80 @@ interface Photo {
 
 const PeopleGallery = () => {
   const gannGroups: Photo[] = Constants.gannPhotos;
+  const fridayGroups: Photo[] = Constants.fridayPhotos;
+  const missionerGroups: Photo[] = Constants.missionerPhotos;
 
-    return (
-        <div style={styles.mainContainer}>
-        <div style={styles.groupContainer}>
-        <div style={{
-            maxHeight: '5000px',
-            overflow: 'hidden',
-            transition: 'max-height 0.4s ease',
-        }}>
-            {/* Сетка карточек жителей острова */}
-            <div style={styles.photosGrid}>
+  return (
+      <div style={styles.mainContainer}>
+      <div style={styles.groupContainer}>
+      <div style={{
 
-            {gannGroups.map((group, index) => (
-                <div style={styles.pirateCard}>
-                <div style={styles.cardTop}>
-                    <div style={styles.imageContainer}>
-                    <Image
-                        src={`/pictures/commonganns/gann_${index + 1}.png`}
-                        roundedCircle
-                        className={cn('photo', {
-                        'photo-active': true,
-                        })}
-                        style={styles.pirateImage}
-                    />
-                    </div>
-                    <h3 style={styles.pirateName}>{group.name}</h3>
-                </div>
-                <p style={styles.pirateDescription}>{group.description}</p>
-                </div>
-            ))}
-            
-            </div>
-        </div>
-        </div>
-        </div>
-    );
+      }}>
+          {/* Сетка карточек жителей острова */}
+          <div style={styles.photosGrid}>
+
+          {gannGroups.map((group, index) => (
+              <div style={styles.pirateCard}>
+              <div style={styles.cardTop}>
+                  <div style={styles.imageContainer}>
+                  <Image
+                      src={`/pictures/commonganns/gann_${index + 1}.png`}
+                      roundedCircle
+                      className={cn('photo', {
+                      'photo-active': true,
+                      })}
+                      style={styles.pirateImage}
+                  />
+                  </div>
+                  <h3 style={styles.pirateName}>{group.name}</h3>
+              </div>
+              <p style={styles.pirateDescription}>{group.description}</p>
+              </div>
+          ))}
+
+          {fridayGroups.map((group, index) => (
+              <div style={styles.pirateCard}>
+              <div style={styles.cardTop}>
+                  <div style={styles.imageContainer}>
+                  <Image
+                      src={`/pictures/commonfridays/friday_${index + 1}.jpg`}
+                      roundedCircle
+                      className={cn('photo', {
+                      'photo-active': true,
+                      })}
+                      style={styles.pirateImage}
+                  />
+                  </div>
+                  <h3 style={styles.pirateName}>{group.name}</h3>
+              </div>
+              <p style={styles.pirateDescription}>{group.description}</p>
+              </div>
+          ))}
+
+          {missionerGroups.map((group, index) => (
+              <div style={styles.pirateCard}>
+              <div style={styles.cardTop}>
+                  <div style={styles.imageContainer}>
+                  <Image
+                      src={`/pictures/common_missioners/missioner_${index + 1}.jpg`}
+                      roundedCircle
+                      className={cn('photo', {
+                      'photo-active': true,
+                      })}
+                      style={styles.pirateImage}
+                  />
+                  </div>
+                  <h3 style={styles.pirateName}>{group.name}</h3>
+              </div>
+              <p style={styles.pirateDescription}>{group.description}</p>
+              </div>
+          ))}
+          
+          </div>
+      </div>
+      </div>
+      </div>
+  );
 };
 
 const styles = {
