@@ -3,9 +3,9 @@ using Jackal.Core.Domain;
 namespace Jackal.Core.MapGenerator.TilesPack;
 
 /// <summary>
-/// Безумный игровой набор от madddmax-а
+/// Быстрый игровой набор от madddmax-а
 /// </summary>
-public class DifficultTilesPack : ITilesPack
+public class FastTilesPack : ITilesPack
 {
     /// <summary>
     /// 120 клеток
@@ -27,7 +27,7 @@ public class DifficultTilesPack : ITilesPack
         TileParams.Coin(2), // 16
         TileParams.Coin(3), // 19
         TileParams.Coin(3), // 21
-        TileParams.Cannibal(), // берем сундук вместе с людоедом
+        TileParams.Cannibal(),
         TileParams.Cannibal(),
         TileParams.Cannibal(),
         TileParams.Cannibal(),
