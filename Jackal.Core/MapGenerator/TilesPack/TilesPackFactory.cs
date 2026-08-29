@@ -7,6 +7,7 @@ public static class TilesPackFactory
     public const string Extended = "extended";
     public const string Basic = "basic";
     public const string Fast = "fast";
+    public const string Imbalance = "imbalance";
     public const string AllGold = "all-gold";
     
     public static string CheckName(string? name) =>
@@ -23,9 +24,10 @@ public static class TilesPackFactory
         {
             Basic => new BasicTilesPack(),
             Fast => new FastTilesPack(),
+            Imbalance => new ImbalanceTilesPack(),
             AllGold => new AllGoldTilesPack(),
             _ => new ExtendedTilesPack()
         };
     
-    public static List<string> GetAll() => [Extended, Basic, Fast];
+    public static List<string> GetAll() => [Extended, Basic, Fast, Imbalance];
 }
