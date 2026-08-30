@@ -2,7 +2,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/esm/Offcanvas';
-import { FaBookSkull, FaStar, FaGamepad, FaNetworkWired } from 'react-icons/fa6';
+import { FaSkull, FaBookSkull, FaStar, FaGamepad, FaNetworkWired } from 'react-icons/fa6';
 import { GiWingfoot } from 'react-icons/gi';
 import { HiLogin, HiLogout } from 'react-icons/hi';
 import { ImFire } from 'react-icons/im';
@@ -68,6 +68,10 @@ const Header = () => {
                             <Nav.Link as={Link} to="/quickstart" eventKey="quickstart">
                                 <GiWingfoot size={20} className="menu-link" />
                                 Быстрый старт
+                            </Nav.Link>
+                            <Nav.Link as={Link} to="/madstart" eventKey="madstart">
+                                <FaSkull size={20} className="menu-link" />
+                                Безумный старт
                             </Nav.Link>
                             <Nav.Link as={Link} to="/newgame" eventKey="newgame">
                                 <FaGamepad size={20} className="menu-link" />

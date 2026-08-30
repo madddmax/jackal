@@ -9,6 +9,7 @@ import useHub from '../../hubs/useHub';
 import MessageNotifier from './messNotifier';
 import Newgame from './newgame';
 import Quickstart from './quickstart';
+import Madstart from './madstart';
 import { hubConnection } from '/app/global';
 import useClientMethods from '/app/hubs/useClientMethods';
 import Login from '/auth/content/login';
@@ -91,6 +92,7 @@ const Layout = () => {
                 {/* Protected Routes Wrapper */}
                 <Route element={<ProtectedRoute />}>
                     <Route path="/quickstart" element={<Quickstart />}></Route>
+                    <Route path="/madstart" element={<Madstart />}></Route>
                     <Route path="/newgame" element={<Newgame />}></Route>
                     <Route path="/newpublic" element={<NetGameCreate />}></Route>
                     <Route path="/netgame" element={<GameList />}></Route>

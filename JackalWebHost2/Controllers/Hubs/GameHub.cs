@@ -113,6 +113,7 @@ public class GameHub : Hub
     /// </summary>
     public async Task Start(StartGameRequest request)
     {
+        
         var user = FastAuthJwtBearerHelper.ExtractUser(Context.User);
         var startGameModel = new StartGameModel { Settings = request.Settings };
         var result = await _gameService.StartGame(user, startGameModel);

@@ -29,4 +29,9 @@ public class GameSettings
     /// Режим игры
     /// </summary>
     public GameModeType? GameMode { get; set; }
+    
+    /// <summary>
+    /// Стартовое количество пиратов у игрока
+    /// </summary>
+    public int? PiratesPerPlayer { get; set; }
 }
