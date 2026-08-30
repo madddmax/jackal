@@ -32,9 +32,9 @@ public class ExtendedTilesPack : ITilesPack
         TileParams.BigCoin(), // 40
         TileParams.Fort(),
         TileParams.Fort(),
-        TileParams.RespawnFort(), // порядок RespawnFort и Cannibal важен для баланса
-        TileParams.Cannibal(), // берем воскрешающий форт вместе с людоедом
         TileParams.RespawnFort(),
+        TileParams.RespawnFort(),
+        TileParams.Cannibal(),
         TileParams.Cannibal(),
         TileParams.RumBarrel(),
         TileParams.RumBarrel(),

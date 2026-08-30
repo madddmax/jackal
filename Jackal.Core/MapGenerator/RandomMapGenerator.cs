@@ -43,33 +43,13 @@ public class RandomMapGenerator : IMapGenerator
         var list = new List<TileParams>(totalTiles);
 
         // выбираем обязательный сундук с 1 монетой
-        bool random = false;
-        int selectedIndex = 0;
-            
-        for (var i = 0; i < totalTiles; i++)
+        list.Add(pack.AllTiles[0]);
+        TotalCoins += 1;
+        
+        for (var i = 1; i < totalTiles; i++)
         {
-            var index = random 
-                ? rand.Next(0, pack.AllTiles.Length - i) 
-                : selectedIndex;
-                
+            var index = rand.Next(1, pack.AllTiles.Length - i);
             list.Add(pack.AllTiles[index]);
-
-            switch (pack.AllTiles[index].Type)
-            {
-                case TileType.Cannibal:
-                    // выбираем воскрешающий форт к людоеду
-                    random = false;
-                    selectedIndex = index > 0 ? index - 1 : 0;
-                    break;
-                case TileType.RespawnFort:
-                    // выбираем людоеда к воскрешающему форту
-                    random = false;
-                    selectedIndex = index + 1;
-                    break;
-                default:
-                    random = true;
-                    break;
-            }
 
             var tileParam = pack.AllTiles[index];
             TotalCoins += tileParam.Type == TileType.Coin ? tileParam.Code : 0;

@@ -16,9 +16,6 @@ const PeopleGallery = () => {
   return (
       <div style={styles.mainContainer}>
       <div style={styles.groupContainer}>
-      <div style={{
-
-      }}>
           {/* Сетка карточек жителей острова */}
           <div style={styles.photosGrid}>
 
@@ -80,7 +77,6 @@ const PeopleGallery = () => {
           ))}
           
           </div>
-      </div>
       </div>
       </div>
   );

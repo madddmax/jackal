@@ -22,6 +22,7 @@ export interface GameSettings {
     mapSize: number;
     tilesPackName?: string;
     gameMode?: string;
+    piratesPerPlayer?: number;
 }
 
 export interface GamePlayer {

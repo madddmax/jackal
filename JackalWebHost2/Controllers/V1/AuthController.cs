@@ -18,10 +18,10 @@ public class AuthController(IUserRepository userRepository) : Controller
     [HttpPost("register")]
     public async Task<RegisterResponse> Register([FromBody] RegisterRequest request, CancellationToken token)
     {
-        if (HttpContext.User.Identity?.IsAuthenticated == true)
+        /*if (HttpContext.User.Identity?.IsAuthenticated == true)
         {
             throw new UserIsAlreadyLoggedInException();
-        }
+        }*/
 
         var user = await userRepository.GetUser(request.Login, token)
                    ?? await userRepository.CreateUser(request.Login, token);

@@ -6,14 +6,15 @@ public static class TilesPackFactory
 {
     public const string Extended = "extended";
     public const string Basic = "basic";
-    public const string Difficult = "difficult";
+    public const string Fast = "fast";
+    public const string Imbalance = "imbalance";
     public const string AllGold = "all-gold";
     
     public static string CheckName(string? name) =>
         name switch
         {
             Basic => Basic,
-            Difficult => Difficult,
+            Fast => Fast,
             AllGold => AllGold,
             _ => Extended
         };
@@ -22,10 +23,11 @@ public static class TilesPackFactory
         name switch
         {
             Basic => new BasicTilesPack(),
-            Difficult => new DifficultTilesPack(),
+            Fast => new FastTilesPack(),
+            Imbalance => new ImbalanceTilesPack(),
             AllGold => new AllGoldTilesPack(),
             _ => new ExtendedTilesPack()
         };
     
-    public static List<string> GetAll() => [Extended, Basic, Difficult];
+    public static List<string> GetAll() => [Extended, Basic, Fast, Imbalance];
 }

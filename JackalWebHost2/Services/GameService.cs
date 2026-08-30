@@ -96,7 +96,8 @@ public class GameService : IGameService
         // );
 
         var gameMode = gameSettings.GameMode ?? GameModeType.FreeForAll;
-        var gameRequest = new GameRequest(mapSize, mapGenerator, gamePlayers, gameMode);
+        var piratesPerPlayer = gameSettings.PiratesPerPlayer ?? 3;
+        var gameRequest = new GameRequest(mapSize, mapGenerator, gamePlayers, gameMode, piratesPerPlayer);
         var game = new Game(gameRequest);
 
         var gameId = await _gameRepository.CreateGame(user.Id, game);
