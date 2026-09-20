@@ -29,12 +29,10 @@ public interface IStateRepository<T> where T : class, ICompletable
     /// <summary>
     /// Создать новую сущность
     /// </summary>
-    void CreateObject(User user, long objectId, T value);
-    void CreateObject(User user, long objectId, T value, HashSet<User> players);
+    void CreateObject(User user, long objectId, T value, HashSet<User>? players = null);
 
     /// <summary>
     /// Обновить сущность
     /// </summary>
-    void UpdateObject(long objectId, T value);
-    void UpdateObject(long objectId, T value, HashSet<User>? players);
+    void UpdateObject(long objectId, T value, HashSet<User>? players = null);
 }

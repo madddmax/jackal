@@ -1,5 +1,4 @@
 ﻿using JackalWebHost2.Data.Entities;
-using JackalWebHost2.Data.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace JackalWebHost2.Data;
@@ -11,11 +10,14 @@ public class JackalDbContext(DbContextOptions<JackalDbContext> options) : DbCont
     public DbSet<GameEntity> Games { get; set; }
     
     public DbSet<GamePlayerEntity> GamePlayers { get; set; }
+    
+    public DbSet<CacheEntryEntity> CacheEntries { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new GameEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new GamePlayerEntityConfiguration());
+        base.OnModelCreating(modelBuilder);
+
+        // Применяем все конфигурации IEntityTypeConfiguration
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(JackalDbContext).Assembly);
     }
 }

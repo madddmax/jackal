@@ -6,11 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JackalWebHost2.Data.Repositories;
 
-public class UserRepository(JackalDbContext jackalDbContext) : IUserRepository
+public class UserRepository(IDbContextFactory<JackalDbContext> contextFactory) : IUserRepository
 {
     public async Task<User?> GetUser(long id, CancellationToken token)
     {
-        var userEntity = await jackalDbContext.Users
+        await using var context = await contextFactory.CreateDbContextAsync(token);
+        var userEntity = await context.Users
             .Include(u => u.GamePlayers)
             .FirstOrDefaultAsync(u => u.Id == id, token);
         
@@ -19,7 +20,8 @@ public class UserRepository(JackalDbContext jackalDbContext) : IUserRepository
 
     public async Task<User?> GetUser(string login, CancellationToken token)
     {
-        var userEntity = await jackalDbContext.Users
+        await using var context = await contextFactory.CreateDbContextAsync(token);
+        var userEntity = await context.Users
             .Include(u => u.GamePlayers)
             .FirstOrDefaultAsync(
                 u => u.Login.ToLower() == login.ToLower(),
@@ -31,9 +33,10 @@ public class UserRepository(JackalDbContext jackalDbContext) : IUserRepository
 
     public async Task<IList<User>> GetUsers(long[] ids, CancellationToken token)
     {
-        var users = await jackalDbContext.Users
+        await using var context = await contextFactory.CreateDbContextAsync(token);
+        var users = await context.Users
             .Include(u => u.GamePlayers)
-            .Where(u => ids.Contains(u.Id)).ToListAsync(token);
+            .Where(u => ((IEnumerable<long>)ids).Contains(u.Id)).ToListAsync(token);
         
         return users.Select(ToUser).ToList();
     }
@@ -48,8 +51,9 @@ public class UserRepository(JackalDbContext jackalDbContext) : IUserRepository
             GamePlayers = []
         };
 
-        await jackalDbContext.Users.AddAsync(userEntity, token);
-        await jackalDbContext.SaveChangesAsync(token);
+        await using var context = await contextFactory.CreateDbContextAsync(token);
+        await context.Users.AddAsync(userEntity, token);
+        await context.SaveChangesAsync(token);
 
         return ToUser(userEntity);
     }

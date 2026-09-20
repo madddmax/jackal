@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JackalWebHost2.Data.Repositories;
 
-public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayerRepository
+public class GamePlayerRepository(IDbContextFactory<JackalDbContext> contextFactory) : IGamePlayerRepository
 {
     private static readonly long?[] BotUserIds = [null, 40, 45];
     
@@ -14,7 +14,8 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
     
     public async Task<List<GamePlayerStat>> GetBotLeaderboard()
     {
-        var groupedBotPlayers = jackalDbContext.GamePlayers
+        await using var context = await contextFactory.CreateDbContextAsync();
+        var groupedBotPlayers = context.GamePlayers
             .Where(p => p.Game.GameOver && BotUserIds.Contains(p.UserId))
             .GroupBy(p => p.PlayerName);
 
@@ -27,7 +28,8 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
 
     public async Task<List<GamePlayerStat>> GetHumanLeaderboard()
     {
-        var groupedHumanPlayers = jackalDbContext.GamePlayers
+        await using var context = await contextFactory.CreateDbContextAsync();
+        var groupedHumanPlayers = context.GamePlayers
             .Where(p => p.Game.GameOver && !BotUserIds.Contains(p.UserId))
             .GroupBy(p => p.PlayerName);
 
@@ -40,7 +42,8 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
     
     public async Task<List<GamePlayerStat>> GetTwoHumanInTeamLeaderboard()
     {
-        var onlyHumanGameIds = jackalDbContext.GamePlayers
+        await using var context = await contextFactory.CreateDbContextAsync();
+        var onlyHumanGameIds = context.GamePlayers
             .Where(g => g.Game.GameOver && g.Game.GameMode == GameModeType.TwoPlayersInTeam)
             .GroupBy(g => g.GameId)
             .Where(g => g
@@ -51,7 +54,7 @@ public class GamePlayerRepository(JackalDbContext jackalDbContext) : IGamePlayer
             )
             .Select(g => g.Key);
         
-        var groupedTwoHumanInTeamPlayers = jackalDbContext.GamePlayers
+        var groupedTwoHumanInTeamPlayers = context.GamePlayers
             .Where(p => onlyHumanGameIds.Contains(p.GameId))
             .GroupBy(p => p.PlayerName);
         

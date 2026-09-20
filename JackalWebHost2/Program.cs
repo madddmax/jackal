@@ -162,7 +162,11 @@ public class Program
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         if (!string.IsNullOrEmpty(connectionString))
         {
-            services.AddDbContext<JackalDbContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContextFactory<JackalDbContext>(options =>
+            {
+                options.UseNpgsql(connectionString, npgsqlOptions => npgsqlOptions.EnableRetryOnFailure());
+                options.EnableSensitiveDataLogging();
+            });
             services.AddDatabaseDeveloperPageExceptionFilter();
             
             services.AddScoped<IUserRepository, UserRepository>();
@@ -176,7 +180,7 @@ public class Program
             services.AddScoped<IGamePlayerRepository, GamePlayerRepositoryStub>();
         }
 
-        services.AddSingleton<IStateRepository<Game>, StateRepositoryInMemory<Game>>();
+        services.AddSingleton<IStateRepository<Game>, StateRepository<Game>>();
         services.AddSingleton<IStateRepository<NetGameSettings>, StateRepositoryInMemory<NetGameSettings>>();
         services.AddSingleton<IUsersOnlineService, UsersOnlineService>();
         services.AddScoped<ILobbyRepository, LobbyRepositoryInMemory>();

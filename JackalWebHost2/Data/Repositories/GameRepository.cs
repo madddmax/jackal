@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JackalWebHost2.Data.Repositories;
 
-public class GameRepository(JackalDbContext jackalDbContext) : IGameRepository
+public class GameRepository(IDbContextFactory<JackalDbContext> contextFactory) : IGameRepository
 {
     public async Task<long> CreateGame(long userId, Game game)
     {
@@ -20,8 +20,10 @@ public class GameRepository(JackalDbContext jackalDbContext) : IGameRepository
             CreatorUserId = userId,
             Created = DateTime.UtcNow
         };
-        await jackalDbContext.Games.AddAsync(gameEntity);
-        await jackalDbContext.SaveChangesAsync();
+        
+        await using var context = await contextFactory.CreateDbContextAsync();
+        await context.Games.AddAsync(gameEntity);
+        await context.SaveChangesAsync();
 
         foreach (var team in game.Board.Teams)
         {
@@ -33,17 +35,18 @@ public class GameRepository(JackalDbContext jackalDbContext) : IGameRepository
                 PlayerName = team.PlayerName,
                 MapPositionId = (byte)MapUtils.ToMapPositionId(team.ShipPosition, game.Board.MapSize)
             };
-            await jackalDbContext.GamePlayers.AddAsync(gamePlayerEntity);
+            await context.GamePlayers.AddAsync(gamePlayerEntity);
         }
 
-        await jackalDbContext.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         return gameEntity.Id;
     }
     
     public async Task UpdateGame(long gameId, Game game)
     {
-        var gameEntity = await jackalDbContext.Games
+        await using var context = await contextFactory.CreateDbContextAsync();
+        var gameEntity = await context.Games
             .Include(g => g.GamePlayers)
             .FirstOrDefaultAsync(g => g.Id == gameId);
         
@@ -64,6 +67,6 @@ public class GameRepository(JackalDbContext jackalDbContext) : IGameRepository
             playerEntity.Winner = game.IsGameOver && playerEntity.Coins == maxCoins;
         }
         
-        await jackalDbContext.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 }
