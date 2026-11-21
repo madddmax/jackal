@@ -49,7 +49,7 @@ const Header = () => {
                             height="40"
                             className="d-inline-block align-top me-2"
                         />
-                        <span className="align-middle">React-Jackal</span>
+                        <span className="align-middle">Jackal Team</span>
                     </Nav.Link>
                 </Navbar.Brand>
                 <Navbar.Offcanvas id="basic-navbar-nav" placement="start">
@@ -61,7 +61,7 @@ const Header = () => {
                             height="40"
                             className="d-inline-block align-top me-2"
                         />
-                        <span className="align-middle">React-Jackal</span>
+                        <span className="align-middle">Jackal Team</span>
                     </Offcanvas.Header>
                     <Offcanvas.Body>
                         <Nav className="me-auto" activeKey="/">
